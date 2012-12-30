@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <profiles version="1">
-<profile kind="CodeFormatterProfile" name="GNU modified" version="1">
+<profile kind="CodeFormatterProfile" name="codeformatter" version="1">
 <setting id="org.eclipse.cdt.core.formatter.insert_space_before_opening_paren_in_method_declaration" value="do not insert"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_after_opening_paren_in_for" value="do not insert"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_new_line_in_empty_block" value="insert"/>
@@ -8,7 +8,7 @@
 <setting id="org.eclipse.cdt.core.formatter.alignment_for_member_access" value="0"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_before_comma_in_base_types" value="do not insert"/>
 <setting id="org.eclipse.cdt.core.formatter.keep_else_statement_on_same_line" value="false"/>
-<setting id="org.eclipse.cdt.core.formatter.indent_switchstatements_compare_to_switch" value="false"/>
+<setting id="org.eclipse.cdt.core.formatter.indent_switchstatements_compare_to_switch" value="true"/>
 <setting id="org.eclipse.cdt.core.formatter.alignment_for_constructor_initializer_list" value="0"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_after_opening_brace_in_array_initializer" value="insert"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_before_comma_in_method_declaration_parameters" value="do not insert"/>
@@ -40,7 +40,7 @@
 <setting id="org.eclipse.cdt.core.formatter.insert_space_before_closing_paren_in_switch" value="do not insert"/>
 <setting id="org.eclipse.cdt.core.formatter.alignment_for_declarator_list" value="16"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_before_opening_paren_in_parenthesized_expression" value="do not insert"/>
-<setting id="org.eclipse.cdt.core.formatter.indent_empty_lines" value="false"/>
+<setting id="org.eclipse.cdt.core.formatter.indent_empty_lines" value="true"/>
 <setting id="org.eclipse.cdt.core.formatter.indent_switchstatements_compare_to_cases" value="true"/>
 <setting id="org.eclipse.cdt.core.formatter.keep_empty_array_initializer_on_one_line" value="false"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_before_opening_brace_in_method_declaration" value="insert"/>
@@ -53,7 +53,7 @@
 <setting id="org.eclipse.cdt.core.formatter.insert_space_after_question_in_conditional" value="insert"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_before_semicolon" value="do not insert"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_after_closing_angle_bracket_in_template_arguments" value="insert"/>
-<setting id="org.eclipse.cdt.core.formatter.insert_space_before_colon_in_base_clause" value="insert"/>
+<setting id="org.eclipse.cdt.core.formatter.insert_space_before_colon_in_base_clause" value="do not insert"/>
 <setting id="org.eclipse.cdt.core.formatter.indent_breaks_compare_to_cases" value="true"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_before_unary_operator" value="do not insert"/>
 <setting id="org.eclipse.cdt.core.formatter.join_wrapped_lines" value="true"/>
@@ -71,7 +71,7 @@
 <setting id="org.eclipse.cdt.core.formatter.insert_space_before_semicolon_in_for" value="do not insert"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_before_colon_in_conditional" value="insert"/>
 <setting id="org.eclipse.cdt.core.formatter.comment.preserve_white_space_between_code_and_line_comments" value="true"/>
-<setting id="org.eclipse.cdt.core.formatter.brace_position_for_block" value="next_line_shifted"/>
+<setting id="org.eclipse.cdt.core.formatter.brace_position_for_block" value="next_line"/>
 <setting id="org.eclipse.cdt.core.formatter.brace_position_for_type_declaration" value="next_line"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_before_assignment_operator" value="insert"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_before_opening_angle_bracket_in_template_arguments" value="do not insert"/>
@@ -111,11 +111,11 @@
 <setting id="org.eclipse.cdt.core.formatter.insert_space_before_opening_paren_in_exception_specification" value="insert"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_before_binary_operator" value="insert"/>
 <setting id="org.eclipse.cdt.core.formatter.alignment_for_base_clause_in_type_declaration" value="80"/>
-<setting id="org.eclipse.cdt.core.formatter.insert_new_line_before_identifier_in_function_declaration" value="insert"/>
+<setting id="org.eclipse.cdt.core.formatter.insert_new_line_before_identifier_in_function_declaration" value="do not insert"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_before_comma_in_method_declaration_throws" value="do not insert"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_between_empty_parens_in_exception_specification" value="do not insert"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_before_comma_in_method_invocation_arguments" value="do not insert"/>
-<setting id="org.eclipse.cdt.core.formatter.indent_declaration_compare_to_template_header" value="true"/>
+<setting id="org.eclipse.cdt.core.formatter.indent_declaration_compare_to_template_header" value="false"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_after_unary_operator" value="do not insert"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_before_opening_paren_in_switch" value="insert"/>
 <setting id="org.eclipse.cdt.core.formatter.indent_statements_compare_to_body" value="true"/>
@@ -131,29 +131,29 @@
 <setting id="org.eclipse.cdt.core.formatter.insert_space_before_opening_angle_bracket_in_template_parameters" value="do not insert"/>
 <setting id="org.eclipse.cdt.core.formatter.tabulation.char" value="space"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_before_closing_angle_bracket_in_template_parameters" value="do not insert"/>
-<setting id="org.eclipse.cdt.core.formatter.insert_new_line_before_colon_in_constructor_initializer_list" value="do not insert"/>
+<setting id="org.eclipse.cdt.core.formatter.insert_new_line_before_colon_in_constructor_initializer_list" value="insert"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_after_opening_paren_in_while" value="do not insert"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_after_comma_in_method_invocation_arguments" value="insert"/>
-<setting id="org.eclipse.cdt.core.formatter.brace_position_for_block_in_case" value="next_line_shifted"/>
+<setting id="org.eclipse.cdt.core.formatter.brace_position_for_block_in_case" value="next_line"/>
 <setting id="org.eclipse.cdt.core.formatter.compact_else_if" value="true"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_after_postfix_operator" value="do not insert"/>
-<setting id="org.eclipse.cdt.core.formatter.insert_new_line_after_template_declaration" value="insert"/>
+<setting id="org.eclipse.cdt.core.formatter.insert_new_line_after_template_declaration" value="do not insert"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_after_colon_in_base_clause" value="insert"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_after_opening_paren_in_catch" value="do not insert"/>
 <setting id="org.eclipse.cdt.core.formatter.keep_then_statement_on_same_line" value="false"/>
-<setting id="org.eclipse.cdt.core.formatter.brace_position_for_switch" value="next_line_shifted"/>
+<setting id="org.eclipse.cdt.core.formatter.brace_position_for_switch" value="next_line"/>
 <setting id="org.eclipse.cdt.core.formatter.alignment_for_overloaded_left_shift_chain" value="16"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_before_opening_paren_in_if" value="insert"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_after_opening_paren_in_switch" value="do not insert"/>
 <setting id="org.eclipse.cdt.core.formatter.keep_imple_if_on_one_line" value="false"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_new_line_after_opening_brace_in_array_initializer" value="do not insert"/>
-<setting id="org.eclipse.cdt.core.formatter.indentation.size" value="8"/>
+<setting id="org.eclipse.cdt.core.formatter.indentation.size" value="4"/>
 <setting id="org.eclipse.cdt.core.formatter.brace_position_for_namespace_declaration" value="next_line"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_after_colon_in_conditional" value="insert"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_before_comma_in_enum_declarations" value="do not insert"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_after_prefix_operator" value="do not insert"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_before_closing_angle_bracket_in_template_arguments" value="do not insert"/>
-<setting id="org.eclipse.cdt.core.formatter.brace_position_for_array_initializer" value="next_line_shifted"/>
+<setting id="org.eclipse.cdt.core.formatter.brace_position_for_array_initializer" value="next_line"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_before_colon_in_case" value="do not insert"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_before_opening_paren_in_catch" value="insert"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_before_opening_brace_in_namespace_declaration" value="insert"/>
