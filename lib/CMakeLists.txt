@@ -1,5 +1,5 @@
 
 add_subdirectory(json)
 add_subdirectory(mongoose)
-#add_subdirectory(jsonrpc)
+add_subdirectory(jsonrpc)
 
