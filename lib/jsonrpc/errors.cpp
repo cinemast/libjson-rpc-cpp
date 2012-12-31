@@ -74,4 +74,10 @@ namespace jsonrpc
         return error;
     }
 
+    const std::string& Errors::GetErrorMessage(int errorCode)
+    {
+        return this->possibleErrors[errorCode];
+    }
+
+
 } /* namespace jsonrpc */

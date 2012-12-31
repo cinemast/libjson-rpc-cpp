@@ -81,6 +81,11 @@ namespace jsonrpc
              */
             Json::Value GetErrorBlock(int errorCode);
 
+            /**
+             * @return error message to corresponding error code.
+             */
+            const std::string& GetErrorMessage(int errorCode);
+
         private:
             Errors();
             std::map<int, std::string> possibleErrors;

@@ -6,6 +6,7 @@
  */
 
 #include "procedure.h"
+#include "exception.h"
 #include "errors.h"
 
 #include <vector>
@@ -83,14 +84,12 @@ namespace jsonrpc
             }
             else
             {
-                //TODO: use correct exceptions
-                throw ERROR_PROCEDURE_PARSE_ERROR;
+                throw Exception(ERROR_PROCEDURE_PARSE_ERROR);
             }
         }
         else
         {
-            //TODO: use correct exceptions
-            throw ERROR_PROCEDURE_PARSE_ERROR;
+            throw Exception(ERROR_PROCEDURE_PARSE_ERROR);
         }
     }
 
