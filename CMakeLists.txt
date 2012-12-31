@@ -4,10 +4,10 @@ project(jsonrpccpp)
 include_directories(lib)
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/lib)
-set(CMAKE_BINARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/bin)
 
 
 add_subdirectory(lib)
-#add_subdirectory(sample)
+add_subdirectory(example)
 
 

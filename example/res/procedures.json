@@ -1,0 +1,15 @@
+[
+	{
+		"method": "sayHello",
+		"isNotification": false,
+		"params": { 
+			"name": "seppi"
+		}
+	},
+	
+	{
+		"method" : "notifyServer",
+		"isNotification": true,
+		"params": null
+	}
+]
