@@ -28,6 +28,7 @@ int main() {
 	procedurePointers["sayHello"] = &sayHello;
 	notPointers["notifyServer"] = &notifyServer;
 
+	cout << "foo" << endl;
 
 
 	Server serv("A Server Instancename", "res/procedures.json", procedurePointers, notPointers, new HttpServer(8080,"./res"));
