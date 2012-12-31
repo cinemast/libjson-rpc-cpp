@@ -35,6 +35,7 @@ namespace jsonrpc
                     const Json::Value &authentication,
                     Json::Value &returnValue) = 0;
 
+            virtual ~AuthenticationManager() {}
     };
 
 } /* namespace jsonrpc */
