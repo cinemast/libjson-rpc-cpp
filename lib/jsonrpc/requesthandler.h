@@ -13,7 +13,7 @@
 #include <map>
 
 #include "procedure.h"
-#include "authenticationmanager.h"
+#include "authenticator.h"
 
 #define KEY_REQUEST_METHODNAME "method"
 #define KEY_REQUEST_VERSION "jsonrpc"
@@ -58,14 +58,14 @@ namespace jsonrpc
             bool AddProcedure(Procedure* procedure);
             bool RemoveProcedure(const std::string& procedure);
 
-            const AuthenticationManager& GetAuthManager() const;
+            const Authenticator& GetAuthManager() const;
             const std::string& GetInstanceName() const;
 
             const std::vector<observerFunction>& GetResponseObservers() const;
             const std::vector<observerFunction>& GetRequestObservers() const;
             const procedurelist_t& GetProcedures() const;
 
-            void SetAuthManager(AuthenticationManager* authManager);
+            void SetAuthManager(Authenticator* authManager);
             void SetProcedures(const procedurelist_t& procedures);
 
             /**
@@ -115,7 +115,7 @@ namespace jsonrpc
             /**
              * this objects decides whether a request is allowed to be processed or not.
              */
-            AuthenticationManager* authManager;
+            Authenticator* authManager;
 
     };
 

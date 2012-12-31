@@ -124,7 +124,7 @@ namespace jsonrpc
         }
     }
 
-    const AuthenticationManager& RequestHandler::GetAuthManager() const
+    const Authenticator& RequestHandler::GetAuthManager() const
     {
         return *this->authManager;
     }
@@ -149,7 +149,7 @@ namespace jsonrpc
         return this->procedures;
     }
 
-    void RequestHandler::SetAuthManager(AuthenticationManager* authManager)
+    void RequestHandler::SetAuthManager(Authenticator* authManager)
     {
         this->authManager = authManager;
     }

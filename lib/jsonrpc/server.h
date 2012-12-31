@@ -11,17 +11,34 @@
 #include <map>
 #include <string>
 
+#include "requesthandler.h"
+#include "serverconnector.h"
+
 namespace jsonrpc
 {
-    //typedef std::map<std::string,jsonRequestPointer> methods_t;
-    //typedef std::map<std::string,jsonNotificationPointer> notifications_t;
+    typedef std::map<std::string,pRequest_t> methods_t;
+    typedef std::map<std::string,pNotification_t> notifications_t;
 
     class Server
     {
         public:
-            Server();
-            virtual
-            ~Server();
+            Server(const std::string& name, const std::string& configfile, methods_t& methods, notifications_t& notifications, ServerConnector* connector, Authenticator* auth = NULL);
+            virtual ~Server();
+
+            bool StartListening();
+            bool StopListening();
+
+            const std::string& GetConfigFile() const
+            {
+                return configFile;
+            }
+
+        private:
+            Authenticator* auth;
+            ServerConnector* connection;
+            RequestHandler* handler;
+            std::string configFile;
+
     };
 
 } /* namespace jsonrpc */
