@@ -8,6 +8,8 @@
 #ifndef SERVERCONNECTOR_H_
 #define SERVERCONNECTOR_H_
 
+#include "requesthandler.h"
+
 namespace jsonrpc
 {
     
