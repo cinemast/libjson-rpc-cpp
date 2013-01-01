@@ -12,4 +12,7 @@ target_link_libraries(jsonrpc mongoose)
 install(FILES ${jsonrpc_header} DESTINATION include/jsonrpc) 
 install(FILES ${connector_header} DESTINATION include/jsonrpc/connectors) 
 
-install(TARGETS jsonrpc LIBRARY DESTINATION lib)
+install(TARGETS jsonrpc LIBRARY DESTINATION lib
+                      ARCHIVE DESTINATION lib
+                      RUNTIME DESTINATION bin)
+

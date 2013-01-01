@@ -8,4 +8,6 @@ add_library(mongoose SHARED ${mongoose_source})
 target_link_libraries(mongoose dl pthread)
 
 install(FILES ${mongoose_header} DESTINATION include/mongoose) 
-install(TARGETS mongoose LIBRARY DESTINATION lib)
+install(TARGETS mongoose LIBRARY DESTINATION lib
+                      ARCHIVE DESTINATION lib
+                      RUNTIME DESTINATION bin)
