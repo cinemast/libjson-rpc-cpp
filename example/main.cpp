@@ -49,11 +49,12 @@ int main()
             cout << "Error starting Server" << endl;
         }
     }
-    catch (jsonrpc::Exception e)
+    catch (jsonrpc::Exception& e)
     {
         cerr << e.what() << endl;
     }
 
-    //"{\"jsonrpc\":2.0,\"method\":\"sayHello\",\"id\":1,\"params\":{\"name\":\"peter\"}}"
+    //curl --data "{\"jsonrpc\":2.0,\"method\":\"sayHello\",\"id\":1,\"params\":{\"name\":\"peter\"}}" localhost:8080
+    //curl --data "{\"jsonrpc\":2.0,\"method\":\"notifyServer\", \"params\": null}" localhost:8080
 
 }
