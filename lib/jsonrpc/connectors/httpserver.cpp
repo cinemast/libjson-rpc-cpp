@@ -89,7 +89,11 @@ namespace jsonrpc
     bool HttpServer::SendResponse(const std::string& response, void* addInfo)
     {
         struct mg_connection* conn = (struct mg_connection*) addInfo;
-        if (mg_printf(conn, "HTTP/1.1 200 OK\r\n\r\n %s", response.c_str()) > 0)
+        if (mg_printf(conn, "HTTP/1.1 200 OK\r\n"
+                "Content-Type: text/plain\r\n"
+                "Content-Length: %d\r\n"        // Always set Content-Length
+                "\r\n"
+                "%s",response.length(), response.c_str()) > 0)
         {
             return true;
         }
