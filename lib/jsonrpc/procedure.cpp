@@ -32,23 +32,25 @@ namespace jsonrpc
 
     Procedure::Procedure(const Json::Value& signature)
     {
-        if (signature.isMember(KEY_PROCEDURE_NAME)
-                && signature.isMember(KEY_PROCEDURE_TYPE)
+        if ((signature.isMember(KEY_METHOD_NAME)
+                || signature.isMember(KEY_NOTIFICATION_NAME))
                 && signature.isMember(KEY_PROCEDURE_PARAMETERS))
         {
-            if (signature[KEY_PROCEDURE_NAME].isString()
-                    && signature[KEY_PROCEDURE_TYPE].isBool()
-                    && signature[KEY_PROCEDURE_PARAMETERS].isObject())
+            std::string procedure_name;
+            if (signature.isMember(KEY_METHOD_NAME))
             {
-                this->procedureName = signature[KEY_PROCEDURE_NAME].asString();
-                if (signature[KEY_PROCEDURE_TYPE].asBool() == JSON_RPC_METHOD)
-                {
-                    this->procedureType = RPC_METHOD;
-                }
-                else
-                {
-                    this->procedureType = RPC_NOTIFICATION;
-                }
+                procedure_name = KEY_METHOD_NAME;
+                this->procedureType = RPC_METHOD;
+            }
+            else
+            {
+                procedure_name = KEY_NOTIFICATION_NAME;
+                this->procedureType = RPC_NOTIFICATION;
+            }
+            if (signature[procedure_name].isString()
+                    && (signature[KEY_PROCEDURE_PARAMETERS].isObject() || signature[KEY_PROCEDURE_PARAMETERS].isNull()))
+            {
+                this->procedureName = signature[procedure_name].asString();
                 vector<string> parameters =
                         signature[KEY_PROCEDURE_PARAMETERS].getMemberNames();
                 for (unsigned int i = 0; i < parameters.size(); i++)
@@ -76,7 +78,9 @@ namespace jsonrpc
                             this->parameters[parameters.at(i)] = JSON_OBJECT;
                             break;
                         default:
-                            throw ERROR_PROCEDURE_PARSE_ERROR;
+                            throw Exception(ERROR_PROCEDURE_PARSE_ERROR,
+                                    "Unknown parameter in "
+                                            + signature.toStyledString());
                     }
                 }
                 this->procedurePointer.np = NULL;
@@ -84,12 +88,16 @@ namespace jsonrpc
             }
             else
             {
-                throw Exception(ERROR_PROCEDURE_PARSE_ERROR);
+                throw Exception(ERROR_PROCEDURE_PARSE_ERROR,
+                        "Invalid signature types in fileds: "
+                                + signature.toStyledString());
             }
         }
         else
         {
-            throw Exception(ERROR_PROCEDURE_PARSE_ERROR);
+            throw Exception(ERROR_PROCEDURE_PARSE_ERROR,
+                    "procedure declaration does not contain method/notification name or paramters: "
+                            + signature.toStyledString());
         }
     }
 

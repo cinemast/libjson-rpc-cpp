@@ -37,6 +37,9 @@ namespace jsonrpc
                 "PERMISSION_DENIED: Insufficient permissions for this request";
         this->possibleErrors[ERROR_MALLFORMED_AUTHENTICATION_HEADER] =
                 "MALLFORMED_AUTHENTICATION_HEADER: Authentication header has wrong format";
+
+        //Implementation specific errors
+        this->possibleErrors[ERROR_CONFIGURATIONFILE_NOT_FOUND] = "Configuration file was not found";
     }
     
     Errors::~Errors()

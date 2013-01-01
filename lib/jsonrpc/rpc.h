@@ -14,7 +14,7 @@
 #include "server.h"
 
 //For error handling and catching Exceptions.
-#include "errors.h"
+#include "exception.h"
 
 #include "connectors/httpserver.h"
 

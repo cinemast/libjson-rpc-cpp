@@ -53,6 +53,11 @@
 #define ERROR_MALLFORMED_AUTHENTICATION_HEADER -32609
 #define ERROR_PARSING_JSON -32610
 
+/**
+ * Library specific Errors
+ */
+#define ERROR_CONFIGURATIONFILE_NOT_FOUND -32000
+
 namespace jsonrpc
 {
     

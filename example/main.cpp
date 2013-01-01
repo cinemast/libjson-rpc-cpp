@@ -30,6 +30,8 @@ int main() {
 
 	cout << "foo" << endl;
 
+	try
+	{
 
 	Server serv("A Server Instancename", "res/procedures.json", procedurePointers, notPointers, new HttpServer(8080,"./res"));
 	if(serv.StartListening()) {
@@ -39,7 +41,11 @@ int main() {
 	} else {
 		cout << "Error starting Server" << endl;
 	}
-
+	}
+	catch(jsonrpc::Exception e)
+	{
+	   cerr << e.what() << endl;
+	}
 
 	//"{\"jsonrpc\":2.0,\"method\":\"sayHello\",\"id\":1,\"params\":{\"name\":\"peter\"}}"
 

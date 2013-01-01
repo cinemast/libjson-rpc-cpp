@@ -27,8 +27,9 @@ namespace jsonrpc
             }
 
             Exception(int code, const std::string& message)
-                    : code(code), message(message)
+                    : code(code)
             {
+                this->message = Errors::GetInstance()->GetErrorMessage(code) +": "+ message;
             }
 
             virtual ~Exception() throw ()

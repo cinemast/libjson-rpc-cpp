@@ -43,9 +43,9 @@
 #define JSON_RPC_METHOD false
 #define JSON_RPC_NOTIFICATION true
 
-#define KEY_PROCEDURE_NAME "method"
+#define KEY_METHOD_NAME "method"
+#define KEY_NOTIFICATION_NAME "notification"
 #define KEY_PROCEDURE_PARAMETERS "params"
-#define KEY_PROCEDURE_TYPE "isNotification"
 
 namespace jsonrpc
 {

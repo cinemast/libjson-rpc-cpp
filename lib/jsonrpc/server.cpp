@@ -6,7 +6,7 @@
  */
 
 #include "server.h"
-
+#include "exception.h"
 #include <fstream>
 
 using namespace std;
@@ -24,18 +24,23 @@ namespace jsonrpc
         Json::Reader reader;
         Json::Value val, line;
         string value;
-        ifstream myfile;
-        char tmp[500];
 
-        myfile.open(configfile.c_str(), ios::in);
-        value.assign((std::istreambuf_iterator<char>(myfile)),
-                (std::istreambuf_iterator<char>()));
+        ifstream config(configFile.c_str());
+
+        if (config)
+        {
+            config.open(configfile.c_str(), ios::in);
+            value.assign((std::istreambuf_iterator<char>(config)),
+                    (std::istreambuf_iterator<char>()));
+        }
+        else
+        {
+            throw Exception(ERROR_CONFIGURATIONFILE_NOT_FOUND, configFile);
+        }
 
         if (!reader.parse(value, val))
         {
-            throw std::string(
-                    "Error while parsing json-method file: "
-                            + this->configFile);
+            throw Exception(ERROR_PARSING_JSON);
         }
 
         notifications_t::iterator it_notifications;
