@@ -6,6 +6,9 @@
  */
 
 #include "httpserver.h"
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
 
 namespace jsonrpc
 {
@@ -91,7 +94,7 @@ namespace jsonrpc
         struct mg_connection* conn = (struct mg_connection*) addInfo;
         if (mg_printf(conn, "HTTP/1.1 200 OK\r\n"
                 "Content-Type: text/plain\r\n"
-                "Content-Length: %d\r\n"        // Always set Content-Length
+                "Content-Length: %d\r\n"
                 "\r\n"
                 "%s",response.length(), response.c_str()) > 0)
         {
