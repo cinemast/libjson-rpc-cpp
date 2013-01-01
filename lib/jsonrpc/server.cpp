@@ -27,19 +27,15 @@ namespace jsonrpc
         ifstream myfile;
         char tmp[500];
 
-        myfile.open(configfile.c_str(), ios::app | ios::in);
-        while (!myfile.eof())
-        {
-            myfile.getline(tmp, 255);
-            value.append(tmp);
-
-        }
-        myfile.close();
+        myfile.open(configfile.c_str(), ios::in);
+        value.assign((std::istreambuf_iterator<char>(myfile)),
+                (std::istreambuf_iterator<char>()));
 
         if (!reader.parse(value, val))
         {
             throw std::string(
-                    "Error while parsing json-method file: " + this->configFile);
+                    "Error while parsing json-method file: "
+                            + this->configFile);
         }
 
         notifications_t::iterator it_notifications;
@@ -58,8 +54,7 @@ namespace jsonrpc
             }
             else
             {
-                it_notifications = notifications.find(
-                        proc->GetProcedureName());
+                it_notifications = notifications.find(proc->GetProcedureName());
                 if (it_notifications != notifications.end())
                 {
                     proc->SetNotificationPointer(it_notifications->second);
@@ -76,7 +71,7 @@ namespace jsonrpc
         delete this->handler;
         this->StopListening();
         delete this->connection;
-        if(this->auth != NULL)
+        if (this->auth != NULL)
         {
             delete this->auth;
         }
