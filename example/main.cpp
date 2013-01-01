@@ -13,40 +13,47 @@
 using namespace jsonrpc;
 using namespace std;
 
-void sayHello(const Json::Value& request, Json::Value& response) {
-	response = "Hello: " + request["name"].asString();
+void sayHello(const Json::Value& request, Json::Value& response)
+{
+    cout << "Requested say Hello" << endl;
+    response = "Hello: " + request["name"].asString();
 }
 
-void notifyServer(const Json::Value& request) {
-	cout << "server received some Notification" << endl;
+void notifyServer(const Json::Value& request)
+{
+    cout << "Requested notifyServer" << endl;
+    cout << "server received some Notification" << endl;
 }
 
-int main() {
-	methods_t procedurePointers;
-	notifications_t notPointers;
+int main()
+{
+    methods_t procedurePointers;
+    notifications_t notPointers;
 
-	procedurePointers["sayHello"] = &sayHello;
-	notPointers["notifyServer"] = &notifyServer;
+    procedurePointers["sayHello"] = &sayHello;
+    notPointers["notifyServer"] = &notifyServer;
 
-	cout << "foo" << endl;
+    try
+    {
 
-	try
-	{
+        Server serv("A Server Instancename", "res/procedures.json",
+                procedurePointers, notPointers, new HttpServer(8080, "./res"));
+        if (serv.StartListening())
+        {
+            cout << "Server started successfully" << endl;
+            getchar();
+            serv.StopListening();
+        }
+        else
+        {
+            cout << "Error starting Server" << endl;
+        }
+    }
+    catch (jsonrpc::Exception e)
+    {
+        cerr << e.what() << endl;
+    }
 
-	Server serv("A Server Instancename", "res/procedures.json", procedurePointers, notPointers, new HttpServer(8080,"./res"));
-	if(serv.StartListening()) {
-		cout << "Server started successfully" << endl;
-		getchar();
-		serv.StopListening();
-	} else {
-		cout << "Error starting Server" << endl;
-	}
-	}
-	catch(jsonrpc::Exception e)
-	{
-	   cerr << e.what() << endl;
-	}
-
-	//"{\"jsonrpc\":2.0,\"method\":\"sayHello\",\"id\":1,\"params\":{\"name\":\"peter\"}}"
+    //"{\"jsonrpc\":2.0,\"method\":\"sayHello\",\"id\":1,\"params\":{\"name\":\"peter\"}}"
 
 }

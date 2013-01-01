@@ -168,7 +168,7 @@ namespace jsonrpc
         Json::FastWriter w;
         int error;
 
-        //  cout << "Request was: " << request << endl;
+        //cout << "Request was: " << request << endl;
 
         if (reader.parse(request, req))
         {
@@ -275,8 +275,32 @@ namespace jsonrpc
     }
 
     void RequestHandler::ProcessRequest(const Json::Value& request,
-            Json::Value& retValue)
+            Json::Value& response)
     {
+        Procedure* method =
+                this->procedures[request[KEY_REQUEST_METHODNAME].asString()];
+        Json::Value result;
+        if (method->GetProcedureType() == RPC_METHOD)
+        {
+            (*method->GetMethodPointer())(request[KEY_REQUEST_PARAMETERS],
+                    result);
+            //cout << "got result" << endl;
+            response[KEY_REQUEST_VERSION] = JSON_RPC_VERSION;
+            response[KEY_RESPONSE_RESULT] = result;
+            response[KEY_REQUEST_ID] = request[KEY_REQUEST_ID];
+            if (this->authManager != NULL)
+            {
+                this->authManager->ProcessAuthentication(
+                        request[KEY_AUTHENTICATION],
+                        response[KEY_AUTHENTICATION]);
+            }
+        }
+        else
+        {
+            (*method->GetNotificationPointer())(
+                    request[KEY_REQUEST_PARAMETERS]);
+            response = Json::Value::null;
+        }
     }
 
     void RequestHandler::NotifyObservers(
