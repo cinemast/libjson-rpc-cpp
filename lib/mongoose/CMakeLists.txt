@@ -5,7 +5,9 @@ include_directories(include/mongoose)
 
 add_library(mongoose SHARED ${mongoose_source})
 
-target_link_libraries(mongoose dl pthread)
+if(UNIX)
+    target_link_libraries(mongoose dl pthread)
+endif(UNIX)
 
 install(FILES ${mongoose_header} DESTINATION include/mongoose) 
 install(TARGETS mongoose LIBRARY DESTINATION lib

@@ -13,12 +13,12 @@
 namespace jsonrpc
 {
     
-    static void *callback(enum mg_event event, struct mg_connection *conn,
-            const struct mg_request_info *request_info)
+    static void *callback(enum mg_event event, struct mg_connection *conn)
     {
-
+        const struct mg_request_info *request_info = mg_get_request_info(conn);
         char* readBuffer = NULL;
         int postSize = 0;
+
         HttpServer* _this = (HttpServer*) request_info->user_data;
 
         if (event == MG_NEW_REQUEST)
@@ -96,7 +96,7 @@ namespace jsonrpc
                 "Content-Type: text/plain\r\n"
                 "Content-Length: %d\r\n"
                 "\r\n"
-                "%s",response.length(), response.c_str()) > 0)
+                "%s",(int)response.length(), response.c_str()) > 0)
         {
             return true;
         }
