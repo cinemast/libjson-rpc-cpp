@@ -13,15 +13,16 @@
 using namespace jsonrpc;
 using namespace std;
 
+//method
 void sayHello(const Json::Value& request, Json::Value& response)
 {
     cout << "Requested say Hello" << endl;
     response = "Hello: " + request["name"].asString();
 }
 
+//notification
 void notifyServer(const Json::Value& request)
 {
-    cout << "Requested notifyServer" << endl;
     cout << "server received some Notification" << endl;
 }
 
