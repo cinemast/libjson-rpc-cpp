@@ -4,7 +4,7 @@ file(GLOB connector_header connectors/*.h)
 
 add_library(jsonrpc SHARED ${jsonrpc_source})
 
-target_link_libraries(jsonrpc json mongoose)
+target_link_libraries(jsonrpc json mongoose curl)
 
 install(FILES ${jsonrpc_header} DESTINATION include/jsonrpc) 
 install(FILES ${connector_header} DESTINATION include/jsonrpc/connectors) 
