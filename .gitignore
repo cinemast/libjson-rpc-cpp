@@ -16,3 +16,5 @@ xcuserdata
 # svn & cvs
 .svn
 CVS
+
+doc/html
