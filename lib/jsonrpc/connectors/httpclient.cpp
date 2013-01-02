@@ -62,11 +62,14 @@ namespace jsonrpc
             : url(url)
     {
         curl = curl_easy_init();
-        if (curl)
+        if (!curl)
         {
             //TODO: throw exception
             cerr << "error constructing httpclient" << endl;
         }
+
+        curl_easy_setopt(curl, CURLOPT_URL, this->url.c_str());
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunc);
     }
     
     HttpClient::~HttpClient()
@@ -85,9 +88,7 @@ namespace jsonrpc
         struct string s;
         init_string(&s);
 
-        curl_easy_setopt(curl, CURLOPT_URL, this->url.c_str());
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, message.c_str());
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunc);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &s);
 
         res = curl_easy_perform(curl);
@@ -102,4 +103,11 @@ namespace jsonrpc
 
         return result;
     }
+
+    void HttpClient::SetUrl(const std::string& url)
+    {
+       // this->url = url;
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+    }
+
 } /* namespace jsonrpc */

@@ -23,6 +23,8 @@ namespace jsonrpc
 
             virtual std::string SendMessage(const std::string& message);
 
+            void SetUrl(const std::string& url);
+
         private:
             const std::string url;
             CURL* curl;
