@@ -10,6 +10,8 @@
 
 #include "../clientconnector.h"
 
+#include <curl/curl.h>
+
 namespace jsonrpc
 {
     
@@ -23,6 +25,7 @@ namespace jsonrpc
 
         private:
             const std::string url;
+            CURL* curl;
     };
 
 } /* namespace jsonrpc */

@@ -59,46 +59,43 @@ namespace jsonrpc
     HttpClient::HttpClient(const std::string& url)
             : url(url)
     {
-        
+        curl = curl_easy_init();
+        if (curl)
+        {
+            //TODO: throw exception
+        }
     }
     
     HttpClient::~HttpClient()
     {
-
+        if (curl)
+        {
+            curl_easy_cleanup(curl);
+        }
     }
 
     std::string HttpClient::SendMessage(const std::string& message)
     {
         std::string result = "";
-        CURL* curl = curl_easy_init();
         CURLcode res;
 
-        if (curl)
-        {
+        struct string s;
+        init_string(&s);
 
-            struct string s;
-            init_string(&s);
+        curl_easy_setopt(curl, CURLOPT_URL, this->url.c_str());
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, message.c_str());
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunc);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &s);
 
-            curl_easy_setopt(curl, CURLOPT_URL, this->url.c_str());
-            curl_easy_setopt(curl, CURLOPT_POSTFIELDS, message.c_str());
-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunc);
-            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &s);
+        res = curl_easy_perform(curl);
 
-            res = curl_easy_perform(curl);
-
-            result = s.ptr;
-            free(s.ptr);
-            if (res != CURLE_OK)
-            {
-                //TODO: throw exception
-            }
-
-            curl_easy_cleanup(curl);
-        }
-        else
+        result = s.ptr;
+        free(s.ptr);
+        if (res != CURLE_OK)
         {
             //TODO: throw exception
         }
+
         return result;
     }
 } /* namespace jsonrpc */
