@@ -11,9 +11,14 @@
 #include "clientconnector.h"
 #include <json/json.h>
 
+#include <vector>
+#include <map>
+
 namespace jsonrpc
 {
     
+    typedef std::map<std::string, Json::Value> batchProcedureCall_t;
+
     class Client
     {
         public:
@@ -24,10 +29,13 @@ namespace jsonrpc
             Json::Value CallMethod(const std::string& name, const Json::Value& paramter);
             void CallNotification(const std::string& name, const Json::Value& paramter);
 
+            std::vector<Json::Value> BatchCallMethod(std::map<std::string,Json::Value> methodcalls);
+            void BatchCallNotification(std::map<std::string,Json::Value> methodcalls);
 
 
         private:
            ClientConnector* connector;
+           static size_t id;
     };
 
 } /* namespace jsonrpc */

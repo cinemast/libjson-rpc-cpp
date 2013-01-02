@@ -9,13 +9,16 @@
 
 namespace jsonrpc
 {
-    
-    Client::Client(ClientConnector* connector) : connector(connector)
+    size_t Client::id = 1;
+
+    Client::Client(ClientConnector* connector)
+            : connector(connector)
     {
     }
     
     Client::Client(ClientConnector* connector,
-            const std::string& serverSpecification) : connector(connector)
+            const std::string& serverSpecification)
+            : connector(connector)
     {
     }
 
@@ -30,8 +33,21 @@ namespace jsonrpc
         return Json::nullValue;
     }
     
-    void Client::CallNotification(const std::string& name, const Json::Value& paramter)
+    void Client::CallNotification(const std::string& name,
+            const Json::Value& paramter)
     {
+    }
+
+    std::vector<Json::Value> Client::BatchCallMethod(
+            std::map<std::string, Json::Value> methodcalls)
+    {
+        //return Json::nullValue;
+    }
+
+    void Client::BatchCallNotification(
+            std::map<std::string, Json::Value> methodcalls)
+    {
+
     }
 
 } /* namespace jsonrpc */
