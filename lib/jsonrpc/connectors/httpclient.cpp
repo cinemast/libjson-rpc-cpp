@@ -11,6 +11,8 @@
 #include <string>
 #include <string.h>
 
+#include <iostream>
+
 using namespace std;
 
 namespace jsonrpc
@@ -63,6 +65,7 @@ namespace jsonrpc
         if (curl)
         {
             //TODO: throw exception
+            cerr << "error constructing httpclient" << endl;
         }
     }
     
@@ -94,6 +97,7 @@ namespace jsonrpc
         if (res != CURLE_OK)
         {
             //TODO: throw exception
+            cerr << "error in libcurl: " << res << endl;
         }
 
         return result;
