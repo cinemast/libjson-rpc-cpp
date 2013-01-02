@@ -63,4 +63,4 @@ It is used for all the JSON parsing and generation inside this library.
 mongoose is a http server that can be easily embedded into other applications. 
 It is used here for the HttpConnector to provide HTTP json-rpc Requests.
 
-Thank you Baptiste Lepilleur and Sergey Lyubka for providing these libraries.
+Thanks go to **Baptiste Lepilleur** and **Sergey Lyubka* for providing jsoncpp and mongoose.
