@@ -95,12 +95,13 @@ std::string generateMethod(Procedure& proc)
     {
         //TODO: add return type parsing
         replace_all(tmp, "<return_type>", "Json::Value");
-        replace_all(tmp, "<return_statement>", "return this->client->CallMethod(p);");
+        replace_all(tmp, "<return_statement>",
+                "return this->client->CallMethod(p);");
     }
     else
     {
         replace_all(tmp, "<return_type>", "void");
-        replace_all(tmp, "<return_statement>", "");
+        replace_all(tmp, "<return_statement>", "this->client->CallMethod(p);");
     }
 
     return tmp;
@@ -115,31 +116,46 @@ std::string generateStub(const string& stubname, const string& configfile)
     std::transform(stub_upper.begin(), stub_upper.end(), stub_upper.begin(),
             ::toupper);
     replace_all(tmp, "<STUBNAME>", stub_upper);
-    cout << tmp << endl;
 
     //generate procedures
     stringstream procedure_string;
-    vector<Procedure*> procedures = Server::ParseProcedures(
-            "res/procedures.json");
+    vector<Procedure*> procedures = Server::ParseProcedures(configfile);
 
     for (int i = 0; i < procedures.size(); i++)
     {
         procedure_string << generateMethod(*procedures[i]) << endl;
     }
+
     replace_all(tmp, "<methods>", procedure_string.str());
     return tmp;
 }
 
 int main(int argc, char** argv)
 {
-
     try
     {
-        cout << generateStub("FooBar", "res/procedures.json");
+        if (argc < 3)
+        {
+            cerr << "call stub jsonrpc generator with: " << endl
+                    << "\tjsonrpcstub <StubName> <Json-Specification>" << endl;
+            return -1;
+        }
+        else
+        {
+            ofstream myfile;
+            string filename = argv[1];
+            filename = filename + ".h";
+            myfile.open(filename.c_str());
+            myfile << generateStub(argv[1], argv[2]);
+            myfile.close();
+
+            cout << "Stub genearted into " << filename << endl;
+        }
     }
     catch (Exception& e)
     {
         cerr << e.what() << endl;
+        return -1;
     }
     return 0;
 }

@@ -10,7 +10,6 @@
 #include "errors.h"
 
 #include <vector>
-
 using namespace std;
 
 namespace jsonrpc
@@ -46,6 +45,7 @@ namespace jsonrpc
             {
                 procedure_name = KEY_NOTIFICATION_NAME;
                 this->procedureType = RPC_NOTIFICATION;
+
             }
             if (signature[procedure_name].isString()
                     && (signature[KEY_PROCEDURE_PARAMETERS].isObject() || signature[KEY_PROCEDURE_PARAMETERS].isNull()))
