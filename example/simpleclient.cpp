@@ -17,7 +17,7 @@ int main()
     Json::Value params;
     params["name"] = "peter";
 
-    cout << c.CallMethod("sayHello", params);
+    cout << c.CallMethod("sayHello", params) << endl;
 
 
     return 0;

@@ -92,4 +92,44 @@ namespace jsonrpc
         return this->connection->StopListening();
     }
 
+    std::vector<Procedure*> Server::ParseProcedures(const std::string& configfile)
+    {
+        Procedure* proc;
+        Json::Reader reader;
+        Json::Value val, line;
+        string value;
+        vector<Procedure*> result;
+
+        ifstream config(configfile.c_str());
+
+        if (config)
+        {
+            config.open(configfile.c_str(), ios::in);
+            value.assign((std::istreambuf_iterator<char>(config)),
+                    (std::istreambuf_iterator<char>()));
+        }
+        else
+        {
+            throw Exception(ERROR_CONFIGURATIONFILE_NOT_FOUND, configfile);
+        }
+
+        if (!reader.parse(value, val))
+        {
+            throw Exception(ERROR_PARSING_JSON);
+        }
+
+        notifications_t::iterator it_notifications;
+        methods_t::iterator it_methods;
+        for (unsigned int i = 0; i < val.size(); i++)
+        {
+            line = val[i];
+            proc = new Procedure(line);
+            result.push_back(proc);
+        }
+
+        return result;
+
+    }
+
 } /* namespace jsonrpc */
+

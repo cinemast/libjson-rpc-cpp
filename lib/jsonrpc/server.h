@@ -10,6 +10,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 #include "requesthandler.h"
 #include "serverconnector.h"
@@ -32,6 +33,8 @@ namespace jsonrpc
             {
                 return configFile;
             }
+
+            static std::vector<Procedure*> ParseProcedures(const std::string& configfile);
 
         private:
             Authenticator* auth;
