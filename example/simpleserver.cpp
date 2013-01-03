@@ -55,7 +55,7 @@ int main()
         cerr << e.what() << endl;
     }
 
-    //curl --data "{\"jsonrpc\":2.0,\"method\":\"sayHello\",\"id\":1,\"params\":{\"name\":\"peter\"}}" localhost:8080
-    //curl --data "{\"jsonrpc\":2.0,\"method\":\"notifyServer\", \"params\": null}" localhost:8080
+    //curl --data "{\"jsonrpc\":\"2.0\",\"method\":\"sayHello\",\"id\":1,\"params\":{\"name\":\"peter\"}}" localhost:8080
+    //curl --data "{\"jsonrpc\":\"2.0\",\"method\":\"notifyServer\", \"params\": null}" localhost:8080
 
 }

@@ -10,13 +10,14 @@
 #ifndef JSONRPCCPP_H_
 #define JSONRPCCPP_H_
 
-//The only class you will need.
 #include "server.h"
+#include "client.h"
 
 //For error handling and catching Exceptions.
 #include "exception.h"
 
 #include "connectors/httpserver.h"
+#include "connectors/httpclient.h"
 
 
 

@@ -56,7 +56,9 @@
 /**
  * Library specific Errors
  */
-#define ERROR_CONFIGURATIONFILE_NOT_FOUND -32000
+#define ERROR_CONFIGURATIONFILE_NOT_FOUND  -32000
+#define ERROR_NO_RESULT_IN_RESPONSE        -32001
+#define ERROR_REQUEST_RESPONSE_ID_MISMATCH -32002
 
 namespace jsonrpc
 {

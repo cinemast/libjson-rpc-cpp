@@ -170,7 +170,7 @@ namespace jsonrpc
 
         //cout << "Request was: " << request << endl;
 
-        if (reader.parse(request, req))
+        if (reader.parse(request, req, false))
         {
             this->NotifyObservers(this->requestObservers, req);
             //It could be a Batch Request

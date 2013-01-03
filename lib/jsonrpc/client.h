@@ -22,20 +22,23 @@ namespace jsonrpc
     class Client
     {
         public:
-            Client(ClientConnector* connector);
-            Client(ClientConnector* connector, const std::string& serverSpecification );
+            Client(ClientConnector* connector, bool validateResponse);
+            Client(ClientConnector* connector, const std::string& serverSpecification, bool validateResponse);
             virtual ~Client();
 
             Json::Value CallMethod(const std::string& name, const Json::Value& paramter);
             void CallNotification(const std::string& name, const Json::Value& paramter);
 
+            /*
             std::vector<Json::Value> BatchCallMethod(std::map<std::string,Json::Value> methodcalls);
             void BatchCallNotification(std::map<std::string,Json::Value> methodcalls);
-
+            */
 
         private:
            ClientConnector* connector;
-           static size_t id;
+           bool validateResponse;
+
+           Json::Value BuildRequestObject(const std::string& name, const Json::Value& parameters, int id) const;
     };
 
 } /* namespace jsonrpc */

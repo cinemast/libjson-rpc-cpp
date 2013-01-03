@@ -40,6 +40,8 @@ namespace jsonrpc
 
         //Implementation specific errors
         this->possibleErrors[ERROR_CONFIGURATIONFILE_NOT_FOUND] = "Configuration file was not found";
+        this->possibleErrors[ERROR_NO_RESULT_IN_RESPONSE] = "The response did not contain a result object";
+        this->possibleErrors[ERROR_REQUEST_RESPONSE_ID_MISMATCH] = "Request and Response id differ";
     }
     
     Errors::~Errors()
