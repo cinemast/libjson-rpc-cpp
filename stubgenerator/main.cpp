@@ -96,12 +96,12 @@ std::string generateMethod(Procedure& proc)
         //TODO: add return type parsing
         replace_all(tmp, "<return_type>", "Json::Value");
         replace_all(tmp, "<return_statement>",
-                "return this->client->CallMethod(p);");
+                "return this->client->CallMethod(\"" + proc.GetProcedureName() + "\",p);");
     }
     else
     {
         replace_all(tmp, "<return_type>", "void");
-        replace_all(tmp, "<return_statement>", "this->client->CallMethod(p);");
+        replace_all(tmp, "<return_statement>", "this->client->CallMethod(\"" + proc.GetProcedureName() + "\",p);");
     }
 
     return tmp;
@@ -149,7 +149,7 @@ int main(int argc, char** argv)
             myfile << generateStub(argv[1], argv[2]);
             myfile.close();
 
-            cout << "Stub genearted into " << filename << endl;
+            cout << "Stub generated into " << filename << endl;
         }
     }
     catch (Exception& e)

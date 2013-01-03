@@ -7,17 +7,16 @@
 
 #include <jsonrpc/rpc.h>
 #include <iostream>
+#include "FooBar.h"
 
 using namespace jsonrpc;
 using namespace std;
 
 int main()
 {
-    Client c(new HttpClient("http://localhost:8080"),true);
-    Json::Value params;
-    params["name"] = "peter";
+    FooBar stub(new HttpClient("localhost:8080"));
 
-    cout << c.CallMethod("sayHello", params) << endl;
+    cout << stub.sayHello("Peter Spiess-Knafl").asString() << endl;
 
 
     return 0;
