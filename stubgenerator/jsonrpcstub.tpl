@@ -17,9 +17,7 @@ class <stubname>
         {
             delete this->client;
         }
-
-<methods>
-        
+<methods>  
     private:
         jsonrpc::Client* client;
 }

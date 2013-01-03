@@ -43,18 +43,6 @@ void replace_all(string& text, const string& fnd, const string& rep)
     }
 }
 
-std::string generateStub(const string& stubname)
-{
-    string tmp = readfile(STUB_PATH);
-    replace_all(tmp, "<stubname>", stubname);
-
-    string stub_upper = stubname;
-    std::transform(stub_upper.begin(), stub_upper.end(), stub_upper.begin(),
-            ::toupper);
-    replace_all(tmp, "<STUBNAME>", stub_upper);
-    cout << tmp << endl;
-}
-
 std::string generateMethod(Procedure& proc)
 {
     string tmp = readfile(METHOD_PATH);
@@ -63,11 +51,11 @@ std::string generateMethod(Procedure& proc)
     replace_all(tmp, "<methodname>", proc.GetProcedureName());
 
     //build parameterlist
-    stringstream param_string, assignment_string;
+    stringstream param_string;
+    stringstream assignment_string;
 
     parameterlist_t list = proc.GetParameters();
-
-    for (parameterlist_t::iterator it = list.begin(); it != list.end(); it++)
+    for (parameterlist_t::iterator it = list.begin(); it != list.end();)
     {
         string type;
         switch (it->second)
@@ -89,9 +77,12 @@ std::string generateMethod(Procedure& proc)
                 type = "const Json::Value&";
                 break;
         }
+
         param_string << type << " " << it->first;
-        assignment_string << "p[\"" << it->first << "\"] = it->first;" << endl;
-        if (it != list.end())
+        assignment_string << "p[\"" << it->first << "\"] = " << it->first
+                << "; " << endl;
+
+        if (++it != list.end())
         {
             param_string << ", ";
         }
@@ -100,15 +91,55 @@ std::string generateMethod(Procedure& proc)
     replace_all(tmp, "<parameters>", param_string.str());
     replace_all(tmp, "<parameter_assign>", assignment_string.str());
 
+    if (proc.GetProcedureType() == RPC_METHOD)
+    {
+        //TODO: add return type parsing
+        replace_all(tmp, "<return_type>", "Json::Value");
+        replace_all(tmp, "<return_statement>", "return this->client->CallMethod(p);");
+    }
+    else
+    {
+        replace_all(tmp, "<return_type>", "void");
+        replace_all(tmp, "<return_statement>", "");
+    }
+
+    return tmp;
+}
+
+std::string generateStub(const string& stubname, const string& configfile)
+{
+    string tmp = readfile(STUB_PATH);
+    replace_all(tmp, "<stubname>", stubname);
+
+    string stub_upper = stubname;
+    std::transform(stub_upper.begin(), stub_upper.end(), stub_upper.begin(),
+            ::toupper);
+    replace_all(tmp, "<STUBNAME>", stub_upper);
+    cout << tmp << endl;
+
+    //generate procedures
+    stringstream procedure_string;
+    vector<Procedure*> procedures = Server::ParseProcedures(
+            "res/procedures.json");
+
+    for (int i = 0; i < procedures.size(); i++)
+    {
+        procedure_string << generateMethod(*procedures[i]) << endl;
+    }
+    replace_all(tmp, "<methods>", procedure_string.str());
     return tmp;
 }
 
 int main(int argc, char** argv)
 {
-    vector<Procedure*> methods = Server::ParseProcedures("res/procedures.json");
 
-    cout << generateMethod(*methods[0]) << endl;
-    //generateStub("FooBar");
-
+    try
+    {
+        cout << generateStub("FooBar", "res/procedures.json");
+    }
+    catch (Exception& e)
+    {
+        cerr << e.what() << endl;
+    }
     return 0;
 }
