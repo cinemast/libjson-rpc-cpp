@@ -17,6 +17,11 @@ Features
 - Using [cmake](http://www.cmake.org) cross platform build system.
 - Tested under Windows7, MacOS X (10.7) and Linux (Ubuntu 12.10).
 - Super liberal [MIT-License](http://en.wikipedia.org/wiki/MIT_License). 
+
+**New**
+- json-rpc client support
+- including HttpClient (wrapping libcurl)
+- stub generator for easy remote procedure calls
  
 Compile & Run
 -------------
@@ -62,5 +67,7 @@ It is used for all the JSON parsing and generation inside this library.
 - [mongoose](https://github.com/valenok/mongoose) (licensed under MIT)
 mongoose is a http server that can be easily embedded into other applications. 
 It is used here for the HttpConnector to provide HTTP json-rpc Requests.
+- [curl](http://curl.haxx.se)
+lib curl is used for the HttpClient connections.
 
 Thanks go to **Baptiste Lepilleur** and **Sergey Lyubka** for providing jsoncpp and mongoose.
