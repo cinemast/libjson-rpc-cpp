@@ -2,7 +2,7 @@
  * @file main.cpp
  * @date 03.01.2013
  * @author Peter Spiess-Knafl <peter.knafl@gmail.com>
- * @brief to be defined
+ * @brief This application generates stubs for all
  */
 
 #include <string>
@@ -17,8 +17,8 @@
 using namespace std;
 using namespace jsonrpc;
 
-#define STUB_PATH  "jsonrpcstub.tpl"
-#define METHOD_PATH  "method.tpl"
+#define STUB_PATH       "jsonrpcstub.tpl"
+#define METHOD_PATH     "method.tpl"
 
 std::string readfile(const std::string& filename)
 {
