@@ -10,6 +10,7 @@
 #include <curl/curl.h>
 #include <string>
 #include <string.h>
+#include <cstdlib>
 
 #include <iostream>
 
