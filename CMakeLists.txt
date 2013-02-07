@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.6)
-project(jsonrpccpp)
+project(libjsonrpccpp)
 
 include_directories(lib)
 
@@ -37,7 +37,7 @@ SET(CPACK_GENERATOR "DEB")
 SET(CPACK_PACKAGE_DESCRIPTION "jsonrpc framework for C++, including server and client support with stubgenerator.")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "jsonrpc framework for C++")
 SET(CPACK_PACKAGE_VENDOR "Peter Spiess-Knafl")
-SET(CPACK_PACKAGE_CONTACT "peter.knafl@gmail.com")
+SET(CPACK_PACKAGE_CONTACT "Peter Spiess-Knafl <peter.knafl@gmail.com>")
 SET(CPACK_PACKAGE_VERSION_MAJOR "${MAJOR_VERSION}")
 SET(CPACK_PACKAGE_VERSION_MINOR "${MINOR_VERSION}")
 SET(CPACK_PACKAGE_VERSION_PATCH "${PATCH_VERSION}")
