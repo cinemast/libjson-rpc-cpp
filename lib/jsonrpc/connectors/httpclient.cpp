@@ -6,7 +6,6 @@
  */
 
 #include "httpclient.h"
-
 #include <curl/curl.h>
 #include <string>
 #include <string.h>
@@ -81,7 +80,7 @@ namespace jsonrpc
         }
     }
 
-    std::string HttpClient::SendMessage(const std::string& message)
+    std::string HttpClient::SendMessage(const std::string& message) throw (Exception)
     {
         std::string result = "";
         CURLcode res;
@@ -98,8 +97,9 @@ namespace jsonrpc
         free(s.ptr);
         if (res != CURLE_OK)
         {
-            //TODO: throw exception
-            cerr << "error in libcurl: " << res << endl;
+            stringstream str;
+            str << "libcurl error: " << res;
+            throw Exception(ERROR_CLIENT_CONNECT, str.str());
         }
 
         return result;

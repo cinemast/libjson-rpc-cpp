@@ -9,7 +9,7 @@
 #define HTTPCLIENT_H_
 
 #include "../clientconnector.h"
-
+#include "../exception.h"
 #include <curl/curl.h>
 
 namespace jsonrpc
@@ -21,7 +21,7 @@ namespace jsonrpc
             HttpClient(const std::string& url);
             virtual ~HttpClient();
 
-            virtual std::string SendMessage(const std::string& message);
+            virtual std::string SendMessage(const std::string& message) throw (Exception);
 
             void SetUrl(const std::string& url);
 

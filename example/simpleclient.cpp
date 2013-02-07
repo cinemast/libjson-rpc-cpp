@@ -2,22 +2,30 @@
  * @file simpleclient.cpp
  * @date 03.01.2013
  * @author Peter Spiess-Knafl <peter.knafl@gmail.com>
- * @brief to be defined
+ * @brief This is a simple client example.
  */
 
 #include <jsonrpc/rpc.h>
 #include <iostream>
-#include "FooBar.h"
 
 using namespace jsonrpc;
 using namespace std;
 
 int main()
 {
-    FooBar stub(new HttpClient("localhost:8080"));
+    Client c(new HttpClient("http://localhost:8081"), true);
 
-    cout << stub.sayHello("Peter Spiess-Knafl").asString() << endl;
+    Json::Value params;
+    params["name"] = "Peter";
+
+    try
+    {
+        cout << c.CallMethod("sayHello", params) << endl;
+    }
+    catch (Exception e)
+    {
+        cerr << e.what() << endl;
+    }
 
 
-    return 0;
 }

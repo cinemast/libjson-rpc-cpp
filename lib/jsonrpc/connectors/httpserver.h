@@ -37,6 +37,7 @@ namespace jsonrpc
     class HttpServer: public ServerConnector
     {
         public:
+            HttpServer(int port);
             HttpServer(int port, const std::string& getResourcePath);
             virtual ~HttpServer();
 

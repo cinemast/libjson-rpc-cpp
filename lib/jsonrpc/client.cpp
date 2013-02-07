@@ -15,12 +15,6 @@ namespace jsonrpc
             : connector(connector), validateResponse(validateResponse)
     {
     }
-    
-    Client::Client(ClientConnector* connector,
-            const std::string& serverSpecification, bool validateResponse)
-            : connector(connector), validateResponse(validateResponse)
-    {
-    }
 
     Client::~Client()
     {
@@ -28,7 +22,7 @@ namespace jsonrpc
     }
     
     Json::Value Client::CallMethod(const std::string& name,
-            const Json::Value& parameter)
+                                   const Json::Value& parameter) throw(Exception)
     {
         Json::FastWriter writer;
         Json::Reader reader;
@@ -45,7 +39,7 @@ namespace jsonrpc
             {
                 if (result[KEY_RESPONSE_ERROR] != Json::nullValue)
                 {
-                    throw Exception(result[KEY_RESPONSE_ERROR].asInt());
+                    throw Exception(result[KEY_RESPONSE_ERROR][KEY_ERROR_CODE].asInt());
                 }
 
                 if (result[KEY_RESPONSE_RESULT] == Json::nullValue)
@@ -74,7 +68,7 @@ namespace jsonrpc
     }
     
     void Client::CallNotification(const std::string& name,
-            const Json::Value& parameter)
+                                  const Json::Value& parameter) throw(Exception)
     {
         Json::FastWriter writer;
         this->connector->SendMessage(writer.write(this->BuildRequestObject(name,parameter, -1)));

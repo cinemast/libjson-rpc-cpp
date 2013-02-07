@@ -9,6 +9,7 @@
 #define CLIENT_H_
 
 #include "clientconnector.h"
+#include "exception.h"
 #include <json/json.h>
 
 #include <vector>
@@ -23,16 +24,11 @@ namespace jsonrpc
     {
         public:
             Client(ClientConnector* connector, bool validateResponse);
-            Client(ClientConnector* connector, const std::string& serverSpecification, bool validateResponse);
             virtual ~Client();
 
-            Json::Value CallMethod(const std::string& name, const Json::Value& paramter);
-            void CallNotification(const std::string& name, const Json::Value& paramter);
+            Json::Value CallMethod(const std::string& name, const Json::Value& paramter) throw (Exception);
+            void CallNotification(const std::string& name, const Json::Value& paramter) throw (Exception);
 
-            /*
-            std::vector<Json::Value> BatchCallMethod(std::map<std::string,Json::Value> methodcalls);
-            void BatchCallNotification(std::map<std::string,Json::Value> methodcalls);
-            */
 
         private:
            ClientConnector* connector;

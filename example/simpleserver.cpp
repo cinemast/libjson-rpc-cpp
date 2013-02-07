@@ -26,36 +26,44 @@ void notifyServer(const Json::Value& request)
     cout << "server received some Notification" << endl;
 }
 
-int main()
+int main(int argc, char** argv)
 {
-    methods_t procedurePointers;
-    notifications_t notPointers;
 
-    procedurePointers["sayHello"] = &sayHello;
-    notPointers["notifyServer"] = &notifyServer;
-
-    try
+    if(argc < 2)
     {
+        cerr << "Missing method specification" << endl;
+        cerr << "e.g. " << argv[0] << " " << "procedures.json" << endl;
+        return -1;
+    }
+    else
+    {
+        methods_t procedurePointers;
+        notifications_t notPointers;
 
-        Server serv("A Server Instancename", "res/procedures.json",
-                procedurePointers, notPointers, new HttpServer(8080, "./res"));
-        if (serv.StartListening())
+        procedurePointers["sayHello"] = &sayHello;
+        notPointers["notifyServer"] = &notifyServer;
+
+        try
         {
-            cout << "Server started successfully" << endl;
-            getchar();
-            serv.StopListening();
+
+            Server serv("samplejsonrpcserver", argv[1],
+                    procedurePointers, notPointers, new HttpServer(8080));
+            if (serv.StartListening())
+            {
+                cout << "Server started successfully" << endl;
+                getchar();
+                serv.StopListening();
+            }
+            else
+            {
+                cout << "Error starting Server" << endl;
+            }
         }
-        else
+        catch (jsonrpc::Exception& e)
         {
-            cout << "Error starting Server" << endl;
+            cerr << e.what() << endl;
         }
     }
-    catch (jsonrpc::Exception& e)
-    {
-        cerr << e.what() << endl;
-    }
-
     //curl --data "{\"jsonrpc\":\"2.0\",\"method\":\"sayHello\",\"id\":1,\"params\":{\"name\":\"peter\"}}" localhost:8080
     //curl --data "{\"jsonrpc\":\"2.0\",\"method\":\"notifyServer\", \"params\": null}" localhost:8080
-
 }

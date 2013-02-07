@@ -12,7 +12,6 @@
 
 namespace jsonrpc
 {
-    
     static void *callback(enum mg_event event, struct mg_connection *conn)
     {
         const struct mg_request_info *request_info = mg_get_request_info(conn);
@@ -52,6 +51,10 @@ namespace jsonrpc
         }
     }
 
+    HttpServer::HttpServer(int port) : port(port), resPath("")
+    {
+    }
+
     HttpServer::HttpServer(int port, const std::string& getResourcePath)
             : ServerConnector()
     {
@@ -69,10 +72,19 @@ namespace jsonrpc
     {
         char port[6];
         sprintf(port, "%d", this->port);
-        const char *options[] =
-                { "document_root", this->resPath.c_str(), "listening_ports",
-                        port, NULL };
-        this->ctx = mg_start(&callback, this, options);
+        if(this->resPath == "")
+        {
+            const char *options[] = { "listening_ports", port, NULL };
+            this->ctx = mg_start(&callback, this, options);
+        }
+        else
+        {
+            const char *options[] =
+                    { "document_root", this->resPath.c_str(), "listening_ports",
+                            port, NULL };
+            this->ctx = mg_start(&callback, this, options);
+        }
+
         if (this->ctx != NULL)
         {
             return true;
