@@ -27,8 +27,15 @@ Features
  
 Compile & Run
 -------------
-see [here](https://github.com/cinemast/libjson-rpc-cpp/wiki/Compile-&-Run).
+```sh
+git clone git://github.com/cinemast/libjson-rpc-cpp.git
+cd libjson-rpc-cpp/build
+cmake .. && make
+#Not required, but makes it easier to use
+sudo make install
+```
 
+For further details see [here](https://github.com/cinemast/libjson-rpc-cpp/wiki/Compile-&-Run).
 
 Examples
 --------
