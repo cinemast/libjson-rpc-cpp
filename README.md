@@ -53,9 +53,7 @@ sudo make uninstall
 Examples
 --------
 - [A simple Server Example](https://github.com/cinemast/libjson-rpc-cpp/wiki/A-simple-Server-Example)
-- [A simple Client Example]()
-- [Using jsonrpcstub]()
-- [Using libjson-rpc-cpp as AJAX backend]()
+- [A simple Client Example](https://github.com/cinemast/libjson-rpc-cpp/wiki/A-simple-Client-example)
 
 Licsense
 --------
