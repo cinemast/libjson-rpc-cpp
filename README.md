@@ -10,20 +10,22 @@ It is fully JSON-RPC 2.0 compatible ([JSON-RPC 2.0](http://www.jsonrpc.org/speci
 
 Features
 ---------
+**5 good reasons why you should use libjson-rpc-cpp in your next project:**
 - Full JSON-RPC 2.0 Support (batch requests, parameter type and name checking, ...).
-- Authentication support: to restrict certain methods to certain user/groups only.
+- Embedded HTTP server to provide simple interfaces for your json-rpc server application.
+- Embedded HTTP client to connect easily via HTTP protocol.
+- jsonrpcstub: Generates automatically C++ classes for your json-rpc client.
+- Super liberal [MIT-License](http://en.wikipedia.org/wiki/MIT_License). 
+
+**Other good reasons to use libjson-rpc-cpp **
 - Easy to use.
 - Method parameter names and checks can be easily configured through a simple json configuration file.
 - Very verbose error reporting.
-- Embedded HTTP server to provide simple interfaces for your json-rpc server application.
-- Using [cmake](http://www.cmake.org) cross platform build system.
+- Easy to use [cmake](http://www.cmake.org) cross platform build system.
+- Clean and simple architecture.
+- Authentication Interface: to restrict certain methods to certain user/groups only.
 - Tested under Windows7, MacOS X (10.7) and Linux (Ubuntu 12.10).
-- Super liberal [MIT-License](http://en.wikipedia.org/wiki/MIT_License). 
 
-**New**
-- json-rpc client support
-- including HttpClient (wrapping libcurl)
-- **jsonrpcstub** Generates C++ classes for your RPC Server.
  
 Build the library
 -------------
