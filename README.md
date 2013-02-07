@@ -4,7 +4,7 @@ libjson-rpc-cpp
 This C++ library provides a json-rpc (remote procedure call) framework for Windows, Linux and MacOS (or any other UNIX derivate).
 It is fully JSON-RPC 2.0 compatible ([JSON-RPC 2.0](http://www.jsonrpc.org/specification)) and provides additional features, such as generic authentication mechanisms.
 
-**Notice: Everything is still under development. Bug Reports are very welcome!**
+**Notice: This framework is currently in a beta phase. Bug Reports are very welcome!**
 
 ![libjson-rpc-cpp logo](https://github.com/cinemast/libjson-rpc-cpp/blob/master/dev/artwork/logo.png?raw=true)
 
@@ -58,6 +58,7 @@ Examples
 Roadmap
 --------
 - Provide .deb package
+- Automated testing after build phase (maybe ctest)
 - Get available at ubuntu mirrors.
 - Documentation for extending libjson-rpc-cpp (implementing more connectors, authentication manager)
 - Tutorial for AJAX-Example (it already works)
