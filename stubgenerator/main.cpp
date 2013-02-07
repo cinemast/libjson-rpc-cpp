@@ -14,11 +14,10 @@
 #include <jsonrpc/rpc.h>
 #include <jsonrpc/procedure.h>
 
+#include "template.h"
+
 using namespace std;
 using namespace jsonrpc;
-
-#define STUB_PATH       "jsonrpcstub.tpl"
-#define METHOD_PATH     "method.tpl"
 
 std::string readfile(const std::string& filename)
 {
@@ -45,7 +44,7 @@ void replace_all(string& text, const string& fnd, const string& rep)
 
 std::string generateMethod(Procedure& proc)
 {
-    string tmp = readfile(METHOD_PATH);
+    string tmp = TEMPLATE_METHOD;
 
     //set methodname
     replace_all(tmp, "<methodname>", proc.GetProcedureName());
@@ -109,7 +108,7 @@ std::string generateMethod(Procedure& proc)
 
 std::string generateStub(const string& stubname, const string& configfile)
 {
-    string tmp = readfile(STUB_PATH);
+    string tmp = TEMPLATE_STUB;
     replace_all(tmp, "<stubname>", stubname);
 
     string stub_upper = stubname;
