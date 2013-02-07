@@ -2,7 +2,8 @@
  * @file main.cpp
  * @date 03.01.2013
  * @author Peter Spiess-Knafl <peter.knafl@gmail.com>
- * @brief This application generates stubs for all
+ * @brief This application generates stubs for all specified methods
+ * and notifications of a given file
  */
 
 #include <string>
