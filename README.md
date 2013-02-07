@@ -8,7 +8,7 @@ It is fully JSON-RPC 2.0 compatible ([JSON-RPC 2.0](http://www.jsonrpc.org/speci
 
 ![libjson-rpc-cpp logo](https://github.com/cinemast/libjson-rpc-cpp/blob/master/dev/artwork/logo.png?raw=true)
 
-*5 good reasons why you should use libjson-rpc-cpp in your next project:
+5 good reasons why you should use libjson-rpc-cpp in your next project:
 ---------
 - Full JSON-RPC 2.0 Support (batch requests, parameter type and name checking, ...).
 - Embedded HTTP server to provide simple interfaces for your json-rpc server application.
