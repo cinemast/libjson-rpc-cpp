@@ -23,10 +23,16 @@ Features
 **New**
 - json-rpc client support
 - including HttpClient (wrapping libcurl)
-- stub generator for easy remote procedure calls
+- **jsonrpcstub** Generates C++ classes for your RPC Server.
  
-Compile & Run
+Build the library
 -------------
+
+You will need [Git](http://git-scm.com/downloads) and [CMake](http://www.cmake.org/cmake/resources/software.html). You can click on the links to download the latest versions. 
+CMake must be Version 2.6 or later.
+
+Open a terminal and copy the following commands:
+
 ```sh
 git clone git://github.com/cinemast/libjson-rpc-cpp.git
 cd libjson-rpc-cpp/build
@@ -35,7 +41,13 @@ cmake .. && make
 sudo make install
 ```
 
-For further details see [here](https://github.com/cinemast/libjson-rpc-cpp/wiki/Compile-&-Run).
+That's all you need.
+
+To uninstall the lib, type (inside the build directory):
+
+```sh
+sudo make uninstall
+```
 
 Examples
 --------
