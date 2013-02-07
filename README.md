@@ -55,6 +55,13 @@ Examples
 - [A simple Server Example](https://github.com/cinemast/libjson-rpc-cpp/wiki/A-simple-Server-Example)
 - [A simple Client Example](https://github.com/cinemast/libjson-rpc-cpp/wiki/A-simple-Client-example)
 
+Roadmap
+--------
+- Provide .deb package
+- Get available at ubuntu mirrors.
+- Documentation for extending libjson-rpc-cpp (implementing more connectors, authentication manager)
+- Tutorial for AJAX-Example (it already works)
+
 Licsense
 --------
 
