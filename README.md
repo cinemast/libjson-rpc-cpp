@@ -40,6 +40,7 @@ cd libjson-rpc-cpp/build
 cmake .. && make
 #Not required, but makes it easier to use
 sudo make install
+sudo ldconfig
 ```
 
 That's all you need.
