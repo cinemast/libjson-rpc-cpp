@@ -72,3 +72,7 @@ SET(CPACK_COMPONENTS_ALL jsonrpc jsoncpp mongoose jsonrpcstub)
 INCLUDE(CPack)
 
 ENDIF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
+
+ENABLE_TESTING()
+
+ADD_TEST(sometest ${CMAKE_CURRENT_SOURCE_DIR}/test/simpletest)
