@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 2.6)
 project(libjsonrpccpp-dev)
 
 include_directories(lib)
+find_package(CURL REQUIRED)
+include_directories(${CURL_INCLUDE_DIRS})
+
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out)
