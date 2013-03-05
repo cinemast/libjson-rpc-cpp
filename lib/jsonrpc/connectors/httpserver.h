@@ -34,7 +34,7 @@ namespace jsonrpc
      *      jsonrpcmethods: Will send you the json-rpc-cpp Configuration file with all method descriptions
      *      html: Will read a defined (see Constructor) HTML File.
      */
-    class HttpServer: public ServerConnector
+    class HttpServer: public AbstractServerConnector
     {
         public:
             HttpServer(int port);

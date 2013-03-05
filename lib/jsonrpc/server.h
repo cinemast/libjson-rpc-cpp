@@ -23,7 +23,7 @@ namespace jsonrpc
     class Server
     {
         public:
-            Server(const std::string& name, const std::string& configfile, methods_t& methods, notifications_t& notifications, ServerConnector* connector, Authenticator* auth = NULL);
+            Server(const std::string& name, const std::string& configfile, methods_t& methods, notifications_t& notifications, AbstractServerConnector* connector, Authenticator* auth = NULL);
             virtual ~Server();
 
             bool StartListening();
@@ -38,7 +38,7 @@ namespace jsonrpc
 
         private:
             Authenticator* auth;
-            ServerConnector* connection;
+            AbstractServerConnector* connection;
             RequestHandler* handler;
             std::string configFile;
 

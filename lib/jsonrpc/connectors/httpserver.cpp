@@ -56,7 +56,7 @@ namespace jsonrpc
     }
 
     HttpServer::HttpServer(int port, const std::string& getResourcePath)
-            : ServerConnector()
+            : AbstractServerConnector()
     {
         this->port = port;
         this->ctx = NULL;

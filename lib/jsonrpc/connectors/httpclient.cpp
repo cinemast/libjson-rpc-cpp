@@ -59,7 +59,7 @@ namespace jsonrpc
     }
     
     HttpClient::HttpClient(const std::string& url)
-            : url(url)
+            : AbstractClientConnector(), url(url)
     {
         curl = curl_easy_init();
         if (!curl)

@@ -13,16 +13,16 @@ using namespace std;
 namespace jsonrpc
 {
     
-    ServerConnector::ServerConnector()
+    AbstractServerConnector::AbstractServerConnector()
     {
         this->handler = NULL;
     }
     
-    ServerConnector::~ServerConnector()
+    AbstractServerConnector::~AbstractServerConnector()
     {
     }
     
-    bool ServerConnector::OnRequest(const std::string& request, void* addInfo)
+    bool AbstractServerConnector::OnRequest(const std::string& request, void* addInfo)
     {
         string response;
         if (this->handler != NULL)
@@ -35,6 +35,11 @@ namespace jsonrpc
         {
             return false;
         }
+    }
+
+    void AbstractServerConnector::SetHandler(RequestHandler *handler)
+    {
+        this->handler = handler;
     }
 
 } /* namespace jsonrpc */

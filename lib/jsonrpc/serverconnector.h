@@ -13,11 +13,11 @@
 namespace jsonrpc
 {
     
-    class ServerConnector
+    class AbstractServerConnector
     {
         public:
-            ServerConnector();
-            virtual ~ServerConnector();
+            AbstractServerConnector();
+            virtual ~AbstractServerConnector();
 
             /**
              * This method should signal the Connector to start waiting for requests, in any way that is appropriate for the derived connector class.
@@ -46,10 +46,7 @@ namespace jsonrpc
              */
             bool OnRequest(const std::string& request, void* addInfo = NULL);
 
-            void SetHandler(RequestHandler* handler)
-            {
-                this->handler = handler;
-            }
+            void SetHandler(RequestHandler* handler);
 
         private:
             RequestHandler* handler;

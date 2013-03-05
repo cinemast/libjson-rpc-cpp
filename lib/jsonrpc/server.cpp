@@ -15,7 +15,7 @@ namespace jsonrpc
 {
     Server::Server(const std::string& name, const std::string& configfile,
             methods_t& methods, notifications_t& notifications,
-            ServerConnector* connector, Authenticator* auth)
+            AbstractServerConnector* connector, Authenticator* auth)
     {
         this->handler = new RequestHandler(name);
         this->configFile = configfile;

@@ -23,7 +23,7 @@ namespace jsonrpc
     class Client
     {
         public:
-            Client(ClientConnector* connector, bool validateResponse);
+            Client(AbstractClientConnector* connector, bool validateResponse);
             virtual ~Client();
 
             Json::Value CallMethod(const std::string& name, const Json::Value& paramter) throw (Exception);
@@ -31,7 +31,7 @@ namespace jsonrpc
 
 
         private:
-           ClientConnector* connector;
+           AbstractClientConnector* connector;
            bool validateResponse;
 
            Json::Value BuildRequestObject(const std::string& name, const Json::Value& parameters, int id) const;

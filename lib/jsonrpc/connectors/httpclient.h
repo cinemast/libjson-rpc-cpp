@@ -15,7 +15,7 @@
 namespace jsonrpc
 {
     
-    class HttpClient : public ClientConnector
+    class HttpClient : public AbstractClientConnector
     {
         public:
             HttpClient(const std::string& url);

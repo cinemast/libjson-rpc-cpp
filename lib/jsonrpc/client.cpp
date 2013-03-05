@@ -11,7 +11,7 @@
 
 namespace jsonrpc
 {
-    Client::Client(ClientConnector* connector, bool validateResponse)
+    Client::Client(AbstractClientConnector* connector, bool validateResponse)
             : connector(connector), validateResponse(validateResponse)
     {
     }

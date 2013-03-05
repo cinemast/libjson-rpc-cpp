@@ -14,10 +14,10 @@
 namespace jsonrpc
 {
     
-    class ClientConnector
+    class AbstractClientConnector
     {
         public:
-            virtual ~ClientConnector() {}
+            virtual ~AbstractClientConnector();
 
             /**
              * This method should take the message and send it via the concrete connector.
