@@ -61,8 +61,7 @@
 #define ERROR_REQUEST_RESPONSE_ID_MISMATCH -32002
 #define ERROR_CLIENT_CONNECT               -32003
 namespace jsonrpc
-{
-    
+{   
     class Errors
     {
         public:
@@ -97,6 +96,5 @@ namespace jsonrpc
             Errors();
             std::map<int, std::string> possibleErrors;
     };
-
 } /* namespace jsonrpc */
 #endif /* ERRORS_H_ */

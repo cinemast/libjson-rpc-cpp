@@ -20,44 +20,19 @@ namespace jsonrpc
     class Exception: public std::exception
     {
         public:
-            Exception(int code)
-                    : code(code)
-            {
-                this->message = Errors::GetInstance()->GetErrorMessage(code);
-            }
+            Exception(int code);
 
-            Exception(int code, const std::string& message)
-                    : code(code)
-            {
-                this->message = Errors::GetInstance()->GetErrorMessage(code) +": "+ message;
-            }
+            Exception(int code, const std::string& message);
 
-            Exception(const std::string& message)
-            {
-                this->message = message;
-            }
+            Exception(const std::string& message);
 
-            virtual ~Exception() throw ()
-            {
+            virtual ~Exception() throw ();
 
-            }
+            int GetCode() const;
 
-            inline int GetCode() const
-            {
-                return code;
-            }
+            const std::string& GetMessage() const;
 
-            inline const std::string& GetMessage() const
-            {
-                return message;
-            }
-
-            virtual const char* what() const throw ()
-            {
-                std::stringstream ss;
-                ss << "Error  " << this->code << " : " << this->message;
-                return ss.str().c_str();
-            }
+            virtual const char* what() const throw ();
 
         private:
             int code;

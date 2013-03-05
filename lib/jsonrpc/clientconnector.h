@@ -13,7 +13,6 @@
 
 namespace jsonrpc
 {
-    
     class AbstractClientConnector
     {
         public:
@@ -25,6 +24,5 @@ namespace jsonrpc
              */
             virtual std::string SendMessage(const std::string& message) throw(Exception) = 0;
     };
-
 } /* namespace jsonrpc */
 #endif /* CLIENTCONNECTOR_H_ */
