@@ -51,6 +51,7 @@ namespace jsonrpc
             int port;
             struct mg_context *ctx;
             std::string resPath;
+            bool running;
     };
 
 } /* namespace jsonrpc */

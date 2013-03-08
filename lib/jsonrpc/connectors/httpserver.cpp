@@ -53,19 +53,21 @@ namespace jsonrpc
 
     HttpServer::HttpServer(int port) : port(port), resPath("")
     {
+        this->running = false;
     }
 
     HttpServer::HttpServer(int port, const std::string& getResourcePath)
-            : AbstractServerConnector()
+        : AbstractServerConnector()
     {
         this->port = port;
         this->ctx = NULL;
         this->resPath = getResourcePath;
+        this->running = false;
     }
 
     HttpServer::~HttpServer()
     {
-        // TODO Auto-generated destructor stub
+        this->StopListening();
     }
     
     bool HttpServer::StartListening()
@@ -80,8 +82,8 @@ namespace jsonrpc
         else
         {
             const char *options[] =
-                    { "document_root", this->resPath.c_str(), "listening_ports",
-                            port, NULL };
+            { "document_root", this->resPath.c_str(), "listening_ports",
+              port, NULL };
             this->ctx = mg_start(&callback, this, options);
         }
 
@@ -97,18 +99,21 @@ namespace jsonrpc
     
     bool HttpServer::StopListening()
     {
-        mg_stop(this->ctx);
-        return true;
+        if(this->running)
+        {
+            mg_stop(this->ctx);
+            return true;
+        }
     }
     
     bool HttpServer::SendResponse(const std::string& response, void* addInfo)
     {
         struct mg_connection* conn = (struct mg_connection*) addInfo;
         if (mg_printf(conn, "HTTP/1.1 200 OK\r\n"
-                "Content-Type: text/plain\r\n"
-                "Content-Length: %d\r\n"
-                "\r\n"
-                "%s",(int)response.length(), response.c_str()) > 0)
+                      "Content-Type: text/plain\r\n"
+                      "Content-Length: %d\r\n"
+                      "\r\n"
+                      "%s",(int)response.length(), response.c_str()) > 0)
         {
             return true;
         }
