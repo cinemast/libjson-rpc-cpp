@@ -1,5 +1,0 @@
-#!/bin/bash
-
-echo "Foo"
-
-exit 0

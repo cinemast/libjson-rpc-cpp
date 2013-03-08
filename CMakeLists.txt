@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.6)
-project(libjsonrpccpp-dev)
+project(libjson-rpc-cpp)
 
 include_directories(lib)
 find_package(CURL REQUIRED)
@@ -14,6 +14,8 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out)
 add_subdirectory(lib)
 add_subdirectory(example)
 add_subdirectory(stubgenerator)
+
+add_subdirectory(test)
 
 
 # uninstall target
@@ -78,4 +80,12 @@ ENDIF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
 
 ENABLE_TESTING()
 
-ADD_TEST(sometest ${CMAKE_CURRENT_SOURCE_DIR}/test/simpletest)
+set(TEST_BINARIES ${CMAKE_BINARY_DIR}/out/test)
+set(CTEST_OUTPUT_ON_FAILURE TRUE)
+
+ADD_TEST(helloworld ${TEST_BINARIES}/helloworld)
+ADD_TEST(remotecounter ${TEST_BINARIES}/remotecounter)
+ADD_TEST(remotecalculator ${TEST_BINARIES}/remotecalculator)
+
+
+
