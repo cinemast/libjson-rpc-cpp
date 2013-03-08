@@ -30,7 +30,7 @@ namespace jsonrpc
      * Callback for libcurl
      */
     static size_t writefunc(void *ptr, size_t size, size_t nmemb,
-            struct string *s)
+                            struct string *s)
     {
         size_t new_len = s->len + size * nmemb;
         s->ptr = (char*) realloc(s->ptr, new_len + 1);
@@ -59,7 +59,7 @@ namespace jsonrpc
     }
     
     HttpClient::HttpClient(const std::string& url)
-            : AbstractClientConnector(), url(url)
+        : AbstractClientConnector(), url(url)
     {
         curl = curl_easy_init();
         if (!curl)
@@ -88,13 +88,21 @@ namespace jsonrpc
         struct string s;
         init_string(&s);
 
+        struct curl_slist * headers = NULL;
+        //Maybe to restrictive
+        //headers = curl_slist_append(headers, "Accept: application/json");
+        headers = curl_slist_append(headers, "Content-Type: application/json");
+        headers = curl_slist_append(headers, "charsets: utf-8");
+
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, message.c_str());
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &s);
+        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
         res = curl_easy_perform(curl);
 
         result = s.ptr;
         free(s.ptr);
+        curl_slist_free_all(headers);
         if (res != CURLE_OK)
         {
             stringstream str;
@@ -107,7 +115,7 @@ namespace jsonrpc
 
     void HttpClient::SetUrl(const std::string& url)
     {
-       // this->url = url;
+        // this->url = url;
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     }
 
