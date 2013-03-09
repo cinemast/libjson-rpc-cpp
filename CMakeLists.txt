@@ -86,6 +86,10 @@ set(CTEST_OUTPUT_ON_FAILURE TRUE)
 ADD_TEST(helloworld ${TEST_BINARIES}/helloworld)
 ADD_TEST(remotecounter ${TEST_BINARIES}/remotecounter)
 ADD_TEST(remotecalculator ${TEST_BINARIES}/remotecalculator)
+ADD_TEST(errorhandling ${TEST_BINARIES}/errorhandling)
+ADD_TEST(jsonrpcprotocol ${TEST_BINARIES}/jsonrpcprotocol)
+
+
 
 
 
