@@ -106,7 +106,14 @@ namespace jsonrpc
         if (res != CURLE_OK)
         {
             stringstream str;
-            str << "libcurl error: " << res;
+            if(res == 7)
+            {
+                str << "Could not connect to " << this->url;
+            }
+            else
+            {
+                str << "libcurl error: " << res;
+            }
             throw Exception(ERROR_CLIENT_CONNECT, str.str());
         }
 

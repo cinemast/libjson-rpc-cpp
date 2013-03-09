@@ -72,28 +72,37 @@ namespace jsonrpc
     
     bool HttpServer::StartListening()
     {
-        char port[6];
-        sprintf(port, "%d", this->port);
-        if(this->resPath == "")
+        if(!this->running)
         {
-            const char *options[] = { "listening_ports", port, NULL };
-            this->ctx = mg_start(&callback, this, options);
+            char port[6];
+            sprintf(port, "%d", this->port);
+            if(this->resPath == "")
+            {
+                const char *options[] = { "listening_ports", port, NULL };
+                this->ctx = mg_start(&callback, this, options);
+            }
+            else
+            {
+                const char *options[] =
+                { "document_root", this->resPath.c_str(), "listening_ports",
+                  port, NULL };
+                this->ctx = mg_start(&callback, this, options);
+            }
+
+            if (this->ctx != NULL)
+            {
+                this->running =  true;
+                return true;
+            }
+            else
+            {
+                this->running = false;
+                return false;
+            }
         }
         else
-        {
-            const char *options[] =
-            { "document_root", this->resPath.c_str(), "listening_ports",
-              port, NULL };
-            this->ctx = mg_start(&callback, this, options);
-        }
-
-        if (this->ctx != NULL)
         {
             return true;
-        }
-        else
-        {
-            return false;
         }
     }
     
@@ -102,6 +111,7 @@ namespace jsonrpc
         if(this->running)
         {
             mg_stop(this->ctx);
+            this->running = false;
             return true;
         }
     }

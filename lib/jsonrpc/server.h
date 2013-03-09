@@ -41,7 +41,6 @@ namespace jsonrpc
             AbstractServerConnector* connection;
             RequestHandler* handler;
             std::string configFile;
-
     };
 
 } /* namespace jsonrpc */

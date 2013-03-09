@@ -11,3 +11,6 @@ target_link_libraries(remotecounter jsonrpc)
 
 add_executable(remotecalculator remotecalculator.cpp ${COMMON_SOURCES})
 target_link_libraries(remotecalculator jsonrpc)
+
+add_executable(errorhandling errorhandling.cpp ${COMMON_SOURCES})
+target_link_libraries(errorhandling jsonrpc)
