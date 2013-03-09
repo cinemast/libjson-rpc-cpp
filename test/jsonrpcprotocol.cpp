@@ -56,7 +56,23 @@ int main(int argc, char** argv)
         return -2;
     }
 
+    v.removeMember("name");
+    v["aaawrwer"] = "asökfjölwer";
+    if(validateRequest(client,"sayHello", v, true) != -32602)
+    {
+        cerr << "Wrong error code for invalid parameter" << endl;
+        return -3;
+    }
+
+    if(validateRequest(client,"incrementCounter", v, true) != -32606)
+    {
+        cerr << "Wrong error code for method called as notification " << validateRequest(client,"sayHello", v, false) << endl;
+        return -4;
+    }
+
 
     delete server;
+    delete client;
+
     return 0;
 }
