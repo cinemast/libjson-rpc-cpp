@@ -1,9 +1,11 @@
-/**
- * @file procedure.h
- * @date 31.12.2012
- * @author Peter Spiess-Knafl <peter.knafl@gmail.com>
- * @brief to be defined
- */
+/*************************************************************************
+ * libjson-rpc-cpp
+ *************************************************************************
+ * @file    procedure.h
+ * @date    31.12.2012
+ * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>
+ * @license See attached LICENSE.txt
+ ************************************************************************/
 
 #ifndef PROCEDURE_H_
 #define PROCEDURE_H_
@@ -90,14 +92,6 @@ namespace jsonrpc
     {
         public:
             /**
-             * @param name - describes the name of the corresponding procedure
-             * @param procedure_type - holds the type of the procedure
-             * @param parameters - holds a map of parameters which will get copied in the constructor.
-             * @see JsonProcedureType
-             */
-            Procedure(const std::string &name, const procedure_t procedure_type, const parameterlist_t &parameters);
-
-            /**
              * @param signature - Is a JSON-Value from which each procedure can parse itself. The parameter should have the following format:
              *      e.g. {
              *              "method" : "doSomething",
@@ -122,11 +116,11 @@ namespace jsonrpc
              * This method is validating the incoming parameters for each procedure.
              * @param parameters - should contain the parameter-object of an valid json-rpc 2.0 request
              * @see http://groups.google.com/group/json-rpc/web/json-rpc-2-0
-             * @return 0 on successful validation a negative errorcode otherwise.
+             * @return true on successful validation false otherwise.
              *
              * If the valid parameters are of Type JSON_ARRAY or JSON_OBJECT, they can only be checked for name and not for their structure.
              */
-            int ValdiateParameters(const Json::Value &parameters);
+            bool ValdiateParameters(const Json::Value &parameters);
 
             const parameterlist_t& GetParameters() const;
             procedure_t GetProcedureType() const;

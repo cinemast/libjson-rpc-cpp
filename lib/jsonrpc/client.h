@@ -29,7 +29,6 @@ namespace jsonrpc
             Json::Value CallMethod(const std::string& name, const Json::Value& paramter) throw (Exception);
             void CallNotification(const std::string& name, const Json::Value& paramter) throw (Exception);
 
-
         private:
            AbstractClientConnector* connector;
            bool validateResponse;

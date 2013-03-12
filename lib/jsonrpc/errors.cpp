@@ -1,88 +1,86 @@
-/**
- * @file errors.cpp
- * @date 31.12.2012
- * @author Peter Spiess-Knafl <peter.knafl@gmail.com>
- * @brief to be defined
- */
+/*************************************************************************
+ * libjson-rpc-cpp
+ *************************************************************************
+ * @file    errors.cpp
+ * @date    31.12.2012
+ * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>
+ * @license See attached LICENSE.txt
+ ************************************************************************/
 
 #include "errors.h"
 
 namespace jsonrpc
 {
-    static Errors* instance = NULL;
-    
-    Errors::Errors()
-    {
+    std::map<int, std::string> Errors::possibleErrors;
+    Errors::_init Errors::_initializer;
+
+    const int Errors::ERROR_RPC_JSON_PARSE_ERROR =  -32700;
+    const int Errors::ERROR_RPC_METHOD_NOT_FOUND =  -32601;
+    const int Errors::ERROR_RPC_INVALID_REQUEST =   -32600;
+    const int Errors::ERROR_RPC_INVALID_PARAMS =    -32602;
+    const int Errors::ERROR_RPC_INTERNAL_ERROR =    -32603;
+
+    const int Errors::ERROR_SERVER_PROCEDURE_IS_METHOD =                  -32604;
+    const int Errors::ERROR_SERVER_PROCEDURE_IS_NOTIFICATION =            -32605;
+    const int Errors::ERROR_SERVER_PROCEDURE_POINTER_IS_NULL =            -32606;
+    const int Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_NOT_FOUND =    -32000;
+    const int Errors::ERROR_SERVER_CONNECTOR =                            -32002;
+    const int Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX =       -32007;
+
+    const int Errors::ERROR_CLIENT_CONNECTOR =   -32003;
+    const int Errors::ERROR_CLIENT_INVALID_RESPONSE =     -32001;
+
+    Errors::_init::_init() {
         //Official Errors
-        this->possibleErrors[ERROR_INVALID_JSON_REQUEST] =
+        possibleErrors[ERROR_RPC_INVALID_REQUEST] =
                 "INVALID_JSON_REQUEST: The JSON sent is not a valid JSON-RPC Request object";
-        this->possibleErrors[ERROR_METHOD_NOT_FOUND] =
+        possibleErrors[ERROR_RPC_METHOD_NOT_FOUND] =
                 "METHOD_NOT_FOUND: The method being requested is not available on this server";
-        this->possibleErrors[ERROR_INVALID_PARAMS] =
+        possibleErrors[ERROR_RPC_INVALID_PARAMS] =
                 "INVALID_PARAMS: Invalid method parameters (invalid name and/or type) recognised";
-        this->possibleErrors[ERROR_JSON_PARSE_ERROR] =
+        possibleErrors[ERROR_RPC_JSON_PARSE_ERROR] =
                 "JSON_PARSE_ERROR: The JSON-Object is not JSON-Valid";
-        this->possibleErrors[ERROR_INTERNAL_ERROR] = "INTERNAL_ERROR: ";
+        possibleErrors[ERROR_RPC_INTERNAL_ERROR] = "INTERNAL_ERROR: ";
 
-        //Specific Errors
-        this->possibleErrors[ERROR_PROCEDURE_IS_METHOD] =
+        possibleErrors[ERROR_SERVER_PROCEDURE_IS_METHOD] =
                 "PROCEDURE_IS_METHOD: The requested notification is declared as a method";
-        this->possibleErrors[ERROR_PROCEDURE_IS_NOTIFICATION] =
+        possibleErrors[ERROR_SERVER_PROCEDURE_IS_NOTIFICATION] =
                 "PROCEDURE_IS_NOTIFICATION: The requested method is declared as notification";
-        this->possibleErrors[ERROR_PROCEDURE_PARSE_ERROR] =
-                "PROCEDURE_PARSE_ERROR: Something went wrong during parsing a procedure-signature";
-        this->possibleErrors[ERROR_PROCEDURE_POINTER_IS_NULL] =
-                "PROCEDURE_POINTER_IS_NULL: Server has no function Reference registered";
-        this->possibleErrors[ERROR_PERMISSION_DENIED] =
-                "PERMISSION_DENIED: Insufficient permissions for this request";
-        this->possibleErrors[ERROR_MALLFORMED_AUTHENTICATION_HEADER] =
-                "MALLFORMED_AUTHENTICATION_HEADER: Authentication header has wrong format";
+        possibleErrors[ERROR_SERVER_PROCEDURE_POINTER_IS_NULL] =
+                "PROCEDURE_POINTER_IS_NULL: Server has no function Reference registered: ";
+        possibleErrors[ERROR_SERVER_PROCEDURE_SPECIFICATION_NOT_FOUND] = "Configuration file was not found: ";
 
-        //Implementation specific errors
-        this->possibleErrors[ERROR_CONFIGURATIONFILE_NOT_FOUND] = "Configuration file was not found";
-        this->possibleErrors[ERROR_NO_RESULT_IN_RESPONSE] = "The response did not contain a result object";
-        this->possibleErrors[ERROR_REQUEST_RESPONSE_ID_MISMATCH] = "Request and Response id differ";
-        this->possibleErrors[ERROR_CLIENT_CONNECT] = "could not connect to server via connector ";
-    }
-    
-    Errors::~Errors()
-    {
-        this->possibleErrors.clear();
+        possibleErrors[ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX] = "Procedure specification mallformed: ";
+
+        possibleErrors[ERROR_CLIENT_INVALID_RESPONSE] = "The response is invalid";
+        possibleErrors[ERROR_CLIENT_CONNECTOR] = "Client connector error";
+        possibleErrors[ERROR_SERVER_CONNECTOR] = "Server connector error";
+
+
+
     }
 
-    Errors* Errors::GetInstance()
+    Json::Value Errors::GetErrorBlock(const Json::Value& request, const int& errorCode)
     {
-        if (instance == NULL)
+        Json::Value error;
+        error["jsonrpc"] = "2.0";
+        error["error"]["code"] = errorCode;
+        error["error"]["message"] = possibleErrors[errorCode];
+
+        if(request["id"].isNull())
         {
-            instance = new Errors();
-        }
-        return instance;
-    }
-
-    bool Errors::AddError(int errorCode, const std::string& errorMessage)
-    {
-        if (errorCode < SPECIFIC_ERROR_STOP || errorCode > SPECIFIC_ERROR_START)
-        {
-            return false;
+            error["id"] = Json::nullValue;
         }
         else
         {
-            this->possibleErrors[errorCode] = errorMessage;
-            return true;
+            error["id"] = request["id"].asInt();
         }
-    }
-
-    Json::Value Errors::GetErrorBlock(int errorCode)
-    {
-        Json::Value error;
-        error[KEY_ERROR_CODE] = errorCode;
-        error[KEY_ERROR_MESSAGE] = this->possibleErrors[errorCode];
         return error;
     }
 
-    const std::string& Errors::GetErrorMessage(int errorCode)
+    std::string Errors::GetErrorMessage(int errorCode)
     {
-        return this->possibleErrors[errorCode];
+        return possibleErrors[errorCode];
     }
 
 

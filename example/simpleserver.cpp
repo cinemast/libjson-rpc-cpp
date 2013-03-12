@@ -37,8 +37,8 @@ int main(int argc, char** argv)
     }
     else
     {
-        methods_t procedurePointers;
-        notifications_t notPointers;
+        methodpointer_t procedurePointers;
+        notificationpointer_t notPointers;
 
         procedurePointers["sayHello"] = &sayHello;
         notPointers["notifyServer"] = &notifyServer;

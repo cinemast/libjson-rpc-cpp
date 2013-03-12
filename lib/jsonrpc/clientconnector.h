@@ -1,9 +1,11 @@
-/**
- * @file clientconnector.h
- * @date 02.01.2013
- * @author Peter Spiess-Knafl <peter.knafl@gmail.com>
- * @brief to be defined
- */
+/*************************************************************************
+ * libjson-rpc-cpp
+ *************************************************************************
+ * @file    clientconnector.h
+ * @date    02.01.2013
+ * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>
+ * @license See attached LICENSE.txt
+ ************************************************************************/
 
 #ifndef CLIENTCONNECTOR_H_
 #define CLIENTCONNECTOR_H_

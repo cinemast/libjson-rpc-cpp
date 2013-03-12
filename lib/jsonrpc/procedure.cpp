@@ -1,9 +1,11 @@
-/**
- * @file procedure.cpp
- * @date 31.12.2012
- * @author Peter Spiess-Knafl <peter.knafl@gmail.com>
- * @brief to be defined
- */
+/*************************************************************************
+ * libjson-rpc-cpp
+ *************************************************************************
+ * @file    procedure.cpp
+ * @date    31.12.2012
+ * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>
+ * @license See attached LICENSE.txt
+ ************************************************************************/
 
 #include "procedure.h"
 #include "exception.h"
@@ -20,19 +22,10 @@ namespace jsonrpc
         this->parameters.clear();
     }
 
-    Procedure::Procedure(const std::string& name,
-            const procedure_t procedure_type, const parameterlist_t& parameters)
-            : procedureName(name), procedureType(procedure_type), parameters(
-                    parameters)
-    {
-        this->procedurePointer.np = NULL;
-        this->procedurePointer.rp = NULL;
-    }
-
     Procedure::Procedure(const Json::Value& signature)
     {
         if ((signature.isMember(KEY_METHOD_NAME)
-                || signature.isMember(KEY_NOTIFICATION_NAME))
+             || signature.isMember(KEY_NOTIFICATION_NAME))
                 && signature.isMember(KEY_PROCEDURE_PARAMETERS))
         {
             std::string procedure_name;
@@ -78,8 +71,7 @@ namespace jsonrpc
                             this->parameters[parameters.at(i)] = JSON_OBJECT;
                             break;
                         default:
-                            throw Exception(ERROR_PROCEDURE_PARSE_ERROR,
-                                    "Unknown parameter in "
+                            throw Exception(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,"Unknown parameter in "
                                             + signature.toStyledString());
                     }
                 }
@@ -88,20 +80,20 @@ namespace jsonrpc
             }
             else
             {
-                throw Exception(ERROR_PROCEDURE_PARSE_ERROR,
-                        "Invalid signature types in fileds: "
+                throw Exception(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,
+                                "Invalid signature types in fileds: "
                                 + signature.toStyledString());
             }
         }
         else
         {
-            throw Exception(ERROR_PROCEDURE_PARSE_ERROR,
-                    "procedure declaration does not contain method/notification name or paramters: "
+            throw Exception(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,
+                            "procedure declaration does not contain method/notification name or paramters: "
                             + signature.toStyledString());
         }
     }
 
-    int Procedure::ValdiateParameters(const Json::Value& parameters)
+    bool Procedure::ValdiateParameters(const Json::Value& parameters)
     {
         map<string, jsontype_t>::iterator it = this->parameters.begin();
         bool ok = true;
@@ -143,14 +135,7 @@ namespace jsonrpc
             }
             it++;
         }
-        if (ok == true)
-        {
-            return ERROR_NO;
-        }
-        else
-        {
-            return ERROR_INVALID_PARAMS;
-        }
+        return ok;
     }
 
     const parameterlist_t& Procedure::GetParameters() const

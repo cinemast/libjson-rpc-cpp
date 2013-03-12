@@ -1,9 +1,11 @@
-/**
- * @file exception.cpp
- * @date 04.03.2013
- * @author Peter Spiess-Knafl <peter.knafl@gmail.com>
- * @brief to be defined
- */
+/*************************************************************************
+ * libjson-rpc-cpp
+ *************************************************************************
+ * @file    exception.cpp
+ * @date    31.12.2012
+ * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>
+ * @license See attached LICENSE.txt
+ ************************************************************************/
 
 #include "exception.h"
 
@@ -12,13 +14,13 @@ namespace jsonrpc
     Exception::Exception(int code)
             : code(code)
     {
-        this->message = Errors::GetInstance()->GetErrorMessage(code);
+        this->message = Errors::GetErrorMessage(code);
     }
 
     Exception::Exception(int code, const std::string& message)
             : code(code)
     {
-        this->message = Errors::GetInstance()->GetErrorMessage(code) +": "+ message;
+        this->message = Errors::GetErrorMessage(code) +": "+ message;
     }
 
     Exception::Exception(const std::string& message)

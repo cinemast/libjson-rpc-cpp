@@ -39,17 +39,17 @@ namespace jsonrpc
             {
                 if (result[KEY_RESPONSE_ERROR] != Json::nullValue)
                 {
-                    throw Exception(result[KEY_RESPONSE_ERROR][KEY_ERROR_CODE].asInt());
+                    throw Exception(result[KEY_RESPONSE_ERROR]["code"].asInt());
                 }
 
                 if (result[KEY_RESPONSE_RESULT] == Json::nullValue)
                 {
-                    throw Exception(ERROR_NO_RESULT_IN_RESPONSE);
+                    throw Exception(Errors::ERROR_CLIENT_INVALID_RESPONSE);
                 }
 
                 if (result[KEY_REQUEST_ID].asInt() != id)
                 {
-                    throw Exception(ERROR_REQUEST_RESPONSE_ID_MISMATCH,
+                    throw Exception(Errors::ERROR_CLIENT_INVALID_RESPONSE,
                             str_result + " / "
                                     + writer.write(
                                             this->BuildRequestObject(name,
@@ -60,7 +60,7 @@ namespace jsonrpc
         }
         else
         {
-            throw Exception(ERROR_PARSING_JSON,
+            throw Exception(Errors::ERROR_RPC_JSON_PARSE_ERROR,
                     "Server response could not be parsed: " + str_result);
         }
 

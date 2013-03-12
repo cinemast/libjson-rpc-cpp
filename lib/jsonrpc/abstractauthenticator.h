@@ -13,7 +13,7 @@
 namespace jsonrpc
 {
     
-    class Authenticator
+    class AbstractAuthenticator
     {
         public:
             /**
@@ -35,7 +35,7 @@ namespace jsonrpc
                     const Json::Value &authentication,
                     Json::Value &returnValue) = 0;
 
-            virtual ~Authenticator() {}
+            virtual ~AbstractAuthenticator() {}
     };
 
 } /* namespace jsonrpc */

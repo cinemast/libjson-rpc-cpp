@@ -1,9 +1,11 @@
-/**
- * @file httpclient.cpp
- * @date 02.01.2013
- * @author Peter Spiess-Knafl <peter.knafl@gmail.com>
- * @brief This class wraps libcurl.
- */
+/*************************************************************************
+ * libjson-rpc-cpp
+ *************************************************************************
+ * @file    httpclient.cpp
+ * @date    02.01.2013
+ * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>
+ * @license See attached LICENSE.txt
+ ************************************************************************/
 
 #include "httpclient.h"
 #include <curl/curl.h>
@@ -58,14 +60,13 @@ namespace jsonrpc
         s->ptr[0] = '\0';
     }
     
-    HttpClient::HttpClient(const std::string& url)
+    HttpClient::HttpClient(const std::string& url) throw(Exception)
         : AbstractClientConnector(), url(url)
     {
         curl = curl_easy_init();
         if (!curl)
         {
-            //TODO: throw exception
-            cerr << "error constructing httpclient" << endl;
+            throw Exception(Errors::ERROR_CLIENT_CONNECTOR, ": libcurl initialization error");
         }
 
         curl_easy_setopt(curl, CURLOPT_URL, this->url.c_str());
@@ -108,13 +109,13 @@ namespace jsonrpc
             stringstream str;
             if(res == 7)
             {
-                str << "Could not connect to " << this->url;
+                str << ": Could not connect to " << this->url;
             }
             else
             {
-                str << "libcurl error: " << res;
+                str << ": libcurl error: " << res;
             }
-            throw Exception(ERROR_CLIENT_CONNECT, str.str());
+            throw Exception(Errors::ERROR_CLIENT_CONNECTOR, str.str());
         }
 
         return result;
@@ -122,7 +123,7 @@ namespace jsonrpc
 
     void HttpClient::SetUrl(const std::string& url)
     {
-        // this->url = url;
+        this->url = url;
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     }
 

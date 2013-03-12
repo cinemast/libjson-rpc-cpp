@@ -1,9 +1,11 @@
-/**
- * @file serverconnector.cpp
- * @date 31.12.2012
- * @author Peter Spiess-Knafl <peter.knafl@gmail.com>
- * @brief to be defined
- */
+/*************************************************************************
+ * libjson-rpc-cpp
+ *************************************************************************
+ * @file    serverconnector.cpp
+ * @date    31.12.2012
+ * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>
+ * @license See attached LICENSE.txt
+ ************************************************************************/
 
 #include "serverconnector.h"
 #include <cstdlib>
