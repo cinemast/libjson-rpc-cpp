@@ -26,11 +26,14 @@ int main(int argc, char** argv)
         server = getTestServer();
         client = getTestClient();
 
+
+
         server->StartListening();
 
         Json::Value v;
         v["name"] = "Peter";
         Json::Value result = client->CallMethod("sayHello", v);
+
         if(result.asString() != "Hello: Peter!") {
             cerr << "sayHello returned " << result.asString() << " but should be \"Hello: Peter!\"" << endl;
             return -1;

@@ -1,17 +1,19 @@
-/**
- * @file client.h
- * @date 03.01.2013
- * @author Peter Spiess-Knafl <peter.knafl@gmail.com>
- * @brief to be defined
- */
+/*************************************************************************
+ * libjson-rpc-cpp
+ *************************************************************************
+ * @file    client.h
+ * @date    03.01.2013
+ * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>
+ * @license See attached LICENSE.txt
+ ************************************************************************/
 
 #ifndef CLIENT_H_
 #define CLIENT_H_
 
 #include "clientconnector.h"
 #include "exception.h"
-#include <json/json.h>
 
+#include <json/json.h>
 #include <vector>
 #include <map>
 

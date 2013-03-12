@@ -1,9 +1,11 @@
-/**
- * @file client.cpp
- * @date 03.01.2013
- * @author Peter Spiess-Knafl <peter.knafl@gmail.com>
- * @brief to be defined
- */
+/*************************************************************************
+ * libjson-rpc-cpp
+ *************************************************************************
+ * @file    client.cpp
+ * @date    03.01.2013
+ * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>
+ * @license See attached LICENSE.txt
+ ************************************************************************/
 
 #include "client.h"
 #include "requesthandler.h"
@@ -39,7 +41,7 @@ namespace jsonrpc
             {
                 if (result[KEY_RESPONSE_ERROR] != Json::nullValue)
                 {
-                    throw Exception(result[KEY_RESPONSE_ERROR]["code"].asInt());
+                    throw Exception(result[KEY_RESPONSE_ERROR]["message"].asString());
                 }
 
                 if (result[KEY_RESPONSE_RESULT] == Json::nullValue)

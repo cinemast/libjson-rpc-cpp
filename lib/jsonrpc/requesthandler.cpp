@@ -103,8 +103,7 @@ namespace jsonrpc
             if (it != this->procedures->end())
             {
                 proc = (*this->procedures)[request[KEY_REQUEST_METHODNAME].asString()];
-                error = proc->ValdiateParameters(request[KEY_REQUEST_PARAMETERS]);
-                if (error == 0)
+                if (proc->ValdiateParameters(request[KEY_REQUEST_PARAMETERS]))
                 {
                     if (request.isMember(KEY_REQUEST_ID))
                     {
@@ -123,6 +122,10 @@ namespace jsonrpc
                                     request[KEY_AUTHENTICATION],
                                     proc->GetProcedureName());
                     }
+                }
+                else
+                {
+                    error = Errors::ERROR_RPC_INVALID_PARAMS;
                 }
             }
             else
