@@ -16,7 +16,8 @@ using namespace std;
 namespace jsonrpc
 {
     Server::Server(const string &configfile, methodpointer_t &methods, notificationpointer_t &notifications, AbstractServerConnector *connector, AbstractAuthenticator *auth) :
-        handler(SpecificationParser::GetProcedures(configfile, methods, notifications), auth)
+        handler(SpecificationParser::GetProcedures(configfile, methods, notifications), auth),
+        connection(connector)
     {
         connector->SetHandler(&this->handler);
     }
