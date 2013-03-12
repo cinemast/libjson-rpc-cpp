@@ -62,6 +62,29 @@ namespace jsonrpc {
         return procedures;
     }
 
+    procedurelist_t *SpecificationParser::GetProcedures(const string &filename) throw(Exception)
+    {
+        string content;
+        GetFileContent(filename,content);
+
+        Json::Reader reader;
+        Json::Value val;
+        if(!reader.parse(content,val)) {
+            throw Exception(Errors::ERROR_RPC_JSON_PARSE_ERROR, " specification file contains syntax errors");
+        }
+
+        procedurelist_t* procedures = new procedurelist_t();
+        Procedure* proc;
+        methodpointer_t::const_iterator it_methods;
+        notificationpointer_t::const_iterator it_notifications;
+        for (unsigned int i = 0; i < val.size(); i++)
+        {
+            proc = new Procedure(val[i]);
+            (*procedures)[proc->GetProcedureName()] = proc;
+        }
+        return procedures;
+    }
+
     void SpecificationParser::GetFileContent(const std::string &filename, std::string& target)
     {
         ifstream config(filename.c_str());

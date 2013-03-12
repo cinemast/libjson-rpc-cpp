@@ -119,11 +119,11 @@ std::string generateStub(const string& stubname, const string& configfile)
 
     //generate procedures
     stringstream procedure_string;
-    vector<Procedure*> procedures = Server::ParseProcedures(configfile);
-
-    for (int i = 0; i < procedures.size(); i++)
+    procedurelist_t* procedures = SpecificationParser::GetProcedures(configfile);
+    procedurelist_t::iterator it;
+    for (it = procedures->begin(); it != procedures->end(); it++)
     {
-        procedure_string << generateMethod(*procedures[i]) << endl;
+        procedure_string << generateMethod(*(it->second)) << endl;
     }
 
     replace_all(tmp, "<methods>", procedure_string.str());

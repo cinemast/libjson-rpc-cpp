@@ -23,6 +23,7 @@ namespace jsonrpc {
     {
         public:
             static procedurelist_t* GetProcedures(const std::string& filename, methodpointer_t& methods, notificationpointer_t& notifications) throw (Exception);
+            static procedurelist_t* GetProcedures(const std::string& filename) throw (Exception);
 
         private:
             static void GetFileContent(const std::string& filename, std::string& target);

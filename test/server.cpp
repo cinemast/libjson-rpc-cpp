@@ -42,8 +42,8 @@ void incrementCounter(const Json::Value& request)
 
 jsonrpc::Server* getTestServer()
 {
-    methods_t methods;
-    notifications_t notifications;
+    methodpointer_t methods;
+    notificationpointer_t notifications;
 
     methods["sayHello"] = sayHello;
     methods["getCounterValue"] = getCounterValue;
@@ -53,7 +53,7 @@ jsonrpc::Server* getTestServer()
     notifications["initCounter"] = initCounter;
     notifications["incrementCounter"] = incrementCounter;
 
-    return new Server("instance", "out/test/procedures.json", methods, notifications, new HttpServer(8080));
+    return new Server("out/test/procedures.json", methods, notifications, new HttpServer(8080));
 }
 
 jsonrpc::Client* getTestClient()
