@@ -1,5 +1,10 @@
 
 add_subdirectory(json)
-add_subdirectory(mongoose)
+
+if(USE_HTTP)
+  add_subdirectory(mongoose)
+  set(DEP_LIBS ${DEP_LIBS} mongoose)
+endif()
+
 add_subdirectory(jsonrpc)
 

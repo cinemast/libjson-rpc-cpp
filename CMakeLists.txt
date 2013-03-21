@@ -2,8 +2,17 @@ cmake_minimum_required(VERSION 2.6)
 project(libjson-rpc-cpp)
 
 include_directories(lib)
-find_package(CURL REQUIRED)
-include_directories(${CURL_INCLUDE_DIRS})
+set(DEP_LIBS json)
+
+option(USE_HTTP
+       "Support JSON-RPC over HTTP (requires libcurl)" 
+       ON)
+
+if(USE_HTTP)
+  find_package(CURL REQUIRED)
+  include_directories(${CURL_INCLUDE_DIRS})
+  set(DEP_LIBS ${DEP_LIBS} ${CURL_LIBRARIES})
+endif()
 
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out)
@@ -83,13 +92,11 @@ ENABLE_TESTING()
 set(TEST_BINARIES ${CMAKE_BINARY_DIR}/out/test)
 set(CTEST_OUTPUT_ON_FAILURE TRUE)
 
-ADD_TEST(helloworld ${TEST_BINARIES}/helloworld)
-ADD_TEST(remotecounter ${TEST_BINARIES}/remotecounter)
-ADD_TEST(remotecalculator ${TEST_BINARIES}/remotecalculator)
-ADD_TEST(errorhandling ${TEST_BINARIES}/errorhandling)
-ADD_TEST(jsonrpcprotocol ${TEST_BINARIES}/jsonrpcprotocol)
-
-
-
-
+if(USE_HTTP)
+  ADD_TEST(helloworld ${TEST_BINARIES}/helloworld)
+  ADD_TEST(remotecounter ${TEST_BINARIES}/remotecounter)
+  ADD_TEST(remotecalculator ${TEST_BINARIES}/remotecalculator)
+  ADD_TEST(errorhandling ${TEST_BINARIES}/errorhandling)
+  ADD_TEST(jsonrpcprotocol ${TEST_BINARIES}/jsonrpcprotocol)
+endif()
 
