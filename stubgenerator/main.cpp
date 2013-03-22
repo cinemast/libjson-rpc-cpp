@@ -101,7 +101,7 @@ std::string generateMethod(Procedure& proc)
     else
     {
         replace_all(tmp, "<return_type>", "void");
-        replace_all(tmp, "<return_statement>", "this->client->CallMethod(\"" + proc.GetProcedureName() + "\",p);");
+        replace_all(tmp, "<return_statement>", "this->client->CallNotification(\"" + proc.GetProcedureName() + "\",p);");
     }
 
     return tmp;
