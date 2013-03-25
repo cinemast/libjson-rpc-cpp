@@ -26,8 +26,6 @@ int main(int argc, char** argv)
         server = getTestServer();
         client = getTestClient();
 
-
-
         server->StartListening();
 
         Json::Value v;

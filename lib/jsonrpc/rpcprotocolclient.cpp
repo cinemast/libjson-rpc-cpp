@@ -108,7 +108,7 @@ namespace jsonrpc
         result[KEY_PROCEDURE_NAME] = method;
         result[KEY_PARAMETER] = parameter;
 
-        if(isNotification)
+        if(!isNotification)
         {
             result[KEY_ID] = id++;
         }
