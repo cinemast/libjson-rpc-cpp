@@ -24,7 +24,9 @@ namespace jsonrpc
              * This method should take the message and send it via the concrete connector.
              * The result of the request must be returned as string.
              */
-            virtual std::string SendMessage(const std::string& message) throw(Exception) = 0;
+            virtual std::string SendMessage(const std::string& message) throw(Exception);
+
+            virtual void SendMessage(const std::string& message, std::string& result) throw(Exception) = 0;
     };
 } /* namespace jsonrpc */
 #endif /* CLIENTCONNECTOR_H_ */

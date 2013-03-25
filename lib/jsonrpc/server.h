@@ -14,7 +14,7 @@
 #include <string>
 #include <vector>
 
-#include "requesthandler.h"
+#include "rpcprotocolserver.h"
 #include "serverconnector.h"
 
 namespace jsonrpc
@@ -30,7 +30,7 @@ namespace jsonrpc
 
         private:
             AbstractServerConnector* connection;
-            RequestHandler handler;
+            RpcProtocolServer handler;
     };
 
 } /* namespace jsonrpc */

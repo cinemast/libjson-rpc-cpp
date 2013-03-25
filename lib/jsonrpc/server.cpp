@@ -19,7 +19,7 @@ namespace jsonrpc
         handler(SpecificationParser::GetProcedures(configfile, methods, notifications), auth),
         connection(connector)
     {
-        connector->SetHandler(&this->handler);
+        connector->SetHandler(this->handler);
     }
 
     Server::~Server()

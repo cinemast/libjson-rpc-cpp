@@ -81,9 +81,8 @@ namespace jsonrpc
         }
     }
 
-    std::string HttpClient::SendMessage(const std::string& message) throw (Exception)
+    void HttpClient::SendMessage(const std::string& message, std::string& result) throw (Exception)
     {
-        std::string result = "";
         CURLcode res;
 
         struct string s;
@@ -117,8 +116,6 @@ namespace jsonrpc
             }
             throw Exception(Errors::ERROR_CLIENT_CONNECTOR, str.str());
         }
-
-        return result;
     }
 
     void HttpClient::SetUrl(const std::string& url)

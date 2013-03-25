@@ -23,7 +23,7 @@ namespace jsonrpc
             HttpClient(const std::string& url) throw (Exception);
             virtual ~HttpClient();
 
-            virtual std::string SendMessage(const std::string& message) throw (Exception);
+            virtual void SendMessage(const std::string& message, std::string& result) throw (Exception);
 
             void SetUrl(const std::string& url);
 

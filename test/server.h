@@ -22,6 +22,9 @@ void sub(const Json::Value& request, Json::Value& response);
 void initCounter(const Json::Value& request);
 void incrementCounter(const Json::Value& request);
 
+jsonrpc::methodpointer_t getMethodPointer();
+jsonrpc::notificationpointer_t getNotificationPointer();
+
 jsonrpc::Server* getTestServer();
 jsonrpc::Client* getTestClient();
 

@@ -80,6 +80,10 @@ namespace jsonrpc
 
     std::string Errors::GetErrorMessage(int errorCode)
     {
+        if(possibleErrors.find(errorCode) == possibleErrors.end())
+        {
+            return "";
+        }
         return possibleErrors[errorCode];
     }
 

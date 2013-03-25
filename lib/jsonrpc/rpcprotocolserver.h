@@ -1,7 +1,7 @@
 /*************************************************************************
  * libjson-rpc-cpp
  *************************************************************************
- * @file    requesthandler.h
+ * @file    rpcprotocolserver.h
  * @date    31.12.2012
  * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>
  * @license See attached LICENSE.txt
@@ -29,17 +29,11 @@
 
 namespace jsonrpc
 {
-
-    /**
-     * typedef for observerCallback Functions
-     */
-    typedef void (*observerFunction)(const std::string&, const Json::Value&);
-
-    class RequestHandler
+    class RpcProtocolServer
     {
         public:
-            RequestHandler(procedurelist_t* procedures, AbstractAuthenticator* auth);
-            virtual ~RequestHandler();
+            RpcProtocolServer(procedurelist_t* procedures, AbstractAuthenticator* auth);
+            virtual ~RpcProtocolServer();
 
             /**
              * This is the key feature of this class, it deals with the JSOn-RPC 2.0 protocol.
@@ -49,6 +43,9 @@ namespace jsonrpc
             void HandleRequest(const std::string& request, std::string& retValue);
 
         private:
+
+            void HandleSingleRequest(Json::Value& request, Json::Value& response);
+            void HandleBatchRequest(Json::Value& requests, Json::Value& response);
 
             int ValidateRequest(const Json::Value &val);
 

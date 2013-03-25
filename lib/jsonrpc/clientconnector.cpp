@@ -18,4 +18,11 @@ namespace jsonrpc
     {
 
     }
+
+    string AbstractClientConnector::SendMessage(const string &message) throw (Exception)
+    {
+        string result;
+        this->SendMessage(message, result);
+        return result;
+    }
 }

@@ -11,7 +11,7 @@
 #define CLIENT_H_
 
 #include "clientconnector.h"
-#include "exception.h"
+#include "rpcprotocolclient.h"
 
 #include <json/json.h>
 #include <vector>
@@ -19,23 +19,19 @@
 
 namespace jsonrpc
 {
-    
-    typedef std::map<std::string, Json::Value> batchProcedureCall_t;
-
     class Client
     {
         public:
-            Client(AbstractClientConnector* connector, bool validateResponse);
-            virtual ~Client();
+            Client(AbstractClientConnector& connector);
 
+            void CallMethod(const std::string &name, const Json::Value &paramter, Json::Value& result) throw (Exception);
             Json::Value CallMethod(const std::string& name, const Json::Value& paramter) throw (Exception);
             void CallNotification(const std::string& name, const Json::Value& paramter) throw (Exception);
 
         private:
            AbstractClientConnector* connector;
-           bool validateResponse;
+           RpcProtocolClient protocol;
 
-           Json::Value BuildRequestObject(const std::string& name, const Json::Value& parameters, int id) const;
     };
 
 } /* namespace jsonrpc */

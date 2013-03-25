@@ -10,7 +10,8 @@
 #ifndef SERVERCONNECTOR_H_
 #define SERVERCONNECTOR_H_
 
-#include "requesthandler.h"
+#include <string>
+#include "rpcprotocolserver.h"
 
 namespace jsonrpc
 {
@@ -48,10 +49,10 @@ namespace jsonrpc
              */
             bool OnRequest(const std::string& request, void* addInfo = NULL);
 
-            void SetHandler(RequestHandler* handler);
+            void SetHandler(RpcProtocolServer& handler);
 
         private:
-            RequestHandler* handler;
+            RpcProtocolServer* handler;
     };
 
 } /* namespace jsonrpc */

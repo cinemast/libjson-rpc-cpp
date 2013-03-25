@@ -39,9 +39,9 @@ namespace jsonrpc
         }
     }
 
-    void AbstractServerConnector::SetHandler(RequestHandler *handler)
+    void AbstractServerConnector::SetHandler(RpcProtocolServer& handler)
     {
-        this->handler = handler;
+        this->handler = &handler;
     }
 
 } /* namespace jsonrpc */
