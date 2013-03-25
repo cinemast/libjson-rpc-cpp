@@ -77,7 +77,7 @@ namespace jsonrpc
         {
             if(value.isMember(KEY_ID) && value.isMember(KEY_PROTOCOL_VERSION) && (value.isMember(KEY_RESULT) || value.isMember(KEY_ERROR)))
             {
-                if(result.isMember(KEY_RESULT))
+                if(value.isMember(KEY_RESULT))
                 {
                     result = value[KEY_RESULT];
                 }
