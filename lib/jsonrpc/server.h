@@ -19,14 +19,35 @@
 
 namespace jsonrpc
 {
+   // template<typename S>
     class Server
     {
         public:
-            Server(const std::string& configfile, methodpointer_t& methods, notificationpointer_t& notifications, AbstractServerConnector* connector, AbstractAuthenticator* auth = NULL);
+            //typedef void(S::methodPointer_t)(Json::Value &parameter, Json::Value &result);
+            Server(AbstractServerConnector* connector);
+
+            Server(const std::string& configfile, methodpointer_t& methods, notificationpointer_t& notifications, AbstractServerConnector* connector);
             virtual ~Server();
 
+            /**
+             * @brief StartListening starts the AbstractServerConnector to listen for incoming requests.
+             * @return
+             */
             bool StartListening();
+
+            /**
+             * @brief StopListening stops the AbstractServerConnector, no more requests will be answered.
+             * @return
+             */
             bool StopListening();
+
+            /**
+             * @brief set an authenticator to be used by this server. The authenticator will be deleted automatically.
+             * @param auth
+             */
+            void setAuthenticator(AbstractAuthenticator* auth);
+
+            void registerMethod(Procedure* proc, pMethod_t);
 
         private:
             AbstractServerConnector* connection;

@@ -15,8 +15,14 @@ using namespace std;
 
 namespace jsonrpc
 {
-    Server::Server(const string &configfile, methodpointer_t &methods, notificationpointer_t &notifications, AbstractServerConnector *connector, AbstractAuthenticator *auth) :
-        handler(SpecificationParser::GetProcedures(configfile, methods, notifications), auth),
+    Server::Server(AbstractServerConnector *connector) :
+        connection(connector)
+    {
+        connector->SetHandler(this->handler);
+    }
+
+    Server::Server(const string &configfile, methodpointer_t &methods, notificationpointer_t &notifications, AbstractServerConnector *connector) :
+        handler(SpecificationParser::GetProcedures(configfile, methods, notifications)),
         connection(connector)
     {
         connector->SetHandler(this->handler);
@@ -36,6 +42,11 @@ namespace jsonrpc
     bool Server::StopListening()
     {
         return this->connection->StopListening();
+    }
+
+    void Server::setAuthenticator(AbstractAuthenticator *auth)
+    {
+        this->handler.setAuthenticator(auth);
     }
 } /* namespace jsonrpc */
 

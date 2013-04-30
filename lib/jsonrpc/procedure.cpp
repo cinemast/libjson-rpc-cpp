@@ -12,85 +12,48 @@
 #include "errors.h"
 
 #include <vector>
+#include <cstdarg>
+#include <string>
 using namespace std;
 
 namespace jsonrpc
 {
-    
+    Procedure::Procedure(const string &name, jsontype_t returntype, ...)
+    {
+        va_list parameters;
+        va_start(parameters, returntype);
+        const char* paramname = va_arg(parameters, const char*);
+        jsontype_t type;
+        while(paramname != NULL) {
+            type = (jsontype_t)va_arg(parameters, int);     //Needs to be tested
+            this->AddParameter(paramname, type);
+            paramname = va_arg(parameters, const char*);
+        }
+        va_end(parameters);
+        this->procedureName = name;
+        this->returntype = returntype;
+        this->procedureType = RPC_METHOD;
+    }
+
+    Procedure::Procedure(const string &name, ...)
+    {
+        va_list parameters;
+        va_start(parameters, name);
+        const char* paramname = va_arg(parameters, const char*);
+        jsontype_t type;
+        while(paramname != NULL) {
+            type = (jsontype_t)va_arg(parameters, int);     //Needs to be tested
+            this->AddParameter(paramname, type);
+            paramname = va_arg(parameters, const char*);
+        }
+        va_end(parameters);
+        this->procedureName = name;
+        this->procedureType = RPC_NOTIFICATION;
+    }
+
     Procedure::~Procedure()
     {
         this->parameters.clear();
-    }
-
-    Procedure::Procedure(const Json::Value& signature)
-    {
-        if ((signature.isMember(KEY_METHOD_NAME)
-             || signature.isMember(KEY_NOTIFICATION_NAME))
-                && signature.isMember(KEY_PROCEDURE_PARAMETERS))
-        {
-            std::string procedure_name;
-            if (signature.isMember(KEY_METHOD_NAME))
-            {
-                procedure_name = KEY_METHOD_NAME;
-                this->procedureType = RPC_METHOD;
-            }
-            else
-            {
-                procedure_name = KEY_NOTIFICATION_NAME;
-                this->procedureType = RPC_NOTIFICATION;
-
-            }
-            if (signature[procedure_name].isString()
-                    && (signature[KEY_PROCEDURE_PARAMETERS].isObject() || signature[KEY_PROCEDURE_PARAMETERS].isNull()))
-            {
-                this->procedureName = signature[procedure_name].asString();
-                vector<string> parameters =
-                        signature[KEY_PROCEDURE_PARAMETERS].getMemberNames();
-                for (unsigned int i = 0; i < parameters.size(); i++)
-                {
-                    switch (signature[KEY_PROCEDURE_PARAMETERS][parameters.at(i)].type())
-                    {
-                        case Json::uintValue:
-                        case Json::intValue:
-                            this->parameters[parameters.at(i)] = JSON_INTEGER;
-                            break;
-
-                        case Json::realValue:
-                            this->parameters[parameters.at(i)] = JSON_REAL;
-                            break;
-                        case Json::stringValue:
-                            this->parameters[parameters.at(i)] = JSON_STRING;
-                            break;
-                        case Json::booleanValue:
-                            this->parameters[parameters.at(i)] = JSON_BOOLEAN;
-                            break;
-                        case Json::arrayValue:
-                            this->parameters[parameters.at(i)] = JSON_ARRAY;
-                            break;
-                        case Json::objectValue:
-                            this->parameters[parameters.at(i)] = JSON_OBJECT;
-                            break;
-                        default:
-                            throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,"Unknown parameter in "
-                                            + signature.toStyledString());
-                    }
-                }
-                this->procedurePointer.np = NULL;
-                this->procedurePointer.rp = NULL;
-            }
-            else
-            {
-                throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,
-                                "Invalid signature types in fileds: "
-                                + signature.toStyledString());
-            }
-        }
-        else
-        {
-            throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,
-                            "procedure declaration does not contain method/notification name or paramters: "
-                            + signature.toStyledString());
-        }
     }
 
     bool Procedure::ValdiateParameters(const Json::Value& parameters)
@@ -153,11 +116,11 @@ namespace jsonrpc
         return this->procedureName;
     }
 
-    pRequest_t jsonrpc::Procedure::GetMethodPointer()
+    pMethod_t jsonrpc::Procedure::GetMethodPointer() const
     {
         if (this->procedureType == RPC_METHOD)
         {
-            return (pRequest_t) this->procedurePointer.rp;
+            return (pMethod_t) this->procedurePointer.rp;
         }
         else
         {
@@ -165,7 +128,7 @@ namespace jsonrpc
         }
     }
 
-    pNotification_t jsonrpc::Procedure::GetNotificationPointer()
+    pNotification_t jsonrpc::Procedure::GetNotificationPointer() const
     {
         if (this->procedureType == RPC_NOTIFICATION)
         {
@@ -177,7 +140,12 @@ namespace jsonrpc
         }
     }
 
-    bool Procedure::SetMethodPointer(pRequest_t rp)
+    jsontype_t Procedure::GetReturnType() const
+    {
+        return this->returntype;
+    }
+
+    bool Procedure::SetMethodPointer(pMethod_t rp)
     {
         if (this->procedureType == RPC_METHOD)
         {
@@ -201,6 +169,11 @@ namespace jsonrpc
         {
             return false;
         }
+    }
+
+    void Procedure::AddParameter(const string& name, jsontype_t type)
+    {
+        this->parameters[name] = type;
     }
 
 } /* namespace jsonrpc */

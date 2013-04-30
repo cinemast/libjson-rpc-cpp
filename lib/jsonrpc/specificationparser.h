@@ -16,7 +16,7 @@
 namespace jsonrpc {
 
     typedef std::map<std::string, Procedure*> procedurelist_t;
-    typedef std::map<std::string,pRequest_t> methodpointer_t;
+    typedef std::map<std::string,pMethod_t> methodpointer_t;
     typedef std::map<std::string,pNotification_t> notificationpointer_t;
 
     class SpecificationParser
@@ -26,6 +26,7 @@ namespace jsonrpc {
             static procedurelist_t* GetProcedures(const std::string& filename) throw (JsonRpcException);
 
         private:
+            static Procedure* GetProcedure(Json::Value& val);
             static void GetFileContent(const std::string& filename, std::string& target);
     };
 }

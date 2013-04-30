@@ -14,8 +14,14 @@ using namespace std;
 
 namespace jsonrpc
 {
-    RpcProtocolServer::RpcProtocolServer(procedurelist_t *procedures, AbstractAuthenticator *auth) :
+    RpcProtocolServer::RpcProtocolServer(procedurelist_t *procedures, AbstractAuthenticator* auth) :
         procedures(procedures),
+        authManager(auth)
+    {
+    }
+
+    RpcProtocolServer::RpcProtocolServer(AbstractAuthenticator* auth) :
+        procedures(new procedurelist_t),
         authManager(auth)
     {
     }
@@ -27,11 +33,7 @@ namespace jsonrpc
         {
             delete it->second;
         }
-        if (this->authManager != NULL)
-        {
-            delete this->authManager;
-        }
-
+        this->setAuthenticator(NULL);
         delete this->procedures;
     }
 
@@ -61,6 +63,15 @@ namespace jsonrpc
             response = Errors::GetErrorBlock(Json::nullValue, Errors::ERROR_RPC_JSON_PARSE_ERROR);
         }
         retValue = w.write(response);
+    }
+
+    void RpcProtocolServer::setAuthenticator(AbstractAuthenticator *auth)
+    {
+        if(this->authManager != NULL)
+        {
+            delete this->authManager;
+        }
+        this->authManager = auth;
     }
 
     void RpcProtocolServer::HandleSingleRequest(Json::Value &req, Json::Value& response)
@@ -160,5 +171,11 @@ namespace jsonrpc
             response = Json::Value::null;
         }
     }
+
+    void RpcProtocolServer::addMethod(Procedure *procedure)
+    {
+        (*this->procedures)[procedure->GetProcedureName()] = procedure;
+    }
+
 } /* namespace jsonrpc */
 

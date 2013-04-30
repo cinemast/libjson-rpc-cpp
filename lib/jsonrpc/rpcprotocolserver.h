@@ -32,15 +32,31 @@ namespace jsonrpc
     class RpcProtocolServer
     {
         public:
-            RpcProtocolServer(procedurelist_t* procedures, AbstractAuthenticator* auth);
+            RpcProtocolServer(procedurelist_t* procedures, AbstractAuthenticator* auth = NULL);
+            RpcProtocolServer(AbstractAuthenticator* auth = NULL);
+
             virtual ~RpcProtocolServer();
 
             /**
-             * This is the key feature of this class, it deals with the JSOn-RPC 2.0 protocol.
+             * This is the key feature of this class, it deals with the JSON-RPC 2.0 protocol.
              *  @param request - holds (hopefully) a valid JSON-Request Object.
              *  @param retValue a reference to string object which will hold the response after this method;
              */
             void HandleRequest(const std::string& request, std::string& retValue);
+
+            /**
+             * @brief This method sets an Authenticator mechanism for the server. The object is deleted
+             * automatically by the RpcProtocolServer instance.
+             * @param auth - the authenticator to be used.
+             */
+            void setAuthenticator(AbstractAuthenticator* auth);
+
+            /**
+             * @brief addMethod adds a new method to the RpcProtocolServer. The added Procedure object is
+             * deleted automatically by this class.
+             * @param procedure
+             */
+            void addMethod(Procedure* procedure);
 
         private:
 

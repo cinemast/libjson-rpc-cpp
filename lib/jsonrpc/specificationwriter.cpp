@@ -1,0 +1,100 @@
+/*************************************************************************
+ * libjson-rpc-cpp
+ *************************************************************************
+ * @file    specificationwriter.cpp
+ * @date    30.04.2013
+ * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>
+ * @license See attached LICENSE.txt
+ ************************************************************************/
+
+#include "specificationwriter.h"
+#include <fstream>
+#include <json/json.h>
+#include <json/writer.h>
+
+using namespace std;
+
+namespace jsonrpc
+{
+    Json::Value SpecificationWriter::toJsonValue(SpecificationWriter::procedurelist_t *procedures)
+    {
+        procedurelist_t::iterator it;
+        Json::Value result;
+        Json::Value row;
+        int i=0;
+        for(it = procedures->begin(); it != procedures->end(); it++)
+        {
+            Procedure* proc = it->second;
+            procedureToJsonValue(proc, row);
+            result[i] = row;
+            i++;
+        }
+        return result;
+    }
+
+    std::string SpecificationWriter::toString(jsonrpc::SpecificationWriter::procedurelist_t *procedures)
+    {
+        Json::FastWriter wr;
+        return wr.write(toJsonValue(procedures));
+    }
+
+    void SpecificationWriter::toFile(const std::string &filename, SpecificationWriter::procedurelist_t *procedures)
+    {
+        ofstream file;
+        file.open(filename.c_str(), ios_base::out);
+        file << toString(procedures);
+        file.close();
+    }
+
+    Json::Value SpecificationWriter::toJsonLiteral(jsontype_t type)
+    {
+        Json::Value literal;
+        switch(type)
+        {
+            case JSON_BOOLEAN:
+                literal = true;
+                break;
+            case JSON_STRING:
+                literal = "somestring";
+                break;
+            case JSON_REAL:
+                literal = 1.0;
+                break;
+            case JSON_ARRAY:
+                literal[0] = "arrayelement";
+                break;
+            case JSON_OBJECT:
+                literal["objectkey"] = "objectvalue";
+                break;
+            case JSON_INTEGER:
+                literal = 1;
+                break;
+        }
+        return literal;
+    }
+
+    void SpecificationWriter::procedureToJsonValue(Procedure *procedure, Json::Value &target)
+    {
+        if(procedure->GetProcedureType() == RPC_METHOD)
+        {
+            target[KEY_METHOD_NAME] = procedure->GetProcedureName();
+            target[KEY_RETURN_TYPE] = toJsonLiteral(procedure->GetReturnType());
+        }
+        else
+        {
+            target[KEY_NOTIFICATION_NAME] = procedure->GetProcedureName();
+        }
+
+        int i=0;
+        for(parameterlist_t::const_iterator it = procedure->GetParameters().begin(); it != procedure->GetParameters().end(); it++)
+        {
+            target[KEY_PROCEDURE_PARAMETERS][i][it->first] = toJsonLiteral(it->second);
+            i++;
+        }
+
+        if(i == 0)
+        {
+            target[KEY_PROCEDURE_PARAMETERS] = Json::nullValue;
+        }
+    }
+}

@@ -32,7 +32,7 @@ namespace jsonrpc {
         notificationpointer_t::const_iterator it_notifications;
         for (unsigned int i = 0; i < val.size(); i++)
         {
-            proc = new Procedure(val[i]);
+            proc = GetProcedure(val[i]);
             (*procedures)[proc->GetProcedureName()] = proc;
             if (proc->GetProcedureType() == RPC_METHOD)
             {
@@ -79,10 +79,85 @@ namespace jsonrpc {
         notificationpointer_t::const_iterator it_notifications;
         for (unsigned int i = 0; i < val.size(); i++)
         {
-            proc = new Procedure(val[i]);
+            proc = GetProcedure(val[i]);
             (*procedures)[proc->GetProcedureName()] = proc;
         }
         return procedures;
+    }
+
+    Procedure* SpecificationParser::GetProcedure(Json::Value &signature)
+    {
+        procedure_t procedureType;
+        std::string name_key;
+        std::string procedureName;
+        Procedure* result;
+
+        if ((signature.isMember(KEY_METHOD_NAME)
+             || signature.isMember(KEY_NOTIFICATION_NAME))
+                && signature.isMember(KEY_PROCEDURE_PARAMETERS))
+        {
+            std::string procedure_name;
+            if (signature.isMember(KEY_METHOD_NAME))
+            {
+                name_key = KEY_METHOD_NAME;
+                procedureType = RPC_METHOD;
+            }
+            else
+            {
+                name_key = KEY_NOTIFICATION_NAME;
+                procedureType = RPC_NOTIFICATION;
+
+            }
+            if (signature[procedure_name].isString()
+                    && (signature[KEY_PROCEDURE_PARAMETERS].isObject() || signature[KEY_PROCEDURE_PARAMETERS].isNull()))
+            {
+                procedureName = signature[name_key].asString();
+                vector<string> parameters =
+                        signature[KEY_PROCEDURE_PARAMETERS].getMemberNames();
+                result = new Procedure(procedureName, procedureType);
+                for (unsigned int i = 0; i < parameters.size(); i++)
+                {
+                    switch (signature[KEY_PROCEDURE_PARAMETERS][parameters.at(i)].type())
+                    {
+                        case Json::uintValue:
+                        case Json::intValue:
+                            result->AddParameter(parameters.at(i), JSON_INTEGER);
+                            break;
+                        case Json::realValue:
+                            result->AddParameter(parameters.at(i), JSON_REAL);
+                            break;
+                        case Json::stringValue:
+                            result->AddParameter(parameters.at(i), JSON_STRING);
+                            break;
+                        case Json::booleanValue:
+                            result->AddParameter(parameters.at(i), JSON_BOOLEAN);
+                            break;
+                        case Json::arrayValue:
+                            result->AddParameter(parameters.at(i), JSON_ARRAY);
+                            break;
+                        case Json::objectValue:
+                            result->AddParameter(parameters.at(i), JSON_OBJECT);
+                            break;
+                        default:
+                            throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,"Unknown parameter in "
+                                                   + signature.toStyledString());
+                    }
+                }
+            }
+            else
+            {
+                throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,
+                                       "Invalid signature types in fileds: "
+                                       + signature.toStyledString());
+            }
+        }
+        else
+        {
+            throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,
+                                   "procedure declaration does not contain method/notification name or paramters: "
+                                   + signature.toStyledString());
+        }
+        return result;
     }
 
     void SpecificationParser::GetFileContent(const std::string &filename, std::string& target)

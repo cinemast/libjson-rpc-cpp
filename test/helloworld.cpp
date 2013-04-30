@@ -12,13 +12,22 @@
 #include <iostream>
 
 #include "server.h"
+#include <jsonrpc/procedure.h>
+#include <jsonrpc/specificationwriter.h>
 
 using namespace jsonrpc;
 using namespace std;
 
 int main(int argc, char** argv)
 {
-    Server* server;
+
+    procedurelist_t procs;
+    procs["somemethod"] = new Procedure("somemethod", "a", JSON_BOOLEAN, NULL);
+
+
+    cout << SpecificationWriter::toString(&procs);
+
+    /*Server* server;
     Client* client;
 
     try {
@@ -57,5 +66,5 @@ int main(int argc, char** argv)
         delete server;
         delete client;
         return -999;
-    }
+    }*/
 }
