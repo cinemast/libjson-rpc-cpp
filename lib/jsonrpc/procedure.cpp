@@ -116,59 +116,9 @@ namespace jsonrpc
         return this->procedureName;
     }
 
-    pMethod_t jsonrpc::Procedure::GetMethodPointer() const
-    {
-        if (this->procedureType == RPC_METHOD)
-        {
-            return (pMethod_t) this->procedurePointer.rp;
-        }
-        else
-        {
-            return NULL;
-        }
-    }
-
-    pNotification_t jsonrpc::Procedure::GetNotificationPointer() const
-    {
-        if (this->procedureType == RPC_NOTIFICATION)
-        {
-            return (pNotification_t) this->procedurePointer.np;
-        }
-        else
-        {
-            return NULL;
-        }
-    }
-
     jsontype_t Procedure::GetReturnType() const
     {
         return this->returntype;
-    }
-
-    bool Procedure::SetMethodPointer(pMethod_t rp)
-    {
-        if (this->procedureType == RPC_METHOD)
-        {
-            this->procedurePointer.rp = rp;
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    bool Procedure::SetNotificationPointer(pNotification_t np)
-    {
-        if (this->procedureType == RPC_NOTIFICATION)
-        {
-            this->procedurePointer.np = np;
-            return true;
-        }
-        else
-        {
-            return false;
-        }
     }
 
     void Procedure::AddParameter(const string& name, jsontype_t type)

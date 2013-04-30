@@ -9,20 +9,23 @@
 
 #include "rpcprotocolserver.h"
 #include "errors.h"
+#include "server.h"
 
 using namespace std;
 
 namespace jsonrpc
 {
-    RpcProtocolServer::RpcProtocolServer(procedurelist_t *procedures, AbstractAuthenticator* auth) :
+    RpcProtocolServer::RpcProtocolServer(AbstractRequestHandler* server, procedurelist_t *procedures, AbstractAuthenticator* auth) :
         procedures(procedures),
-        authManager(auth)
+        authManager(auth),
+        server(server)
     {
     }
 
-    RpcProtocolServer::RpcProtocolServer(AbstractAuthenticator* auth) :
+    RpcProtocolServer::RpcProtocolServer(AbstractRequestHandler* server, AbstractAuthenticator* auth) :
         procedures(new procedurelist_t),
-        authManager(auth)
+        authManager(auth),
+        server(server)
     {
     }
 
@@ -33,7 +36,7 @@ namespace jsonrpc
         {
             delete it->second;
         }
-        this->setAuthenticator(NULL);
+        this->SetAuthenticator(NULL);
         delete this->procedures;
     }
 
@@ -65,7 +68,7 @@ namespace jsonrpc
         retValue = w.write(response);
     }
 
-    void RpcProtocolServer::setAuthenticator(AbstractAuthenticator *auth)
+    void RpcProtocolServer::SetAuthenticator(AbstractAuthenticator *auth)
     {
         if(this->authManager != NULL)
         {
@@ -152,7 +155,7 @@ namespace jsonrpc
 
         if (method->GetProcedureType() == RPC_METHOD)
         {
-            (*method->GetMethodPointer())(request[KEY_REQUEST_PARAMETERS],
+            server->handleMethodCall(method, request[KEY_REQUEST_PARAMETERS],
                                           result);
             response[KEY_REQUEST_VERSION] = JSON_RPC_VERSION;
             response[KEY_RESPONSE_RESULT] = result;
@@ -166,15 +169,19 @@ namespace jsonrpc
         }
         else
         {
-            (*method->GetNotificationPointer())(
-                        request[KEY_REQUEST_PARAMETERS]);
+            server->handleNotificationCall(method, request[KEY_REQUEST_PARAMETERS]);
             response = Json::Value::null;
         }
     }
 
-    void RpcProtocolServer::addMethod(Procedure *procedure)
+    void RpcProtocolServer::AddProcedure(Procedure *procedure)
     {
         (*this->procedures)[procedure->GetProcedureName()] = procedure;
+    }
+
+    procedurelist_t &RpcProtocolServer::GetProcedures()
+    {
+        return *this->procedures;
     }
 
 } /* namespace jsonrpc */

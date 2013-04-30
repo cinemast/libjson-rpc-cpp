@@ -16,6 +16,7 @@
 
 #include "specificationparser.h"
 #include "abstractauthenticator.h"
+#include "abstractrequesthandler.h"
 
 #define KEY_REQUEST_METHODNAME "method"
 #define KEY_REQUEST_VERSION "jsonrpc"
@@ -32,8 +33,8 @@ namespace jsonrpc
     class RpcProtocolServer
     {
         public:
-            RpcProtocolServer(procedurelist_t* procedures, AbstractAuthenticator* auth = NULL);
-            RpcProtocolServer(AbstractAuthenticator* auth = NULL);
+            RpcProtocolServer(AbstractRequestHandler* server, procedurelist_t* procedures, AbstractAuthenticator* auth = NULL);
+            RpcProtocolServer(AbstractRequestHandler* server, AbstractAuthenticator* auth = NULL);
 
             virtual ~RpcProtocolServer();
 
@@ -49,14 +50,16 @@ namespace jsonrpc
              * automatically by the RpcProtocolServer instance.
              * @param auth - the authenticator to be used.
              */
-            void setAuthenticator(AbstractAuthenticator* auth);
+            void SetAuthenticator(AbstractAuthenticator* auth);
 
             /**
              * @brief addMethod adds a new method to the RpcProtocolServer. The added Procedure object is
              * deleted automatically by this class.
              * @param procedure
              */
-            void addMethod(Procedure* procedure);
+            void AddProcedure(Procedure* procedure);
+
+            procedurelist_t& GetProcedures();
 
         private:
 
@@ -83,6 +86,7 @@ namespace jsonrpc
              * this objects decides whether a request is allowed to be processed or not.
              */
             AbstractAuthenticator* authManager;
+            AbstractRequestHandler* server;
 
     };
 

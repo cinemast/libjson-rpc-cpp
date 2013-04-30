@@ -38,7 +38,7 @@ int validateRequest(Client* client, const std::string& method, Json::Value& para
 int main(int argc, char** argv)
 {
 
-    Server* server = getTestServer();
+    AbstractServer* server = getTestServer();
     Client* client = getTestClient();
     server->StartListening();
 

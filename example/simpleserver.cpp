@@ -46,7 +46,7 @@ int main(int argc, char** argv)
         try
         {
 
-            Server serv(argv[1], procedurePointers, notPointers, new HttpServer(8080));
+            AbstractServer serv(argv[1], procedurePointers, notPointers, new HttpServer(8080));
             if (serv.StartListening())
             {
                 cout << "Server started successfully" << endl;

@@ -12,10 +12,10 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out)
 
 
 add_subdirectory(lib)
-add_subdirectory(example)
+#add_subdirectory(example)
 add_subdirectory(stubgenerator)
 
-add_subdirectory(test)
+#add_subdirectory(test)
 
 
 # uninstall target

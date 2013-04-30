@@ -25,7 +25,7 @@ void incrementCounter(const Json::Value& request);
 jsonrpc::methodpointer_t getMethodPointer();
 jsonrpc::notificationpointer_t getNotificationPointer();
 
-jsonrpc::Server* getTestServer();
+jsonrpc::AbstractServer* getTestServer();
 jsonrpc::Client* getTestClient();
 
 #endif // SERVER_H

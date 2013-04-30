@@ -19,7 +19,7 @@ using namespace std;
 int main(int argc, char** argv)
 {
 
-    Server* server;
+    AbstractServer* server;
     Client* client;
 
     try {

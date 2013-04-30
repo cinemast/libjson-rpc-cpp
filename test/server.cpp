@@ -58,11 +58,11 @@ jsonrpc::notificationpointer_t getNotificationPointer()
     return notifications;
 }
 
-jsonrpc::Server* getTestServer()
+jsonrpc::AbstractServer* getTestServer()
 {
     notificationpointer_t notifications = getNotificationPointer();
     methodpointer_t methods = getMethodPointer();
-    return new Server("out/test/procedures.json", methods, notifications, new HttpServer(8080));
+    return new AbstractServer("out/test/procedures.json", methods, notifications, new HttpServer(8080));
 }
 
 jsonrpc::Client* getTestClient()

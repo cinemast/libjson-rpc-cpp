@@ -19,39 +19,120 @@
 
 namespace jsonrpc
 {
-   // template<typename S>
-    class Server
+    template<class S>
+    class AbstractServer : public AbstractRequestHandler
     {
         public:
-            //typedef void(S::methodPointer_t)(Json::Value &parameter, Json::Value &result);
-            Server(AbstractServerConnector* connector);
+            typedef void(S::*methodPointer_t)(const Json::Value &parameter, Json::Value &result);
+            typedef void(S::*notificationPointer_t)(const Json::Value &parameter);
 
-            Server(const std::string& configfile, methodpointer_t& methods, notificationpointer_t& notifications, AbstractServerConnector* connector);
-            virtual ~Server();
+            AbstractServer(AbstractServerConnector *connector) :
+                connection(connector),
+                handler(this)
+            {
+                connector->SetHandler(this->handler);
+            }
+
+            AbstractServer(const std::string &configfile, AbstractServerConnector *connector) :
+                handler(this, SpecificationParser::GetProcedures(configfile)),
+                connection(connector)
+            {
+                connector->SetHandler(this->handler);
+            }
+
+            virtual ~AbstractServer()
+            {
+                this->StopListening();
+                delete this->connection;
+            }
 
             /**
              * @brief StartListening starts the AbstractServerConnector to listen for incoming requests.
              * @return
              */
-            bool StartListening();
+            bool StartListening()
+            {
+                return this->connection->StartListening();
+            }
+
 
             /**
              * @brief StopListening stops the AbstractServerConnector, no more requests will be answered.
              * @return
              */
-            bool StopListening();
+            bool StopListening()
+            {
+                return this->connection->StopListening();
+            }
 
             /**
              * @brief set an authenticator to be used by this server. The authenticator will be deleted automatically.
              * @param auth
              */
-            void setAuthenticator(AbstractAuthenticator* auth);
+            void setAuthenticator(AbstractAuthenticator *auth)
+            {
+                this->handler.SetAuthenticator(auth);
+            }
 
-            void registerMethod(Procedure* proc, pMethod_t);
+            virtual void handleMethodCall(Procedure* proc, const Json::Value& input, Json::Value& output)
+            {
+                S* instance = dynamic_cast<S*>(this);
+                (instance->*methods[proc->GetProcedureName()])(input, output);
+            }
+
+            virtual void handleNotificationCall(Procedure* proc, const Json::Value& input)
+            {
+                S* instance = dynamic_cast<S*>(this);
+                (instance->*notifications[proc->GetProcedureName()])(input);
+            }
+
+            bool bindMethod(std::string& name, methodPointer_t method)
+            {
+                if(this->handler.GetProcedures().find(name) != this->handler.GetProcedures().end() && this->handler.GetProcedures()[name]->GetProcedureType() == RPC_METHOD)
+                {
+                    this->methods[name] = method;
+                    return true;
+                }
+                return false;
+            }
+
+            bool bindNotification(std::string& name, notificationPointer_t notification)
+            {
+                if(this->handler.GetProcedures().find(name) != this->handler.GetProcedures().end() && this->handler.GetProcedures()[name]->GetProcedureTyp() == RPC_NOTIFICATION)
+                {
+                    this->notifications[name] = notification;
+                    return true;
+                }
+                return false;
+            }
+
+            bool bindAndAddMethod(Procedure* proc, methodPointer_t pointer)
+            {
+                if(proc->GetProcedureType() == RPC_METHOD)
+                {
+                    this->handler.AddProcedure(proc);
+                    this->methods[proc->GetProcedureName()] = pointer;
+                    return true;
+                }
+                return false;
+            }
+
+            bool bindAndAddNotification(Procedure* proc, notificationPointer_t pointer)
+            {
+                if(proc->GetProcedureType() == RPC_NOTIFICATION)
+                {
+                    this->handler.AddProcedure(proc);
+                    this->methods[proc->GetProcedureName()] = pointer;
+                    return true;
+                }
+                return false;
+            }
 
         private:
             AbstractServerConnector* connection;
             RpcProtocolServer handler;
+            std::map<std::string, methodPointer_t> methods;
+            std::map<std::string, notificationPointer_t> notifications;
     };
 
 } /* namespace jsonrpc */

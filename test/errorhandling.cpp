@@ -15,8 +15,8 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-    Server* server = getTestServer();
-    Server* server2 = getTestServer();
+    AbstractServer* server = getTestServer();
+    AbstractServer* server2 = getTestServer();
 
     //Server Startup and shutdown tests
     if(!server->StartListening())
