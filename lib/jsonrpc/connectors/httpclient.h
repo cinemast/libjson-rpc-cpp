@@ -20,10 +20,10 @@ namespace jsonrpc
     class HttpClient : public AbstractClientConnector
     {
         public:
-            HttpClient(const std::string& url) throw (Exception);
+            HttpClient(const std::string& url) throw (JsonRpcException);
             virtual ~HttpClient();
 
-            virtual void SendMessage(const std::string& message, std::string& result) throw (Exception);
+            virtual void SendMessage(const std::string& message, std::string& result) throw (JsonRpcException);
 
             void SetUrl(const std::string& url);
 

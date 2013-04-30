@@ -63,7 +63,7 @@ int main(int argc, char** argv)
     {
         client->CallNotification("initCounter", Json::nullValue);
     }
-    catch(Exception e)
+    catch(JsonRpcException e)
     {
         error = e.GetCode();
     }

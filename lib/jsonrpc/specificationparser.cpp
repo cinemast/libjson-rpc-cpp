@@ -15,7 +15,7 @@ using namespace std;
 
 namespace jsonrpc {
 
-    procedurelist_t* SpecificationParser::GetProcedures(const std::string &filename, methodpointer_t &methods, notificationpointer_t &notifications) throw (Exception)
+    procedurelist_t* SpecificationParser::GetProcedures(const std::string &filename, methodpointer_t &methods, notificationpointer_t &notifications) throw (JsonRpcException)
     {
         string content;
         GetFileContent(filename,content);
@@ -23,7 +23,7 @@ namespace jsonrpc {
         Json::Reader reader;
         Json::Value val;
         if(!reader.parse(content,val)) {
-            throw Exception(Errors::ERROR_RPC_JSON_PARSE_ERROR, " specification file contains syntax errors");
+            throw JsonRpcException(Errors::ERROR_RPC_JSON_PARSE_ERROR, " specification file contains syntax errors");
         }
 
         procedurelist_t* procedures = new procedurelist_t();
@@ -43,7 +43,7 @@ namespace jsonrpc {
                 }
                 else
                 {
-                    throw Exception(Errors::ERROR_SERVER_PROCEDURE_POINTER_IS_NULL, proc->GetProcedureName());
+                    throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_POINTER_IS_NULL, proc->GetProcedureName());
                 }
             }
             else
@@ -55,14 +55,14 @@ namespace jsonrpc {
                 }
                 else
                 {
-                    throw Exception(Errors::ERROR_SERVER_PROCEDURE_POINTER_IS_NULL, proc->GetProcedureName());
+                    throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_POINTER_IS_NULL, proc->GetProcedureName());
                 }
             }
         }
         return procedures;
     }
 
-    procedurelist_t *SpecificationParser::GetProcedures(const string &filename) throw(Exception)
+    procedurelist_t *SpecificationParser::GetProcedures(const string &filename) throw(JsonRpcException)
     {
         string content;
         GetFileContent(filename,content);
@@ -70,7 +70,7 @@ namespace jsonrpc {
         Json::Reader reader;
         Json::Value val;
         if(!reader.parse(content,val)) {
-            throw Exception(Errors::ERROR_RPC_JSON_PARSE_ERROR, " specification file contains syntax errors");
+            throw JsonRpcException(Errors::ERROR_RPC_JSON_PARSE_ERROR, " specification file contains syntax errors");
         }
 
         procedurelist_t* procedures = new procedurelist_t();
@@ -97,7 +97,7 @@ namespace jsonrpc {
         }
         else
         {
-            throw Exception(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_NOT_FOUND, filename);
+            throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_NOT_FOUND, filename);
         }
     }
 }

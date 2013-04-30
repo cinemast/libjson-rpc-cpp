@@ -23,7 +23,7 @@ int main()
     {
         cout << c.CallMethod("sayHello", params) << endl;
     }
-    catch (Exception e)
+    catch (JsonRpcException e)
     {
         cerr << e.what() << endl;
     }

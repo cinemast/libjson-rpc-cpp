@@ -152,7 +152,7 @@ int main(int argc, char** argv)
             cout << "Stub generated into " << filename << endl;
         }
     }
-    catch (Exception& e)
+    catch (JsonRpcException& e)
     {
         cerr << e.what() << endl;
         return -1;

@@ -19,16 +19,16 @@
 namespace jsonrpc
 {
     
-    class Exception: public std::exception
+    class JsonRpcException: public std::exception
     {
         public:
-            Exception(int code);
+            JsonRpcException(int code);
 
-            Exception(int code, const std::string& message);
+            JsonRpcException(int code, const std::string& message);
 
-            Exception(const std::string& message);
+            JsonRpcException(const std::string& message);
 
-            virtual ~Exception() throw ();
+            virtual ~JsonRpcException() throw ();
 
             int GetCode() const;
 

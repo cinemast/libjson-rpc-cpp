@@ -18,7 +18,7 @@ namespace jsonrpc
     {
     }
 
-    void Client::CallMethod(const std::string &name, const Json::Value &paramter, Json::Value& result) throw(Exception)
+    void Client::CallMethod(const std::string &name, const Json::Value &paramter, Json::Value& result) throw(JsonRpcException)
     {
         std::string request, response;
         protocol.BuildRequest(name, paramter, request, false);
@@ -27,14 +27,14 @@ namespace jsonrpc
     }
     
     Json::Value Client::CallMethod(const std::string& name,
-                                   const Json::Value& parameter) throw(Exception)
+                                   const Json::Value& parameter) throw(JsonRpcException)
     {
         Json::Value result;
         this->CallMethod(name, parameter, result);
         return result;
     }
     
-    void Client::CallNotification(const std::string& name, const Json::Value& parameter) throw(Exception)
+    void Client::CallNotification(const std::string& name, const Json::Value& parameter) throw(JsonRpcException)
     {
         std::string request, response;
         protocol.BuildRequest(name, parameter, request, false);

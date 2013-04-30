@@ -11,39 +11,39 @@
 
 namespace jsonrpc
 {
-    Exception::Exception(int code)
+    JsonRpcException::JsonRpcException(int code)
             : code(code)
     {
         this->message = Errors::GetErrorMessage(code);
     }
 
-    Exception::Exception(int code, const std::string& message)
+    JsonRpcException::JsonRpcException(int code, const std::string& message)
             : code(code)
     {
         this->message = Errors::GetErrorMessage(code) +": "+ message;
     }
 
-    Exception::Exception(const std::string& message)
+    JsonRpcException::JsonRpcException(const std::string& message)
     {
         this->message = message;
     }
 
-    Exception::~Exception() throw ()
+    JsonRpcException::~JsonRpcException() throw ()
     {
 
     }
 
-    int Exception::GetCode() const
+    int JsonRpcException::GetCode() const
     {
         return code;
     }
 
-    const std::string& Exception::GetMessage() const
+    const std::string& JsonRpcException::GetMessage() const
     {
         return message;
     }
 
-    const char* Exception::what() const throw ()
+    const char* JsonRpcException::what() const throw ()
     {
         std::stringstream ss;
         ss << "Error  " << this->code << " : " << this->message;

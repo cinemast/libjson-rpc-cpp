@@ -24,9 +24,9 @@ namespace jsonrpc
         public:
             Client(AbstractClientConnector& connector);
 
-            void CallMethod(const std::string &name, const Json::Value &paramter, Json::Value& result) throw (Exception);
-            Json::Value CallMethod(const std::string& name, const Json::Value& paramter) throw (Exception);
-            void CallNotification(const std::string& name, const Json::Value& paramter) throw (Exception);
+            void CallMethod(const std::string &name, const Json::Value &paramter, Json::Value& result) throw (JsonRpcException);
+            Json::Value CallMethod(const std::string& name, const Json::Value& paramter) throw (JsonRpcException);
+            void CallNotification(const std::string& name, const Json::Value& paramter) throw (JsonRpcException);
 
         private:
            AbstractClientConnector* connector;

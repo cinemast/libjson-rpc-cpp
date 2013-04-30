@@ -62,14 +62,14 @@ namespace jsonrpc
         result = writer.write(res);
     }
 
-    Json::Value RpcProtocolClient::HandleResponse(const std::string &response) throw(Exception)
+    Json::Value RpcProtocolClient::HandleResponse(const std::string &response) throw(JsonRpcException)
     {
         Json::Value result;
         this->HandleResponse(response, result);
         return result;
     }
 
-    void RpcProtocolClient::HandleResponse(const std::string &response, Json::Value& result) throw(Exception)
+    void RpcProtocolClient::HandleResponse(const std::string &response, Json::Value& result) throw(JsonRpcException)
     {
         Json::Reader reader;
         Json::Value value;
@@ -83,17 +83,17 @@ namespace jsonrpc
                 }
                 else
                 {
-                    throw Exception(value[KEY_ERROR][KEY_ERROR_CODE].asInt(), value[KEY_ERROR][KEY_ERROR_MESSAGE].asString());
+                    throw JsonRpcException(value[KEY_ERROR][KEY_ERROR_CODE].asInt(), value[KEY_ERROR][KEY_ERROR_MESSAGE].asString());
                 }
             }
             else
             {
-                throw Exception(Errors::ERROR_CLIENT_INVALID_RESPONSE, " " + response);
+                throw JsonRpcException(Errors::ERROR_CLIENT_INVALID_RESPONSE, " " + response);
             }
         }
         else
         {
-            throw Exception(Errors::ERROR_RPC_JSON_PARSE_ERROR, " " + response);
+            throw JsonRpcException(Errors::ERROR_RPC_JSON_PARSE_ERROR, " " + response);
         }
     }
 

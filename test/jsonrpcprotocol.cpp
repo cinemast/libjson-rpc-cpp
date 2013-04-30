@@ -28,7 +28,7 @@ int validateRequest(Client* client, const std::string& method, Json::Value& para
             client->CallNotification(method, param);
         }
     }
-    catch (Exception e)
+    catch (JsonRpcException e)
     {
         error = e.GetCode();
     }

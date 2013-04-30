@@ -69,14 +69,14 @@ namespace jsonrpc {
              * @param response - the resonse of a json-rpc server represented as string.
              * @return The result object inside the json-rpc response message
              */
-            Json::Value HandleResponse(const std::string& response) throw(Exception);
+            Json::Value HandleResponse(const std::string& response) throw(JsonRpcException);
 
 
             /**
              * @brief Does the same as Json::Value RpcProtocolClient::HandleResponse(const std::string& response) throw(Exception)
              * but returns result as reference for performance speed up.
              */
-            void HandleResponse(const std::string& response, Json::Value& result) throw (Exception);
+            void HandleResponse(const std::string& response, Json::Value& result) throw (JsonRpcException);
 
 
             /**

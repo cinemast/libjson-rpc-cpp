@@ -53,7 +53,7 @@ int main(int argc, char** argv)
 
         return 0;
 
-    } catch(jsonrpc::Exception e) {
+    } catch(jsonrpc::JsonRpcException e) {
         cerr << "Exception occured: " << e.what() << endl;
         delete server;
         delete client;

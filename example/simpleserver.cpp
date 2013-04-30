@@ -58,7 +58,7 @@ int main(int argc, char** argv)
                 cout << "Error starting Server" << endl;
             }
         }
-        catch (jsonrpc::Exception& e)
+        catch (jsonrpc::JsonRpcException& e)
         {
             cerr << e.what() << endl;
         }

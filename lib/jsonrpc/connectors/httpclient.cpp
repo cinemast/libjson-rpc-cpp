@@ -60,13 +60,13 @@ namespace jsonrpc
         s->ptr[0] = '\0';
     }
     
-    HttpClient::HttpClient(const std::string& url) throw(Exception)
+    HttpClient::HttpClient(const std::string& url) throw(JsonRpcException)
         : AbstractClientConnector(), url(url)
     {
         curl = curl_easy_init();
         if (!curl)
         {
-            throw Exception(Errors::ERROR_CLIENT_CONNECTOR, ": libcurl initialization error");
+            throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, ": libcurl initialization error");
         }
 
         curl_easy_setopt(curl, CURLOPT_URL, this->url.c_str());
@@ -81,7 +81,7 @@ namespace jsonrpc
         }
     }
 
-    void HttpClient::SendMessage(const std::string& message, std::string& result) throw (Exception)
+    void HttpClient::SendMessage(const std::string& message, std::string& result) throw (JsonRpcException)
     {
         CURLcode res;
 
@@ -114,7 +114,7 @@ namespace jsonrpc
             {
                 str << ": libcurl error: " << res;
             }
-            throw Exception(Errors::ERROR_CLIENT_CONNECTOR, str.str());
+            throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, str.str());
         }
     }
 

@@ -71,7 +71,7 @@ namespace jsonrpc
                             this->parameters[parameters.at(i)] = JSON_OBJECT;
                             break;
                         default:
-                            throw Exception(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,"Unknown parameter in "
+                            throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,"Unknown parameter in "
                                             + signature.toStyledString());
                     }
                 }
@@ -80,14 +80,14 @@ namespace jsonrpc
             }
             else
             {
-                throw Exception(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,
+                throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,
                                 "Invalid signature types in fileds: "
                                 + signature.toStyledString());
             }
         }
         else
         {
-            throw Exception(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,
+            throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,
                             "procedure declaration does not contain method/notification name or paramters: "
                             + signature.toStyledString());
         }
