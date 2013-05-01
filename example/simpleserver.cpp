@@ -13,56 +13,50 @@
 using namespace jsonrpc;
 using namespace std;
 
-//method
-void sayHello(const Json::Value& request, Json::Value& response)
+class SampleServer : public AbstractServer<SampleServer>
 {
-    cout << "Requested say Hello" << endl;
-    response = "Hello: " + request["name"].asString();
-}
+    public:
+        SampleServer() :
+            AbstractServer(new HttpServer(8080))
+        {
+            this->bindAndAddMethod(new Procedure("sayHello", JSON_STRING, "name", JSON_STRING, NULL), &SampleServer::sayHello);
+            this->bindAndAddNotification(new Procedure("notifyServer", NULL), &SampleServer::notifyServer);
+        }
 
-//notification
-void notifyServer(const Json::Value& request)
-{
-    cout << "server received some Notification" << endl;
-}
+        //method
+        void sayHello(const Json::Value& request, Json::Value& response)
+        {
+            cout << "Requested say Hello" << endl;
+            response = "Hello: " + request["name"].asString();
+        }
+
+        //notification
+        void notifyServer(const Json::Value& request)
+        {
+            cout << "server received some Notification" << endl;
+        }
+};
 
 int main(int argc, char** argv)
 {
-
-    if(argc < 2)
+    try
     {
-        cerr << "Missing method specification" << endl;
-        cerr << "e.g. " << argv[0] << " " << "procedures.json" << endl;
-        return -1;
-    }
-    else
-    {
-        methodpointer_t procedurePointers;
-        notificationpointer_t notPointers;
-
-        procedurePointers["sayHello"] = &sayHello;
-        notPointers["notifyServer"] = &notifyServer;
-
-        try
+        SampleServer serv;
+        if (serv.StartListening())
         {
-
-            AbstractServer serv(argv[1], procedurePointers, notPointers, new HttpServer(8080));
-            if (serv.StartListening())
-            {
-                cout << "Server started successfully" << endl;
-                getchar();
-                serv.StopListening();
-            }
-            else
-            {
-                cout << "Error starting Server" << endl;
-            }
+            cout << "Server started successfully" << endl;
+            getchar();
+            serv.StopListening();
         }
-        catch (jsonrpc::JsonRpcException& e)
+        else
         {
-            cerr << e.what() << endl;
+            cout << "Error starting Server" << endl;
         }
     }
-    //curl --data "{\"jsonrpc\":\"2.0\",\"method\":\"sayHello\",\"id\":1,\"params\":{\"name\":\"peter\"}}" localhost:8080
-    //curl --data "{\"jsonrpc\":\"2.0\",\"method\":\"notifyServer\", \"params\": null}" localhost:8080
+    catch (jsonrpc::JsonRpcException& e)
+    {
+        cerr << e.what() << endl;
+    }
+//curl --data "{\"jsonrpc\":\"2.0\",\"method\":\"sayHello\",\"id\":1,\"params\":{\"name\":\"peter\"}}" localhost:8080
+//curl --data "{\"jsonrpc\":\"2.0\",\"method\":\"notifyServer\", \"params\": null}" localhost:8080
 }
