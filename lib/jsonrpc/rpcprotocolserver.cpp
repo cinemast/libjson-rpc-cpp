@@ -41,7 +41,7 @@ namespace jsonrpc
     }
 
     void RpcProtocolServer::HandleRequest(const std::string& request,
-                                       std::string& retValue)
+                                          std::string& retValue)
     {
         Json::Reader reader;
         Json::Value req;
@@ -114,19 +114,16 @@ namespace jsonrpc
             if (it != this->procedures->end())
             {
                 proc = (*this->procedures)[request[KEY_REQUEST_METHODNAME].asString()];
-                if (proc->ValdiateParameters(request[KEY_REQUEST_PARAMETERS]))
+                if(request.isMember(KEY_REQUEST_ID) && proc->GetProcedureType() == RPC_NOTIFICATION)
                 {
-                    if (request.isMember(KEY_REQUEST_ID))
-                    {
-                        if (proc->GetProcedureType() == RPC_NOTIFICATION)
-                        {
-                            error = Errors::ERROR_SERVER_PROCEDURE_IS_NOTIFICATION;
-                        }
-                    }
-                    else if (proc->GetProcedureType() == RPC_METHOD)
-                    {
-                        error = Errors::ERROR_SERVER_PROCEDURE_IS_METHOD;
-                    }
+                    error = Errors::ERROR_SERVER_PROCEDURE_IS_NOTIFICATION;
+                }
+                else if(!request.isMember(KEY_REQUEST_ID) && proc->GetProcedureType() == RPC_METHOD)
+                {
+                    error = Errors::ERROR_SERVER_PROCEDURE_IS_METHOD;
+                }
+                else if (proc->ValdiateParameters(request[KEY_REQUEST_PARAMETERS]))
+                {
                     if (this->authManager != NULL)
                     {
                         error = this->authManager->CheckPermission(
@@ -148,7 +145,7 @@ namespace jsonrpc
     }
 
     void RpcProtocolServer::ProcessRequest(const Json::Value& request,
-                                        Json::Value& response)
+                                           Json::Value& response)
     {
         Procedure* method = (*this->procedures)[request[KEY_REQUEST_METHODNAME].asString()];
         Json::Value result;
@@ -156,7 +153,7 @@ namespace jsonrpc
         if (method->GetProcedureType() == RPC_METHOD)
         {
             server->handleMethodCall(method, request[KEY_REQUEST_PARAMETERS],
-                                          result);
+                                     result);
             response[KEY_REQUEST_VERSION] = JSON_RPC_VERSION;
             response[KEY_RESPONSE_RESULT] = result;
             response[KEY_REQUEST_ID] = request[KEY_REQUEST_ID];

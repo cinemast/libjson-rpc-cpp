@@ -116,7 +116,7 @@ namespace jsonrpc
             this->running = false;
             return true;
         }
-        return false;
+        return true;
     }
     
     bool HttpServer::SendResponse(const std::string& response, void* addInfo)

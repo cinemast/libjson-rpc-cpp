@@ -64,7 +64,7 @@ int main(int argc, char** argv)
         return -3;
     }
 
-    if(validateRequest(client,"incrementCounter", v, true) != -32606)
+    if(validateRequest(client,"incrementCounter", v, true) != -32605)
     {
         cerr << "Wrong error code for method called as notification " << validateRequest(client,"sayHello", v, false) << endl;
         return -4;
