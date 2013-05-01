@@ -8,6 +8,9 @@
  ************************************************************************/
 
 #include "server.h"
+#include <iostream>
+
+using namespace std;
 using namespace jsonrpc;
 
 TestServer::TestServer() :
@@ -20,7 +23,7 @@ TestServer::TestServer() :
     this->bindAndAddMethod(new Procedure("sub", JSON_INTEGER, "value1", JSON_INTEGER, "value2", JSON_INTEGER, NULL), &TestServer::sub);
 
     this->bindAndAddNotification(new Procedure("initCounter", NULL), &TestServer::initCounter);
-    this->bindAndAddNotification(new Procedure("incrementCounter", NULL), &TestServer::incrementCounter);
+    this->bindAndAddNotification(new Procedure("incrementCounter", "value", JSON_INTEGER, NULL), &TestServer::incrementCounter);
 }
 
 void TestServer::sayHello(const Json::Value &request, Json::Value& response)
@@ -45,7 +48,7 @@ void TestServer::sub(const Json::Value &request, Json::Value &response)
 
 void TestServer::initCounter(const Json::Value &request)
 {
-    cnt=0;
+    cnt= request["value"].asInt();
 }
 
 void TestServer::incrementCounter(const Json::Value &request)

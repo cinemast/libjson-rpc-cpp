@@ -19,14 +19,10 @@ using namespace std;
 int main(int argc, char** argv)
 {
 
-    AbstractServer* server;
-    Client* client;
+    TestServer* server = new TestServer();
+    Client* client = new Client(new HttpClient("http://localhost:8080"));
 
     try {
-
-        server = getTestServer();
-        client = getTestClient();
-
         server->StartListening();
 
         Json::Value v;

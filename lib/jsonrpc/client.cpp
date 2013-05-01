@@ -42,7 +42,7 @@ namespace jsonrpc
     void Client::CallNotification(const std::string& name, const Json::Value& parameter) throw(JsonRpcException)
     {
         std::string request, response;
-        protocol.BuildRequest(name, parameter, request, false);
+        protocol.BuildRequest(name, parameter, request, true);
         connector->SendMessage(request, response);
     }
 

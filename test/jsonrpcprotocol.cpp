@@ -38,8 +38,8 @@ int validateRequest(Client* client, const std::string& method, Json::Value& para
 int main(int argc, char** argv)
 {
 
-    AbstractServer* server = getTestServer();
-    Client* client = getTestClient();
+    TestServer* server = new TestServer();
+    Client* client = new Client(new HttpClient("http://localhost:8080"));
     server->StartListening();
 
     Json::Value v;

@@ -15,8 +15,8 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-    AbstractServer* server = getTestServer();
-    AbstractServer* server2 = getTestServer();
+    TestServer* server = new TestServer();
+     TestServer* server2 = new TestServer();
 
     //Server Startup and shutdown tests
     if(!server->StartListening())
@@ -56,7 +56,7 @@ int main(int argc, char** argv)
     server->StopListening();
 
     //Client startup and shutdown tests
-    Client* client = getTestClient();
+    Client* client = new Client(new HttpClient("http://localhost:8080"));
 
     int error = 0;
     try
