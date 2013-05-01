@@ -11,6 +11,8 @@
 #include "errors.h"
 #include "server.h"
 
+#include <iostream>
+
 using namespace std;
 
 namespace jsonrpc
@@ -23,7 +25,7 @@ namespace jsonrpc
     }
 
     RpcProtocolServer::RpcProtocolServer(AbstractRequestHandler* server, AbstractAuthenticator* auth) :
-        procedures(new procedurelist_t),
+        procedures(new procedurelist_t()),
         authManager(auth),
         server(server)
     {
@@ -176,9 +178,9 @@ namespace jsonrpc
         (*this->procedures)[procedure->GetProcedureName()] = procedure;
     }
 
-    procedurelist_t &RpcProtocolServer::GetProcedures()
+    procedurelist_t& RpcProtocolServer::GetProcedures()
     {
-        return *this->procedures;
+        return *(this->procedures);
     }
 
 } /* namespace jsonrpc */

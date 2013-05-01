@@ -11,18 +11,19 @@
 #include <fstream>
 #include <json/json.h>
 #include <json/writer.h>
+#include <iostream>
 
 using namespace std;
 
 namespace jsonrpc
 {
-    Json::Value SpecificationWriter::toJsonValue(SpecificationWriter::procedurelist_t *procedures)
+    Json::Value SpecificationWriter::toJsonValue(SpecificationWriter::procedurelist_t& procedures)
     {
         procedurelist_t::iterator it;
         Json::Value result;
         Json::Value row;
         int i=0;
-        for(it = procedures->begin(); it != procedures->end(); it++)
+        for(it = procedures.begin(); it != procedures.end(); it++)
         {
             Procedure* proc = it->second;
             procedureToJsonValue(proc, row);
@@ -32,13 +33,13 @@ namespace jsonrpc
         return result;
     }
 
-    std::string SpecificationWriter::toString(jsonrpc::SpecificationWriter::procedurelist_t *procedures)
+    std::string SpecificationWriter::toString(jsonrpc::SpecificationWriter::procedurelist_t& procedures)
     {
-        Json::FastWriter wr;
+        Json::StyledWriter wr;
         return wr.write(toJsonValue(procedures));
     }
 
-    void SpecificationWriter::toFile(const std::string &filename, SpecificationWriter::procedurelist_t *procedures)
+    void SpecificationWriter::toFile(const std::string &filename, SpecificationWriter::procedurelist_t& procedures)
     {
         ofstream file;
         file.open(filename.c_str(), ios_base::out);
@@ -84,11 +85,10 @@ namespace jsonrpc
         {
             target[KEY_NOTIFICATION_NAME] = procedure->GetProcedureName();
         }
-
         int i=0;
         for(parameterlist_t::const_iterator it = procedure->GetParameters().begin(); it != procedure->GetParameters().end(); it++)
         {
-            target[KEY_PROCEDURE_PARAMETERS][i][it->first] = toJsonLiteral(it->second);
+            target[KEY_PROCEDURE_PARAMETERS][it->first] = toJsonLiteral(it->second);
             i++;
         }
 

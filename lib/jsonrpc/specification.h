@@ -13,7 +13,7 @@
 #define KEY_METHOD_NAME "method"
 #define KEY_NOTIFICATION_NAME "notification"
 #define KEY_PROCEDURE_PARAMETERS "params"
-#define KEY_RETURN_TYPE ""
+#define KEY_RETURN_TYPE "returns"
 
 namespace jsonrpc
 {

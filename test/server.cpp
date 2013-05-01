@@ -17,6 +17,7 @@ TestServer::TestServer() :
     AbstractServer(new HttpServer(8080)),
     cnt(0)
 {
+    cout << "Called default const" << endl;
     this->bindAndAddMethod(new Procedure("sayHello", JSON_STRING, "name", JSON_STRING, NULL), &TestServer::sayHello);
     this->bindAndAddMethod(new Procedure("getCounterValue", JSON_INTEGER, NULL), &TestServer::getCounterValue);
     this->bindAndAddMethod(new Procedure("add", JSON_INTEGER, "value1", JSON_INTEGER, "value2", JSON_INTEGER, NULL), &TestServer::add);

@@ -19,9 +19,9 @@ namespace jsonrpc {
         typedef std::map<std::string, Procedure*> procedurelist_t;
 
         public:
-            static Json::Value toJsonValue(procedurelist_t* procedures);
-            static std::string toString(procedurelist_t* procedures);
-            static void toFile(const std::string& filename, procedurelist_t* procedures);
+            static Json::Value toJsonValue(procedurelist_t& procedures);
+            static std::string toString(procedurelist_t& procedures);
+            static void toFile(const std::string& filename, procedurelist_t& procedures);
 
         private:
             static Json::Value toJsonLiteral(jsontype_t type);

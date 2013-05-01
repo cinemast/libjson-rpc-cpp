@@ -24,6 +24,8 @@ int main(int argc, char** argv)
     TestServer* server = new TestServer();
     Client* client = new Client(new HttpClient("http://localhost:8080"));
 
+    cout << SpecificationWriter::toString(server->GetProtocolHanlder()->GetProcedures()) << endl;
+
     try {
         server->StartListening();
 

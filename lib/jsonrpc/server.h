@@ -66,12 +66,12 @@ namespace jsonrpc
             }
 
             /**
-             * @brief set an authenticator to be used by this server. The authenticator will be deleted automatically.
-             * @param auth
+             * @brief Returns the protocol instance, which can be used to get all registered Methods.
+             * @return
              */
-            virtual void setAuthenticator(AbstractAuthenticator *auth)
+            virtual RpcProtocolServer* GetProtocolHanlder()
             {
-                this->handler.SetAuthenticator(auth);
+                return &this->handler;
             }
 
             virtual void handleMethodCall(Procedure* proc, const Json::Value& input, Json::Value& output)
