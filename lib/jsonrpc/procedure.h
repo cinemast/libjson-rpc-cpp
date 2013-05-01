@@ -18,7 +18,6 @@
 
 namespace jsonrpc
 {
-
     typedef std::map<std::string, jsontype_t> parameterlist_t;
 
     class Procedure
@@ -81,6 +80,8 @@ namespace jsonrpc
              */
             jsontype_t returntype;
     };
+
+    typedef std::map<std::string, Procedure*> procedurelist_t;
 
 } /* namespace jsonrpc */
 #endif /* PROCEDURE_H_ */

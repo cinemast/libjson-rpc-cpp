@@ -1,5 +1,5 @@
-#ifndef TEMPLATE_H_
-#define TEMPLATE_H_
+#ifndef CLIENTTEMPLATE_H_
+#define CLIENTTEMPLATE_H_
 
 #define TEMPLATE_METHOD "\
         <return_type> <methodname>(<parameters>) throw (jsonrpc::Exception)\n\

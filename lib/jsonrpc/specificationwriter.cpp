@@ -17,7 +17,7 @@ using namespace std;
 
 namespace jsonrpc
 {
-    Json::Value SpecificationWriter::toJsonValue(SpecificationWriter::procedurelist_t& procedures)
+    Json::Value SpecificationWriter::toJsonValue(procedurelist_t& procedures)
     {
         procedurelist_t::iterator it;
         Json::Value result;
@@ -33,13 +33,13 @@ namespace jsonrpc
         return result;
     }
 
-    std::string SpecificationWriter::toString(jsonrpc::SpecificationWriter::procedurelist_t& procedures)
+    std::string SpecificationWriter::toString(procedurelist_t& procedures)
     {
         Json::StyledWriter wr;
         return wr.write(toJsonValue(procedures));
     }
 
-    void SpecificationWriter::toFile(const std::string &filename, SpecificationWriter::procedurelist_t& procedures)
+    void SpecificationWriter::toFile(const std::string &filename, procedurelist_t& procedures)
     {
         ofstream file;
         file.open(filename.c_str(), ios_base::out);

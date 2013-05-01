@@ -25,6 +25,7 @@ namespace jsonrpc {
         private:
             static Procedure* GetProcedure(Json::Value& val);
             static void GetFileContent(const std::string& filename, std::string& target);
+            static jsontype_t toJsonType(Json::Value& val);
     };
 }
 #endif // SPECIFICATIONPARSER_H

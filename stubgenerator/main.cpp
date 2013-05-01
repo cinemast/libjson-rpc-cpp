@@ -15,147 +15,91 @@
 #include <jsonrpc/rpc.h>
 #include <jsonrpc/procedure.h>
 
-#include "template.h"
+#include "clientstubgenerator.h"
+#include "serverstubgenerator.h"
 
 using namespace std;
 using namespace jsonrpc;
 
-std::string readfile(const std::string& filename)
+void printHelp()
 {
-    ifstream config(filename.c_str());
-    string value;
-    if (config)
-    {
-        value.assign((std::istreambuf_iterator<char>(config)),
-                (std::istreambuf_iterator<char>()));
-    }
+    cout << "jsonrpcstub Usage: jsonrpcstub {-s | -c} [-o /home/somepath/] inputfile stubname" << endl;
+    cout << "Warning: stubname parameter may not contain any characters dissalowed in a C++ class name" << endl << endl;
+    cout << "Options: " << endl;
+    cout << "\t -h, --help\t\tPrint this menu" << endl;
+    cout << "\t -s, --server\tCreate stub for server" << endl;
+    cout << "\t -c, --client\tCreate stub for client" << endl;
+    //   cout << "\t -b, --both\t\tCreate stub for client and server" << endl;
+    cout << "\t -o, --output\tSpecify output path for stubfile. If not specified, outputpath will be CWD" << endl << endl;
 
-    return value;
-}
+    cout << "Example for client stub:" << endl;
+    cout << "\tjsonrpcstub -c /home/user/procedures.json MyClient" << endl << endl;
 
-void replace_all(string& text, const string& fnd, const string& rep)
-{
-    size_t pos = text.find(fnd);
-    while (pos != string::npos)
-    {
-        text.replace(pos, fnd.length(), rep);
-        pos = text.find(fnd, pos + rep.length());
-    }
-}
-
-std::string generateMethod(Procedure& proc)
-{
-    string tmp = TEMPLATE_METHOD;
-
-    //set methodname
-    replace_all(tmp, "<methodname>", proc.GetProcedureName());
-
-    //build parameterlist
-    stringstream param_string;
-    stringstream assignment_string;
-
-    parameterlist_t list = proc.GetParameters();
-    for (parameterlist_t::iterator it = list.begin(); it != list.end();)
-    {
-        string type;
-        switch (it->second)
-        {
-            case JSON_BOOLEAN:
-                type = "bool";
-                break;
-
-            case JSON_INTEGER:
-                type = "int";
-                break;
-            case JSON_REAL:
-                type = "double";
-                break;
-            case JSON_STRING:
-                type = "const std::string&";
-                break;
-            default:
-                type = "const Json::Value&";
-                break;
-        }
-
-        param_string << type << " " << it->first;
-        assignment_string << "p[\"" << it->first << "\"] = " << it->first
-                << "; " << endl;
-
-        if (++it != list.end())
-        {
-            param_string << ", ";
-        }
-    }
-
-    replace_all(tmp, "<parameters>", param_string.str());
-    replace_all(tmp, "<parameter_assign>", assignment_string.str());
-
-    if (proc.GetProcedureType() == RPC_METHOD)
-    {
-        //TODO: add return type parsing
-        replace_all(tmp, "<return_type>", "Json::Value");
-        replace_all(tmp, "<return_statement>",
-                "return this->client->CallMethod(\"" + proc.GetProcedureName() + "\",p);");
-    }
-    else
-    {
-        replace_all(tmp, "<return_type>", "void");
-        replace_all(tmp, "<return_statement>", "this->client->CallNotification(\"" + proc.GetProcedureName() + "\",p);");
-    }
-
-    return tmp;
-}
-
-std::string generateStub(const string& stubname, const string& configfile)
-{
-    string tmp = TEMPLATE_STUB;
-    replace_all(tmp, "<stubname>", stubname);
-
-    string stub_upper = stubname;
-    std::transform(stub_upper.begin(), stub_upper.end(), stub_upper.begin(),
-            ::toupper);
-    replace_all(tmp, "<STUBNAME>", stub_upper);
-
-    //generate procedures
-    stringstream procedure_string;
-    procedurelist_t* procedures = SpecificationParser::GetProcedures(configfile);
-    procedurelist_t::iterator it;
-    for (it = procedures->begin(); it != procedures->end(); it++)
-    {
-        procedure_string << generateMethod(*(it->second)) << endl;
-    }
-
-    replace_all(tmp, "<methods>", procedure_string.str());
-    return tmp;
+    cout << "Example for server stub:" << endl;
+    cout << "\tjsonrpcstub -s /home/user/procedures.json MyServer" << endl << endl;
 }
 
 int main(int argc, char** argv)
 {
-    try
+    if(argc < 3)
     {
-        if (argc < 3)
-        {
-            cerr << "call stub jsonrpc generator with: " << endl
-                    << "\tjsonrpcstub <StubName> <Json-Specification>" << endl;
-            return -1;
-        }
-        else
-        {
-            ofstream myfile;
-            string filename = argv[1];
-            filename = filename + ".h";
-            myfile.open(filename.c_str());
-            myfile << generateStub(argv[1], argv[2]);
-            myfile.close();
-
-            cout << "Stub generated into " << filename << endl;
-        }
-    }
-    catch (JsonRpcException& e)
-    {
-        cerr << e.what() << endl;
+        cerr << "Not enough arguments! Use --help for further info." << endl;
         return -1;
     }
+    else
+    {
+        bool createClient = false;
+        bool createServer = false;
+        string inpath = string(argv[argc-2]);
+        string stubname = string(argv[argc-1]);
+        string outpath = "./";
+
+        for(int i=1; i < argc-2; i++)
+        {
+            if(strcmp(argv[i], "-s") == 0 || strcmp(argv[i], "--server") == 0)
+            {
+                createServer = true;
+            }
+            else if(strcmp(argv[i], "-c") == 0 || strcmp(argv[i], "--client") == 0)
+            {
+                createClient = true;
+            }
+            else if(strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0)
+            {
+                printHelp();
+                return 0;
+            }
+            else if((strcmp(argv[i], "-o") == 0 || strcmp(argv[i], "--output") == 0) && i+1 < argc -2)
+            {
+                outpath = string(argv[++i]);
+            }
+            else
+            {
+                cerr << "Unrecognized option or missing parameter, use --help." << endl;
+                return -1;
+            }
+        }
+
+        try
+        {
+            if(createClient)
+            {
+                ClientStubGenerator stub(stubname, inpath);
+                stub.generateStubToFile(outpath);
+            }
+            if(createServer)
+            {
+                cerr  << "Server stub not suppoerted yet" << endl;
+                return -1;
+                //ServerStubGenerator stub(stubname, inpath);
+                //stub.generateStubToFile(outpath);
+            }
+        }
+        catch(JsonRpcException e)
+        {
+            cerr << e.what() << endl;
+        }
+    }
+
     return 0;
 }

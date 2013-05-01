@@ -16,8 +16,6 @@
 namespace jsonrpc {
     class SpecificationWriter
     {
-        typedef std::map<std::string, Procedure*> procedurelist_t;
-
         public:
             static Json::Value toJsonValue(procedurelist_t& procedures);
             static std::string toString(procedurelist_t& procedures);

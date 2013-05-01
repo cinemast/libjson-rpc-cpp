@@ -47,7 +47,6 @@ namespace jsonrpc {
              || signature.isMember(KEY_NOTIFICATION_NAME))
                 && signature.isMember(KEY_PROCEDURE_PARAMETERS))
         {
-            std::string procedure_name;
             if (signature.isMember(KEY_METHOD_NAME))
             {
                 name_key = KEY_METHOD_NAME;
@@ -59,40 +58,28 @@ namespace jsonrpc {
                 procedureType = RPC_NOTIFICATION;
 
             }
-            if (signature[procedure_name].isString()
+            if (signature[name_key].isString()
                     && (signature[KEY_PROCEDURE_PARAMETERS].isObject() || signature[KEY_PROCEDURE_PARAMETERS].isNull()))
             {
                 procedureName = signature[name_key].asString();
                 vector<string> parameters =
                         signature[KEY_PROCEDURE_PARAMETERS].getMemberNames();
-                result = new Procedure(procedureName, procedureType);
+                if(procedureType == RPC_NOTIFICATION)
+                {
+                    result = new Procedure(procedureName, NULL);
+                }
+                else
+                {
+                    jsontype_t returntype = JSON_OBJECT;
+                    if(signature.isMember(KEY_RETURN_TYPE))
+                    {
+                        returntype = toJsonType(signature[KEY_RETURN_TYPE]);
+                    }
+                    result = new Procedure(procedureName, returntype, NULL);
+                }
                 for (unsigned int i = 0; i < parameters.size(); i++)
                 {
-                    switch (signature[KEY_PROCEDURE_PARAMETERS][parameters.at(i)].type())
-                    {
-                        case Json::uintValue:
-                        case Json::intValue:
-                            result->AddParameter(parameters.at(i), JSON_INTEGER);
-                            break;
-                        case Json::realValue:
-                            result->AddParameter(parameters.at(i), JSON_REAL);
-                            break;
-                        case Json::stringValue:
-                            result->AddParameter(parameters.at(i), JSON_STRING);
-                            break;
-                        case Json::booleanValue:
-                            result->AddParameter(parameters.at(i), JSON_BOOLEAN);
-                            break;
-                        case Json::arrayValue:
-                            result->AddParameter(parameters.at(i), JSON_ARRAY);
-                            break;
-                        case Json::objectValue:
-                            result->AddParameter(parameters.at(i), JSON_OBJECT);
-                            break;
-                        default:
-                            throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,"Unknown parameter in "
-                                                   + signature.toStyledString());
-                    }
+                    result->AddParameter(parameters.at(i), toJsonType(signature[KEY_PROCEDURE_PARAMETERS][parameters.at(i)]));
                 }
             }
             else
@@ -125,5 +112,36 @@ namespace jsonrpc {
         {
             throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_NOT_FOUND, filename);
         }
+    }
+
+    jsontype_t SpecificationParser::toJsonType(Json::Value &val)
+    {
+        jsontype_t result;
+        switch(val.type())
+        {
+            case Json::uintValue:
+            case Json::intValue:
+                result =  JSON_INTEGER;
+                break;
+            case Json::realValue:
+                result = JSON_REAL;
+                break;
+            case Json::stringValue:
+                result = JSON_STRING;
+                break;
+            case Json::booleanValue:
+                result = JSON_BOOLEAN;
+                break;
+            case Json::arrayValue:
+                result = JSON_ARRAY;
+                break;
+            case Json::objectValue:
+                result = JSON_OBJECT;
+                break;
+            default:
+                throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,"Unknown parameter in "
+                                       + val.toStyledString());
+        }
+        return result;
     }
 }
