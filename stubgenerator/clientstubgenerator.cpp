@@ -56,28 +56,8 @@ string ClientStubGenerator::generateMethod(Procedure &proc)
     parameterlist_t list = proc.GetParameters();
     for (parameterlist_t::iterator it = list.begin(); it != list.end();)
     {
-        string type;
-        switch (it->second)
-        {
-            case JSON_BOOLEAN:
-                type = "bool";
-                break;
 
-            case JSON_INTEGER:
-                type = "int";
-                break;
-            case JSON_REAL:
-                type = "double";
-                break;
-            case JSON_STRING:
-                type = "const std::string&";
-                break;
-            default:
-                type = "const Json::Value&";
-                break;
-        }
-
-        param_string << type << " " << it->first;
+        param_string << toCppType(it->second, true, true) << " " << it->first;
         assignment_string << "p[\"" << it->first << "\"] = " << it->first
                 << "; " << endl;
 
@@ -93,9 +73,9 @@ string ClientStubGenerator::generateMethod(Procedure &proc)
     if (proc.GetProcedureType() == RPC_METHOD)
     {
         //TODO: add return type parsing
-        replaceAll(tmp, "<return_type>", "Json::Value");
+        replaceAll(tmp, "<return_type>", toCppType(proc.GetReturnType()));
         replaceAll(tmp, "<return_statement>",
-                "return this->client->CallMethod(\"" + proc.GetProcedureName() + "\",p);");
+                   "return this->client->CallMethod(\"" + proc.GetProcedureName() + "\",p)"+ toCppConversion(proc.GetReturnType()) +";");
     }
     else
     {
@@ -104,4 +84,60 @@ string ClientStubGenerator::generateMethod(Procedure &proc)
     }
 
     return tmp;
+}
+
+string ClientStubGenerator::toCppType(jsontype_t type, bool isConst, bool isReference)
+{
+    string result;
+    switch(type)
+    {
+        case JSON_BOOLEAN:
+            result = "bool";
+            break;
+        case JSON_INTEGER:
+            result = "int";
+            break;
+        case JSON_REAL:
+            result = "double";
+            break;
+        case JSON_STRING:
+            result = "std::string";
+            break;
+        default:
+            result = "Json::Value";
+            break;
+    }
+    if(isConst)
+    {
+        result = "const " + result;
+    }
+    if(isReference)
+    {
+        result = result + "&";
+    }
+    return result;
+}
+
+string ClientStubGenerator::toCppConversion(jsontype_t type)
+{
+    string result;
+    switch(type)
+    {
+        case JSON_BOOLEAN:
+            result = ".asBool()";
+            break;
+        case JSON_INTEGER:
+            result = ".asInt()";
+            break;
+        case JSON_REAL:
+            result = ".asDouble()";
+            break;
+        case JSON_STRING:
+            result = ".asString()";
+            break;
+        default:
+            result = "";
+            break;
+    }
+    return result;
 }

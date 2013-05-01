@@ -3,7 +3,8 @@
 		"method": "sayHello",
 		"params": { 
 			"name": "seppi"
-		}
+		},
+		"returns": "Hello Seppi"
 	},
 	
 	{

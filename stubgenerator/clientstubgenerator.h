@@ -23,6 +23,9 @@ namespace jsonrpc
 
         private:
             std::string generateMethod(Procedure& proc);
+
+            static std::string toCppType(jsontype_t type, bool isConst = false, bool isReference = false);
+            static std::string toCppConversion(jsontype_t);
     };
 }
 #endif // CLIENTSTUBGENERATOR_H

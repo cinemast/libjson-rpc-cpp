@@ -2,7 +2,7 @@
 #define CLIENTTEMPLATE_H_
 
 #define TEMPLATE_METHOD "\
-        <return_type> <methodname>(<parameters>) throw (jsonrpc::Exception)\n\
+        <return_type> <methodname>(<parameters>) throw (jsonrpc::JsonRpcException)\n\
         {\n\
             Json::Value p;\n\
             <parameter_assign>\n\
@@ -18,17 +18,14 @@
 #ifndef _<STUBNAME>_H_\n\
 #define _<STUBNAME>_H_\n\
 \n\
-#include <jsonrpc/clientconnector.h>\n\
-#include <jsonrpc/client.h>\n\
-#include <string>\n\
-#include <json/json.h>\n\
+#include <jsonrpc/rpc.h>\n\
 \n\
 class <stubname>\n\
 {\n\
     public:\n\
         <stubname>(jsonrpc::AbstractClientConnector* conn)\n\
         {\n\
-            this->client = new jsonrpc::Client(conn,false);\n\
+            this->client = new jsonrpc::Client(conn);\n\
         }\n\
         ~<stubname>()\n\
         {\n\
