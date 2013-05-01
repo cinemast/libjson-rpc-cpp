@@ -22,7 +22,7 @@ ClientStubGenerator::ClientStubGenerator(const string &stubname, const string &f
 
 std::string ClientStubGenerator::generateStub()
 {
-    string tmp = TEMPLATE_STUB;
+    string tmp = TEMPLATE_CLIENT_STUB;
     replaceAll(tmp, "<stubname>", stubname);
 
     string stub_upper = stubname;
@@ -44,7 +44,7 @@ std::string ClientStubGenerator::generateStub()
 
 string ClientStubGenerator::generateMethod(Procedure &proc)
 {
-    string tmp = TEMPLATE_METHOD;
+    string tmp = TEMPLATE_CLIENT_METHOD;
 
     //set methodname
     replaceAll(tmp, "<methodname>", proc.GetProcedureName());

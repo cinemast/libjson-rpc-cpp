@@ -19,13 +19,14 @@ class SampleServer : public AbstractServer<SampleServer>
         SampleServer() :
             AbstractServer(new HttpServer(8080))
         {
-            this->bindAndAddMethod(new Procedure("sayHello", JSON_STRING, "name", JSON_STRING, NULL), &SampleServer::sayHello);
+            this->bindAndAddMethod(new Procedure("sayHello", JSON_STRING, "name", JSON_STRING, NULL), &SampleServer::sayHelloI);
             this->bindAndAddNotification(new Procedure("notifyServer", NULL), &SampleServer::notifyServer);
         }
 
         //method
-        void sayHello(const Json::Value& request, Json::Value& response)
+        void sayHelloI(const Json::Value& request, Json::Value& response)
         {
+         //   response = this->sayHello(request["name"].asString());
             cout << "Requested say Hello" << endl;
             response = "Hello: " + request["name"].asString();
         }
@@ -35,6 +36,9 @@ class SampleServer : public AbstractServer<SampleServer>
         {
             cout << "server received some Notification" << endl;
         }
+
+       // virtual std::string sayHello(const std::string& name) = 0;
+
 };
 
 int main(int argc, char** argv)
