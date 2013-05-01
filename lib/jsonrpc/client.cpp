@@ -13,9 +13,14 @@
 
 namespace jsonrpc
 {
-    Client::Client(AbstractClientConnector& connector)
-            : connector(&connector)
+    Client::Client(AbstractClientConnector* connector)
+            : connector(connector)
     {
+    }
+
+    Client::~Client()
+    {
+        delete this->connector;
     }
 
     void Client::CallMethod(const std::string &name, const Json::Value &paramter, Json::Value& result) throw(JsonRpcException)

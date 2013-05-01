@@ -21,20 +21,10 @@ using namespace std;
 int main(int argc, char** argv)
 {
 
-    procedurelist_t procs;
-    procs["somemethod"] = new Procedure("somemethod", "a", JSON_BOOLEAN, NULL);
-
-
-    cout << SpecificationWriter::toString(&procs);
-
-    /*Server* server;
-    Client* client;
+    TestServer* server = new TestServer();
+    Client* client = new Client(new HttpClient("http://localhost:8080"));
 
     try {
-
-        server = getTestServer();
-        client = getTestClient();
-
         server->StartListening();
 
         Json::Value v;
@@ -66,5 +56,5 @@ int main(int argc, char** argv)
         delete server;
         delete client;
         return -999;
-    }*/
+    }
 }

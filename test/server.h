@@ -13,19 +13,22 @@
 #include <jsonrpc/rpc.h>
 
 //Methods
-void sayHello(const Json::Value& request, Json::Value& response);
-void getCounterValue(const Json::Value& request, Json::Value& response);
-void add(const Json::Value& request, Json::Value& response);
-void sub(const Json::Value& request, Json::Value& response);
 
-//Notifications
-void initCounter(const Json::Value& request);
-void incrementCounter(const Json::Value& request);
+    class TestServer : public jsonrpc::AbstractServer<TestServer>
+    {
+        public:
+            TestServer();
 
-jsonrpc::methodpointer_t getMethodPointer();
-jsonrpc::notificationpointer_t getNotificationPointer();
+            void sayHello(const Json::Value& request, Json::Value& response);
+            void getCounterValue(const Json::Value& request, Json::Value& response);
+            void add(const Json::Value& request, Json::Value& response);
+            void sub(const Json::Value& request, Json::Value& response);
 
-jsonrpc::AbstractServer* getTestServer();
-jsonrpc::Client* getTestClient();
+            //Notifications
+            void initCounter(const Json::Value& request);
+            void incrementCounter(const Json::Value& request);
+        private:
+            int cnt;
+    };
 
 #endif // SERVER_H

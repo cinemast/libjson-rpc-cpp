@@ -50,7 +50,7 @@ namespace jsonrpc
              * @brief StartListening starts the AbstractServerConnector to listen for incoming requests.
              * @return
              */
-            bool StartListening()
+            virtual bool StartListening()
             {
                 return this->connection->StartListening();
             }
@@ -60,7 +60,7 @@ namespace jsonrpc
              * @brief StopListening stops the AbstractServerConnector, no more requests will be answered.
              * @return
              */
-            bool StopListening()
+            virtual bool StopListening()
             {
                 return this->connection->StopListening();
             }
@@ -69,7 +69,7 @@ namespace jsonrpc
              * @brief set an authenticator to be used by this server. The authenticator will be deleted automatically.
              * @param auth
              */
-            void setAuthenticator(AbstractAuthenticator *auth)
+            virtual void setAuthenticator(AbstractAuthenticator *auth)
             {
                 this->handler.SetAuthenticator(auth);
             }
@@ -86,7 +86,8 @@ namespace jsonrpc
                 (instance->*notifications[proc->GetProcedureName()])(input);
             }
 
-            bool bindMethod(std::string& name, methodPointer_t method)
+        protected:
+            virtual bool bindMethod(std::string& name, methodPointer_t method)
             {
                 if(this->handler.GetProcedures().find(name) != this->handler.GetProcedures().end() && this->handler.GetProcedures()[name]->GetProcedureType() == RPC_METHOD)
                 {
@@ -96,9 +97,9 @@ namespace jsonrpc
                 return false;
             }
 
-            bool bindNotification(std::string& name, notificationPointer_t notification)
+            virtual bool bindNotification(std::string& name, notificationPointer_t notification)
             {
-                if(this->handler.GetProcedures().find(name) != this->handler.GetProcedures().end() && this->handler.GetProcedures()[name]->GetProcedureTyp() == RPC_NOTIFICATION)
+                if(this->handler.GetProcedures().find(name) != this->handler.GetProcedures().end() && this->handler.GetProcedures()[name]->GetProcedureType() == RPC_NOTIFICATION)
                 {
                     this->notifications[name] = notification;
                     return true;
@@ -106,7 +107,7 @@ namespace jsonrpc
                 return false;
             }
 
-            bool bindAndAddMethod(Procedure* proc, methodPointer_t pointer)
+            virtual bool bindAndAddMethod(Procedure* proc, methodPointer_t pointer)
             {
                 if(proc->GetProcedureType() == RPC_METHOD)
                 {
@@ -117,12 +118,12 @@ namespace jsonrpc
                 return false;
             }
 
-            bool bindAndAddNotification(Procedure* proc, notificationPointer_t pointer)
+            virtual bool bindAndAddNotification(Procedure* proc, notificationPointer_t pointer)
             {
                 if(proc->GetProcedureType() == RPC_NOTIFICATION)
                 {
                     this->handler.AddProcedure(proc);
-                    this->methods[proc->GetProcedureName()] = pointer;
+                    this->notifications[proc->GetProcedureName()] = pointer;
                     return true;
                 }
                 return false;
