@@ -8,6 +8,7 @@
  ************************************************************************/
 
 #include <fstream>
+#include <algorithm>
 #include <jsonrpc/specificationparser.h>
 
 #include "stubgenerator.h"

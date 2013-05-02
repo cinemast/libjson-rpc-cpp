@@ -12,7 +12,7 @@
 
 #include <jsonrpc/specificationwriter.h>
 #include <sstream>
-#include <iostream>
+#include <algorithm>
 
 using namespace std;
 using namespace jsonrpc;

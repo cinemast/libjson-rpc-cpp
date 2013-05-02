@@ -11,6 +11,8 @@
 #include <iostream>
 #include <algorithm>
 #include <sstream>
+#include <cstdlib>
+#include <cstring>
 
 #include <jsonrpc/rpc.h>
 #include <jsonrpc/procedure.h>
