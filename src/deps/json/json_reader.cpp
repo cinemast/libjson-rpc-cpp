@@ -1,21 +1,13 @@
-// Copyright 2007-2011 Baptiste Lepilleur
-// Distributed under MIT license, or public domain if desired and
-// recognized in your jurisdiction.
-// See file LICENSE for detail or copy at http://jsoncpp.sourceforge.net/LICENSE
-
-#if !defined(JSON_IS_AMALGAMATION)
-# include <json/assertions.h>
-# include <json/reader.h>
-# include <json/value.h>
-# include "json_tool.h"
-#endif // if !defined(JSON_IS_AMALGAMATION)
+#include "reader.h"
+#include "value.h"
 #include <utility>
 #include <cstdio>
 #include <cassert>
 #include <cstring>
+#include <iostream>
 #include <stdexcept>
 
-#if defined(_MSC_VER)  &&  _MSC_VER >= 1400 // VC++ 8.0
+#if _MSC_VER >= 1400 // VC++ 8.0
 #pragma warning( disable : 4996 )   // disable warning about strdup being deprecated.
 #endif
 
@@ -74,36 +66,54 @@ containsNewLine( Reader::Location begin,
    return false;
 }
 
+static std::string codePointToUTF8(unsigned int cp)
+{
+   std::string result;
+   
+   // based on description from http://en.wikipedia.org/wiki/UTF-8
+
+   if (cp <= 0x7f) 
+   {
+      result.resize(1);
+      result[0] = static_cast<char>(cp);
+   } 
+   else if (cp <= 0x7FF) 
+   {
+      result.resize(2);
+      result[1] = static_cast<char>(0x80 | (0x3f & cp));
+      result[0] = static_cast<char>(0xC0 | (0x1f & (cp >> 6)));
+   } 
+   else if (cp <= 0xFFFF) 
+   {
+      result.resize(3);
+      result[2] = static_cast<char>(0x80 | (0x3f & cp));
+      result[1] = 0x80 | static_cast<char>((0x3f & (cp >> 6)));
+      result[0] = 0xE0 | static_cast<char>((0xf & (cp >> 12)));
+   }
+   else if (cp <= 0x10FFFF) 
+   {
+      result.resize(4);
+      result[3] = static_cast<char>(0x80 | (0x3f & cp));
+      result[2] = static_cast<char>(0x80 | (0x3f & (cp >> 6)));
+      result[1] = static_cast<char>(0x80 | (0x3f & (cp >> 12)));
+      result[0] = static_cast<char>(0xF0 | (0x7 & (cp >> 18)));
+   }
+
+   return result;
+}
+
 
 // Class Reader
 // //////////////////////////////////////////////////////////////////
 
 Reader::Reader()
-    : errors_(),
-      document_(),
-      begin_(),
-      end_(),
-      current_(),
-      lastValueEnd_(),
-      lastValue_(),
-      commentsBefore_(),
-      features_( Features::all() ),
-      collectComments_()
+   : features_( Features::all() )
 {
 }
 
 
 Reader::Reader( const Features &features )
-    : errors_(),
-      document_(),
-      begin_(),
-      end_(),
-      current_(),
-      lastValueEnd_(),
-      lastValue_(),
-      commentsBefore_(),
-      features_( features ),
-      collectComments_()
+   : features_( features )
 {
 }
 
@@ -467,7 +477,7 @@ Reader::readString()
 
 
 bool 
-Reader::readObject( Token &/*tokenStart*/ )
+Reader::readObject( Token &tokenStart )
 {
    Token tokenName;
    std::string name;
@@ -506,7 +516,7 @@ Reader::readObject( Token &/*tokenStart*/ )
       if ( !readToken( comma )
             ||  ( comma.type_ != tokenObjectEnd  &&  
                   comma.type_ != tokenArraySeparator &&
-                  comma.type_ != tokenComment ) )
+		  comma.type_ != tokenComment ) )
       {
          return addErrorAndRecover( "Missing ',' or '}' in object declaration", 
                                     comma, 
@@ -526,7 +536,7 @@ Reader::readObject( Token &/*tokenStart*/ )
 
 
 bool 
-Reader::readArray( Token &/*tokenStart*/ )
+Reader::readArray( Token &tokenStart )
 {
    currentValue() = Value( arrayValue );
    skipSpaces();
@@ -537,7 +547,7 @@ Reader::readArray( Token &/*tokenStart*/ )
       return true;
    }
    int index = 0;
-   for (;;)
+   while ( true )
    {
       Value &value = currentValue()[ index++ ];
       nodes_.push( &value );
@@ -553,8 +563,8 @@ Reader::readArray( Token &/*tokenStart*/ )
       {
          ok = readToken( token );
       }
-      bool badTokenType = ( token.type_ != tokenArraySeparator  &&
-                            token.type_ != tokenArrayEnd );
+      bool badTokenType = ( token.type_ == tokenArraySeparator  &&  
+                            token.type_ == tokenArrayEnd );
       if ( !ok  ||  badTokenType )
       {
          return addErrorAndRecover( "Missing ',' or ']' in array declaration", 
@@ -580,42 +590,26 @@ Reader::decodeNumber( Token &token )
    }
    if ( isDouble )
       return decodeDouble( token );
-   // Attempts to parse the number as an integer. If the number is
-   // larger than the maximum supported value of an integer then
-   // we decode the number as a double.
    Location current = token.start_;
    bool isNegative = *current == '-';
    if ( isNegative )
       ++current;
-   Value::LargestUInt maxIntegerValue = isNegative ? Value::LargestUInt(-Value::minLargestInt) 
-                                                   : Value::maxLargestUInt;
-   Value::LargestUInt threshold = maxIntegerValue / 10;
-   Value::LargestUInt value = 0;
+   Value::UInt threshold = (isNegative ? Value::UInt(-Value::minInt) 
+                                       : Value::maxUInt) / 10;
+   Value::UInt value = 0;
    while ( current < token.end_ )
    {
       Char c = *current++;
       if ( c < '0'  ||  c > '9' )
          return addError( "'" + std::string( token.start_, token.end_ ) + "' is not a number.", token );
-      Value::UInt digit(c - '0');
       if ( value >= threshold )
-      {
-         // We've hit or exceeded the max value divided by 10 (rounded down). If
-         // a) we've only just touched the limit, b) this is the last digit, and
-         // c) it's small enough to fit in that rounding delta, we're okay.
-         // Otherwise treat this number as a double to avoid overflow.
-         if (value > threshold ||
-             current != token.end_ ||
-             digit > maxIntegerValue % 10)
-         {
-            return decodeDouble( token );
-         }
-      }
-      value = value * 10 + digit;
+         return decodeDouble( token );
+      value = value * 10 + Value::UInt(c - '0');
    }
    if ( isNegative )
-      currentValue() = -Value::LargestInt( value );
-   else if ( value <= Value::LargestUInt(Value::maxInt) )
-      currentValue() = Value::LargestInt( value );
+      currentValue() = -Value::Int( value );
+   else if ( value <= Value::UInt(Value::maxInt) )
+      currentValue() = Value::Int( value );
    else
       currentValue() = value;
    return true;
@@ -629,30 +623,17 @@ Reader::decodeDouble( Token &token )
    const int bufferSize = 32;
    int count;
    int length = int(token.end_ - token.start_);
-
-   // Sanity check to avoid buffer overflow exploits.
-   if (length < 0) {
-      return addError( "Unable to parse token length", token );
-   }
-
-   // Avoid using a string constant for the format control string given to
-   // sscanf, as this can cause hard to debug crashes on OS X. See here for more
-   // info:
-   //
-   //     http://developer.apple.com/library/mac/#DOCUMENTATION/DeveloperTools/gcc-4.0.1/gcc/Incompatibilities.html
-   char format[] = "%lf";
-
    if ( length <= bufferSize )
    {
-      Char buffer[bufferSize+1];
+      Char buffer[bufferSize];
       memcpy( buffer, token.start_, length );
       buffer[length] = 0;
-      count = sscanf( buffer, format, &value );
+      count = sscanf( buffer, "%lf", &value );
    }
    else
    {
       std::string buffer( token.start_, token.end_ );
-      count = sscanf( buffer.c_str(), format, &value );
+      count = sscanf( buffer.c_str(), "%lf", &value );
    }
 
    if ( count != 1 )
@@ -794,7 +775,7 @@ Reader::recoverFromError( TokenType skipUntilToken )
 {
    int errorCount = int(errors_.size());
    Token skip;
-   for (;;)
+   while ( true )
    {
       if ( !readToken(skip) )
          errors_.resize( errorCount ); // discard errors caused by recovery
@@ -873,16 +854,8 @@ Reader::getLocationLineAndColumn( Location location ) const
 }
 
 
-// Deprecated. Preserved for backward compatibility
 std::string 
 Reader::getFormatedErrorMessages() const
-{
-    return getFormattedErrorMessages();
-}
-
-
-std::string 
-Reader::getFormattedErrorMessages() const
 {
    std::string formattedMessage;
    for ( Errors::const_iterator itError = errors_.begin();
@@ -903,14 +876,8 @@ std::istream& operator>>( std::istream &sin, Value &root )
 {
     Json::Reader reader;
     bool ok = reader.parse(sin, root, true);
-    if (!ok) {
-      fprintf(
-          stderr,
-          "Error from reader: %s",
-          reader.getFormattedErrorMessages().c_str());
-
-      JSON_FAIL_MESSAGE("reader error");
-    }
+    //JSON_ASSERT( ok );
+    if (!ok) throw std::runtime_error(reader.getFormatedErrorMessages());
     return sin;
 }
 

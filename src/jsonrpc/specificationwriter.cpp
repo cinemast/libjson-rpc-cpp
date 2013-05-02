@@ -62,7 +62,7 @@ namespace jsonrpc
                 literal = 1.0;
                 break;
             case JSON_ARRAY:
-                literal[0] = "arrayelement";
+                literal = Json::arrayValue;
                 break;
             case JSON_OBJECT:
                 literal["objectkey"] = "objectvalue";

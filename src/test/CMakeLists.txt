@@ -1,5 +1,4 @@
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/test)
-file(COPY procedures.json DESTINATION ${CMAKE_BINARY_DIR}/out/test)
 
 set(COMMON_SOURCES server.cpp)
 

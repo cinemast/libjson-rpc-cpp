@@ -1,21 +1,23 @@
 cmake_minimum_required(VERSION 2.6)
 project(libjson-rpc-cpp)
 
-include_directories(lib)
+
 find_package(CURL REQUIRED)
 include_directories(${CURL_INCLUDE_DIRS})
 
+include_directories(${CMAKE_SOURCE_DIR}/src/deps)
+include_directories(${CMAKE_SOURCE_DIR}/src)
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out)
 
 
-add_subdirectory(lib)
-add_subdirectory(example)
-add_subdirectory(stubgenerator)
-
-add_subdirectory(test)
+add_subdirectory(src/deps/json)
+add_subdirectory(src/deps/mongoose)
+add_subdirectory(src/jsonrpc)
+add_subdirectory(src/test)
+add_subdirectory(src/stubgenerator)
 
 
 # uninstall target

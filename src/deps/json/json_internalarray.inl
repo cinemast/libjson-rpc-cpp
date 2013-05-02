@@ -1,11 +1,5 @@
-// Copyright 2007-2010 Baptiste Lepilleur
-// Distributed under MIT license, or public domain if desired and
-// recognized in your jurisdiction.
-// See file LICENSE for detail or copy at http://jsoncpp.sourceforge.net/LICENSE
-
 // included by json_value.cpp
-
-namespace Json {
+// everything is within Json namespace
 
 // //////////////////////////////////////////////////////////////////
 // //////////////////////////////////////////////////////////////////
@@ -53,7 +47,8 @@ public: // overridden from ValueArrayAllocator
       if ( minNewIndexCount > newIndexCount )
          newIndexCount = minNewIndexCount;
       void *newIndexes = realloc( indexes, sizeof(Value*) * newIndexCount );
-      JSON_ASSERT_MESSAGE(newIndexes, "Couldn't realloc.");
+      if ( !newIndexes )
+         throw std::bad_alloc();
       indexCount = newIndexCount;
       indexes = static_cast<Value **>( newIndexes );
    }
@@ -116,7 +111,8 @@ public: // overridden from ValueArrayAllocator
       if ( minNewIndexCount > newIndexCount )
          newIndexCount = minNewIndexCount;
       void *newIndexes = realloc( indexes, sizeof(Value*) * newIndexCount );
-      JSON_ASSERT_MESSAGE(newIndexes, "Couldn't realloc.");
+      if ( !newIndexes )
+         throw std::bad_alloc();
       indexCount = newIndexCount;
       indexes = static_cast<Value **>( newIndexes );
    }
@@ -256,8 +252,8 @@ ValueInternalArray::ValueInternalArray()
 
 ValueInternalArray::ValueInternalArray( const ValueInternalArray &other )
    : pages_( 0 )
-   , size_( other.size_ )
    , pageCount_( 0 )
+   , size_( other.size_ )
 {
    PageIndex minNewPages = other.size_ / itemsPerPage;
    arrayAllocator()->reallocateArrayPageIndex( pages_, pageCount_, minNewPages );
@@ -450,5 +446,3 @@ ValueInternalArray::compare( const ValueInternalArray &other ) const
    }
    return 0;
 }
-
-} // namespace Json

@@ -1,8 +1,3 @@
-// Copyright 2007-2010 Baptiste Lepilleur
-// Distributed under MIT license, or public domain if desired and
-// recognized in your jurisdiction.
-// See file LICENSE for detail or copy at http://jsoncpp.sourceforge.net/LICENSE
-
 #ifndef JSONCPP_BATCHALLOCATOR_H_INCLUDED
 # define JSONCPP_BATCHALLOCATOR_H_INCLUDED
 
@@ -30,6 +25,8 @@ template<typename AllocatedType
 class BatchAllocator
 {
 public:
+   typedef AllocatedType Type;
+
    BatchAllocator( unsigned int objectsPerPage = 255 )
       : freeHead_( 0 )
       , objectsPerPage_( objectsPerPage )
@@ -125,3 +122,4 @@ private:
 # endif // ifndef JSONCPP_DOC_INCLUDE_IMPLEMENTATION
 
 #endif // JSONCPP_BATCHALLOCATOR_H_INCLUDED
+

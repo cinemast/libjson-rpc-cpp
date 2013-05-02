@@ -1,14 +1,7 @@
-// Copyright 2007-2010 Baptiste Lepilleur
-// Distributed under MIT license, or public domain if desired and
-// recognized in your jurisdiction.
-// See file LICENSE for detail or copy at http://jsoncpp.sourceforge.net/LICENSE
-
 #ifndef CPPTL_JSON_H_INCLUDED
 # define CPPTL_JSON_H_INCLUDED
 
-#if !defined(JSON_IS_AMALGAMATION)
 # include "forwards.h"
-#endif // if !defined(JSON_IS_AMALGAMATION)
 # include <string>
 # include <vector>
 
@@ -128,37 +121,12 @@ namespace Json {
       typedef ValueConstIterator const_iterator;
       typedef Json::UInt UInt;
       typedef Json::Int Int;
-# if defined(JSON_HAS_INT64)
-      typedef Json::UInt64 UInt64;
-      typedef Json::Int64 Int64;
-#endif // defined(JSON_HAS_INT64)
-      typedef Json::LargestInt LargestInt;
-      typedef Json::LargestUInt LargestUInt;
-      typedef Json::ArrayIndex ArrayIndex;
+      typedef UInt ArrayIndex;
 
       static const Value null;
-      /// Minimum signed integer value that can be stored in a Json::Value.
-      static const LargestInt minLargestInt;
-      /// Maximum signed integer value that can be stored in a Json::Value.
-      static const LargestInt maxLargestInt;
-      /// Maximum unsigned integer value that can be stored in a Json::Value.
-      static const LargestUInt maxLargestUInt;
-
-      /// Minimum signed int value that can be stored in a Json::Value.
       static const Int minInt;
-      /// Maximum signed int value that can be stored in a Json::Value.
       static const Int maxInt;
-      /// Maximum unsigned int value that can be stored in a Json::Value.
       static const UInt maxUInt;
-
-# if defined(JSON_HAS_INT64)
-      /// Minimum signed 64 bits int value that can be stored in a Json::Value.
-      static const Int64 minInt64;
-      /// Maximum signed 64 bits int value that can be stored in a Json::Value.
-      static const Int64 maxInt64;
-      /// Maximum unsigned 64 bits int value that can be stored in a Json::Value.
-      static const UInt64 maxUInt64;
-#endif // defined(JSON_HAS_INT64)
 
    private:
 #ifndef JSONCPP_DOC_EXCLUDE_IMPLEMENTATION
@@ -172,20 +140,20 @@ namespace Json {
             duplicate,
             duplicateOnCopy
          };
-         CZString( ArrayIndex index );
+         CZString( int index );
          CZString( const char *cstr, DuplicationPolicy allocate );
          CZString( const CZString &other );
          ~CZString();
          CZString &operator =( const CZString &other );
          bool operator<( const CZString &other ) const;
          bool operator==( const CZString &other ) const;
-         ArrayIndex index() const;
+         int index() const;
          const char *c_str() const;
          bool isStaticString() const;
       private:
          void swap( CZString &other );
          const char *cstr_;
-         ArrayIndex index_;
+         int index_;
       };
 
    public:
@@ -204,22 +172,18 @@ namespace Json {
         To create an empty array, pass arrayValue.
         To create an empty object, pass objectValue.
         Another Value can then be set to this one by assignment.
-    This is useful since clear() and resize() will not alter types.
+	This is useful since clear() and resize() will not alter types.
 
         Examples:
-    \code
-    Json::Value null_value; // null
-    Json::Value arr_value(Json::arrayValue); // []
-    Json::Value obj_value(Json::objectValue); // {}
-    \endcode
+	\code
+	Json::Value null_value; // null
+	Json::Value arr_value(Json::arrayValue); // []
+	Json::Value obj_value(Json::objectValue); // {}
+	\endcode
       */
       Value( ValueType type = nullValue );
       Value( Int value );
       Value( UInt value );
-#if defined(JSON_HAS_INT64)
-      Value( Int64 value );
-      Value( UInt64 value );
-#endif // if defined(JSON_HAS_INT64)
       Value( double value );
       Value( const char *value );
       Value( const char *beginValue, const char *endValue );
@@ -258,7 +222,7 @@ namespace Json {
       bool operator ==( const Value &other ) const;
       bool operator !=( const Value &other ) const;
 
-      int compare( const Value &other ) const;
+      int compare( const Value &other );
 
       const char *asCString() const;
       std::string asString() const;
@@ -267,22 +231,13 @@ namespace Json {
 # endif
       Int asInt() const;
       UInt asUInt() const;
-#if defined(JSON_HAS_INT64)
-      Int64 asInt64() const;
-      UInt64 asUInt64() const;
-#endif // if defined(JSON_HAS_INT64)
-      LargestInt asLargestInt() const;
-      LargestUInt asLargestUInt() const;
-      float asFloat() const;
       double asDouble() const;
       bool asBool() const;
 
       bool isNull() const;
       bool isBool() const;
       bool isInt() const;
-      bool isInt64() const;
       bool isUInt() const;
-      bool isUInt64() const;
       bool isIntegral() const;
       bool isDouble() const;
       bool isNumeric() const;
@@ -293,7 +248,7 @@ namespace Json {
       bool isConvertibleTo( ValueType other ) const;
 
       /// Number of values in array or object
-      ArrayIndex size() const;
+      UInt size() const;
 
       /// \brief Return true if empty array, empty object, or null;
       /// otherwise, false.
@@ -312,38 +267,24 @@ namespace Json {
       /// May only be called on nullValue or arrayValue.
       /// \pre type() is arrayValue or nullValue
       /// \post type() is arrayValue
-      void resize( ArrayIndex size );
+      void resize( UInt size );
 
       /// Access an array element (zero based index ).
       /// If the array contains less than index element, then null value are inserted
       /// in the array so that its size is index+1.
       /// (You may need to say 'value[0u]' to get your compiler to distinguish
       ///  this from the operator[] which takes a string.)
-      Value &operator[]( ArrayIndex index );
-
-      /// Access an array element (zero based index ).
-      /// If the array contains less than index element, then null value are inserted
-      /// in the array so that its size is index+1.
-      /// (You may need to say 'value[0u]' to get your compiler to distinguish
-      ///  this from the operator[] which takes a string.)
-      Value &operator[]( int index );
-
+      Value &operator[]( UInt index );
       /// Access an array element (zero based index )
       /// (You may need to say 'value[0u]' to get your compiler to distinguish
       ///  this from the operator[] which takes a string.)
-      const Value &operator[]( ArrayIndex index ) const;
-
-      /// Access an array element (zero based index )
-      /// (You may need to say 'value[0u]' to get your compiler to distinguish
-      ///  this from the operator[] which takes a string.)
-      const Value &operator[]( int index ) const;
-
+      const Value &operator[]( UInt index ) const;
       /// If the array contains at least index+1 elements, returns the element value, 
       /// otherwise returns defaultValue.
-      Value get( ArrayIndex index, 
+      Value get( UInt index, 
                  const Value &defaultValue ) const;
       /// Return true if index < size().
-      bool isValidIndex( ArrayIndex index ) const;
+      bool isValidIndex( UInt index ) const;
       /// \brief Append value to array at the end.
       ///
       /// Equivalent to jsonvalue[jsonvalue.size()] = value;
@@ -483,8 +424,8 @@ namespace Json {
 
       union ValueHolder
       {
-         LargestInt int_;
-         LargestUInt uint_;
+         Int int_;
+         UInt uint_;
          double real_;
          bool bool_;
          char *string_;
@@ -513,7 +454,7 @@ namespace Json {
       friend class Path;
 
       PathArgument();
-      PathArgument( ArrayIndex index );
+      PathArgument( UInt index );
       PathArgument( const char *key );
       PathArgument( const std::string &key );
 
@@ -525,7 +466,7 @@ namespace Json {
          kindKey
       };
       std::string key_;
-      ArrayIndex index_;
+      UInt index_;
       Kind kind_;
    };
 
@@ -572,7 +513,26 @@ namespace Json {
       Args args_;
    };
 
+   /** \brief Experimental do not use: Allocator to customize member name and string value memory management done by Value.
+    *
+    * - makeMemberName() and releaseMemberName() are called to respectively duplicate and
+    *   free an Json::objectValue member name.
+    * - duplicateStringValue() and releaseStringValue() are called similarly to
+    *   duplicate and free a Json::stringValue value.
+    */
+   class ValueAllocator
+   {
+   public:
+      enum { unknown = (unsigned)-1 };
 
+      virtual ~ValueAllocator();
+
+      virtual char *makeMemberName( const char *memberName ) = 0;
+      virtual void releaseMemberName( char *memberName ) = 0;
+      virtual char *duplicateStringValue( const char *value, 
+                                          unsigned int length = unknown ) = 0;
+      virtual void releaseStringValue( char *value ) = 0;
+   };
 
 #ifdef JSON_VALUE_USE_INTERNAL_MAP
    /** \brief Allocator to customize Value internal map.
