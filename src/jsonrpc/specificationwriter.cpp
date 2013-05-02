@@ -29,6 +29,7 @@ namespace jsonrpc
             procedureToJsonValue(proc, row);
             result[i] = row;
             i++;
+            row.clear();
         }
         return result;
     }

@@ -16,3 +16,6 @@ target_link_libraries(errorhandling jsonrpc)
 
 add_executable(jsonrpcprotocol jsonrpcprotocol.cpp ${COMMON_SOURCES})
 target_link_libraries(jsonrpcprotocol jsonrpc)
+
+add_executable(specification specification.cpp ${COMMON_SOURCES})
+target_link_libraries(specification jsonrpc)
