@@ -18,6 +18,7 @@ add_subdirectory(src/deps/mongoose)
 add_subdirectory(src/jsonrpc)
 add_subdirectory(src/test)
 add_subdirectory(src/stubgenerator)
+add_subdirectory(src/example)
 
 
 # uninstall target

@@ -2,9 +2,9 @@
 	{
 		"method": "sayHello",
 		"params": { 
-			"name": "seppi"
+			"name": "Peter"
 		},
-		"returns": "Hello Seppi"
+		"returns": "Hello Peter"
 	},
 	
 	{
