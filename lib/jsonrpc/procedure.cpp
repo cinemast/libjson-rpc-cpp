@@ -101,7 +101,7 @@ namespace jsonrpc
         return ok;
     }
 
-    const parameterlist_t& Procedure::GetParameters() const
+    parameterlist_t& Procedure::GetParameters()
     {
         return this->parameters;
     }

@@ -22,6 +22,7 @@ int main()
     try
     {
         cout << c.sayHello("Peter Knafl") << endl;
+        c.notifyServer();
     }
     catch (JsonRpcException e)
     {

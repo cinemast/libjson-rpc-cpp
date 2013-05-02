@@ -24,24 +24,37 @@ class <stubname> : public jsonrpc::AbstractServer<<stubname>>\n\
 {\n\
     public:\n\
         <stubname>(jsonrpc::AbstractServerConnector* conn) :\n\
-    AbstractServer(conn) \n\
+            AbstractServer(conn) \n\
         {\n\
-            <procedurebindings>\n\
+<procedurebindings>\n\
         }\n\
         \n\
-        <proceduredefinitions>\n\
-        \n\
-        <abstractdefinitions>\n\
+<proceduredefinitions>\n\
+<abstractdefinitions>\n\
 };\n\
 #endif //_<STUBNAME>_H_\n\
 "
 
-#define TEMPLATE_SERVER_METHODBINDING "this->bindAndAddMethod(new Procedure(<procedurename>,<returntype>,<parameterlist> NULL), &<stubname>::<procedurename>I);"
-#define TEMPLATE_SERVER_NOTIFICATIONBINDING "this->bindAndAddNotification(new Procedure(<procedurename>, <parameterlist> NULL), &<stubname>::<procedurename>I);"
+#define TEMPLATE_SERVER_METHODBINDING "\
+            this->bindAndAddMethod(new jsonrpc::Procedure(\"<procedurename>\",<returntype>,<parameterlist> NULL), &<stubname>::<procedurename>I);"
+#define TEMPLATE_SERVER_NOTIFICATIONBINDING "\
+            this->bindAndAddNotification(new jsonrpc::Procedure(\"<procedurename>\", <parameterlist> NULL), &<stubname>::<procedurename>I);"
 
-#define TEMPLATE_SERVER_METHODDEFINITION ""
-#define TEMPLATE_SERVER_NOTIFICAITONDEFINITION ""
+#define TEMPLATE_SERVER_METHODDEFINITION "\
+        inline virtual void <procedurename>I(const Json::Value& request, Json::Value& response) \n\
+        {\n\
+            response = this-><procedurename>(<parametermapping>);\n\
+        }\n\
+"
+#define TEMPLATE_SERVER_NOTIFICAITONDEFINITION "\
+        inline virtual void <procedurename>I(const Json::Value& request) \n\
+        {\n\
+            this-><procedurename>(<parametermapping>);\n\
+        }\n\
+"
 
-#define TEMPLATE_SERVER_ABSTRACTDEFINITION "virtual <returntype> <procedurename>(<parameterlist>) = 0;"
+#define TEMPLATE_SERVER_ABSTRACTDEFINITION "\
+        virtual <returntype> <procedurename>(<parameterlist>) = 0;\n\
+"
 
 #endif // SERVERTEMPLATE_H

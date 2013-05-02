@@ -89,10 +89,8 @@ int main(int argc, char** argv)
             }
             if(createServer)
             {
-                cerr  << "Server stub not suppoerted yet" << endl;
-                return -1;
-                //ServerStubGenerator stub(stubname, inpath);
-                //stub.generateStubToFile(outpath);
+                ServerStubGenerator stub(stubname, inpath);
+                stub.generateStubToFile(outpath);
             }
         }
         catch(JsonRpcException e)

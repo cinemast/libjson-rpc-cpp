@@ -1,10 +1,13 @@
 file(COPY res DESTINATION ${CMAKE_BINARY_DIR}/out)
 
-add_executable(jsonrpcserversample simpleserver.cpp)
-target_link_libraries(jsonrpcserversample jsonrpc)
+add_executable(simpleserversample simpleserver.cpp)
+target_link_libraries(simpleserversample jsonrpc)
 
-add_executable(jsonrpcclientsample simpleclient.cpp)
-target_link_libraries(jsonrpcclientsample jsonrpc)
+add_executable(simpleclientsample simpleclient.cpp)
+target_link_libraries(simpleclientsample jsonrpc)
 
-add_executable(jsonrpcstubclient stubclient.cpp)
-target_link_libraries(jsonrpcstubclient jsonrpc)
+add_executable(stubclientsample stubclient.cpp)
+target_link_libraries(stubclientsample jsonrpc)
+
+add_executable(stubserversample stubserver.cpp)
+target_link_libraries(stubserversample jsonrpc)

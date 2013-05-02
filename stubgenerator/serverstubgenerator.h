@@ -18,6 +18,15 @@ namespace jsonrpc
     {
         public:
             ServerStubGenerator(const std::string& stubname, const std::string& filename);
+
+            virtual std::string generateStub();
+
+        private:
+            std::string generateBindings();
+            std::string generateProcedureDefinitions();
+            std::string generateAbstractDefinitions();
+            std::string generateBindingParameterlist(Procedure* proc);
+            std::string generateParameterMapping(Procedure* proc);
     };
 }
 

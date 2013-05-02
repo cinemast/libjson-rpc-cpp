@@ -8,13 +8,134 @@
  ************************************************************************/
 
 #include "serverstubgenerator.h"
+#include "servertemplate.h"
+
+#include <jsonrpc/specificationwriter.h>
+#include <sstream>
+#include <iostream>
 
 using namespace std;
 using namespace jsonrpc;
 
 
 ServerStubGenerator::ServerStubGenerator(const std::string &stubname, const std::string &filename) :
-    StubGenerator(stubname + "Server", filename)
+    StubGenerator("Abstract"+stubname + "Server", filename)
 {
+}
+
+string ServerStubGenerator::generateStub()
+{
+    string stub = TEMPLATE_SERVER_STUB;
+    replaceAll(stub, "<stubname>", this->stubname);
+    replaceAll(stub, "<procedurebindings>", this->generateBindings());
+    replaceAll(stub, "<proceduredefinitions>", this->generateProcedureDefinitions());
+    replaceAll(stub, "<abstractdefinitions>", this->generateAbstractDefinitions());
+
+    string stub_upper = this->stubname;
+    std::transform(stub_upper.begin(), stub_upper.end(), stub_upper.begin(),
+            ::toupper);
+    replaceAll(stub, "<STUBNAME>", stub_upper);
+
+    return stub;
+}
+
+string ServerStubGenerator::generateBindings()
+{
+    stringstream result;
+    string tmp;
+    Procedure* proc;
+
+    for(procedurelist_t::iterator it = this->procedures->begin(); it != this->procedures->end(); it++)
+    {
+        proc = it->second;
+        if(proc->GetProcedureType() == RPC_METHOD)
+        {
+            tmp = TEMPLATE_SERVER_METHODBINDING;
+        }
+        else
+        {
+            tmp = TEMPLATE_SERVER_NOTIFICATIONBINDING;
+        }
+        replaceAll(tmp, "<procedurename>", proc->GetProcedureName());
+        replaceAll(tmp, "<returntype>", toString(proc->GetReturnType()));
+        replaceAll(tmp, "<parameterlist>", generateBindingParameterlist(proc));
+        replaceAll(tmp, "<stubname>", this->stubname);
+        result << tmp << endl;
+    }
+    return result.str();
+}
+
+string ServerStubGenerator::generateProcedureDefinitions()
+{
+    stringstream result;
+    string tmp;
+    Procedure* proc;
+    for(procedurelist_t::iterator it = this->procedures->begin(); it != this->procedures->end(); it++)
+    {
+        proc = it->second;
+        if(proc->GetProcedureType() == RPC_METHOD)
+        {
+            tmp = TEMPLATE_SERVER_METHODDEFINITION;
+        }
+        else
+        {
+            tmp = TEMPLATE_SERVER_NOTIFICAITONDEFINITION;
+        }
+        replaceAll(tmp,"<procedurename>", proc->GetProcedureName());
+        replaceAll(tmp,"<parametermapping>", this->generateParameterMapping(proc));
+        result << tmp << endl;
+    }
+    return result.str();
+}
+
+string ServerStubGenerator::generateAbstractDefinitions()
+{
+    stringstream result;
+    string tmp;
+    Procedure* proc;
+
+    for(procedurelist_t::iterator it = this->procedures->begin(); it != this->procedures->end(); it++)
+    {
+        proc = it->second;
+        tmp = TEMPLATE_SERVER_ABSTRACTDEFINITION;
+        string returntype ="void";
+        if(proc->GetProcedureType() == RPC_METHOD)
+        {
+            returntype = toCppType(proc->GetReturnType());
+        }
+        replaceAll(tmp, "<returntype>", returntype);
+        replaceAll(tmp, "<procedurename>", proc->GetProcedureName());
+        replaceAll(tmp, "<parameterlist>", generateParameterDeclarationList(*proc));
+        result << tmp;
+    }
+    return result.str();
+}
+
+string ServerStubGenerator::generateBindingParameterlist(Procedure *proc)
+{
+    stringstream parameter;
+    parameterlist_t& list = proc->GetParameters();
+    for(parameterlist_t::iterator it2 = list.begin(); it2 != list.end(); it2++)
+    {
+        parameter << "\"" << it2->first << "\"," << toString(it2->second) << ",";
+    }
+    return parameter.str();
+}
+
+string ServerStubGenerator::generateParameterMapping(Procedure *proc)
+{
+    stringstream parameter;
+    string tmp;
+    parameterlist_t& params = proc->GetParameters();
+    for(parameterlist_t::iterator it2 = params.begin(); it2 != params.end(); it2++)
+    {
+        tmp = "request[\"" + it2->first  + "\"]" + toCppConversion(it2->second);
+        parameter << tmp;
+        if(it2 != --params.end())
+        {
+            parameter << ", ";
+        }
+    }
+    return parameter.str();
 }
 

@@ -30,6 +30,12 @@ namespace jsonrpc
         protected:
             procedurelist_t* procedures;
             std::string stubname;
+
+            static std::string toCppType(jsontype_t type, bool isConst = false, bool isReference = false);
+            static std::string toCppConversion(jsontype_t);
+            static std::string toString(jsontype_t type);
+
+            static std::string generateParameterDeclarationList(Procedure& proc);
     };
 }
 

@@ -52,7 +52,7 @@ namespace jsonrpc
              */
             bool ValdiateParameters(const Json::Value &parameters);
 
-            const parameterlist_t& GetParameters() const;
+            parameterlist_t& GetParameters();
             procedure_t GetProcedureType() const;
             const std::string& GetProcedureName() const;
 

@@ -50,24 +50,16 @@ string ClientStubGenerator::generateMethod(Procedure &proc)
     replaceAll(tmp, "<methodname>", proc.GetProcedureName());
 
     //build parameterlist
-    stringstream param_string;
     stringstream assignment_string;
 
     parameterlist_t list = proc.GetParameters();
-    for (parameterlist_t::iterator it = list.begin(); it != list.end();)
+    for (parameterlist_t::iterator it = list.begin(); it != list.end(); it++)
     {
-
-        param_string << toCppType(it->second, true, true) << " " << it->first;
         assignment_string << "p[\"" << it->first << "\"] = " << it->first
                 << "; " << endl;
-
-        if (++it != list.end())
-        {
-            param_string << ", ";
-        }
     }
 
-    replaceAll(tmp, "<parameters>", param_string.str());
+    replaceAll(tmp, "<parameters>", generateParameterDeclarationList(proc));
     replaceAll(tmp, "<parameter_assign>", assignment_string.str());
 
     if (proc.GetProcedureType() == RPC_METHOD)
@@ -84,60 +76,4 @@ string ClientStubGenerator::generateMethod(Procedure &proc)
     }
 
     return tmp;
-}
-
-string ClientStubGenerator::toCppType(jsontype_t type, bool isConst, bool isReference)
-{
-    string result;
-    switch(type)
-    {
-        case JSON_BOOLEAN:
-            result = "bool";
-            break;
-        case JSON_INTEGER:
-            result = "int";
-            break;
-        case JSON_REAL:
-            result = "double";
-            break;
-        case JSON_STRING:
-            result = "std::string";
-            break;
-        default:
-            result = "Json::Value";
-            break;
-    }
-    if(isConst)
-    {
-        result = "const " + result;
-    }
-    if(isReference)
-    {
-        result = result + "&";
-    }
-    return result;
-}
-
-string ClientStubGenerator::toCppConversion(jsontype_t type)
-{
-    string result;
-    switch(type)
-    {
-        case JSON_BOOLEAN:
-            result = ".asBool()";
-            break;
-        case JSON_INTEGER:
-            result = ".asInt()";
-            break;
-        case JSON_REAL:
-            result = ".asDouble()";
-            break;
-        case JSON_STRING:
-            result = ".asString()";
-            break;
-        default:
-            result = "";
-            break;
-    }
-    return result;
 }
