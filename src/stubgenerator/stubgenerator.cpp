@@ -19,7 +19,7 @@ using namespace jsonrpc;
 StubGenerator::StubGenerator(const string &stubname, const string &filename) :
     stubname(stubname)
 {
-    this->procedures = SpecificationParser::GetProcedures(filename);
+    this->procedures = SpecificationParser::GetProceduresFromFile(filename);
 }
 
 StubGenerator::~StubGenerator()

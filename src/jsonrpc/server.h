@@ -34,7 +34,7 @@ namespace jsonrpc
             }
 
             AbstractServer(const std::string &configfile, AbstractServerConnector *connector) :
-                handler(this, SpecificationParser::GetProcedures(configfile)),
+                handler(this, SpecificationParser::GetProceduresFromFile(configfile)),
                 connection(connector)
             {
                 connector->SetHandler(this->handler);

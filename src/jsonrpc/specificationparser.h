@@ -20,7 +20,9 @@ namespace jsonrpc {
     class SpecificationParser
     {
         public:
-            static procedurelist_t* GetProcedures(const std::string& filename) throw (JsonRpcException);
+            static procedurelist_t* GetProceduresFromFile(const std::string& filename) throw (JsonRpcException);
+            static procedurelist_t* GetProceduresFromString(const std::string& spec) throw (JsonRpcException);
+
 
         private:
             static Procedure* GetProcedure(Json::Value& val);

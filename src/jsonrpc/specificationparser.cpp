@@ -15,10 +15,15 @@ using namespace std;
 
 namespace jsonrpc {
 
-    procedurelist_t *SpecificationParser::GetProcedures(const string &filename) throw(JsonRpcException)
+     procedurelist_t *SpecificationParser::GetProceduresFromFile(const string &filename) throw(JsonRpcException)
+     {
+         string content;
+         GetFileContent(filename, content);
+         return GetProceduresFromString(content);
+     }
+
+    procedurelist_t *SpecificationParser::GetProceduresFromString(const string &content) throw(JsonRpcException)
     {
-        string content;
-        GetFileContent(filename,content);
 
         Json::Reader reader;
         Json::Value val;
