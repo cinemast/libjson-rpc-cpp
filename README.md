@@ -1,7 +1,7 @@
 libjson-rpc-cpp
 ===============
 
-This C++ library provides a json-rpc (remote procedure call) framework for Windows, Linux and MacOS (or any other UNIX derivate).
+This C++ library provides a json-rpc (remote procedure call) framework for Linux and MacOS (or any other UNIX derivate).
 It is fully JSON-RPC 2.0 compatible ([JSON-RPC 2.0](http://www.jsonrpc.org/specification)) and provides additional features, such as generic authentication mechanisms.
 
 **Notice: This framework is currently in a beta phase. Bug Reports are very welcome!**
@@ -11,9 +11,9 @@ It is fully JSON-RPC 2.0 compatible ([JSON-RPC 2.0](http://www.jsonrpc.org/speci
 5 good reasons why you should use libjson-rpc-cpp in your next project:
 ---------
 - Full JSON-RPC 2.0 Support (batch requests, parameter type and name checking, ...).
+- jsonrpcstub: Generates automatically C++ stub-classes for your json-rpc client AND server.
 - Embedded HTTP server to provide simple interfaces for your json-rpc server application.
 - Embedded HTTP client to connect easily via HTTP protocol.
-- jsonrpcstub: Generates automatically C++ classes for your json-rpc client.
 - Super liberal [MIT-License](http://en.wikipedia.org/wiki/MIT_License). 
 
 **Other good reasons to use libjson-rpc-cpp**
@@ -23,8 +23,8 @@ It is fully JSON-RPC 2.0 compatible ([JSON-RPC 2.0](http://www.jsonrpc.org/speci
 - Easy to use [cmake](http://www.cmake.org) cross platform build system.
 - Clean and simple architecture.
 - Authentication Interface: to restrict certain methods to certain user/groups only.
-- Tested under Windows7, MacOS X (10.7) and Linux (Ubuntu 12.10).
-
+- Tested under MacOS X (10.7,10.8) and Linux (Ubuntu 12.10).
+- Automated testing using `make test`
  
 Build the library
 -------------
@@ -44,24 +44,34 @@ sudo make install
 
 That's all you need.
 
-To uninstall the lib, type (inside the build directory):
+To uninstall the lib, type:
 
 ```sh
-sudo make uninstall
+cd build && sudo make uninstall
 ```
 
 Examples
 --------
-- [A simple Server Example](https://github.com/cinemast/libjson-rpc-cpp/wiki/A-simple-Server-Example)
-- [A simple Client Example](https://github.com/cinemast/libjson-rpc-cpp/wiki/A-simple-Client-example)
+TODO
 
-Roadmap
+Roadmap for v0.3
 --------
 - Provide .deb package
 - Automated testing after build phase (maybe ctest)
 - Get available at ubuntu mirrors.
 - Documentation for extending libjson-rpc-cpp (implementing more connectors, authentication manager)
 - Tutorial for AJAX-Example (it already works)
+
+Changes in v0.2
+---------
+- Minor bugfixes.
+- Refactored architecture.
+- stub generator for client and server.
+- removed mandatory configuration files (making it more compatible for embedded use cases).
+- Introduced SpecificationWriter to generate Specifications from RPC-Server definitions.
+- Introduced SpecificationParser to parse a Specification file and generate Methods for the RPC-Server.
+- Updated JsonCPP library
+- Introduced automated testing after build phase (using `make test`)
 
 Licsense
 --------
