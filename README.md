@@ -191,6 +191,7 @@ Changes in v0.2
 - Introduced SpecificationParser to parse a Specification file and generate Methods for the RPC-Server.
 - Updated JsonCPP library
 - Update Mongoose library
+- Enable SSL Support (provided by mongoose)
 - Introduced automated testing after build phase (using `make test`)
 - Embedding dependent libraries (to avoid naming conflicts)
 
