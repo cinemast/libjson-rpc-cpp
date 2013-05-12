@@ -52,7 +52,7 @@ cd build && sudo make uninstall
 
 Simple Example
 --------
-This example will show the most simple way to create a rpc server and client. If you only need the server, ignore step 4. If you only need the client, ignore step 3.
+This example will show the most simple way to create a rpc server and client. If you only need the server, ignore step 4. If you only need the client, ignore step 3. You can find all resources of this sample in the `src/example` directory of this repository.
 
 ### Step 1: Writing the specification file ###
 
@@ -92,7 +92,7 @@ Server Stub genearted to: /Users/cinemast/Desktop/AbstractMyStubServer.h
 
 ### Step 3: implement the abstract server stub ###
 
-Extend the abstract server stub and implment all pure virtual (abstract) methods defined in `spec.json`.
+Extend the abstract server stub and implement all pure virtual (abstract) methods defined in `spec.json`.
 
 ```cpp
 #include <jsonrpc/rpc.h>
