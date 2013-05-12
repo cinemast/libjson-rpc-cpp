@@ -16,7 +16,7 @@ SET(MAJOR_VERSION 0)
 SET(MINOR_VERSION 2)
 SET(PATCH_VERSION 0)
 
-set(VERSION_STRING ${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}) 
+
 
 # configure a header file to pass some of the CMake settings
 # to the source code
