@@ -15,7 +15,7 @@
 
 namespace jsonrpc
 {
-    static int callback(struct mg_connection *conn)
+    int HttpServer::callback(struct mg_connection *conn)
     {
         const struct mg_request_info *request_info = mg_get_request_info(conn);
         char* readBuffer = NULL;
@@ -25,6 +25,11 @@ namespace jsonrpc
 
         if (strcmp(request_info->request_method, "GET") == 0)
         {
+            if(_this->showSpec)
+            {
+                _this->SendResponse(_this->GetSpecification(), conn);
+                return 1;
+            }
             //Mark the request as unprocessed.
             return 0;
         }
@@ -46,18 +51,14 @@ namespace jsonrpc
         }
     }
 
-    HttpServer::HttpServer(int port) : port(port), resPath("")
+    HttpServer::HttpServer(int port, bool enableSpecification, const std::string &sslcert) :
+        AbstractServerConnector(),
+        port(port),
+        ctx(NULL),
+        running(false),
+        showSpec(enableSpecification),
+        sslcert(sslcert)
     {
-        this->running = false;
-    }
-
-    HttpServer::HttpServer(int port, const std::string& getResourcePath)
-        : AbstractServerConnector()
-    {
-        this->port = port;
-        this->ctx = NULL;
-        this->resPath = getResourcePath;
-        this->running = false;
     }
 
     HttpServer::~HttpServer()
@@ -73,17 +74,17 @@ namespace jsonrpc
             struct mg_callbacks callbacks;
             memset(&callbacks, 0, sizeof(callbacks));
             callbacks.begin_request = callback;
-            sprintf(port, "%d", this->port);
-            if(this->resPath == "")
+            if(this->sslcert == "")
             {
+                sprintf(port, "%d", this->port);
                 const char *options[] = { "listening_ports", port, NULL };
                 this->ctx = mg_start(&callbacks, this, options);
             }
             else
             {
+                sprintf(port, "%ds", this->port);
                 const char *options[] =
-                { "document_root", this->resPath.c_str(), "listening_ports",
-                  port, NULL };
+                { "listening_ports", port, "ssl_certificate", this->sslcert.c_str(), NULL };
                 this->ctx = mg_start(&callbacks, this, options);
             }
 

@@ -16,14 +16,6 @@
 namespace jsonrpc
 {
     /**
-     * Typedefinition to differ between Text and Binary ressources
-     */
-    typedef enum
-    {
-        TEXT, BINARY
-    } ResourceType;
-
-    /**
      * This class provides an embedded HTTP Server, based on Mongoose, to handle incoming Requests and send HTTP 1.1
      * valid responses.
      * Note that this class will always send HTTP-Status 200, even though an JSON-RPC Error might have occurred. Please
@@ -39,8 +31,7 @@ namespace jsonrpc
     class HttpServer: public AbstractServerConnector
     {
         public:
-            HttpServer(int port);
-            HttpServer(int port, const std::string& getResourcePath);
+            HttpServer(int port, bool enableSpecification = true, const std::string& sslcert = "");
             virtual ~HttpServer();
 
             virtual bool StartListening();
@@ -52,8 +43,12 @@ namespace jsonrpc
         private:
             int port;
             struct mg_context *ctx;
-            std::string resPath;
             bool running;
+            bool showSpec;
+            std::string sslcert;
+
+            static int callback(struct mg_connection *conn);
+
     };
 
 } /* namespace jsonrpc */

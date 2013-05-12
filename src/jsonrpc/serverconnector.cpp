@@ -8,6 +8,7 @@
  ************************************************************************/
 
 #include "serverconnector.h"
+#include "specificationwriter.h"
 #include <cstdlib>
 
 using namespace std;
@@ -37,6 +38,11 @@ namespace jsonrpc
         {
             return false;
         }
+    }
+
+    string AbstractServerConnector::GetSpecification()
+    {
+        return SpecificationWriter::toString(this->handler->GetProcedures());
     }
 
     void AbstractServerConnector::SetHandler(RpcProtocolServer& handler)

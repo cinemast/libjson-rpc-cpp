@@ -49,6 +49,8 @@ namespace jsonrpc
              */
             bool OnRequest(const std::string& request, void* addInfo = NULL);
 
+            std::string GetSpecification();
+
             void SetHandler(RpcProtocolServer& handler);
 
         private:
