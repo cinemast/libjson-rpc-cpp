@@ -9,8 +9,8 @@
 
 #include "specificationwriter.h"
 #include <fstream>
-#include <json/json.h>
-#include <json/writer.h>
+#include "json/json.h"
+#include "json/writer.h"
 #include <iostream>
 
 using namespace std;

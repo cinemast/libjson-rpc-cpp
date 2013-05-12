@@ -12,7 +12,7 @@
 
 #include "abstractauthenticator.h"
 #include "exception.h"
-#include <json/value.h>
+#include "json/value.h"
 #include <string>
 
 namespace jsonrpc {

@@ -10,7 +10,7 @@
 #ifndef HTTPSERVERCONNECTOR_H_
 #define HTTPSERVERCONNECTOR_H_
 
-#include <mongoose/mongoose.h>
+#include "mongoose.h"
 #include "../serverconnector.h"
 
 namespace jsonrpc

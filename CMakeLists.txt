@@ -13,8 +13,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out)
 
 
-add_subdirectory(src/deps/json)
-add_subdirectory(src/deps/mongoose)
+#add_subdirectory(src/deps/json)
+#add_subdirectory(src/deps/mongoose)
 add_subdirectory(src/jsonrpc)
 add_subdirectory(src/test)
 add_subdirectory(src/stubgenerator)

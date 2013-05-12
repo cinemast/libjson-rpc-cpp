@@ -8,7 +8,7 @@
  ************************************************************************/
 
 #include "rpcprotocolclient.h"
-#include <json/writer.h>
+#include "json/writer.h"
 
 namespace jsonrpc
 {

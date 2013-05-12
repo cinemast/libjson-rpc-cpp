@@ -8,7 +8,7 @@
 #ifndef AUTHENTICATIONMANAGER_H_
 #define AUTHENTICATIONMANAGER_H_
 
-#include <json/json.h>
+#include "json/json.h"
 
 namespace jsonrpc
 {
