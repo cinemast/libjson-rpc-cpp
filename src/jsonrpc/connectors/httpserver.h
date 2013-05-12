@@ -20,17 +20,17 @@ namespace jsonrpc
      * valid responses.
      * Note that this class will always send HTTP-Status 200, even though an JSON-RPC Error might have occurred. Please
      * always check for the JSON-RPC Error Header.
-     *
-     * Query String Parameters:
-     *  You can send Query String Parameters in a GET Request. E.g.: http://testserver:port?someParameter
-     *
-     *  Possible Parameters:
-     *      jsonrpcmethods: Will send you the json-rpc-cpp Configuration file with all method descriptions
-     *      html: Will read a defined (see Constructor) HTML File.
      */
     class HttpServer: public AbstractServerConnector
     {
         public:
+
+            /**
+             * @brief HttpServer, constructor for the included HttpServer
+             * @param port on which the server is listening
+             * @param enableSpecification - defines if the specification is returned in case of a GET request
+             * @param sslcert - defines the path to a SSL certificate, if this path is != "", then SSL/HTTPS is used with the given certificate.
+             */
             HttpServer(int port, bool enableSpecification = true, const std::string& sslcert = "");
             virtual ~HttpServer();
 
