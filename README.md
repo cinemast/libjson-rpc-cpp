@@ -50,7 +50,7 @@ To uninstall the lib, type:
 cd build && sudo make uninstall
 ```
 
-Examples
+Simple Example
 --------
 This example will show the most simple way to create a rpc server and client. If you only need the server, ignore step 4. If you only need the client, ignore step 3.
 
@@ -78,7 +78,8 @@ The type of a return value or parameter is defined by the literal assigned to it
 
 Call jsonrpcstub:
 ```sh
-jsonrpcstub -s -c -o /Users/cinemast/Desktop spec.json MyStub```
+jsonrpcstub -s -c -o /Users/cinemast/Desktop spec.json MyStub
+```
 
 This generates the server (-s) and the client (-c) stub to the specified output directory (-o). `spec.json` is the specification file. `MyStub` defines the name of the stub classes.
 
