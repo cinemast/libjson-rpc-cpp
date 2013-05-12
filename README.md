@@ -29,7 +29,7 @@ It is fully JSON-RPC 2.0 compatible ([JSON-RPC 2.0](http://www.jsonrpc.org/speci
 Build the library
 -------------
 
-You will need [Git](http://git-scm.com/downloads) and [CMake](http://www.cmake.org/cmake/resources/software.html). You can click on the links to download the latest versions. 
+You will need [Git](http://git-scm.com/downloads) and [CMake](http://www.cmake.org/cmake/resources/software.html). You can click on the links to download the latest versions. [libcurl](http://curl.haxx.se/libcurl/) is also required but should already be installed on most systems.
 CMake must be Version 2.6 or later.
 
 Open a terminal and copy the following commands:
@@ -178,10 +178,8 @@ g++ main.cpp -ljsonrpc -ljsoncpp -o sampleclient
 Roadmap for v0.3
 --------
 - Provide .deb package
-- Automated testing after build phase (maybe ctest)
 - Get available at ubuntu mirrors.
 - Documentation for extending libjson-rpc-cpp (implementing more connectors, authentication manager)
-- Tutorial for AJAX-Example (it already works)
 
 Changes in v0.2
 ---------
