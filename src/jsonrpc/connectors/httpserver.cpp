@@ -8,13 +8,14 @@
  ************************************************************************/
 
 #include "httpserver.h"
+#include "mongoose.h"
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
 
 namespace jsonrpc
 {
-    static void *callback(enum mg_event event, struct mg_connection *conn)
+    static int callback(struct mg_connection *conn)
     {
         const struct mg_request_info *request_info = mg_get_request_info(conn);
         char* readBuffer = NULL;
@@ -22,34 +23,26 @@ namespace jsonrpc
 
         HttpServer* _this = (HttpServer*) request_info->user_data;
 
-        if (event == MG_NEW_REQUEST)
+        if (strcmp(request_info->request_method, "GET") == 0)
         {
+            //Mark the request as unprocessed.
+            return 0;
+        }
+        else if (strcmp(request_info->request_method, "POST") == 0)
+        {
+            //get size of postData
+            sscanf(mg_get_header(conn, "Content-Length"), "%d", &postSize);
+            readBuffer = (char*) malloc(sizeof(char) * (postSize + 1));
+            mg_read(conn, readBuffer, postSize);
+            _this->OnRequest(readBuffer, conn);
+            free(readBuffer);
 
-            if (strcmp(request_info->request_method, "GET") == 0)
-            {
-                //Mark the request as unprocessed.
-                return NULL;
-            }
-            else if (strcmp(request_info->request_method, "POST") == 0)
-            {
-                //get size of postData
-                sscanf(mg_get_header(conn, "Content-Length"), "%d", &postSize);
-                readBuffer = (char*) malloc(sizeof(char) * (postSize + 1));
-                mg_read(conn, readBuffer, postSize);
-                _this->OnRequest(readBuffer, conn);
-                free(readBuffer);
-
-                //Mark the request as processed by our handler.
-                return (void*) "";
-            }
-            else
-            {
-                return NULL;
-            }
+            //Mark the request as processed by our handler.
+            return 1;
         }
         else
         {
-            return NULL;
+            return 0;
         }
     }
 
@@ -71,24 +64,27 @@ namespace jsonrpc
     {
         this->StopListening();
     }
-    
+
     bool HttpServer::StartListening()
     {
         if(!this->running)
         {
             char port[6];
+            struct mg_callbacks callbacks;
+            memset(&callbacks, 0, sizeof(callbacks));
+            callbacks.begin_request = callback;
             sprintf(port, "%d", this->port);
             if(this->resPath == "")
             {
                 const char *options[] = { "listening_ports", port, NULL };
-                this->ctx = mg_start(&callback, this, options);
+                this->ctx = mg_start(&callbacks, this, options);
             }
             else
             {
                 const char *options[] =
                 { "document_root", this->resPath.c_str(), "listening_ports",
                   port, NULL };
-                this->ctx = mg_start(&callback, this, options);
+                this->ctx = mg_start(&callbacks, this, options);
             }
 
             if (this->ctx != NULL)
@@ -107,7 +103,7 @@ namespace jsonrpc
             return true;
         }
     }
-    
+
     bool HttpServer::StopListening()
     {
         if(this->running)
@@ -118,7 +114,7 @@ namespace jsonrpc
         }
         return true;
     }
-    
+
     bool HttpServer::SendResponse(const std::string& response, void* addInfo)
     {
         struct mg_connection* conn = (struct mg_connection*) addInfo;

@@ -192,7 +192,9 @@ Changes in v0.2
 - Introduced SpecificationWriter to generate Specifications from RPC-Server definitions.
 - Introduced SpecificationParser to parse a Specification file and generate Methods for the RPC-Server.
 - Updated JsonCPP library
+- Update Mongoose library
 - Introduced automated testing after build phase (using `make test`)
+- Embedding dependent libraries (to avoid naming conflicts)
 
 Licsense
 --------
