@@ -17,13 +17,13 @@ class SampleServer : public AbstractServer<SampleServer>
 {
     public:
         SampleServer() :
-            AbstractServer(new HttpServer(8080))
+            AbstractServer(new HttpServer(8080, true, "ssl_cert.pem"))
         {
             this->bindAndAddMethod(new Procedure("sayHello", JSON_STRING, "name", JSON_STRING, NULL), &SampleServer::sayHello);
             this->bindAndAddNotification(new Procedure("notifyServer", NULL), &SampleServer::notifyServer);
         }
 
-        //method
+        //methodssl_cert.pem
         void sayHello(const Json::Value& request, Json::Value& response)
         {
             response = "Hello: " + request["name"].asString();

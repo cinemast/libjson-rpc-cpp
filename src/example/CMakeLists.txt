@@ -1,4 +1,4 @@
-file(COPY spec.json DESTINATION ${CMAKE_BINARY_DIR}/out)
+file(COPY spec.json ssl_cert.pem DESTINATION ${CMAKE_BINARY_DIR}/out)
 
 add_executable(simpleserversample simpleserver.cpp)
 target_link_libraries(simpleserversample jsonrpc)

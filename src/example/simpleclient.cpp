@@ -13,7 +13,7 @@ using namespace std;
 
 int main()
 {
-    Client c(new HttpClient("http://localhost:8080"));
+    Client c(new HttpClient("https://localhost:8080"));
 
     Json::Value params;
     params["name"] = "Peter";
