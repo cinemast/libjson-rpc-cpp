@@ -195,6 +195,10 @@ Changes in v0.2
 - Introduced automated testing after build phase (using `make test`)
 - Embedding dependent libraries (to avoid naming conflicts)
 
+Known issues
+-------------
+- Due to a bug in gcc 4.6.2 this project is not compiling under Mac OS gcc. Use clang++ instead. [See here](http://stackoverflow.com/questions/8887864/template-base-constructor-call-in-member-initialization-list-error)
+
 Licsense
 --------
 
