@@ -52,7 +52,127 @@ cd build && sudo make uninstall
 
 Examples
 --------
-TODO
+This example will show the most simple way to create a rpc server and client. If you only need the server, ignore step 4. If you only need the client, ignore step 3.
+
+### Step 1: Writing the specification file ###
+
+```json
+[
+	{
+		"method": "sayHello",
+		"params": { 
+			"name": "Peter"
+		}
+		"returns" : "Hello Peter"
+	},
+	{
+		"notification" : "notifyServer",
+		"params": null
+	}
+]
+```
+
+The type of a return value or parameter is defined by the literal assigned to it. In this example you can see how to specify methods and notifications.
+
+### Step 2: Generate the stubs for client and server ###
+
+Call jsonrpcstub:
+```sh
+jsonrpcstub -s -c -o /Users/cinemast/Desktop spec.json MyStub```
+
+This generates the server (-s) and the client (-c) stub to the specified output directory (-o). `spec.json` is the specification file. `MyStub` defines the name of the stub classes.
+
+You should see the following on your command line: 
+
+```sh
+Client Stub genearted to: /Users/cinemast/Desktop/MyStubClient.h
+Server Stub genearted to: /Users/cinemast/Desktop/AbstractMyStubServer.h
+```
+
+### Step 3: implement the abstract server stub ###
+
+Extend the abstract server stub and implment all pure virtual (abstract) methods defined in `spec.json`.
+
+```cpp
+#include <jsonrpc/rpc.h>
+#include <iostream>
+
+#include "abstractmystubserver.h"
+
+using namespace jsonrpc;
+using namespace std;
+
+class MyStubServer : public AbstractMyStubServer
+{
+    public:
+        MyStubServer();
+
+        virtual void notifyServer();
+        virtual std::string sayHello(const std::string& name);
+};
+
+MyStubServer::MyStubServer() :
+    AbstractMyStubServer(new HttpServer(8080))
+{
+}
+void MyStubServer::notifyServer()
+{
+    cout << "Server got notified" << endl;
+}
+string MyStubServer::sayHello(const string &name)
+{
+    return "Hello " + name;
+}
+
+int main()
+{
+    MyStubServer s;
+    s.StartListening();
+    getchar();
+    s.StopListening();
+    return 0;
+}
+```
+
+In the main function the concrete server is instantiated and started. That is all for the server. Any JSON-RPC 2.0 compliant client can now connect to your server.
+
+Compile the server with:
+
+```sh
+g++ main.cpp -ljsonrpc -ljsoncpp -lmongoose -o sampleserver
+```
+
+### Step 4: Create the client application
+```cpp
+#include <jsonrpc/rpc.h>
+#include <iostream>
+
+#include "mystubclient.h"
+
+using namespace jsonrpc;
+using namespace std;
+
+int main()
+{
+    MyStubClient c(new HttpClient("http://localhost:8080"));
+    try
+    {
+        cout << c.sayHello("Peter Knafl") << endl;
+        c.notifyServer();
+    }
+    catch (JsonRpcException e)
+    {
+        cerr << e.what() << endl;
+    }
+	return 0;
+}
+```
+
+Compile the client with:
+
+```sh
+g++ main.cpp -ljsonrpc -ljsoncpp -o sampleclient
+```
 
 Roadmap for v0.3
 --------

@@ -24,6 +24,7 @@ namespace jsonrpc
 
             virtual std::string generateStub() = 0;
             void generateStubToFile(const std::string& outputpath);
+            std::string getStubName();
 
             static void replaceAll(std::string& text, const std::string& fnd, const std::string& rep);
 

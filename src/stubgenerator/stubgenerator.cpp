@@ -48,6 +48,11 @@ void StubGenerator::generateStubToFile(const string &path)
     stream.close();
 }
 
+string StubGenerator::getStubName()
+{
+    return this->stubname;
+}
+
 string StubGenerator::toCppType(jsontype_t type, bool isConst, bool isReference)
 {
     string result;

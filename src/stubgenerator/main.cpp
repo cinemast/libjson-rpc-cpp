@@ -35,15 +35,15 @@ void printHelp()
     cout << "\t -o, --output\tSpecify output path for stubfile. If not specified, outputpath will be CWD" << endl << endl;
 
     cout << "Example for client stub:" << endl;
-    cout << "\tjsonrpcstub -c /home/user/procedures.json MyClient" << endl << endl;
+    cout << "\tjsonrpcstub -c /home/user/procedures.json MyStub" << endl << endl;
 
     cout << "Example for server stub:" << endl;
-    cout << "\tjsonrpcstub -s /home/user/procedures.json MyServer" << endl << endl;
+    cout << "\tjsonrpcstub -s /home/user/procedures.json MyStub" << endl << endl;
 }
 
 int main(int argc, char** argv)
 {
-    if(argc < 3)
+    if(argc < 3 && !(strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0))
     {
         cerr << "Not enough arguments! Use --help for further info." << endl;
         return -1;
@@ -82,17 +82,24 @@ int main(int argc, char** argv)
             }
         }
 
+        if(argc == 2)
+        {
+            printHelp();
+        }
+
         try
         {
             if(createClient)
             {
                 ClientStubGenerator stub(stubname, inpath);
                 stub.generateStubToFile(outpath);
+                cout << "Client Stub genearted to: " + outpath + "/" + stub.getStubName() + ".h" << endl;
             }
             if(createServer)
             {
                 ServerStubGenerator stub(stubname, inpath);
                 stub.generateStubToFile(outpath);
+                cout << "Server Stub genearted to: " + outpath + "/" + stub.getStubName() + ".h" << endl;
             }
         }
         catch(JsonRpcException e)
