@@ -12,9 +12,21 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out)
 
+SET(MAJOR_VERSION 0)
+SET(MINOR_VERSION 2)
+SET(PATCH_VERSION 0)
 
-#add_subdirectory(src/deps/json)
-#add_subdirectory(src/deps/mongoose)
+set(VERSION_STRING ${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}) 
+
+# configure a header file to pass some of the CMake settings
+# to the source code
+configure_file (
+  "${PROJECT_SOURCE_DIR}/src/jsonrpc/version.h.in"
+  "${PROJECT_BINARY_DIR}/version.h"
+)
+install(FILES ${PROJECT_BINARY_DIR}/version.h DESTINATION include/jsonrpc) 
+
+
 add_subdirectory(src/jsonrpc)
 add_subdirectory(src/test)
 add_subdirectory(src/stubgenerator)
@@ -31,10 +43,6 @@ add_custom_target(uninstall
     COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
 
 
-SET(MAJOR_VERSION 0)
-SET(MINOR_VERSION 1)
-SET(PATCH_VERSION 0)
-
 IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
 INCLUDE(InstallRequiredSystemLibraries)
 
@@ -48,7 +56,7 @@ SET(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
 
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	SET(CPACK_GENERATOR "PackageMaker")
-	SET(CPACK_PACKAGING_INSTALL_PREFIX "/usr/local")
+	SET(CPACK_PACKAGING_INSTALL_PREFIX "/opt/local")
 ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")

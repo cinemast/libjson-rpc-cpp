@@ -1,0 +1,17 @@
+/*************************************************************************
+ * libjson-rpc-cpp
+ *************************************************************************
+ * @file    version.h.in
+ * @date    12.05.2013
+ * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>
+ * @license See attached LICENSE.txt
+ ************************************************************************/
+
+#ifndef VERSION_H_
+#define VERSION_H_
+
+#define JSON_RPC_CPP_MAJOR_VERSION @MAJOR_VERSION@
+#define JSON_RPC_CPP_MINOR_VERSION @MINOR_VERSION@
+
+
+#endif /* VERSION_H_ */

@@ -10,6 +10,8 @@
 #ifndef JSONRPCCPP_H_
 #define JSONRPCCPP_H_
 
+#define JSON_RPC_CPP_VERION 0.2
+
 #include "server.h"
 #include "client.h"
 
