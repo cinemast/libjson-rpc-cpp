@@ -14,7 +14,7 @@ using namespace std;
 using namespace jsonrpc;
 
 TestServer::TestServer() :
-    AbstractServer(new HttpServer(8080)),
+    AbstractServer<TestServer>(new HttpServer(8080)),
     cnt(0)
 {
     cout << "Called default const" << endl;

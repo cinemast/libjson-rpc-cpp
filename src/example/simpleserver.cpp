@@ -17,7 +17,7 @@ class SampleServer : public AbstractServer<SampleServer>
 {
     public:
         SampleServer() :
-            AbstractServer(new HttpServer(8080, true, "ssl_cert.pem"))
+            AbstractServer<SampleServer>(new HttpServer(8080, true, "ssl_cert.pem"))
         {
             this->bindAndAddMethod(new Procedure("sayHello", JSON_STRING, "name", JSON_STRING, NULL), &SampleServer::sayHello);
             this->bindAndAddNotification(new Procedure("notifyServer", NULL), &SampleServer::notifyServer);

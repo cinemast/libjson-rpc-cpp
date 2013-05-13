@@ -54,13 +54,13 @@ int main(int argc, char** argv)
     }
 
     proc = (*procs)["initCounter"];
-    if(proc->GetProcedureName() != "initCounter" || proc->GetReturnType() != RPC_NOTIFICATION || proc->GetParameters().size() != 1 || proc->GetParameters()["value"] != JSON_INTEGER)
+    if(proc->GetProcedureName() != "initCounter" || proc->GetProcedureType() != RPC_NOTIFICATION || proc->GetParameters().size() != 1 || proc->GetParameters()["value"] != JSON_INTEGER)
     {
         cerr << "Method initCounter failed verification" << endl;
     }
 
     proc = (*procs)["incrementCounter"];
-    if(proc->GetProcedureName() != "incrementCounter" || proc->GetReturnType() != RPC_NOTIFICATION || proc->GetParameters().size() != 0)
+    if(proc->GetProcedureName() != "incrementCounter" || proc->GetProcedureType() != RPC_NOTIFICATION || proc->GetParameters().size() != 0)
     {
         cerr << "Method incrementCounter failed verification" << endl;
     }

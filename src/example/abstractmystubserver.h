@@ -11,7 +11,7 @@ class AbstractMyStubServer : public jsonrpc::AbstractServer<AbstractMyStubServer
 {
     public:
         AbstractMyStubServer(jsonrpc::AbstractServerConnector* conn) :
-            AbstractServer(conn) 
+            jsonrpc::AbstractServer<AbstractMyStubServer>(conn)
         {
             this->bindAndAddNotification(new jsonrpc::Procedure("notifyServer",  NULL), &AbstractMyStubServer::notifyServerI);
             this->bindAndAddMethod(new jsonrpc::Procedure("sayHello",jsonrpc::JSON_STRING,"name",jsonrpc::JSON_STRING, NULL), &AbstractMyStubServer::sayHelloI);
