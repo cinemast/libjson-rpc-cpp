@@ -32,6 +32,12 @@ Build the library
 You will need [Git](http://git-scm.com/downloads) and [CMake](http://www.cmake.org/cmake/resources/software.html). You can click on the links to download the latest versions. [libcurl](http://curl.haxx.se/libcurl/) is also required but should already be installed on most systems.
 CMake must be Version 2.6 or later.
 
+Under Debian based systems type:
+
+```sh
+sudo apt-get install libcurl4-openssl-dev cmake
+```
+
 Open a terminal and copy the following commands:
 
 ```sh
