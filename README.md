@@ -40,6 +40,8 @@ cd libjson-rpc-cpp/build
 cmake .. && make
 #Not required, but makes it easier to use
 sudo make install
+#only required for linux
+sudo ldconfig	
 ```
 
 That's all you need.
@@ -62,7 +64,7 @@ This example will show the most simple way to create a rpc server and client. If
 		"method": "sayHello",
 		"params": { 
 			"name": "Peter"
-		}
+		},
 		"returns" : "Hello Peter"
 	},
 	{
