@@ -39,6 +39,7 @@ namespace jsonrpc
             delete it->second;
         }
         this->SetAuthenticator(NULL);
+        this->procedures->clear();
         delete this->procedures;
     }
 

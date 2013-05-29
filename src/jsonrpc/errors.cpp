@@ -55,9 +55,6 @@ namespace jsonrpc
         possibleErrors[ERROR_CLIENT_INVALID_RESPONSE] = "The response is invalid";
         possibleErrors[ERROR_CLIENT_CONNECTOR] = "Client connector error";
         possibleErrors[ERROR_SERVER_CONNECTOR] = "Server connector error";
-
-
-
     }
 
     Json::Value Errors::GetErrorBlock(const Json::Value& request, const int& errorCode)
