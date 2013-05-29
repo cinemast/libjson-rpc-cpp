@@ -39,6 +39,9 @@ namespace jsonrpc
         private:
             int code;
             std::string message;
+            std::string whatString;
+
+            void setWhatMessage();
     };
 
 } /* namespace jsonrpc */
