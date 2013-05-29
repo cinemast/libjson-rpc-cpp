@@ -37,15 +37,24 @@ void StubGenerator::replaceAll(string &text, const string &fnd, const string &re
     }
 }
 
-void StubGenerator::generateStubToFile(const string &path)
+std::string StubGenerator::generateStubToFile(const string &path)
 {
     ofstream stream;
     string filename = this->stubname + ".h";
+    string completepath;
     //std::transform(filename.begin(), filename.end(), filename.begin(), ::tolower);
-    string completepath = path + "/" + filename;
+    if (path.at(path.size()-1) == '/')
+    {
+        completepath = path + filename;
+    }
+    else
+    {
+        completepath = path + "/" + filename;
+    }
     stream.open(completepath.c_str(), ios_base::out);
     stream << this->generateStub();
     stream.close();
+    return completepath;
 }
 
 string StubGenerator::getStubName()

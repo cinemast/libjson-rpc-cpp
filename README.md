@@ -52,7 +52,7 @@ sudo ldconfig
 
 That's all you need.
 
-To uninstall the lib, type:
+To uninstall the library and the stubgenerator, type:
 
 ```sh
 cd build && sudo make uninstall

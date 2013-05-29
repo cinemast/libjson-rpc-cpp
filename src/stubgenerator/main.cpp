@@ -97,14 +97,12 @@ int main(int argc, char** argv)
             if(createClient)
             {
                 ClientStubGenerator stub(stubname, inpath);
-                stub.generateStubToFile(outpath);
-                cout << "Client Stub genearted to: " + outpath + "/" + stub.getStubName() + ".h" << endl;
+                cout << "Client Stub genearted to: " << stub.generateStubToFile(outpath) << endl;
             }
             if(createServer)
             {
                 ServerStubGenerator stub(stubname, inpath);
-                stub.generateStubToFile(outpath);
-                cout << "Server Stub genearted to: " + outpath + "/" + stub.getStubName() + ".h" << endl;
+                cout << "Server Stub genearted to: " + stub.generateStubToFile(outpath) << endl;
             }
         }
         catch(JsonRpcException e)
