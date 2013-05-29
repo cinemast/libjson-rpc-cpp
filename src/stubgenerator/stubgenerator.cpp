@@ -41,7 +41,7 @@ void StubGenerator::generateStubToFile(const string &path)
 {
     ofstream stream;
     string filename = this->stubname + ".h";
-    std::transform(filename.begin(), filename.end(), filename.begin(), ::tolower);
+    //std::transform(filename.begin(), filename.end(), filename.begin(), ::tolower);
     string completepath = path + "/" + filename;
     stream.open(completepath.c_str(), ios_base::out);
     stream << this->generateStub();

@@ -43,7 +43,12 @@ void printHelp()
 
 int main(int argc, char** argv)
 {
-    if(argc < 3 && !(strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0))
+    if(argc == 1)
+    {
+        cerr << "Not enough arguments! Use --help for further info." << endl;
+        return -1;
+    }
+    else if(argc < 3 && !(strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0))
     {
         cerr << "Not enough arguments! Use --help for further info." << endl;
         return -1;
