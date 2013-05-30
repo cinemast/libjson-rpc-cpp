@@ -23,7 +23,8 @@ It is fully JSON-RPC 2.0 compatible ([JSON-RPC 2.0](http://www.jsonrpc.org/speci
 - Easy to use [cmake](http://www.cmake.org) cross platform build system.
 - Clean and simple architecture.
 - Authentication Interface: to restrict certain methods to certain user/groups only.
-- Tested under MacOS X (10.7,10.8) and Linux (Ubuntu 12.10).
+- Tested under MacOS X (10.7,10.8), Linux (Ubuntu 12.10 64bit, LinuxMint 14 64bit).
+- Tested under RaspberryPi (raspbian). This library offers great opportunities to remotely control your raspberry pi.
 - Automated testing using `make test`
  
 Build the library
