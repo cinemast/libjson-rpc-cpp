@@ -67,21 +67,25 @@ int kbhit_mac() {
 #else
 //Taken from: http://stackoverflow.com/questions/2984307/c-key-pressed-in-linux-console
 int kbhit_linux() {
-    int c=0;
-    struct termios org_opts, new_opts;
-    int res=0;
-    //-----  store old settings -----------
-    res=tcgetattr(STDIN_FILENO, &org_opts);
-    assert(res==0);
-    //---- set new terminal parms --------
-    memcpy(&new_opts, &org_opts, sizeof(new_opts));
-    new_opts.c_lflag &= ~(ICANON | ECHO | ECHOE | ECHOK | ECHONL | ECHOPRT | ECHOKE | ICRNL);
-    tcsetattr(STDIN_FILENO, TCSANOW, &new_opts);
-    c=getchar();
-    //------  restore old settings ---------
-    res=tcsetattr(STDIN_FILENO, TCSANOW, &org_opts);
-    assert(res==0);
-    return(c);
+    static int ch = -1, fd = 0;
+
+    struct termios neu, alt;
+
+    fd = fileno(stdin);
+
+    tcgetattr(fd, &alt);
+
+    neu = alt;
+
+    neu.c_lflag &= ~(ICANON|ECHO);
+
+    tcsetattr(fd, TCSANOW, &neu);
+
+    ch = getchar();
+
+    tcsetattr(fd, TCSANOW, &alt);
+
+    return ch;
 }
 #endif
 int main(int argc, char** argv) {
@@ -112,12 +116,14 @@ int main(int argc, char** argv) {
                         break;
                     case 119: stub.Input_Up();
                         break;
+                    case 10:
                     case 13: stub.Input_Select();
                         break;
                     case 127:
                     case 27: stub.Input_Back();
                         break;
                 }
+                cout << "Pressed: " << key << endl;
             }
         } catch(jsonrpc::JsonRpcException e) {
             cerr << e.what() << endl;
