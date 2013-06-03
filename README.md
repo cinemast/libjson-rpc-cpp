@@ -26,6 +26,7 @@ It is fully JSON-RPC 2.0 compatible ([JSON-RPC 2.0](http://www.jsonrpc.org/speci
 - Tested under MacOS X (10.7,10.8), Linux (Ubuntu 12.10 64bit, LinuxMint 14 64bit).
 - Tested under RaspberryPi (raspbian). This library offers great opportunities to remotely control your raspberry pi.
 - Automated testing using `make test`
+- Useful Examples provided. g.g. XBMC Remote using json-rpc client part and stub generator.
  
 Build the library
 -------------

@@ -26,15 +26,12 @@ int kbhit_mac() {
     char ch;
     int error;
     static struct termios Otty, Ntty;
-
     fflush(stdout);
     tcgetattr(0, &Otty);
     Ntty = Otty;
-
     Ntty.c_iflag  =  0;		/* input mode		*/
     Ntty.c_oflag  =  0;		/* output mode		*/
     Ntty.c_lflag &= ~ICANON;	/* line settings 	*/
-
 #if 1
     /* disable echoing the char as it is typed */
     Ntty.c_lflag &= ~ECHO;	/* disable echo 	*/
@@ -42,21 +39,19 @@ int kbhit_mac() {
     /* enable echoing the char as it is typed */
     Ntty.c_lflag |=  ECHO;	/* enable echo	 	*/
 #endif
-
     Ntty.c_cc[VMIN]  = CMIN;	/* minimum chars to wait for */
     Ntty.c_cc[VTIME] = CTIME;	/* minimum wait time	*/
 #if 1
     /*
     * use this to flush the input buffer before blocking for new input
     */
-#define FLAG TCSAFLUSH
+    #define FLAG TCSAFLUSH
 #else
     /*
     * use this to return a char from the current input buffer, or block if
     * no input is waiting.
     */
-#define FLAG TCSANOW
-
+    #define FLAG TCSANOW
 #endif
     if ((error = tcsetattr(0, FLAG, &Ntty)) == 0) {
         error  = read(0, &ch, 1 );	      /* get char from stdin */
@@ -68,23 +63,14 @@ int kbhit_mac() {
 //Taken from: http://stackoverflow.com/questions/2984307/c-key-pressed-in-linux-console
 int kbhit_linux() {
     static int ch = -1, fd = 0;
-
     struct termios neu, alt;
-
     fd = fileno(stdin);
-
     tcgetattr(fd, &alt);
-
     neu = alt;
-
     neu.c_lflag &= ~(ICANON|ECHO);
-
     tcsetattr(fd, TCSANOW, &neu);
-
     ch = getchar();
-
     tcsetattr(fd, TCSANOW, &alt);
-
     return ch;
 }
 #endif
