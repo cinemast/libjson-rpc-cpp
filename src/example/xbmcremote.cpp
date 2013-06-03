@@ -20,30 +20,7 @@
 using namespace jsonrpc;
 using namespace std;
 
-//Taken from: http://stackoverflow.com/questions/2984307/c-key-pressed-in-linux-console
-int kbhit_linux() {
-    int character;
-    struct termios orig_term_attr;
-    struct termios new_term_attr;
-
-    /* set the terminal to raw mode */
-    tcgetattr(fileno(stdin), &orig_term_attr);
-    memcpy(&new_term_attr, &orig_term_attr, sizeof(struct termios));
-    new_term_attr.c_lflag &= ~(ECHO|ICANON);
-    new_term_attr.c_cc[VTIME] = 0;
-    new_term_attr.c_cc[VMIN] = 0;
-    tcsetattr(fileno(stdin), TCSANOW, &new_term_attr);
-
-    /* read a character from the stdin stream without blocking */
-    /*   returns EOF (-1) if no character is available */
-    character = fgetc(stdin);
-
-    /* restore the original terminal attributes */
-    tcsetattr(fileno(stdin), TCSANOW, &orig_term_attr);
-
-    return character;
-}
-
+#ifdef __APPLE__
 //Taken from: http://stackoverflow.com/questions/312185/kbhit-in-mac
 int kbhit_mac() {
     char ch;
@@ -87,7 +64,31 @@ int kbhit_mac() {
     }
     return (error == 1 ? (int) ch : -1 );
 }
+#else
+//Taken from: http://stackoverflow.com/questions/2984307/c-key-pressed-in-linux-console
+int kbhit_linux() {
+    int character;
+    struct termios orig_term_attr;
+    struct termios new_term_attr;
 
+    /* set the terminal to raw mode */
+    tcgetattr(fileno(stdin), &orig_term_attr);
+    memcpy(&new_term_attr, &orig_term_attr, sizeof(struct termios));
+    new_term_attr.c_lflag &= ~(ECHO|ICANON);
+    new_term_attr.c_cc[VTIME] = 0;
+    new_term_attr.c_cc[VMIN] = 0;
+    tcsetattr(fileno(stdin), TCSANOW, &new_term_attr);
+
+    /* read a character from the stdin stream without blocking */
+    /*   returns EOF (-1) if no character is available */
+    character = fgetc(stdin);
+
+    /* restore the original terminal attributes */
+    tcsetattr(fileno(stdin), TCSANOW, &orig_term_attr);
+
+    return character;
+}
+#endif
 int main(int argc, char** argv) {
 
     if(argc < 2)
