@@ -21,7 +21,7 @@ using namespace jsonrpc;
 using namespace std;
 
 //Taken from: http://stackoverflow.com/questions/2984307/c-key-pressed-in-linux-console
-int getkey() {
+int kbhit_linux() {
     int character;
     struct termios orig_term_attr;
     struct termios new_term_attr;
@@ -44,6 +44,50 @@ int getkey() {
     return character;
 }
 
+//Taken from: http://stackoverflow.com/questions/312185/kbhit-in-mac
+int kbhit_mac() {
+    char ch;
+    int error;
+    static struct termios Otty, Ntty;
+
+    fflush(stdout);
+    tcgetattr(0, &Otty);
+    Ntty = Otty;
+
+    Ntty.c_iflag  =  0;		/* input mode		*/
+    Ntty.c_oflag  =  0;		/* output mode		*/
+    Ntty.c_lflag &= ~ICANON;	/* line settings 	*/
+
+#if 1
+    /* disable echoing the char as it is typed */
+    Ntty.c_lflag &= ~ECHO;	/* disable echo 	*/
+#else
+    /* enable echoing the char as it is typed */
+    Ntty.c_lflag |=  ECHO;	/* enable echo	 	*/
+#endif
+
+    Ntty.c_cc[VMIN]  = CMIN;	/* minimum chars to wait for */
+    Ntty.c_cc[VTIME] = CTIME;	/* minimum wait time	*/
+#if 1
+    /*
+    * use this to flush the input buffer before blocking for new input
+    */
+#define FLAG TCSAFLUSH
+#else
+    /*
+    * use this to return a char from the current input buffer, or block if
+    * no input is waiting.
+    */
+#define FLAG TCSANOW
+
+#endif
+    if ((error = tcsetattr(0, FLAG, &Ntty)) == 0) {
+        error  = read(0, &ch, 1 );	      /* get char from stdin */
+        error += tcsetattr(0, FLAG, &Otty);   /* restore old settings */
+    }
+    return (error == 1 ? (int) ch : -1 );
+}
+
 int main(int argc, char** argv) {
 
     if(argc < 2)
@@ -53,19 +97,31 @@ int main(int argc, char** argv) {
     }
     else
     {
+        cout << "XBMC Remote: a,s,d,w for navigation, enter for select, escape or backspace for back button" << endl;
         try {
             XbmcRemoteClient stub(new HttpClient(argv[1]));
             int key = 0;
             for (;;) {
-                key = getkey();
-                /* terminate loop on ESC (0x1B) or Ctrl-D (0x04) on STDIN */
-                if (key == 0x1B || key == 0x04) {
-                    break;
+#ifdef __APPLE__
+                key = kbhit_mac();
+#else
+                key = kbhit_linux();
+#endif
+                switch(key) {
+                    case 97: stub.Input_Left();
+                        break;
+                    case 115: stub.Input_Down();
+                        break;
+                    case 100: stub.Input_Right();
+                        break;
+                    case 119: stub.Input_Up();
+                        break;
+                    case 13: stub.Input_Select();
+                        break;
+                    case 127:
+                    case 27: stub.Input_Back();
+                        break;
                 }
-                else {
-                    cout << "presseD: " << key << endl;
-                }
-                sleep(0.2);
             }
         } catch(jsonrpc::JsonRpcException e) {
             cerr << e.what() << endl;
