@@ -37,6 +37,8 @@ namespace jsonrpc
             static std::string toString(jsontype_t type);
 
             static std::string generateParameterDeclarationList(Procedure& proc);
+
+            static std::string normalizeString(const std::string &text);
     };
 }
 

@@ -11,6 +11,7 @@
 #include "rpcprotocolclient.h"
 #include "exception.h"
 
+
 namespace jsonrpc
 {
     Client::Client(AbstractClientConnector* connector)

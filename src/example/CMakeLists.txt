@@ -11,3 +11,7 @@ target_link_libraries(stubclientsample jsonrpc)
 
 add_executable(stubserversample stubserver.cpp)
 target_link_libraries(stubserversample jsonrpc)
+
+
+add_executable(xbmcremote xbmcremote.cpp)
+target_link_libraries(xbmcremote jsonrpc)

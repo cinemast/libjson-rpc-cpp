@@ -56,7 +56,7 @@ string ServerStubGenerator::generateBindings()
         {
             tmp = TEMPLATE_SERVER_NOTIFICATIONBINDING;
         }
-        replaceAll(tmp, "<procedurename>", proc->GetProcedureName());
+        replaceAll(tmp, "<procedurename>", normalizeString(proc->GetProcedureName()));
         replaceAll(tmp, "<returntype>", toString(proc->GetReturnType()));
         replaceAll(tmp, "<parameterlist>", generateBindingParameterlist(proc));
         replaceAll(tmp, "<stubname>", this->stubname);

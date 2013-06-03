@@ -1,0 +1,12 @@
+[
+    {
+        "method": "Input.Left",
+        "params": null,
+        "returns": "string"
+    },
+    {
+        "method": "Input.Right",
+        "params": null,
+        "returns": "string"
+    }
+]

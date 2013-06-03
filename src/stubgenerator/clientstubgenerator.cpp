@@ -28,7 +28,7 @@ std::string ClientStubGenerator::generateStub()
 
     string stub_upper = stubname;
     std::transform(stub_upper.begin(), stub_upper.end(), stub_upper.begin(),
-            ::toupper);
+                   ::toupper);
     replaceAll(tmp, "<STUBNAME>", stub_upper);
 
     //generate procedures
@@ -48,17 +48,27 @@ string ClientStubGenerator::generateMethod(Procedure &proc)
     string tmp = TEMPLATE_CLIENT_METHOD;
 
     //set methodname
-    replaceAll(tmp, "<methodname>", proc.GetProcedureName());
+    replaceAll(tmp, "<methodname>", normalizeString(proc.GetProcedureName()));
 
     //build parameterlist
     stringstream assignment_string;
 
     parameterlist_t list = proc.GetParameters();
-    for (parameterlist_t::iterator it = list.begin(); it != list.end(); it++)
+
+    if(list.size() > 0)
     {
-        assignment_string << "p[\"" << it->first << "\"] = " << it->first
-                << "; " << endl;
+        for (parameterlist_t::iterator it = list.begin(); it != list.end(); it++)
+        {
+            assignment_string << "p[\"" << it->first << "\"] = " << it->first
+                              << "; " << endl;
+        }
     }
+    else
+    {
+        assignment_string << "p = Json::arrayValue;";
+    }
+
+
 
     replaceAll(tmp, "<parameters>", generateParameterDeclarationList(proc));
     replaceAll(tmp, "<parameter_assign>", assignment_string.str());

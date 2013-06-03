@@ -159,3 +159,16 @@ string StubGenerator::generateParameterDeclarationList(Procedure &proc)
     }
     return param_string.str();
 }
+
+string StubGenerator::normalizeString(const string &text)
+{
+    string result = text;
+    for(unsigned int i=0; i < text.length(); i++)
+    {
+        if (!((text[i] >= 'a' && text[i] <= 'z') || (text[i] >= 'A' && text[i] <= 'Z')))
+        {
+            result[i] = '_';
+        }
+    }
+    return result;
+}
