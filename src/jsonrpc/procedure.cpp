@@ -18,7 +18,7 @@ using namespace std;
 
 namespace jsonrpc
 {
-    Procedure::Procedure(const string &name, jsontype_t returntype, ...)
+    Procedure::Procedure(const string name, jsontype_t returntype, ...)
     {
         va_list parameters;
         va_start(parameters, returntype);
@@ -35,7 +35,7 @@ namespace jsonrpc
         this->procedureType = RPC_METHOD;
     }
 
-    Procedure::Procedure(const string &name, ...)
+    Procedure::Procedure(const string name, ...)
     {
         va_list parameters;
         va_start(parameters, name);
