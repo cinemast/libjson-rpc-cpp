@@ -75,7 +75,7 @@ namespace jsonrpc {
                 }
                 else
                 {
-                    jsontype_t returntype = JSON_OBJECT;
+                    jsontypeT returntype = JSON_OBJECT;
                     if(signature.isMember(KEY_RETURN_TYPE))
                     {
                         returntype = toJsonType(signature[KEY_RETURN_TYPE]);
@@ -119,9 +119,9 @@ namespace jsonrpc {
         }
     }
 
-    jsontype_t SpecificationParser::toJsonType(Json::Value &val)
+    jsontypeT SpecificationParser::toJsonType(Json::Value &val)
     {
-        jsontype_t result;
+        jsontypeT result;
         switch(val.type())
         {
             case Json::uintValue:
