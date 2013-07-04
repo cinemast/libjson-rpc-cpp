@@ -53,57 +53,23 @@ namespace jsonrpc
 
     Procedure::~Procedure()
     {
-        this->parameters.clear();
+        this->parametersName.clear();
     }
 
     bool Procedure::ValdiateParameters(const Json::Value& parameters)
     {
-        map<string, jsontype_t>::iterator it = this->parameters.begin();
-        bool ok = true;
-        while (ok == true && it != this->parameters.end())
+        if(parameters.isArray())
         {
-            if (!parameters.isMember(it->first.c_str()))
-            {
-                ok = false;
-            }
-            else
-            {
-                switch (it->second)
-                {
-                    case JSON_STRING:
-                        if (!parameters[it->first].isString())
-                            ok = false;
-                        break;
-                    case JSON_BOOLEAN:
-                        if (!parameters[it->first].isBool())
-                            ok = false;
-                        break;
-                    case JSON_INTEGER:
-                        if (!parameters[it->first].isInt())
-                            ok = false;
-                        break;
-                    case JSON_REAL:
-                        if (!parameters[it->first].isDouble())
-                            ok = false;
-                        break;
-                    case JSON_OBJECT:
-                        if (!parameters[it->first].isObject())
-                            ok = false;
-                        break;
-                    case JSON_ARRAY:
-                        if (!parameters[it->first].isArray())
-                            ok = false;
-                        break;
-                }
-            }
-            it++;
+            return this->ValidatePositionalParameters(parameters);
         }
-        return ok;
+        else
+        {
+            return this->ValidateNamedParameters(parameters);
+        }
     }
-
-    parameterlist_t& Procedure::GetParameters()
+    parameterNameList_t& Procedure::GetParameters()
     {
-        return this->parameters;
+        return this->parametersName;
     }
 
     procedure_t Procedure::GetProcedureType() const
@@ -123,7 +89,76 @@ namespace jsonrpc
 
     void Procedure::AddParameter(const string& name, jsontype_t type)
     {
-        this->parameters[name] = type;
+        this->parametersName[name] = type;
+        this->parametersPosition.push_back(type);
+    }
+
+    bool Procedure::ValidateNamedParameters(const Json::Value &parameters)
+    {
+        map<string, jsontype_t>::iterator it = this->parametersName.begin();
+        bool ok = true;
+        while (ok == true && it != this->parametersName.end())
+        {
+            if (!parameters.isMember(it->first.c_str()))
+            {
+                ok = false;
+            }
+            else
+            {
+                ok = this->ValidateSingleParameter(it->second, parameters[it->first]);
+            }
+            it++;
+        }
+        return ok;
+    }
+
+    bool Procedure::ValidatePositionalParameters(const Json::Value &parameters)
+    {
+        bool ok = true;
+
+        if(parameters.size() != this->parametersPosition.size())
+        {
+            return false;
+        }
+
+        for(unsigned int i=0; ok && i < this->parametersPosition.size(); i++)
+        {
+            ok = this->ValidateSingleParameter(this->parametersPosition.at(i), parameters[i]);
+        }
+        return ok;
+    }
+
+    bool Procedure::ValidateSingleParameter(jsontype_t expectedType, const Json::Value &value)
+    {
+        bool ok = true;
+        switch (expectedType)
+        {
+            case JSON_STRING:
+                if (!value.isString())
+                    ok = false;
+                break;
+            case JSON_BOOLEAN:
+                if (!value.isBool())
+                    ok = false;
+                break;
+            case JSON_INTEGER:
+                if (!value.isInt())
+                    ok = false;
+                break;
+            case JSON_REAL:
+                if (!value.isDouble())
+                    ok = false;
+                break;
+            case JSON_OBJECT:
+                if (!value.isObject())
+                    ok = false;
+                break;
+            case JSON_ARRAY:
+                if (!value.isArray())
+                    ok = false;
+                break;
+        }
+        return ok;
     }
 
 } /* namespace jsonrpc */

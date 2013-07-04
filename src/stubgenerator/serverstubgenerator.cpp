@@ -114,8 +114,8 @@ string ServerStubGenerator::generateAbstractDefinitions()
 string ServerStubGenerator::generateBindingParameterlist(Procedure *proc)
 {
     stringstream parameter;
-    parameterlist_t& list = proc->GetParameters();
-    for(parameterlist_t::iterator it2 = list.begin(); it2 != list.end(); it2++)
+    parameterNameList_t& list = proc->GetParameters();
+    for(parameterNameList_t::iterator it2 = list.begin(); it2 != list.end(); it2++)
     {
         parameter << "\"" << it2->first << "\"," << toString(it2->second) << ",";
     }
@@ -126,8 +126,8 @@ string ServerStubGenerator::generateParameterMapping(Procedure *proc)
 {
     stringstream parameter;
     string tmp;
-    parameterlist_t& params = proc->GetParameters();
-    for(parameterlist_t::iterator it2 = params.begin(); it2 != params.end(); it2++)
+    parameterNameList_t& params = proc->GetParameters();
+    for(parameterNameList_t::iterator it2 = params.begin(); it2 != params.end(); it2++)
     {
         tmp = "request[\"" + it2->first  + "\"]" + toCppConversion(it2->second);
         parameter << tmp;

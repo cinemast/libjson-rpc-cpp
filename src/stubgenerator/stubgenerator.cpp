@@ -148,8 +148,8 @@ string StubGenerator::toString(jsontype_t type)
 string StubGenerator::generateParameterDeclarationList(Procedure &proc)
 {
     stringstream param_string;
-    parameterlist_t list = proc.GetParameters();
-    for (parameterlist_t::iterator it = list.begin(); it != list.end();)
+    parameterNameList_t list = proc.GetParameters();
+    for (parameterNameList_t::iterator it = list.begin(); it != list.end();)
     {
         param_string << toCppType(it->second, true, true) << " " << it->first;
         if (++it != list.end())
