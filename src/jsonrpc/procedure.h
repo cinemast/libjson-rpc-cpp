@@ -18,7 +18,7 @@
 
 namespace jsonrpc
 {
-
+    typedef std::map<std::string, jsontype_t> parameterlist_t;
 
     class Procedure
     {
@@ -29,7 +29,7 @@ namespace jsonrpc
              * If no parameters are passed, parameters either do not exist, or cannot be checked for type compliance by the library.
              * @param name
              */
-            Procedure(const std::string name, bool usePositinalParams ,...);
+            Procedure(const std::string name, ...);
 
             /**
              * @brief Constructor for method with parameters as va_list. The last parameter must be NULL.
@@ -37,7 +37,7 @@ namespace jsonrpc
              * @param name
              * @param returntype
              */
-            Procedure(const std::string name, jsontype_t returntype, bool usePositinalParams, ...);
+            Procedure(const std::string name, jsontype_t returntype, ...);
 
 
             ~Procedure();
@@ -52,40 +52,26 @@ namespace jsonrpc
              */
             bool ValdiateParameters(const Json::Value &parameters);
 
-
-            /**
-             * @brief GetNamedParameters
-             * @return a map with all named parameters (only valid if procudre is declared with named parameters)
-             */
-            std::map<std::string, jsontype_t> GetNamedParameters();
-
-
-            /**
-             * @brief GetNamedParameters
-             * @return a list with all positional parameters (only valid if procudre is declared with positional parameters)
-             */
-            std::vector<jsontype_t> GetPositionalParameters();
-
-
-            jsontype_t GetProcedureType() const;
-
+            parameterlist_t& GetParameters();
+            procedure_t GetProcedureType() const;
             const std::string& GetProcedureName() const;
 
             jsontype_t GetReturnType() const;
 
-       //
+            void AddParameter(const std::string& name, jsontype_t type);
+
         private:
             /**
              * Each Procedure should have a name.
              */
             std::string procedureName;
-
-
-            std::map<std::string, jsontype_t> namedList;
-            std::vector<jsontype_t> positionList;
-
             /**
-             * defines whether the procedure is a real procedure or just a notification.
+             * This map represents all necessary Parameters of each Procedure.
+             * The string represents the name of each parameter and JsonType the type it should have.
+             */
+            parameterlist_t parameters;
+            /**
+             * defines whether the procedure is a real procedure or just a notification
              */
             procedure_t procedureType;
 
@@ -93,16 +79,6 @@ namespace jsonrpc
              * this field is only valid if procedure is of type method (not notification).
              */
             jsontype_t returntype;
-
-            /**
-             * @brief this flags descides if this method uses positional or named parameters
-             */
-            bool positionalParameters;
-
-
-            void AddNamedParameter(const std::string& name, jsontype_t type);
-            void AddPositionalParameter(jsontype_t);
-
     };
 
     typedef std::map<std::string, Procedure*> procedurelist_t;

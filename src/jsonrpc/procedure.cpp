@@ -18,22 +18,14 @@ using namespace std;
 
 namespace jsonrpc
 {
-    Procedure::Procedure(const string name, bool usePositinalParams)
-    {
-    }
-
-    Procedure::Procedure(const string name, jsontype_t returntype, bool usePositinalParams)
-    {
-    }
-
-    Procedure::Procedure(const string name, jsontypeT returntype, ...)
+    Procedure::Procedure(const string name, jsontype_t returntype, ...)
     {
         va_list parameters;
         va_start(parameters, returntype);
         const char* paramname = va_arg(parameters, const char*);
-        jsontypeT type;
+        jsontype_t type;
         while(paramname != NULL) {
-            type = (jsontypeT)va_arg(parameters, int);     //Needs to be tested
+            type = (jsontype_t)va_arg(parameters, int);     //Needs to be tested
             this->AddParameter(paramname, type);
             paramname = va_arg(parameters, const char*);
         }
@@ -48,9 +40,9 @@ namespace jsonrpc
         va_list parameters;
         va_start(parameters, name);
         const char* paramname = va_arg(parameters, const char*);
-        jsontypeT type;
+        jsontype_t type;
         while(paramname != NULL) {
-            type = (jsontypeT)va_arg(parameters, int);     //Needs to be tested
+            type = (jsontype_t)va_arg(parameters, int);     //Needs to be tested
             this->AddParameter(paramname, type);
             paramname = va_arg(parameters, const char*);
         }
@@ -66,7 +58,7 @@ namespace jsonrpc
 
     bool Procedure::ValdiateParameters(const Json::Value& parameters)
     {
-        map<string, jsontypeT>::iterator it = this->parameters.begin();
+        map<string, jsontype_t>::iterator it = this->parameters.begin();
         bool ok = true;
         while (ok == true && it != this->parameters.end())
         {
@@ -109,14 +101,9 @@ namespace jsonrpc
         return ok;
     }
 
-    map<string, jsontypeT> Procedure::GetNamedParameters()
+    parameterlist_t& Procedure::GetParameters()
     {
-        return this->parameters.namedList;
-    }
-
-    vector<jsontype_t> Procedure::GetPositionalParameters()
-    {
-        return this->parameters.positionList;
+        return this->parameters;
     }
 
     procedure_t Procedure::GetProcedureType() const
@@ -129,25 +116,15 @@ namespace jsonrpc
         return this->procedureName;
     }
 
-    jsontypeT Procedure::GetReturnType() const
+    jsontype_t Procedure::GetReturnType() const
     {
         return this->returntype;
     }
 
-    void Procedure::AddNamedParameter(const string &name, jsontype_t type)
-    {
-        this->namedList[name] = type;
-    }
-
-    void Procedure::AddPositionalParameter(jsontype_t type)
-    {
-        this->positionalParameters.add(type);
-    }
-/*
     void Procedure::AddParameter(const string& name, jsontype_t type)
     {
         this->parameters[name] = type;
     }
-*/
+
 } /* namespace jsonrpc */
 

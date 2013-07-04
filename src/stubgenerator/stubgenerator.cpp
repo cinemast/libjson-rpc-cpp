@@ -62,7 +62,7 @@ string StubGenerator::getStubName()
     return this->stubname;
 }
 
-string StubGenerator::toCppType(jsontypeT type, bool isConst, bool isReference)
+string StubGenerator::toCppType(jsontype_t type, bool isConst, bool isReference)
 {
     string result;
     switch(type)
@@ -94,7 +94,7 @@ string StubGenerator::toCppType(jsontypeT type, bool isConst, bool isReference)
     return result;
 }
 
-string StubGenerator::toCppConversion(jsontypeT type)
+string StubGenerator::toCppConversion(jsontype_t type)
 {
     string result;
     switch(type)
@@ -118,7 +118,7 @@ string StubGenerator::toCppConversion(jsontypeT type)
     return result;
 }
 
-string StubGenerator::toString(jsontypeT type)
+string StubGenerator::toString(jsontype_t type)
 {
     string result;
     switch(type)
