@@ -10,5 +10,12 @@
 	{
 		"notification" : "notifyServer",
 		"params": null
-	}
+    },
+
+    {
+    "method" : "addNumbers",
+            "params" : [3,4],
+            "returns" : 7
+}
+
 ]

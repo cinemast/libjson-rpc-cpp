@@ -64,11 +64,9 @@ namespace jsonrpc {
 
             }
             if (signature[name_key].isString()
-                    && (signature[KEY_PROCEDURE_PARAMETERS].isObject() || signature[KEY_PROCEDURE_PARAMETERS].isNull()))
+                    && (signature[KEY_PROCEDURE_PARAMETERS].isObject() || signature[KEY_PROCEDURE_PARAMETERS].isNull() || signature[KEY_PROCEDURE_PARAMETERS].isArray()))
             {
                 procedureName = signature[name_key].asString();
-                vector<string> parameters =
-                        signature[KEY_PROCEDURE_PARAMETERS].getMemberNames();
                 if(procedureType == RPC_NOTIFICATION)
                 {
                     result = new Procedure(procedureName, NULL);
@@ -82,9 +80,29 @@ namespace jsonrpc {
                     }
                     result = new Procedure(procedureName, returntype, NULL);
                 }
-                for (unsigned int i = 0; i < parameters.size(); i++)
+
+                if(signature[KEY_PROCEDURE_PARAMETERS].isObject())
                 {
-                    result->AddParameter(parameters.at(i), toJsonType(signature[KEY_PROCEDURE_PARAMETERS][parameters.at(i)]));
+                    //Named parameters
+                    vector<string> parameters =
+                            signature[KEY_PROCEDURE_PARAMETERS].getMemberNames();
+
+                    for (unsigned int i = 0; i < parameters.size(); i++)
+                    {
+                        result->AddParameter(parameters.at(i), toJsonType(signature[KEY_PROCEDURE_PARAMETERS][parameters.at(i)]));
+                    }
+                    result->SetParameterDeclarationType(ParamsByName);
+                }
+                else
+                {
+                    //Positional parameters
+                    for (unsigned int i=0; i < signature[KEY_PROCEDURE_PARAMETERS].size(); i++)
+                    {
+                        stringstream paramname;
+                        paramname << "param" << (i+1);
+                        result->AddParameter(paramname.str(), toJsonType(signature[KEY_PROCEDURE_PARAMETERS][i]));
+                    }
+                    result->SetParameterDeclarationType(ParamsByPosition);
                 }
             }
             else

@@ -21,6 +21,8 @@ namespace jsonrpc
     typedef std::map<std::string, jsontype_t> parameterNameList_t;
     typedef std::vector<jsontype_t> parameterPositionList_t;
 
+    typedef enum {ParamsByName, ParamsByPosition} parameterDeclaration_t;
+
     class Procedure
     {
         public:
@@ -61,6 +63,9 @@ namespace jsonrpc
 
             void AddParameter(const std::string& name, jsontype_t type);
 
+            void SetParameterDeclarationType(parameterDeclaration_t type);
+            parameterDeclaration_t GetParameterDeclarationType();
+
         private:
             /**
              * Each Procedure should have a name.
@@ -87,6 +92,8 @@ namespace jsonrpc
              * this field is only valid if procedure is of type method (not notification).
              */
             jsontype_t returntype;
+
+            parameterDeclaration_t paramDeclaration;
 
             bool ValidateNamedParameters(const Json::Value &parameters);
             bool ValidatePositionalParameters(const Json::Value &parameters);

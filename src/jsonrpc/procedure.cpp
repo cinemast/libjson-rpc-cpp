@@ -93,6 +93,16 @@ namespace jsonrpc
         this->parametersPosition.push_back(type);
     }
 
+    void Procedure::SetParameterDeclarationType(parameterDeclaration_t type)
+    {
+        this->paramDeclaration = type;
+    }
+
+    parameterDeclaration_t Procedure::GetParameterDeclarationType()
+    {
+        return this->paramDeclaration;
+    }
+
     bool Procedure::ValidateNamedParameters(const Json::Value &parameters)
     {
         map<string, jsontype_t>::iterator it = this->parametersName.begin();

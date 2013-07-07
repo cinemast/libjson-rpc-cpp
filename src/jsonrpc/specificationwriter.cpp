@@ -87,9 +87,17 @@ namespace jsonrpc
             target[KEY_NOTIFICATION_NAME] = procedure->GetProcedureName();
         }
         int i=0;
+
         for(parameterNameList_t::const_iterator it = procedure->GetParameters().begin(); it != procedure->GetParameters().end(); it++)
         {
-            target[KEY_PROCEDURE_PARAMETERS][it->first] = toJsonLiteral(it->second);
+            if(procedure->GetParameterDeclarationType() == ParamsByName)
+            {
+                target[KEY_PROCEDURE_PARAMETERS][it->first] = toJsonLiteral(it->second);
+            }
+            else
+            {
+                target[KEY_PROCEDURE_PARAMETERS].append(toJsonLiteral(it->second));
+            }
             i++;
         }
 
