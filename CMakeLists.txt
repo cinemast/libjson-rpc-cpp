@@ -103,7 +103,8 @@ ADD_TEST(remotecounter ${TEST_BINARIES}/remotecounter)
 ADD_TEST(remotecalculator ${TEST_BINARIES}/remotecalculator)
 ADD_TEST(errorhandling ${TEST_BINARIES}/errorhandling)
 ADD_TEST(jsonrpcprotocol ${TEST_BINARIES}/jsonrpcprotocol)
-
+ADD_TEST(specification ${TEST_BINARIES}/specification)
+ADD_TEST(parametervalidation ${TEST_BINARIES}/parametervalidation)
 
 
 
