@@ -23,7 +23,7 @@ TestServer::TestServer() :
     this->bindAndAddMethod(new Procedure("add", JSON_INTEGER, "value1", JSON_INTEGER, "value2", JSON_INTEGER, NULL), &TestServer::add);
     this->bindAndAddMethod(new Procedure("sub", JSON_INTEGER, "value1", JSON_INTEGER, "value2", JSON_INTEGER, NULL), &TestServer::sub);
 
-    this->bindAndAddNotification(new Procedure("initCounter", NULL), &TestServer::initCounter);
+    this->bindAndAddNotification(new Procedure("initCounter", "value", JSON_INTEGER, NULL), &TestServer::initCounter);
     this->bindAndAddNotification(new Procedure("incrementCounter", "value", JSON_INTEGER, NULL), &TestServer::incrementCounter);
 }
 
