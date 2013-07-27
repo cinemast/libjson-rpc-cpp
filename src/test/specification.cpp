@@ -14,8 +14,7 @@ using namespace std;
 using namespace jsonrpc;
 
 int main(int argc, char** argv)
-{
-    
+{    
     TestServer t;
 
     string spec = SpecificationWriter::toString(t.GetProtocolHanlder()->GetProcedures());

@@ -18,7 +18,7 @@ using namespace std;
 
 namespace jsonrpc
 {
-    Procedure::Procedure(const string name, jsontype_t returntype, ...)
+    Procedure::Procedure(const string name, parameterDeclaration_t paramType, jsontype_t returntype, ...)
     {
         va_list parameters;
         va_start(parameters, returntype);
@@ -33,12 +33,13 @@ namespace jsonrpc
         this->procedureName = name;
         this->returntype = returntype;
         this->procedureType = RPC_METHOD;
+        this->paramDeclaration = paramType;
     }
 
-    Procedure::Procedure(const string name, ...)
+    Procedure::Procedure(const string name, parameterDeclaration_t paramType, ...)
     {
         va_list parameters;
-        va_start(parameters, name);
+        va_start(parameters, paramType);
         const char* paramname = va_arg(parameters, const char*);
         jsontype_t type;
         while(paramname != NULL) {
@@ -49,6 +50,7 @@ namespace jsonrpc
         va_end(parameters);
         this->procedureName = name;
         this->procedureType = RPC_NOTIFICATION;
+        this->paramDeclaration = paramType;
     }
 
     Procedure::~Procedure()
@@ -58,13 +60,17 @@ namespace jsonrpc
 
     bool Procedure::ValdiateParameters(const Json::Value& parameters)
     {
-        if(parameters.isArray())
+        if(parameters.isArray() && this->paramDeclaration == PARAMS_BY_POSITION)
         {
             return this->ValidatePositionalParameters(parameters);
         }
-        else
+        else if(parameters.isObject() && this->paramDeclaration == PARAMS_BY_NAME)
         {
             return this->ValidateNamedParameters(parameters);
+        }
+        else
+        {
+            return false;
         }
     }
     parameterNameList_t& Procedure::GetParameters()
@@ -91,11 +97,6 @@ namespace jsonrpc
     {
         this->parametersName[name] = type;
         this->parametersPosition.push_back(type);
-    }
-
-    void Procedure::SetParameterDeclarationType(parameterDeclaration_t type)
-    {
-        this->paramDeclaration = type;
     }
 
     parameterDeclaration_t Procedure::GetParameterDeclarationType()
@@ -165,6 +166,10 @@ namespace jsonrpc
                 break;
             case JSON_ARRAY:
                 if (!value.isArray())
+                    ok = false;
+                break;
+            case JSON_NULL:
+                if (!value.isNull())
                     ok = false;
                 break;
         }

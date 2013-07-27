@@ -1,21 +1,21 @@
 [
-	{
-		"method": "sayHello",
-		"params": { 
-			"name": "Peter"
-		},
-		"returns": "Hello Peter"
-	},
-	
-	{
-		"notification" : "notifyServer",
-		"params": null
-    },
-
     {
-    "method" : "addNumbers",
-            "params" : [3,4],
-            "returns" : 7
-}
-
+        "method": "sayHello",
+        "params": {
+            "name": "Peter"
+        },
+        "returns": "Hello Peter"
+    },
+    {
+        "notification": "notifyServer",
+        "params": null
+    },
+    {
+        "method": "addNumbers",
+        "params": [
+            3,
+            4
+        ],
+        "returns": 7
+    }
 ]

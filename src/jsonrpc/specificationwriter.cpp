@@ -71,6 +71,9 @@ namespace jsonrpc
             case JSON_INTEGER:
                 literal = 1;
                 break;
+            case JSON_NULL:
+                literal = Json::nullValue;
+                break;
         }
         return literal;
     }
@@ -90,7 +93,7 @@ namespace jsonrpc
 
         for(parameterNameList_t::const_iterator it = procedure->GetParameters().begin(); it != procedure->GetParameters().end(); it++)
         {
-            if(procedure->GetParameterDeclarationType() == ParamsByName)
+            if(procedure->GetParameterDeclarationType() == PARAMS_BY_NAME)
             {
                 target[KEY_PROCEDURE_PARAMETERS][it->first] = toJsonLiteral(it->second);
             }

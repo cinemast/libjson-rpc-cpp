@@ -15,7 +15,7 @@ using namespace std;
 
 int main() {
 
-    Procedure proc1("someprocedure", JSON_BOOLEAN, "name", JSON_STRING, "ssnr", JSON_INTEGER, NULL);
+    Procedure proc1("someprocedure", PARAMS_BY_NAME, JSON_BOOLEAN, "name", JSON_STRING, "ssnr", JSON_INTEGER, NULL);
 
     //Expected to pass validation
     Json::Value param1;
@@ -28,12 +28,12 @@ int main() {
         return -1;
     }
 
-    //Expected to pass validation
+    //Expected to fail validation
     Json::Value param2;
     param2.append("Peter");
     param2.append(4711);
 
-    if(!proc1.ValdiateParameters(param2))
+    if(proc1.ValdiateParameters(param2))
     {
         cerr << "Vaildation returned false" << endl;
         return -2;

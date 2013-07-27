@@ -33,7 +33,7 @@ string ServerStubGenerator::generateStub()
 
     string stub_upper = this->stubname;
     std::transform(stub_upper.begin(), stub_upper.end(), stub_upper.begin(),
-            ::toupper);
+                   ::toupper);
     replaceAll(stub, "<STUBNAME>", stub_upper);
 
     return stub;
@@ -60,6 +60,16 @@ string ServerStubGenerator::generateBindings()
         replaceAll(tmp, "<returntype>", toString(proc->GetReturnType()));
         replaceAll(tmp, "<parameterlist>", generateBindingParameterlist(proc));
         replaceAll(tmp, "<stubname>", this->stubname);
+
+        if(proc->GetParameterDeclarationType() == PARAMS_BY_NAME)
+        {
+            replaceAll(tmp, "<paramtype>", "jsonrpc::PARAMS_BY_NAME");
+        }
+        else
+        {
+            replaceAll(tmp, "<paramtype>", "jsonrpc::PARAMS_BY_POSITION");
+        }
+
         result << tmp << endl;
     }
     return result.str();
@@ -115,6 +125,7 @@ string ServerStubGenerator::generateBindingParameterlist(Procedure *proc)
 {
     stringstream parameter;
     parameterNameList_t& list = proc->GetParameters();
+
     for(parameterNameList_t::iterator it2 = list.begin(); it2 != list.end(); it2++)
     {
         parameter << "\"" << it2->first << "\"," << toString(it2->second) << ",";
@@ -127,14 +138,25 @@ string ServerStubGenerator::generateParameterMapping(Procedure *proc)
     stringstream parameter;
     string tmp;
     parameterNameList_t& params = proc->GetParameters();
+    int i=0;
     for(parameterNameList_t::iterator it2 = params.begin(); it2 != params.end(); it2++)
     {
-        tmp = "request[\"" + it2->first  + "\"]" + toCppConversion(it2->second);
+        if(proc->GetParameterDeclarationType() == PARAMS_BY_NAME)
+        {
+            tmp = "request[\"" + it2->first  + "\"]" + toCppConversion(it2->second);
+        }
+        else
+        {
+            stringstream tmp2;
+            tmp2 << "request["<< i << "u]" << toCppConversion(it2->second);
+            tmp = tmp2.str();
+        }
         parameter << tmp;
         if(it2 != --params.end())
         {
             parameter << ", ";
         }
+        i++;
     }
     return parameter.str();
 }

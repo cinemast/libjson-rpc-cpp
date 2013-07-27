@@ -59,16 +59,21 @@ string ClientStubGenerator::generateMethod(Procedure &proc)
     {
         for (parameterNameList_t::iterator it = list.begin(); it != list.end(); it++)
         {
-            assignment_string << "p[\"" << it->first << "\"] = " << it->first
-                              << "; " << endl;
+            if(proc.GetParameterDeclarationType() == PARAMS_BY_NAME)
+            {
+                assignment_string << "p[\"" << it->first << "\"] = " << it->first
+                                  << "; " << endl;
+            }
+            else
+            {
+                assignment_string << "p.append(" << it->first << ");" << endl;
+            }
         }
     }
     else
     {
-        assignment_string << "p = Json::arrayValue;";
+        assignment_string << "p = Json::nullValue;";
     }
-
-
 
     replaceAll(tmp, "<parameters>", generateParameterDeclarationList(proc));
     replaceAll(tmp, "<parameter_assign>", assignment_string.str());

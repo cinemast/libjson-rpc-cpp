@@ -36,7 +36,8 @@ namespace jsonrpc
         JSON_INTEGER = 3,
         JSON_REAL = 4,
         JSON_OBJECT = 5,
-        JSON_ARRAY = 6
+        JSON_ARRAY = 6,
+        JSON_NULL = 7
     } ;
 }
 

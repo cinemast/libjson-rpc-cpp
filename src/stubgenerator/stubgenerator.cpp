@@ -42,7 +42,7 @@ std::string StubGenerator::generateStubToFile(const string &path)
     ofstream stream;
     string filename = this->stubname + ".h";
     string completepath;
-    //std::transform(filename.begin(), filename.end(), filename.begin(), ::tolower);
+    std::transform(filename.begin(), filename.end(), filename.begin(), ::tolower);
     if (path.at(path.size()-1) == '/')
     {
         completepath = path + filename;
@@ -141,6 +141,8 @@ string StubGenerator::toString(jsontype_t type)
         case JSON_ARRAY:
             result = "jsonrpc::JSON_ARRAY";
             break;
+        case JSON_NULL:
+            result = "jsonrpc::JSON_NULL";
     }
     return result;
 }

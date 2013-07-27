@@ -23,6 +23,9 @@ int main()
     {
         cout << c.sayHello("Peter Knafl") << endl;
         c.notifyServer();
+
+        cout << " 3 + 5 = " << c.addNumbers(3,5) << endl;
+
     }
     catch (JsonRpcException e)
     {

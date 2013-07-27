@@ -11,13 +11,19 @@ class AbstractMyStubServer : public jsonrpc::AbstractServer<AbstractMyStubServer
 {
     public:
         AbstractMyStubServer(jsonrpc::AbstractServerConnector* conn) :
-            jsonrpc::AbstractServer<AbstractMyStubServer>(conn)
+            jsonrpc::AbstractServer<AbstractMyStubServer>(conn) 
         {
-            this->bindAndAddNotification(new jsonrpc::Procedure("notifyServer",  NULL), &AbstractMyStubServer::notifyServerI);
-            this->bindAndAddMethod(new jsonrpc::Procedure("sayHello",jsonrpc::JSON_STRING,"name",jsonrpc::JSON_STRING, NULL), &AbstractMyStubServer::sayHelloI);
+            this->bindAndAddMethod(new jsonrpc::Procedure("addNumbers", jsonrpc::PARAMS_BY_POSITION, jsonrpc::JSON_INTEGER, "param1",jsonrpc::JSON_INTEGER,"param2",jsonrpc::JSON_INTEGER, NULL), &AbstractMyStubServer::addNumbersI);
+            this->bindAndAddNotification(new jsonrpc::Procedure("notifyServer", jsonrpc::PARAMS_BY_NAME,  NULL), &AbstractMyStubServer::notifyServerI);
+            this->bindAndAddMethod(new jsonrpc::Procedure("sayHello", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, "name",jsonrpc::JSON_STRING, NULL), &AbstractMyStubServer::sayHelloI);
 
         }
         
+        inline virtual void addNumbersI(const Json::Value& request, Json::Value& response) 
+        {
+            response = this->addNumbers(request[0u].asInt(), request[1u].asInt());
+        }
+
         inline virtual void notifyServerI(const Json::Value& request) 
         {
             this->notifyServer();
@@ -29,6 +35,7 @@ class AbstractMyStubServer : public jsonrpc::AbstractServer<AbstractMyStubServer
         }
 
 
+        virtual int addNumbers(const int& param1, const int& param2) = 0;
         virtual void notifyServer() = 0;
         virtual std::string sayHello(const std::string& name) = 0;
 
