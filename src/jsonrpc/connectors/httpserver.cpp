@@ -36,11 +36,20 @@ namespace jsonrpc
         else if (strcmp(request_info->request_method, "POST") == 0)
         {
             //get size of postData
-            sscanf(mg_get_header(conn, "Content-Length"), "%d", &postSize);
-            readBuffer = (char*) malloc(sizeof(char) * (postSize + 1));
-            mg_read(conn, readBuffer, postSize);
-            _this->OnRequest(readBuffer, conn);
-            free(readBuffer);
+            const char* size_header = mg_get_header(conn, "Content-Length");
+            if (size_header != NULL)
+            {
+                sscanf(size_header, "%d", &postSize);
+                readBuffer = (char*) malloc(sizeof(char) * (postSize + 1));
+                mg_read(conn, readBuffer, postSize);
+                _this->OnRequest(readBuffer, conn);
+                free(readBuffer);
+            }
+            else
+            {
+                _this->OnRequest("", conn);
+            }
+
 
             //Mark the request as processed by our handler.
             return 1;
