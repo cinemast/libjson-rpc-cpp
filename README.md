@@ -188,8 +188,12 @@ g++ main.cpp -ljsonrpc -o sampleclient
 Roadmap for v0.3
 --------
 - Provide .deb package
-- Get available at ubuntu mirrors.
 - Documentation for extending libjson-rpc-cpp (implementing more connectors, authentication manager)
+
+Changes in v0.2.1
+---------
+
+- Added support for positional parameters. (see at [example specification](https://github.com/cinemast/libjson-rpc-cpp/blob/master/src/example/spec.json) how to declare them)
 
 Changes in v0.2
 ---------

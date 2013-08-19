@@ -64,27 +64,57 @@ namespace jsonrpc {
 
             }
             if (signature[name_key].isString()
-                    && (signature[KEY_PROCEDURE_PARAMETERS].isObject() || signature[KEY_PROCEDURE_PARAMETERS].isNull()))
+                    && (signature[KEY_PROCEDURE_PARAMETERS].isObject() || signature[KEY_PROCEDURE_PARAMETERS].isNull() || signature[KEY_PROCEDURE_PARAMETERS].isArray()))
             {
                 procedureName = signature[name_key].asString();
-                vector<string> parameters =
-                        signature[KEY_PROCEDURE_PARAMETERS].getMemberNames();
-                if(procedureType == RPC_NOTIFICATION)
+
+                if(signature[KEY_PROCEDURE_PARAMETERS].isObject() || signature[KEY_PROCEDURE_PARAMETERS].isNull())
                 {
-                    result = new Procedure(procedureName, NULL);
-                }
-                else
-                {
-                    jsontype_t returntype = JSON_OBJECT;
-                    if(signature.isMember(KEY_RETURN_TYPE))
+                    if(procedureType == RPC_NOTIFICATION)
                     {
-                        returntype = toJsonType(signature[KEY_RETURN_TYPE]);
+                        result = new Procedure(procedureName, PARAMS_BY_NAME, NULL);
                     }
-                    result = new Procedure(procedureName, returntype, NULL);
+                    else
+                    {
+                        jsontype_t returntype = JSON_OBJECT;
+                        if(signature.isMember(KEY_RETURN_TYPE))
+                        {
+                            returntype = toJsonType(signature[KEY_RETURN_TYPE]);
+                        }
+                        result = new Procedure(procedureName, PARAMS_BY_NAME, returntype, NULL);
+                    }
+                    //Named parameters
+                    vector<string> parameters =
+                            signature[KEY_PROCEDURE_PARAMETERS].getMemberNames();
+
+                    for (unsigned int i = 0; i < parameters.size(); i++)
+                    {
+                        result->AddParameter(parameters.at(i), toJsonType(signature[KEY_PROCEDURE_PARAMETERS][parameters.at(i)]));
+                    }
+
                 }
-                for (unsigned int i = 0; i < parameters.size(); i++)
+                else if(signature[KEY_PROCEDURE_PARAMETERS].isArray())
                 {
-                    result->AddParameter(parameters.at(i), toJsonType(signature[KEY_PROCEDURE_PARAMETERS][parameters.at(i)]));
+                    if(procedureType == RPC_NOTIFICATION)
+                    {
+                        result = new Procedure(procedureName, PARAMS_BY_POSITION, NULL);
+                    }
+                    else
+                    {
+                        jsontype_t returntype = JSON_OBJECT;
+                        if(signature.isMember(KEY_RETURN_TYPE))
+                        {
+                            returntype = toJsonType(signature[KEY_RETURN_TYPE]);
+                        }
+                        result = new Procedure(procedureName, PARAMS_BY_POSITION, returntype, NULL);
+                    }
+                    //Positional parameters
+                    for (unsigned int i=0; i < signature[KEY_PROCEDURE_PARAMETERS].size(); i++)
+                    {
+                        stringstream paramname;
+                        paramname << "param" << (i+1);
+                        result->AddParameter(paramname.str(), toJsonType(signature[KEY_PROCEDURE_PARAMETERS][i]));
+                    }
                 }
             }
             else
@@ -143,6 +173,8 @@ namespace jsonrpc {
             case Json::objectValue:
                 result = JSON_OBJECT;
                 break;
+            case Json::nullValue:
+                result = JSON_NULL;
             default:
                 throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,"Unknown parameter in "
                                        + val.toStyledString());

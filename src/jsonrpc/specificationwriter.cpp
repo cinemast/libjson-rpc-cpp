@@ -71,6 +71,9 @@ namespace jsonrpc
             case JSON_INTEGER:
                 literal = 1;
                 break;
+            case JSON_NULL:
+                literal = Json::nullValue;
+                break;
         }
         return literal;
     }
@@ -87,9 +90,17 @@ namespace jsonrpc
             target[KEY_NOTIFICATION_NAME] = procedure->GetProcedureName();
         }
         int i=0;
-        for(parameterlist_t::const_iterator it = procedure->GetParameters().begin(); it != procedure->GetParameters().end(); it++)
+
+        for(parameterNameList_t::const_iterator it = procedure->GetParameters().begin(); it != procedure->GetParameters().end(); it++)
         {
-            target[KEY_PROCEDURE_PARAMETERS][it->first] = toJsonLiteral(it->second);
+            if(procedure->GetParameterDeclarationType() == PARAMS_BY_NAME)
+            {
+                target[KEY_PROCEDURE_PARAMETERS][it->first] = toJsonLiteral(it->second);
+            }
+            else
+            {
+                target[KEY_PROCEDURE_PARAMETERS].append(toJsonLiteral(it->second));
+            }
             i++;
         }
 

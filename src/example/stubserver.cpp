@@ -21,6 +21,7 @@ class MyStubServer : public AbstractMyStubServer
 
         virtual void notifyServer();
         virtual std::string sayHello(const std::string& name);
+        virtual int addNumbers(const int& param1, const int& param2);
 };
 
 MyStubServer::MyStubServer() :
@@ -36,6 +37,11 @@ void MyStubServer::notifyServer()
 string MyStubServer::sayHello(const string &name)
 {
     return "Hello " + name;
+}
+
+int MyStubServer::addNumbers(const int &param1, const int &param2)
+{
+    return param1 + param2;
 }
 
 int main()

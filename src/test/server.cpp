@@ -18,13 +18,13 @@ TestServer::TestServer() :
     cnt(0)
 {
     cout << "Called default const" << endl;
-    this->bindAndAddMethod(new Procedure("sayHello", JSON_STRING, "name", JSON_STRING, NULL), &TestServer::sayHello);
-    this->bindAndAddMethod(new Procedure("getCounterValue", JSON_INTEGER, NULL), &TestServer::getCounterValue);
-    this->bindAndAddMethod(new Procedure("add", JSON_INTEGER, "value1", JSON_INTEGER, "value2", JSON_INTEGER, NULL), &TestServer::add);
-    this->bindAndAddMethod(new Procedure("sub", JSON_INTEGER, "value1", JSON_INTEGER, "value2", JSON_INTEGER, NULL), &TestServer::sub);
+    this->bindAndAddMethod(new Procedure("sayHello", PARAMS_BY_NAME, JSON_STRING, "name", JSON_STRING, NULL), &TestServer::sayHello);
+    this->bindAndAddMethod(new Procedure("getCounterValue", PARAMS_BY_NAME, JSON_INTEGER, NULL), &TestServer::getCounterValue);
+    this->bindAndAddMethod(new Procedure("add", PARAMS_BY_NAME, JSON_INTEGER, "value1", JSON_INTEGER, "value2", JSON_INTEGER, NULL), &TestServer::add);
+    this->bindAndAddMethod(new Procedure("sub", PARAMS_BY_NAME, JSON_INTEGER, "value1", JSON_INTEGER, "value2", JSON_INTEGER, NULL), &TestServer::sub);
 
-    this->bindAndAddNotification(new Procedure("initCounter", NULL), &TestServer::initCounter);
-    this->bindAndAddNotification(new Procedure("incrementCounter", "value", JSON_INTEGER, NULL), &TestServer::incrementCounter);
+    this->bindAndAddNotification(new Procedure("initCounter", PARAMS_BY_NAME, "value", JSON_INTEGER, NULL), &TestServer::initCounter);
+    this->bindAndAddNotification(new Procedure("incrementCounter", PARAMS_BY_NAME, "value", JSON_INTEGER, NULL), &TestServer::incrementCounter);
 }
 
 void TestServer::sayHello(const Json::Value &request, Json::Value& response)

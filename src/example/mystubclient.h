@@ -19,10 +19,19 @@ class MyStubClient
             delete this->client;
         }
 
+        int addNumbers(const int& param1, const int& param2) throw (jsonrpc::JsonRpcException)
+        {
+            Json::Value p;
+            p.append(param1);
+p.append(param2);
+
+            return this->client->CallMethod("addNumbers",p).asInt();
+        }
+
         void notifyServer() throw (jsonrpc::JsonRpcException)
         {
             Json::Value p;
-            
+            p = Json::nullValue;
             this->client->CallNotification("notifyServer",p);
         }
 

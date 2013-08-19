@@ -50,7 +50,6 @@ namespace jsonrpc
         Json::Value req;
         Json::Value response, resp;
         Json::FastWriter w;
-        int error;
 
         if (reader.parse(request, req, false))
         {

@@ -18,5 +18,4 @@ xcuserdata
 CVS
 
 doc/html
-CMakeLists.txt.user
-dist
+CMakeLists.txt.user*

@@ -12,9 +12,13 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out)
 
+SET(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
+SET(CMAKE_C_FLAGS_DEBUG     "${CMAKE_C_FLAGS_DEBUG} -Wall")
+
+
 SET(MAJOR_VERSION 0)
 SET(MINOR_VERSION 2)
-SET(PATCH_VERSION 0)
+SET(PATCH_VERSION 1)
 
 
 
@@ -99,7 +103,8 @@ ADD_TEST(remotecounter ${TEST_BINARIES}/remotecounter)
 ADD_TEST(remotecalculator ${TEST_BINARIES}/remotecalculator)
 ADD_TEST(errorhandling ${TEST_BINARIES}/errorhandling)
 ADD_TEST(jsonrpcprotocol ${TEST_BINARIES}/jsonrpcprotocol)
-
+ADD_TEST(specification ${TEST_BINARIES}/specification)
+ADD_TEST(parametervalidation ${TEST_BINARIES}/parametervalidation)
 
 
 
