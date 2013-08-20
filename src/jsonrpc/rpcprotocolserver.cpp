@@ -84,7 +84,14 @@ namespace jsonrpc
         int error = this->ValidateRequest(req);
         if (error == 0)
         {
-            this->ProcessRequest(req, response);
+            try
+            {
+                this->ProcessRequest(req, response);
+            }
+            catch (const JsonRpcException & exc)
+            {
+                response = Errors::GetErrorBlock(req, exc.GetCode(), exc.GetMessage());
+            }
         }
         else
         {

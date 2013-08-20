@@ -59,10 +59,17 @@ namespace jsonrpc
 
     Json::Value Errors::GetErrorBlock(const Json::Value& request, const int& errorCode)
     {
+        static std::string _emptyString;
+
+        return GetErrorBlock(request, errorCode, _emptyString);
+    }
+
+    Json::Value Errors::GetErrorBlock(const Json::Value& request, const int& errorCode, const std::string& errorMessage)
+    {
         Json::Value error;
         error["jsonrpc"] = "2.0";
         error["error"]["code"] = errorCode;
-        error["error"]["message"] = possibleErrors[errorCode];
+        error["error"]["message"] = errorMessage.empty() ? GetErrorMessage(errorCode) : errorMessage;
 
         if(request["id"].isNull())
         {

@@ -29,6 +29,11 @@ namespace jsonrpc
             static Json::Value GetErrorBlock(const Json::Value& request, const int& errorCode);
 
             /**
+             * Same as previous, but with user-supplied message.
+             */
+            static Json::Value GetErrorBlock(const Json::Value& request, const int& errorCode, const std::string& errorMessage);
+
+            /**
              * @return error message to corresponding error code.
              */
             static std::string GetErrorMessage(int errorCode);
