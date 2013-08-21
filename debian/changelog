@@ -1,0 +1,5 @@
+libjson-rpc-cpp (0.2.1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Peter Spiess-Knafl <peter.knafl@bitmovin.net>  Tue, 20 Aug 2013 14:57:55 +0400
