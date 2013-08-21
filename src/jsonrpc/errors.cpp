@@ -8,6 +8,7 @@
  ************************************************************************/
 
 #include "errors.h"
+#include "exception.h"
 
 namespace jsonrpc
 {
@@ -62,7 +63,7 @@ namespace jsonrpc
         Json::Value error;
         error["jsonrpc"] = "2.0";
         error["error"]["code"] = errorCode;
-        error["error"]["message"] = possibleErrors[errorCode];
+        error["error"]["message"] = GetErrorMessage(errorCode);
 
         if(request["id"].isNull())
         {
@@ -72,6 +73,15 @@ namespace jsonrpc
         {
             error["id"] = request["id"].asInt();
         }
+        return error;
+    }
+
+    Json::Value Errors::GetErrorBlock(const Json::Value& request, const JsonRpcException& exc)
+    {
+        Json::Value error = GetErrorBlock(request, exc.GetCode());
+        std::string errorMessage = exc.GetMessage();
+        if ( not errorMessage.empty() )
+            error["error"]["message"] = errorMessage;
         return error;
     }
 
