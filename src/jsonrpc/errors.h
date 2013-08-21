@@ -17,6 +17,8 @@
 
 namespace jsonrpc
 {   
+    class JsonRpcException;
+
     class Errors
     {
         public:
@@ -29,9 +31,9 @@ namespace jsonrpc
             static Json::Value GetErrorBlock(const Json::Value& request, const int& errorCode);
 
             /**
-             * Same as previous, but with user-supplied message.
+             * Same as previous, but using user-generated exception.
              */
-            static Json::Value GetErrorBlock(const Json::Value& request, const int& errorCode, const std::string& errorMessage);
+            static Json::Value GetErrorBlock(const Json::Value& request, const JsonRpcException& exc);
 
             /**
              * @return error message to corresponding error code.

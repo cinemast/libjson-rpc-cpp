@@ -90,7 +90,7 @@ namespace jsonrpc
             }
             catch (const JsonRpcException & exc)
             {
-                response = Errors::GetErrorBlock(req, exc.GetCode(), exc.GetMessage());
+                response = Errors::GetErrorBlock(req, exc);
             }
         }
         else
