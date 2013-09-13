@@ -8,4 +8,4 @@ compiler:
   - clang
   - gcc
 
-script: build && cmake ..
+script: cd build && cmake ..
