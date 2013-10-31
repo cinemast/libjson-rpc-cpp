@@ -12,8 +12,8 @@ set(VERSION_STRING ${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION})
 set_target_properties(jsonrpc jsonrpcStatic PROPERTIES VERSION "${VERSION_STRING}" SOVERSION "${VERSION_MAJOR}")
 
 
-target_link_libraries(jsonrpc ${CURL_LIBRARIES})
-target_link_libraries(jsonrpcStatic ${CURL_LIBRARIES})
+target_link_libraries(jsonrpc pthread ${CURL_DL_LIBS} ${CURL_LIBRARIES})
+target_link_libraries(jsonrpcStatic pthread ${CURL_DL_LIBS} ${CURL_LIBRARIES})
 
 install(FILES ${jsonrpc_header} DESTINATION include/jsonrpc) 
 install(FILES ${connector_header} DESTINATION include/jsonrpc/connectors)
