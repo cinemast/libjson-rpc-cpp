@@ -19,3 +19,5 @@ CVS
 
 doc/html
 CMakeLists.txt.user*
+src/example/gen/*
+*~
