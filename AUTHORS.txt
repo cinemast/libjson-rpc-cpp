@@ -1,0 +1,9 @@
+Peter Spiess-Knafl <peter.knafl@gmail.com>
+	core library
+	cmake build system
+
+contributions:
+	Joegen Baclor <joegen@ossapp.com>
+		automake/autoconf support
+		RPM packaging
+		
