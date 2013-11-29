@@ -82,7 +82,15 @@ sudo make install
 #only required for linux
 sudo ldconfig	
 ```
+To build RPM package for Fedora/Redhat/CentOS systems type:
 
+```sh
+sudo yum install rpm-build
+cd libjson-rpc-cpp/build
+../configure
+make rpm
+```
+Your packages will be available under libjson-rpc-cpp/build/RPMBUILD/RPMS folder
 
 Simple Example
 --------
