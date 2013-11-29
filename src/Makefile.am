@@ -15,11 +15,13 @@ version_Age=0
 version_Revision=2
 
 libjsonrpccpp_la_LDFLAGS = \
-  -shared \
   -version-info ${version_Current}:${version_Revision}:${version_Age} \
   @CURL_LIBS@
   
 libjsonrpccpp_la_SOURCES = \
+  jsonrpc/json/json_internalarray.inl \
+  jsonrpc/json/json_valueiterator.inl \
+  jsonrpc/json/json_internalmap.inl \
   jsonrpc/json/json_value.cpp \
   jsonrpc/json/json_writer.cpp \
   jsonrpc/json/json_reader.cpp \
