@@ -1,5 +1,5 @@
 AC_PREREQ(2.57)
-AC_INIT(lib-json-rpc-cpp, 0.2.1, https://github.com/cinemast/libjson-rpc-cpp/issues)
+AC_INIT(libjsonrpccpp, 0.2.1, https://github.com/cinemast/libjson-rpc-cpp/issues)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR([src/jsonrpc/rpc.h])
 AC_PATH_PROG([BASH], [bash])
@@ -8,7 +8,7 @@ AC_PROG_CC
 
 AM_INIT_AUTOMAKE(foreign tar-ustar)
 AM_CONFIG_HEADER([config.h])
-AC_PROG_LIBTOOL
+LT_INIT
 
 
 AC_ARG_ENABLE(dep-check,
@@ -23,6 +23,10 @@ AC_DEFUN([SF_MISSING_DEP],[
 
 AC_SUBST(MAJOR_VERSION, "0")
 AC_SUBST(MINOR_VERSION, "2")
+
+PACKAGE_REVISION=`cd ${srcdir} && ./revision-gen ${PACKAGE_VERSION}`
+AC_DEFINE_UNQUOTED([PACKAGE_REVISION], "${PACKAGE_REVISION}", [Revion number including git SHA])
+AC_SUBST(PACKAGE_REVISION)
 
 AC_CHECK_HEADERS([curl/curl.h], [], [SF_MISSING_DEP("Curl library not found.  Install libcurl-devel.")])
 AC_CHECK_LIB(curl, main, [CURL_LIBS="-lcurl"], [SF_MISSING_DEP("Curl library not found.  Install libcurl-devel.")])
@@ -46,6 +50,7 @@ AC_CONFIG_FILES([
 	src/stubgenerator/Makefile
 	Makefile
 	src/jsonrpc/version.h
+	libjsonrpccpp.spec
 ])
 
 AC_OUTPUT
