@@ -65,13 +65,13 @@ namespace jsonrpc
         error["error"]["code"] = errorCode;
         error["error"]["message"] = GetErrorMessage(errorCode);
 
-        if(!request["id"].isNull() && !request["id"].isInt() && ! request["id"].isString())
+        if(request["id"].isNull() || request["id"].isInt() || request["id"].isUInt() || request["id"].isString())
         {
-            error["id"] = Json::nullValue;
+            error["id"] = request["id"];
         }
         else
         {
-            error["id"] = request["id"];
+            error["id"] = Json::nullValue;
         }
         return error;
     }
