@@ -118,6 +118,36 @@ string StubGenerator::toCppConversion(jsontype_t type)
     return result;
 }
 
+string StubGenerator::isCppConversion(jsontype_t type)
+{
+    string result;
+    switch(type)
+    {
+        case JSON_BOOLEAN:
+            result = ".isBool()";
+            break;
+        case JSON_INTEGER:
+            result = ".isInt()";
+            break;
+        case JSON_REAL:
+            result = ".isDouble()";
+            break;
+        case JSON_STRING:
+            result = ".isString()";
+            break;
+        case JSON_OBJECT:
+            result = ".isObject()";
+            break;
+        case JSON_ARRAY:
+            result = ".isArray()";
+            break;
+        default:
+            result = "";
+            break;
+    }
+    return result;
+}
+
 string StubGenerator::toString(jsontype_t type)
 {
     string result;

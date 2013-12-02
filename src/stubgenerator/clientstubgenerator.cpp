@@ -82,8 +82,14 @@ string ClientStubGenerator::generateMethod(Procedure &proc)
     {
         //TODO: add return type parsing
         replaceAll(tmp, "<return_type>", toCppType(proc.GetReturnType()));
-        replaceAll(tmp, "<return_statement>",
-                   "return this->client->CallMethod(\"" + proc.GetProcedureName() + "\",p)"+ toCppConversion(proc.GetReturnType()) +";");
+
+        stringstream result;
+        result <<  "Json::Value result = this->client->CallMethod(\"" + proc.GetProcedureName() + "\",p);" << endl;
+        result <<  "    if (result" << isCppConversion(proc.GetReturnType()) << ")" << endl;
+        result <<  "        return result" << toCppConversion(proc.GetReturnType()) << ";" << endl;
+        result << "     else " << endl;
+        result << "         throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE);" << endl;
+        replaceAll(tmp, "<return_statement>", result.str());
     }
     else
     {
