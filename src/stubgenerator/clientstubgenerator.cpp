@@ -88,7 +88,7 @@ string ClientStubGenerator::generateMethod(Procedure &proc)
         result <<  "    if (result" << isCppConversion(proc.GetReturnType()) << ")" << endl;
         result <<  "        return result" << toCppConversion(proc.GetReturnType()) << ";" << endl;
         result << "     else " << endl;
-        result << "         throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE);" << endl;
+        result << "         throw jsonrpc::JsonRpcException(jsonrpc::Errors::ERROR_CLIENT_INVALID_RESPONSE, result.toStyledString());" << endl;
         replaceAll(tmp, "<return_statement>", result.str());
     }
     else
