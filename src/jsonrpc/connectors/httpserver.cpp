@@ -60,13 +60,14 @@ namespace jsonrpc
         }
     }
 
-    HttpServer::HttpServer(int port, bool enableSpecification, const std::string &sslcert) :
+    HttpServer::HttpServer(int port, bool enableSpecification, const std::string &sslcert, int threads) :
         AbstractServerConnector(),
         port(port),
         ctx(NULL),
         running(false),
         showSpec(enableSpecification),
-        sslcert(sslcert)
+        sslcert(sslcert),
+        threads(threads)
     {
     }
 
@@ -80,20 +81,23 @@ namespace jsonrpc
         if(!this->running)
         {
             char port[6];
+            char threads[6];
             struct mg_callbacks callbacks;
             memset(&callbacks, 0, sizeof(callbacks));
             callbacks.begin_request = callback;
+
+            sprintf(port, "%d", this->port);
+            sprintf(threads, "%d", this->threads);
+
             if(this->sslcert == "")
             {
-                sprintf(port, "%d", this->port);
-                const char *options[] = { "listening_ports", port, NULL };
+                const char *options[] = { "listening_ports", port, "num_threads", threads, NULL };
                 this->ctx = mg_start(&callbacks, this, options);
             }
             else
             {
-                sprintf(port, "%ds", this->port);
                 const char *options[] =
-                { "listening_ports", port, "ssl_certificate", this->sslcert.c_str(), NULL };
+                { "listening_ports", port, "ssl_certificate", "num_threads", threads, this->sslcert.c_str(), NULL };
                 this->ctx = mg_start(&callbacks, this, options);
             }
 
