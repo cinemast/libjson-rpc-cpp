@@ -14,7 +14,7 @@
 #include <string.h>
 #include <termios.h>
 #include <time.h>
-
+#include <unistd.h>
 #include <iostream>
 
 using namespace jsonrpc;
