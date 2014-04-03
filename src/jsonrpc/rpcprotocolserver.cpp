@@ -103,7 +103,7 @@ namespace jsonrpc
     {
         for (unsigned int i = 0; i < req.size(); i++)
         {
-            this->HandleSingleRequest(req, response[i]);
+            this->HandleSingleRequest(req[i], response[i]);
         }
     }
 
