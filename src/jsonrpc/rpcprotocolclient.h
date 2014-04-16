@@ -17,7 +17,7 @@
 
 namespace jsonrpc {
 
-    typedef std::map<const std::string, const Json::Value> batchProcedureCall_t;
+    typedef std::multimap<const std::string, const Json::Value> batchProcedureCall_t;
 
     /**
      * @brief The RpcProtocolClient class handles the json-rpc 2.0 protocol for the client side.
