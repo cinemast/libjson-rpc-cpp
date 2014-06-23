@@ -59,7 +59,7 @@ namespace jsonrpc
         }
         s->ptr[0] = '\0';
     }
-    
+
     HttpClient::HttpClient(const std::string& url) throw(JsonRpcException)
         : AbstractClientConnector(), url(url)
     {
@@ -72,7 +72,7 @@ namespace jsonrpc
         curl_easy_setopt(curl, CURLOPT_URL, this->url.c_str());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunc);
     }
-    
+
     HttpClient::~HttpClient()
     {
         if (curl)
@@ -91,6 +91,10 @@ namespace jsonrpc
         struct curl_slist * headers = NULL;
         //Maybe to restrictive
         //headers = curl_slist_append(headers, "Accept: application/json");
+        for (std::map<std::string, std::string>::iterator header = this->headers.begin(); header != this->headers.end(); ++header) {
+            headers = curl_slist_append(headers, (header->first + ": " + header->second).c_str());
+		}
+
         headers = curl_slist_append(headers, "Content-Type: application/json");
         headers = curl_slist_append(headers, "charsets: utf-8");
 
@@ -124,4 +128,11 @@ namespace jsonrpc
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     }
 
+    void HttpClient::AddHeader(const std::string attr, const std::string val) {
+        this->headers[attr] = val;
+    }
+
+    void HttpClient::RemoveHeader(const std::string attr) {
+        this->headers.erase(attr);
+    }
 } /* namespace jsonrpc */

@@ -12,11 +12,12 @@
 
 #include "../clientconnector.h"
 #include "../exception.h"
+#include <unordered_map>
 #include <curl/curl.h>
 
 namespace jsonrpc
 {
-    
+
     class HttpClient : public AbstractClientConnector
     {
         public:
@@ -27,7 +28,11 @@ namespace jsonrpc
 
             void SetUrl(const std::string& url);
 
+            void AddHeader(const std::string attr, const std::string val);
+            void RemoveHeader(const std::string attr);
+
         private:
+            std::map<std::string,std::string> headers;
             std::string url;
             CURL* curl;
     };
