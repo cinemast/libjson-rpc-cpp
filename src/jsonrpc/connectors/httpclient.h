@@ -12,7 +12,7 @@
 
 #include "../clientconnector.h"
 #include "../exception.h"
-#include <unordered_map>
+#include <map>
 #include <curl/curl.h>
 
 namespace jsonrpc
