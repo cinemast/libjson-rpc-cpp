@@ -16,8 +16,10 @@
 //For error handling and catching Exceptions.
 #include "exception.h"
 
-#include "connectors/httpserver.h"
-#include "connectors/httpclient.h"
+#ifdef HTTP_CONNECTOR
+  #include "connectors/httpserver.h"
+  #include "connectors/httpclient.h"
+#endif
 
 #include "specificationparser.h"
 #include "specificationwriter.h"

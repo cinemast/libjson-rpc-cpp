@@ -1,6 +1,0 @@
-Run the following commands:
-
-cmake ..
-make
-sudo make install
-sudo ldconfig
