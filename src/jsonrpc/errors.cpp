@@ -80,7 +80,7 @@ namespace jsonrpc
     {
         Json::Value error = GetErrorBlock(request, exc.GetCode());
         std::string errorMessage = exc.GetMessage();
-        if ( not errorMessage.empty() )
+        if ( ! errorMessage.empty() )
             error["error"]["message"] = errorMessage;
         return error;
     }
