@@ -217,6 +217,13 @@ Compile the client with:
 g++ main.cpp -ljsonrpc -o sampleclient
 ```
 
+References
+-------------
+- [NASA Ames Research Center](http://www.nasa.gov/centers/ames/home/): used it to obtain aircraft state information from an aircraft simulator.
+- [LaseShark 3D Printer](https://github.com/macpod/lasershark_3dp): used to control the firmware of the 3D printer.
+
+If you use this library and find it useful, I would be very pleased if you let me know about it.
+
 Roadmap for v0.3
 --------
 - Provide .deb package
