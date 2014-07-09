@@ -1,19 +1,22 @@
 cmake_minimum_required(VERSION 2.6)
 project(libjson-rpc-cpp)
 
+SET(HTTP_CONNECTOR YES CACHE BOOL "Include HTTP connector inside library")
 
-find_package(CURL REQUIRED)
-include_directories(${CURL_INCLUDE_DIRS})
+if (HTTP_CONNECTOR)
+  find_package(CURL REQUIRED)
+  include_directories(${CURL_INCLUDE_DIRS})
+  ADD_DEFINITIONS(-DHTTP_CONNECTOR)
+endif()
 
-include_directories(${CMAKE_SOURCE_DIR}/src/deps)
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out)
 
-SET(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
-SET(CMAKE_C_FLAGS_DEBUG     "${CMAKE_C_FLAGS_DEBUG} -Wall")
+# SET(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
+# SET(CMAKE_C_FLAGS_DEBUG     "${CMAKE_C_FLAGS_DEBUG} -Wall")
 
 
 SET(MAJOR_VERSION 0)
@@ -32,9 +35,10 @@ install(FILES ${PROJECT_BINARY_DIR}/version.h DESTINATION include/jsonrpc)
 
 
 add_subdirectory(src/jsonrpc)
-add_subdirectory(src/test)
 add_subdirectory(src/stubgenerator)
-add_subdirectory(src/example)
+if (HTTP_CONNECTOR)
+  add_subdirectory(src/example)
+endif()
 
 
 # uninstall target
@@ -98,14 +102,4 @@ ENABLE_TESTING()
 set(TEST_BINARIES ${CMAKE_BINARY_DIR}/out/test)
 set(CTEST_OUTPUT_ON_FAILURE TRUE)
 
-ADD_TEST(helloworld ${TEST_BINARIES}/helloworld)
-ADD_TEST(remotecounter ${TEST_BINARIES}/remotecounter)
-ADD_TEST(remotecalculator ${TEST_BINARIES}/remotecalculator)
-ADD_TEST(errorhandling ${TEST_BINARIES}/errorhandling)
-ADD_TEST(jsonrpcprotocol ${TEST_BINARIES}/jsonrpcprotocol)
-ADD_TEST(specification ${TEST_BINARIES}/specification)
-ADD_TEST(parametervalidation ${TEST_BINARIES}/parametervalidation)
-
-
-
-
+add_subdirectory(src/test)
