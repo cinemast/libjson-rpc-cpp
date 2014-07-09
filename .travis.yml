@@ -4,8 +4,12 @@ before_install:
  - sudo apt-get update -qq
  - sudo apt-get install -qq libcurl4-openssl-dev
 
+env:
+ - HTTP_CONN=YES
+ - HTTP_CONN=NO
+
 compiler:
   - clang
   - gcc
 
-script: cd build && cmake .. && make && make test
+script: cd build && cmake -DHTTP_CONNECTOR=${HTTP_CONN} .. && make && make test
