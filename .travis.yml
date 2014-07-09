@@ -12,4 +12,4 @@ compiler:
   - clang
   - gcc
 
-script: cd build && cmake -DHTTP_CONNECTOR=$(HTTP_CONN) .. && make && make test
+script: cd build && cmake -DHTTP_CONNECTOR=${HTTP_CONN} .. && make && make test
