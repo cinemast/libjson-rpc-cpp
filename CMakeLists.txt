@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.6)
 project(libjson-rpc-cpp)
 
 SET(HTTP_CONNECTOR YES CACHE BOOL "Include HTTP connector inside library")
+SET(MSVC_WITHOUT_WIN32 NO CACHE BOOL "Compile MSVC library without WIN32/WINDOWS support.")
 
 if (HTTP_CONNECTOR)
   find_package(CURL REQUIRED)
