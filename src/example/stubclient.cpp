@@ -17,7 +17,8 @@ using namespace std;
 
 int main()
 {
-    MyStubClient c(new HttpClient("http://localhost:8080"));
+    HttpClient* httpClient = new HttpClient("http://localhost:8080");
+    MyStubClient c(httpClient);
 
     try
     {
@@ -32,6 +33,6 @@ int main()
         cerr << e.what() << endl;
     }
 
-
+    delete httpClient;
 }
 

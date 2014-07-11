@@ -20,7 +20,8 @@ int main(int argc, char** argv)
 {
 
     TestServer* server = new TestServer();
-    Client* client = new Client(new HttpClient("http://localhost:8080"));
+    HttpClient *httpClient = new HttpClient("http://localhost:8080");
+    Client* client = new Client(httpClient);
 
     try {
         server->StartListening();
@@ -64,6 +65,7 @@ int main(int argc, char** argv)
 
         delete server;
         delete client;
+        delete httpClient;
 
         cout << argv[0] << " passed" << endl;
 
@@ -73,6 +75,7 @@ int main(int argc, char** argv)
         cerr << "Exception occured: " << e.what() << endl;
         delete server;
         delete client;
+        delete httpClient;
         return -999;
     }
 }

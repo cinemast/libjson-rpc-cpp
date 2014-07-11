@@ -39,7 +39,8 @@ int main(int argc, char** argv)
 {
 
     TestServer* server = new TestServer();
-    Client* client = new Client(new HttpClient("http://localhost:8080"));
+    HttpClient *httpClient = new HttpClient("http://localhost:8080");
+    Client* client = new Client(httpClient);
     server->StartListening();
 
     Json::Value v;
@@ -73,6 +74,7 @@ int main(int argc, char** argv)
 
     delete server;
     delete client;
+    delete httpClient;
 
     return 0;
 }
