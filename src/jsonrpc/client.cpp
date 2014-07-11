@@ -19,11 +19,6 @@ namespace jsonrpc
     {
     }
 
-    Client::~Client()
-    {
-        delete this->connector;
-    }
-
     void Client::CallMethod(const std::string &name, const Json::Value &paramter, Json::Value& result) throw(JsonRpcException)
     {
         std::string request, response;

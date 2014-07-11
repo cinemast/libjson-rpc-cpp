@@ -13,7 +13,8 @@ using namespace std;
 
 int main()
 {
-    Client c(new HttpClient("https://localhost:8080"));
+    HttpClient* httpClient = new HttpClient("http://localhost:8080");
+    Client c(httpClient);
 
     Json::Value params;
     params["name"] = "Peter";
@@ -27,5 +28,5 @@ int main()
         cerr << e.what() << endl;
     }
 
-
+    delete httpClient;
 }

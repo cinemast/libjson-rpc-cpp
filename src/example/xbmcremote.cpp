@@ -85,7 +85,8 @@ int main(int argc, char** argv) {
     {
         cout << "XBMC Remote: a,s,d,w for navigation, enter for select, escape or backspace for back button" << endl;
         try {
-            XbmcRemoteClient stub(new HttpClient(argv[1]));
+            HttpClient* httpClient = new HttpClient(argv[1]);
+            XbmcRemoteClient stub(httpClient);
             int key = 0;
             for (;;) {
 #ifdef __APPLE__
@@ -111,6 +112,7 @@ int main(int argc, char** argv) {
                 }
                 cout << "Pressed: " << key << endl;
             }
+            delete httpClient;
         } catch(jsonrpc::JsonRpcException e) {
             cerr << e.what() << endl;
         }
