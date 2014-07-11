@@ -13,11 +13,11 @@
 #include <jsonrpc/rpc.h>
 
 //Methods
-
     class TestServer : public jsonrpc::AbstractServer<TestServer>
     {
         public:
             TestServer();
+            TestServer(jsonrpc::AbstractServerConnector* connection);
 
             void sayHello(const Json::Value& request, Json::Value& response);
             void getCounterValue(const Json::Value& request, Json::Value& response);
@@ -29,6 +29,8 @@
             void incrementCounter(const Json::Value& request);
         private:
             int cnt;
+            void initialize();
+
     };
 
 #endif // SERVER_H

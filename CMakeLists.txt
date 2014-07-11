@@ -2,12 +2,21 @@ cmake_minimum_required(VERSION 2.6)
 project(libjson-rpc-cpp)
 
 SET(HTTP_CONNECTOR YES CACHE BOOL "Include HTTP connector inside library")
+SET(SOCKET_CONNECTOR NO CACHE BOOL "Include simple SOCKET connector inside library")
 SET(STUB_GENERATOR YES CACHE BOOL "Build stub generator")
+
+if (HTTP_CONNECTOR OR SOCKET_CONNECTOR)
+  find_package(Threads REQUIRED)
+endif()
 
 if (HTTP_CONNECTOR)
   find_package(CURL REQUIRED)
   include_directories(${CURL_INCLUDE_DIRS})
   ADD_DEFINITIONS(-DHTTP_CONNECTOR)
+endif()
+
+if (SOCKET_CONNECTOR)
+  ADD_DEFINITIONS(-DSOCKET_CONNECTOR)
 endif()
 
 include_directories(${CMAKE_SOURCE_DIR}/src)

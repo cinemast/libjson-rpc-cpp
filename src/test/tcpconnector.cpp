@@ -1,0 +1,64 @@
+/*************************************************************************
+ * libjson-rpc-cpp
+ *************************************************************************
+ * @file    tcpconnector.cpp
+ * @date    07.10.2014
+ * @author  Bertrand Cachet <bertrand.cachet@gmail.com>
+ * @license See attached LICENSE.txt
+ ************************************************************************/
+
+#include <stdio.h>
+#include <string>
+#include <iostream>
+
+#include "server.h"
+#include <jsonrpc/procedure.h>
+#include <jsonrpc/specificationwriter.h>
+#include <jsonrpc/connectors/socketserver.h>
+#include <jsonrpc/connectors/socketclient.h>
+
+using namespace jsonrpc;
+using namespace std;
+
+int main(int argc, char** argv)
+{
+    SocketServer server_connector = SocketServer("8080", SOCK_STREAM, 2);
+    TestServer server = TestServer(&server_connector);
+    SocketClient client_connector = SocketClient("0.0.0.0", "8080");
+    SocketClient client_connector2 = SocketClient("0.0.0.0", "8080");
+    Client client = Client(&client_connector);
+    Client client2 = Client(&client_connector2);
+
+    cout << SpecificationWriter::toString(server.GetProtocolHanlder()->GetProcedures()) << endl;
+
+    try {
+        server.StartListening();
+
+        Json::Value v;
+        v["name"] = "Peter";
+        Json::Value result = client.CallMethod("sayHello", v);
+        Json::Value result2 = client2.CallMethod("sayHello", v);
+
+        if((result.asString() != "Hello: Peter!")
+           && (result2.asString() != "Hello: Peter!")
+           ) {
+            cerr << "sayHello returned " << result.asString() << " but should be \"Hello: Peter!\"" << endl;
+            return -1;
+        }
+
+        v["name"] = "Peter Spiess-Knafl";
+        result = client.CallMethod("sayHello", v);
+        if(result.asString() != "Hello: Peter Spiess-Knafl!") {
+            cerr << "sayHello returned " << result.asString() << " but should be \"Hello: Peter Spiess-Knafl!\"" << endl;
+            return -2;
+        }
+
+        cout << argv[0] << " passed" << endl;
+        return 0;
+
+    } catch(jsonrpc::JsonRpcException e) {
+
+        cerr << "Exception occured: " << e.what() << endl;
+        return -999;
+    }
+}

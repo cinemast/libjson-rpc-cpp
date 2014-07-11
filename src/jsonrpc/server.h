@@ -43,7 +43,7 @@ namespace jsonrpc
             virtual ~AbstractServer()
             {
                 this->StopListening();
-                delete this->connection;
+//                delete this->connection;
             }
 
             /**

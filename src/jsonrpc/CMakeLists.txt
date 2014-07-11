@@ -1,21 +1,25 @@
 file(GLOB jsonrpc_source *.cpp json/*.c*)
 file(GLOB jsonrpc_header *.h)
 
-set(JSONRPC_DEPENDENCIES)
+
+set(JSONRPC_DEPENDENCIES ${CMAKE_THREAD_LIBS_INIT})
 
 if(HTTP_CONNECTOR)
 	file(GLOB connector_mongoose_source connectors/mongoose*.c*)
 	file(GLOB connector_mongoose_header connectors/mongoose*.h)
 	file(GLOB connector_http_source connectors/http*.c*)
 	file(GLOB connector_http_header connectors/http*.h)
-	set(JSONRPC_DEPENDENCIES ${JSONRPC_DEPENDENCIES} ${CURL_LIBRARIES} pthread dl)
+	set(JSONRPC_DEPENDENCIES ${JSONRPC_DEPENDENCIES} ${CURL_LIBRARIES} dl)
 endif()
 
 file(GLOB jsoncpp_header json/*.h)
 
-set(connectors_source ${connector_http_source} ${connector_mongoose_source})
-set(connectors_header ${connector_http_header} ${connector_mongoose_header})
+if(SOCKET_CONNECTOR)
+	file(GLOB connector_socket_source connectors/socket*.c*)
+	file(GLOB connector_socket_header connectors/socket*.h)
+endif()
 
+set(connectors_source ${connector_http_source} ${connector_mongoose_source} ${connector_socket_source})
 
 add_library(jsonrpc SHARED ${jsonrpc_source} ${connectors_source})
 add_library(jsonrpcStatic STATIC ${jsonrpc_source} ${connectors_source})
@@ -33,10 +37,14 @@ target_link_libraries(jsonrpcStatic ${JSONRPC_DEPENDENCIES})
 install(FILES ${jsonrpc_header} DESTINATION include/jsonrpc)
 install(FILES ${jsoncpp_header} DESTINATION include/jsonrpc/json)
 if(HTTP_CONNECTOR)
-	install(FILES ${connectors_header} DESTINATION include/jsonrpc/connectors)
+	install(FILES $${connector_http_header} ${connector_mongoose_header} DESTINATION include/jsonrpc/connectors)
+endif()
+if(SOCKET_CONNECTOR)
+	install(FILES ${connector_socket_header} DESTINATION include/jsonrpc/connectors)
 endif()
 
-install(TARGETS jsonrpc jsonrpcStatic LIBRARY DESTINATION lib
-                      ARCHIVE DESTINATION lib
-                      RUNTIME DESTINATION bin)
+install(TARGETS jsonrpc jsonrpcStatic
+					LIBRARY DESTINATION lib
+					ARCHIVE DESTINATION lib
+					RUNTIME DESTINATION bin)
 

@@ -13,10 +13,26 @@
 using namespace std;
 using namespace jsonrpc;
 
-TestServer::TestServer() :
-    AbstractServer<TestServer>(new HttpServer(8080)),
-    cnt(0)
+TestServer::TestServer(AbstractServerConnector* connection) : AbstractServer<TestServer>(connection)
 {
+    initialize();
+}
+
+#if HTTP_CONNECTOR
+TestServer::TestServer() : AbstractServer<TestServer>(new HttpServer(8080))
+{
+    initialize();
+}
+#elif SOCKET_CONNETOR
+TestServer::TestServer() : AbstractServer<TestServer>(new TcpServer("8080"))
+{
+    initialize();
+}
+#endif
+
+void TestServer::initialize()
+{
+    cnt = 0;
     cout << "Called default const" << endl;
     this->bindAndAddMethod(new Procedure("sayHello", PARAMS_BY_NAME, JSON_STRING, "name", JSON_STRING, NULL), &TestServer::sayHello);
     this->bindAndAddMethod(new Procedure("getCounterValue", PARAMS_BY_NAME, JSON_INTEGER, NULL), &TestServer::getCounterValue);
@@ -25,6 +41,7 @@ TestServer::TestServer() :
 
     this->bindAndAddNotification(new Procedure("initCounter", PARAMS_BY_NAME, "value", JSON_INTEGER, NULL), &TestServer::initCounter);
     this->bindAndAddNotification(new Procedure("incrementCounter", PARAMS_BY_NAME, "value", JSON_INTEGER, NULL), &TestServer::incrementCounter);
+
 }
 
 void TestServer::sayHello(const Json::Value &request, Json::Value& response)
