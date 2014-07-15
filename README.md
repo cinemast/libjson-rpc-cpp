@@ -221,6 +221,9 @@ References
 -------------
 - [NASA Ames Research Center](http://www.nasa.gov/centers/ames/home/): used it to obtain aircraft state information from an aircraft simulator.
 - [LaseShark 3D Printer](https://github.com/macpod/lasershark_3dp): used to control the firmware of the 3D printer.
+- [cpp-ethereum](https://github.com/ethereum/cpp-ethereum): a distributed computing framework.
+- [mage-sdk-cpp](https://github.com/mage/mage-sdk-cpp): a game engine.
+- [bitcodin](http://www.bitmovin.net): a scaleable cloud based video transcoding platform.
 
 If you use this library and find it useful, I would be very pleased if you let me know about it.
 
