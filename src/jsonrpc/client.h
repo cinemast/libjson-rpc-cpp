@@ -23,7 +23,6 @@ namespace jsonrpc
     {
         public:
             Client(AbstractClientConnector* connector);
-            ~Client();
 
 
             void CallMethod(const std::string &name, const Json::Value &paramter, Json::Value& result) throw (JsonRpcException);

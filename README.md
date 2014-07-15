@@ -197,7 +197,8 @@ using namespace std;
 
 int main()
 {
-    MyStubClient c(new HttpClient("http://localhost:8080"));
+    HttpClient* httpClient = new HttpClient("http://localhost:8080");
+    MyStubClient c(httpClient);
     try
     {
         cout << c.sayHello("Peter Knafl") << endl;
@@ -207,7 +208,8 @@ int main()
     {
         cerr << e.what() << endl;
     }
-	return 0;
+    delete httpClient;
+    return 0;
 }
 ```
 

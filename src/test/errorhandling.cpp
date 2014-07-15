@@ -16,7 +16,7 @@ using namespace std;
 int main(int argc, char** argv)
 {
     TestServer* server = new TestServer();
-     TestServer* server2 = new TestServer();
+    TestServer* server2 = new TestServer();
 
     //Server Startup and shutdown tests
     if(!server->StartListening())
@@ -56,7 +56,8 @@ int main(int argc, char** argv)
     server->StopListening();
 
     //Client startup and shutdown tests
-    Client* client = new Client(new HttpClient("http://localhost:8080"));
+    HttpClient *httpClient = new HttpClient("http://localhost:8080");
+    Client* client = new Client(httpClient);
 
     int error = 0;
     try
@@ -67,6 +68,9 @@ int main(int argc, char** argv)
     {
         error = e.GetCode();
     }
+
+    delete client;
+    delete httpClient;
 
     if(error != -32003)
     {

@@ -14,7 +14,7 @@ endif()
 file(GLOB jsoncpp_header json/*.h)
 
 set(connectors_source ${connector_http_source} ${connector_mongoose_source})
-set(connectors_header ${connector_http_source} ${connector_mongoose_source})
+set(connectors_header ${connector_http_header} ${connector_mongoose_header})
 
 
 add_library(jsonrpc SHARED ${jsonrpc_source} ${connectors_source})
