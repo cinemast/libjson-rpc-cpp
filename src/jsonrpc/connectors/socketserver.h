@@ -42,13 +42,19 @@ namespace jsonrpc {
       int socket_;
       struct addrinfo* host_info_;
       bool shutdown_;
-      int poolSize_;
+      unsigned int poolSize_;
 
-      void CreateSocket();
+      void CreateSocket() throw (JsonRpcException);
       void CloseSocket();
 
-      static void *ConnectionHandler(void *connection);
+#ifdef _WIN32
+	static DWORD WINAPI ConnectionHandler(LPVOID connection);
+    static DWORD WINAPI HandleConnections(LPVOID server);
+#else
+	  static void *ConnectionHandler(void *connection);
       static void *HandleConnections(void* server);
+
+#endif
 
   };
 

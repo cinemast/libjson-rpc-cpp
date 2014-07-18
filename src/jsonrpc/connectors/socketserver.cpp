@@ -1,7 +1,4 @@
 #include <cstring>
-#include <unistd.h>
-#include <pthread.h>
-#include <netdb.h>
 #include <vector>
 
 #include "socketserver.h"
@@ -9,8 +6,8 @@
 namespace jsonrpc {
 
     void CloseConnection(const SocketServer::Connection* connection) {
-      shutdown(connection->socket, SHUT_RDWR);
-      close(connection->socket);
+      shutdown(connection->socket, BOTH_DIRECTION);
+      closesocket(connection->socket);
       pthread_join(connection->thread, NULL);
       delete connection;
     }
@@ -51,7 +48,8 @@ namespace jsonrpc {
     hint.ai_family = AF_INET;
     hint.ai_socktype = type;
     hint.ai_flags = AI_PASSIVE;
-    CHECK(getaddrinfo(NULL, port.c_str(), &hint, &host_info_));
+    int status = getaddrinfo(NULL, port.c_str(), &hint, &host_info_);
+	CHECK(status);
     return;
 error:
     throw JsonRpcException(Errors::ERROR_SERVER_CONNECTOR);
@@ -70,6 +68,7 @@ error:
     CreateSocket();
     shutdown_ = false;
     return pthread_create(&server_thread_, NULL, HandleConnections, this) == 0;
+	return true;
   }
 
   bool SocketServer::StopListening()
@@ -84,10 +83,16 @@ error:
                                 void* addInfo)
   {
     Connection* connection = (Connection*)addInfo;
-    return write(connection->socket, response.c_str(), response.length()) == response.length();
+    return send(connection->socket, response.c_str(), response.length(), 0) == response.length();
   }
 
-  void* SocketServer::HandleConnections(void* data) {
+#ifdef _WIN32
+  DWORD WINAPI SocketServer::HandleConnections(LPVOID data)
+#else
+  void* SocketServer::HandleConnections(void* data)
+#endif
+ {
+
     SocketServer* server = (SocketServer*) data;
     std::vector<SocketServer::Connection*> clients;
     struct sockaddr_storage client_addr;
@@ -114,14 +119,19 @@ error:
     return 0;
   }
 
-  void* SocketServer::ConnectionHandler(void* data) {
+#ifdef _WIN32
+  DWORD WINAPI SocketServer::ConnectionHandler(LPVOID data)
+#else
+  void* SocketServer::ConnectionHandler(void* data)
+#endif
+  {
     Connection* connection = (Connection*)data;
     const int MAX_SIZE = 5000;
     char client_message[MAX_SIZE];
     int read_size;
       std::string request;
     connection->finished = false;
-    while((read_size = read(connection->socket , client_message , MAX_SIZE)) > 0) {
+    while((read_size = recv(connection->socket , client_message , MAX_SIZE, 0)) > 0) {
       client_message[read_size] = '\0';
       request.assign(client_message);
       pthread_mutex_lock(connection->plock_server);
@@ -136,22 +146,23 @@ error:
     return 0;
   }
 
-  void SocketServer::CreateSocket() {
-    int yes = 1;
+  void SocketServer::CreateSocket() throw (JsonRpcException) {
+    char yes = 1;
     socket_ = socket(host_info_->ai_family, host_info_->ai_socktype, host_info_->ai_protocol);
-    CHECK(socket_);
-    CHECK(setsockopt(socket_, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)));
-    CHECK(bind(socket_, host_info_->ai_addr, host_info_->ai_addrlen));
-    CHECK(listen(socket_, poolSize_));
+    CHECK_SOCKET(socket_);
+    CHECK_STATUS(setsockopt(socket_, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)));
+    CHECK_STATUS(bind(socket_, host_info_->ai_addr, host_info_->ai_addrlen));
+    CHECK_STATUS(listen(socket_, poolSize_));
     return;
 error:
     CloseSocket();
+	throw JsonRpcException(Errors::ERROR_SERVER_CONNECTOR);
   }
 
   void SocketServer::CloseSocket() {
     if (socket_ != -1) {
-      shutdown(socket_, SHUT_RDWR);
-      close(socket_);
+      shutdown(socket_, BOTH_DIRECTION);
+      closesocket(socket_);
     }
     socket_ = -1;
   }

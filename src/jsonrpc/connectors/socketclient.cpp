@@ -1,6 +1,5 @@
 #include <string>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
 
 #include "socketclient.h"
@@ -9,55 +8,58 @@
 namespace jsonrpc {
 
   SocketClient::SocketClient(const std::string& url, const std::string& port, const int type) throw (JsonRpcException) :
-      AbstractClientConnector()
+      AbstractClientConnector(),
+      socket_(-1),
+      server_info_(NULL)
   {
-    int p = atoi(port.c_str());
-    int family = AF_INET;
-    server_info_.sin_port = htons(p);
-    server_info_.sin_family = family;
-    server_info_.sin_addr.s_addr = inet_addr(url.c_str());
-    if (server_info_.sin_addr.s_addr == -1) {
-      struct hostent *he;
-      struct in_addr **addr_list;
-
-      CHECK_PTR((he = gethostbyname(url.c_str())));
-
-      addr_list = (struct in_addr **) he->h_addr_list;
-
-      for(int i = 0; addr_list[i] != NULL; i++) {
-        server_info_.sin_addr = *addr_list[i];
-        break;
-      }
-    }
-
-    socket_ = socket(family, type, 0);
-    CHECK(socket_);
+    struct addrinfo hints;
+    memset(&hints, 0, sizeof(struct addrinfo));
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_protocol = IPPROTO_TCP;
+    CHECK(getaddrinfo(url.c_str(), port.c_str(), &hints, &server_info_));
     return;
-
 error:
-    if (socket_ != -1)
-      close(socket_);
+    if (server_info_ != NULL)
+      freeaddrinfo(server_info_);
+    server_info_ = NULL;
     throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR);
   }
 
   SocketClient::~SocketClient()
   {
-      close(socket_);
+    shutdown(socket_, BOTH_DIRECTION);
+    closesocket(socket_);
+    freeaddrinfo(server_info_);
   }
 
   void SocketClient::SendMessage(const std::string& message, std::string& result) throw (JsonRpcException) {
     int read_size;
     const int MAX_SIZE = 5000;
     char server_message[MAX_SIZE];
+    struct addrinfo *ptr;
+    if (socket_ == -1) {
+      for (ptr = server_info_; ptr != NULL; ptr = ptr->ai_next) {
+        socket_ = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
+        CHECK_SOCKET(socket_);
+        if (connect(socket_, ptr->ai_addr, (int)ptr->ai_addrlen) == 0) {
+          break;
+        }
+        closesocket(socket_);
+      }
+    }
     memset(server_message, 0, MAX_SIZE);
-    connect(socket_, (struct sockaddr *)&server_info_ , sizeof(server_info_));
-    CHECK(write(socket_, message.c_str(), message.length()));
-    CHECK((read_size = read(socket_, server_message, MAX_SIZE)));
+    CHECK_STATUS(send(socket_, message.c_str(), message.length(), 0));
+    CHECK_READSIZE(read_size = recv(socket_, server_message, MAX_SIZE, 0));
     server_message[read_size] = '\0';
     result.assign(server_message);
     return;
 error:
+    if (socket_ != -1) {
+      shutdown(socket_, BOTH_DIRECTION);
+      closesocket(socket_);
+    }
+    socket_ = -1;
     throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR);
   }
-
 }

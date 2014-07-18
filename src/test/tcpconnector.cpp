@@ -22,12 +22,20 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
+#ifdef _WIN32
+   WORD wVersionRequested;
+    WSADATA wsaData;
+    wVersionRequested = MAKEWORD(2, 2);
+	WSAStartup(wVersionRequested, &wsaData);
+#endif
+
     SocketServer server_connector = SocketServer("8080", SOCK_STREAM, 2);
     TestServer server = TestServer(&server_connector);
-    SocketClient client_connector = SocketClient("0.0.0.0", "8080");
-    SocketClient client_connector2 = SocketClient("0.0.0.0", "8080");
+    SocketClient client_connector = SocketClient("127.0.0.1", "8080");
+    SocketClient client_connector2 = SocketClient("127.0.0.1", "8080");
     Client client = Client(&client_connector);
     Client client2 = Client(&client_connector2);
+	int status = 0;
 
     cout << SpecificationWriter::toString(server.GetProtocolHanlder()->GetProcedures()) << endl;
 
@@ -43,22 +51,30 @@ int main(int argc, char** argv)
            && (result2.asString() != "Hello: Peter!")
            ) {
             cerr << "sayHello returned " << result.asString() << " but should be \"Hello: Peter!\"" << endl;
-            return -1;
+            status = -1;
+            goto cleanup;
         }
 
         v["name"] = "Peter Spiess-Knafl";
         result = client.CallMethod("sayHello", v);
         if(result.asString() != "Hello: Peter Spiess-Knafl!") {
             cerr << "sayHello returned " << result.asString() << " but should be \"Hello: Peter Spiess-Knafl!\"" << endl;
-            return -2;
+            status = -2;
+            goto cleanup;
         }
 
         cout << argv[0] << " passed" << endl;
-        return 0;
+
 
     } catch(jsonrpc::JsonRpcException e) {
 
         cerr << "Exception occured: " << e.what() << endl;
-        return -999;
+        status = -999;
+        goto cleanup;
     }
+cleanup:
+#ifdef _WIN32
+  WSACleanup();
+#endif
+  return status;
 }
