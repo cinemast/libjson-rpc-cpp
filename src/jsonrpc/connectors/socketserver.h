@@ -15,9 +15,10 @@
 #include "../serverconnector.h"
 #include "../exception.h"
 #include "socket.h"
+#include "threads.h"
 
 namespace jsonrpc {
-    
+
   class SocketServer : public AbstractServerConnector {
    public:
       SocketServer(const std::string& port = "8080", const int type = SOCK_STREAM, const int pool = 1) throw (JsonRpcException);
@@ -27,17 +28,16 @@ namespace jsonrpc {
       bool StopListening();
 
       bool SendResponse(const std::string& response, void* addInfo = NULL);
-      
+
       struct Connection {
           int socket;
-          pthread_t thread;
-          pthread_mutex_t *plock_server;
+          ThreadHandle thread;
+          MutexHandle *plock_server;
           SocketServer* pserver;
           bool finished;
       };
     private:
-
-      pthread_t server_thread_;
+      ThreadHandle server_thread_;
 
       int socket_;
       struct addrinfo* host_info_;
@@ -47,14 +47,9 @@ namespace jsonrpc {
       void CreateSocket() throw (JsonRpcException);
       void CloseSocket();
 
-#ifdef _WIN32
-	static DWORD WINAPI ConnectionHandler(LPVOID connection);
-    static DWORD WINAPI HandleConnections(LPVOID server);
-#else
-	  static void *ConnectionHandler(void *connection);
-      static void *HandleConnections(void* server);
+      static THREAD_ROUTINE_RETURN ConnectionHandler(void* connection);
+      static THREAD_ROUTINE_RETURN HandleConnections(void* server);
 
-#endif
 
   };
 

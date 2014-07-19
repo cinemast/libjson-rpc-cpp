@@ -8,7 +8,7 @@ namespace jsonrpc {
     void CloseConnection(const SocketServer::Connection* connection) {
       shutdown(connection->socket, BOTH_DIRECTION);
       closesocket(connection->socket);
-      pthread_join(connection->thread, NULL);
+      threadJoin(connection->thread);
       delete connection;
     }
 
@@ -67,7 +67,7 @@ error:
   {
     CreateSocket();
     shutdown_ = false;
-    return pthread_create(&server_thread_, NULL, HandleConnections, this) == 0;
+    return threadCreate(&server_thread_, HandleConnections, this) == 0;
 	return true;
   }
 
@@ -75,7 +75,7 @@ error:
   {
     shutdown_ = true;
     CloseSocket();
-    pthread_join(server_thread_, NULL);
+    threadJoin(server_thread_);
     return true;
   }
 
@@ -86,19 +86,15 @@ error:
     return send(connection->socket, response.c_str(), response.length(), 0) == response.length();
   }
 
-#ifdef _WIN32
-  DWORD WINAPI SocketServer::HandleConnections(LPVOID data)
-#else
-  void* SocketServer::HandleConnections(void* data)
-#endif
+ THREAD_ROUTINE_RETURN SocketServer::HandleConnections(void* data)
  {
 
     SocketServer* server = (SocketServer*) data;
     std::vector<SocketServer::Connection*> clients;
     struct sockaddr_storage client_addr;
     socklen_t addr_size = sizeof(sockaddr_storage);
-    pthread_mutex_t lock;
-    pthread_mutex_init(&lock, NULL);
+    MutexHandle lock;
+    mutexCreate(&lock);
     int client_socket;
 
     while (!server->shutdown_) {
@@ -111,19 +107,15 @@ error:
         if (clients.size() > server->poolSize_) {
           CloseOldestConnection(clients);
         }
-        pthread_create(&clients.back()->thread, NULL, ConnectionHandler, clients.back());
+        threadCreate(&clients.back()->thread, ConnectionHandler, clients.back());
       }
     }
     CloseAllConnections(clients);
-    pthread_mutex_destroy(&lock);
+    mutexDestroy(&lock);
     return 0;
   }
 
-#ifdef _WIN32
-  DWORD WINAPI SocketServer::ConnectionHandler(LPVOID data)
-#else
-  void* SocketServer::ConnectionHandler(void* data)
-#endif
+  THREAD_ROUTINE_RETURN SocketServer::ConnectionHandler(void* data)
   {
     Connection* connection = (Connection*)data;
     const int MAX_SIZE = 5000;
@@ -134,12 +126,12 @@ error:
     while((read_size = recv(connection->socket , client_message , MAX_SIZE, 0)) > 0) {
       client_message[read_size] = '\0';
       request.assign(client_message);
-      pthread_mutex_lock(connection->plock_server);
+      mutexLock(connection->plock_server);
       try {
         connection->pserver->OnRequest(request, connection);
       } catch (...) {
       }
-      pthread_mutex_unlock(connection->plock_server);
+      mutexUnlock(connection->plock_server);
       memset(client_message, 0, MAX_SIZE);
     }
     connection->finished = true;

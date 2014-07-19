@@ -13,6 +13,16 @@
 #include "../exception.h"
 #include "socket.h"
 
+// WinUser.h has a preprocessor macro to replace SendMessage with SendMessageW or SendMessageA
+// We need to undef this macro to be sure that our AbstractClientConnector::SendMessage methods are not
+// modified by this preprocessor macro
+#ifdef _WINUSER_
+	#ifdef SendMessage
+	#undef SendMessage
+	#endif
+#endif
+
+
 namespace jsonrpc
 {
   class SocketClient : public AbstractClientConnector
