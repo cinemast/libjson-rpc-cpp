@@ -4,7 +4,7 @@
 #define CHECK(status) if ((status) != 0) goto error;
 #define CHECK_READSIZE(read) if((read) < 0) goto error;
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(__INTIME__)
   #include <WinSock2.h>
   #include <ws2tcpip.h>
   #include <io.h>
@@ -18,11 +18,12 @@
   #include <arpa/inet.h>
   #include <netdb.h>
   #include <unistd.h>
-  #include <netdb.h>
   static const int BOTH_DIRECTION=SHUT_RDWR;
   #define CHECK_STATUS(s) if ((s) < 0) goto error;
   #define CHECK_SOCKET(s) if ((s) == -1) goto error;
+#ifndef __INTIME__
   #define closesocket(s) close((s))
+#endif
 #endif
 
 #endif // JSONRPC_CONNECTORS_SOCKET_H_

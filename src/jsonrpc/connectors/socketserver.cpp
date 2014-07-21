@@ -1,7 +1,7 @@
+#include "socketserver.h"
+
 #include <cstring>
 #include <vector>
-
-#include "socketserver.h"
 
 namespace jsonrpc {
 
@@ -148,7 +148,7 @@ error:
     return;
 error:
     CloseSocket();
-	throw JsonRpcException(Errors::ERROR_SERVER_CONNECTOR);
+    throw JsonRpcException(Errors::ERROR_SERVER_CONNECTOR);
   }
 
   void SocketServer::CloseSocket() {

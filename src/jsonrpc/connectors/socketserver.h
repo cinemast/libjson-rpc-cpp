@@ -9,13 +9,15 @@
 #ifndef JSONRPC_SOCKET_SERVER_H_
 #define JSONRPC_SOCKET_SERVER_H_
 
+#include "threads.h"
+#include "socket.h"
+
 #include <string>
 #include <exception>
 
 #include "../serverconnector.h"
 #include "../exception.h"
-#include "socket.h"
-#include "threads.h"
+
 
 namespace jsonrpc {
 

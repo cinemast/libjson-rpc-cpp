@@ -20,7 +20,7 @@ if(SOCKET_CONNECTOR)
   set(connector_socket_header ${connector_socket_header} connectors/threads.h)
   set(connector_socket_source ${connector_socket_source} connectors/threads.cpp)
 	if (MSVC)
-		set(JSONRPC_DEPENDENCIES ${JSONRPC_DEPENDENCIES} wsock32 ws2_32)	
+		set(JSONRPC_DEPENDENCIES ${JSONRPC_DEPENDENCIES} ${Socket_LIBRARIES})
 	endif()
 endif()
 
@@ -41,12 +41,8 @@ target_link_libraries(jsonrpcStatic ${JSONRPC_DEPENDENCIES})
 
 install(FILES ${jsonrpc_header} DESTINATION include/jsonrpc)
 install(FILES ${jsoncpp_header} DESTINATION include/jsonrpc/json)
-if(HTTP_CONNECTOR)
-	install(FILES $${connector_http_header} ${connector_mongoose_header} DESTINATION include/jsonrpc/connectors)
-endif()
-if(SOCKET_CONNECTOR)
-	install(FILES ${connector_socket_header} DESTINATION include/jsonrpc/connectors)
-endif()
+install(FILES ${connector_http_header} ${connector_mongoose_header} DESTINATION include/jsonrpc/connectors)
+install(FILES ${connector_socket_header} DESTINATION include/jsonrpc/connectors)
 
 install(TARGETS jsonrpc jsonrpcStatic
 					LIBRARY DESTINATION lib

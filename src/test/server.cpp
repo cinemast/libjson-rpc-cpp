@@ -23,8 +23,8 @@ TestServer::TestServer() : AbstractServer<TestServer>(new HttpServer(8080))
 {
     initialize();
 }
-#elif SOCKET_CONNETOR
-TestServer::TestServer() : AbstractServer<TestServer>(new TcpServer("8080"))
+#elif SOCKET_CONNECTOR
+TestServer::TestServer() : AbstractServer<TestServer>(new SocketServer("8080"))
 {
     initialize();
 }

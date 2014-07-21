@@ -1,9 +1,12 @@
+LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
+
 cmake_minimum_required(VERSION 2.6)
 project(libjson-rpc-cpp)
 
 SET(HTTP_CONNECTOR YES CACHE BOOL "Include HTTP connector inside library")
 SET(SOCKET_CONNECTOR NO CACHE BOOL "Include simple SOCKET connector inside library")
 SET(STUB_GENERATOR YES CACHE BOOL "Build stub generator")
+SET(BUILD_TESTS YES CACHE BOOL "Do we build tests binaries ?")
 
 if (HTTP_CONNECTOR OR SOCKET_CONNECTOR)
   find_package(Threads REQUIRED)
@@ -16,6 +19,7 @@ if (HTTP_CONNECTOR)
 endif()
 
 if (SOCKET_CONNECTOR)
+  find_package(Socket REQUIRED)
   ADD_DEFINITIONS(-DSOCKET_CONNECTOR)
 endif()
 
@@ -114,4 +118,6 @@ ENABLE_TESTING()
 set(TEST_BINARIES ${CMAKE_BINARY_DIR}/out/test)
 set(CTEST_OUTPUT_ON_FAILURE TRUE)
 
-add_subdirectory(src/test)
+if (BUILD_TESTS)
+  add_subdirectory(src/test)
+endif()

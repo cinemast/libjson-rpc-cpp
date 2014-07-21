@@ -1,8 +1,8 @@
+#include "socketclient.h"
+
 #include <string>
 #include <stdlib.h>
 #include <string.h>
-
-#include "socketclient.h"
 
 
 namespace jsonrpc {

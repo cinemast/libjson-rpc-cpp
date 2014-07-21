@@ -6,6 +6,7 @@
  * @author  Bertrand Cachet <bertrand.cachet@gmail.com>
  * @license See attached LICENSE.txt
  ************************************************************************/
+#include <jsonrpc/rpc.h>
 
 #include <stdio.h>
 #include <string>
@@ -14,8 +15,7 @@
 #include "server.h"
 #include <jsonrpc/procedure.h>
 #include <jsonrpc/specificationwriter.h>
-#include <jsonrpc/connectors/socketserver.h>
-#include <jsonrpc/connectors/socketclient.h>
+
 
 using namespace jsonrpc;
 using namespace std;
@@ -29,10 +29,10 @@ int main(int argc, char** argv)
 	WSAStartup(wVersionRequested, &wsaData);
 #endif
 
-    SocketServer server_connector = SocketServer("8080", SOCK_STREAM, 2);
+    SocketServer server_connector = SocketServer("8888", SOCK_STREAM, 2);
     TestServer server = TestServer(&server_connector);
-    SocketClient client_connector = SocketClient("127.0.0.1", "8080");
-    SocketClient client_connector2 = SocketClient("127.0.0.1", "8080");
+    SocketClient client_connector = SocketClient("127.0.0.1", "8888");
+    SocketClient client_connector2 = SocketClient("127.0.0.1", "8888");
     Client client = Client(&client_connector);
     Client client2 = Client(&client_connector2);
 	int status = 0;
