@@ -21,7 +21,7 @@
   #include "connectors/httpclient.h"
 #endif
 
-#ifdef TCP_CONNECTOR
+#ifdef SOCKET_CONNECTOR
   #include "connectors/socketserver.h"
   #include "connectors/socketclient.h"
 #endif
