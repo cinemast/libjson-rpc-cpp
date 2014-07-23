@@ -49,7 +49,7 @@ namespace jsonrpc {
     hint.ai_socktype = type;
     hint.ai_flags = AI_PASSIVE;
     int status = getaddrinfo(NULL, port.c_str(), &hint, &host_info_);
-	CHECK(status);
+  CHECK(status);
     return;
 error:
     throw JsonRpcException(Errors::ERROR_SERVER_CONNECTOR);
@@ -67,8 +67,7 @@ error:
   {
     CreateSocket();
     shutdown_ = false;
-    return threadCreate(&server_thread_, HandleConnections, this) == 0;
-	return true;
+    return threadCreate(&server_thread_, (ThreadStartRoutine)HandleConnections, this) == 0;
   }
 
   bool SocketServer::StopListening()
@@ -88,7 +87,6 @@ error:
 
  THREAD_ROUTINE_RETURN SocketServer::HandleConnections(void* data)
  {
-
     SocketServer* server = (SocketServer*) data;
     std::vector<SocketServer::Connection*> clients;
     struct sockaddr_storage client_addr;
@@ -99,7 +97,7 @@ error:
 
     while (!server->shutdown_) {
       if ((client_socket = accept(server->socket_, (struct sockaddr*)&client_addr, &addr_size)) > 0) {
-        clients.push_back(new Connection());
+        clients.push_back(new jsonrpc::SocketServer::Connection());
         clients.back()->socket = client_socket;
         clients.back()->pserver = server;
         clients.back()->plock_server = &lock;
@@ -107,12 +105,19 @@ error:
         if (clients.size() > server->poolSize_) {
           CloseOldestConnection(clients);
         }
-        threadCreate(&clients.back()->thread, ConnectionHandler, clients.back());
+        
+  #ifdef __INTIME__
+    threadCreate(&clients.back()->thread, (ThreadStartRoutine)ConnectionHandler, clients.back(), (DWORD)5*1024);
+  #else
+    threadCreate(&clients.back()->thread, (ThreadStartRoutine)ConnectionHandler, clients.back());
+  #endif
       }
     }
     CloseAllConnections(clients);
     mutexDestroy(&lock);
+#ifndef __INTIME__
     return 0;
+#endif
   }
 
   THREAD_ROUTINE_RETURN SocketServer::ConnectionHandler(void* data)
@@ -121,7 +126,7 @@ error:
     const int MAX_SIZE = 5000;
     char client_message[MAX_SIZE];
     int read_size;
-      std::string request;
+    std::string request;
     connection->finished = false;
     while((read_size = recv(connection->socket , client_message , MAX_SIZE, 0)) > 0) {
       client_message[read_size] = '\0';
@@ -135,7 +140,9 @@ error:
       memset(client_message, 0, MAX_SIZE);
     }
     connection->finished = true;
+#ifndef __INTIME__
     return 0;
+#endif
   }
 
   void SocketServer::CreateSocket() throw (JsonRpcException) {

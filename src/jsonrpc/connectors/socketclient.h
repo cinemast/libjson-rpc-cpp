@@ -32,7 +32,7 @@ namespace jsonrpc
       SocketClient(const std::string& url = "0.0.0.0", const std::string& port = "8080", const int type = SOCK_STREAM) throw (JsonRpcException);
       virtual ~SocketClient();
 
-	  void SendMessage(const std::string& message, std::string& result) throw(JsonRpcException);
+    void SendMessage(const std::string& message, std::string& result) throw(JsonRpcException);
     private:
       int socket_;
       struct addrinfo* server_info_;

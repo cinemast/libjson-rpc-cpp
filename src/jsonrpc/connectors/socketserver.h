@@ -49,6 +49,7 @@ namespace jsonrpc {
       void CreateSocket() throw (JsonRpcException);
       void CloseSocket();
 
+
       static THREAD_ROUTINE_RETURN ConnectionHandler(void* connection);
       static THREAD_ROUTINE_RETURN HandleConnections(void* server);
 
