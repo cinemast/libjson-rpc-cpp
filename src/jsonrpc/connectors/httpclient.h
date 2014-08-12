@@ -13,7 +13,6 @@
 #include "../clientconnector.h"
 #include "../exception.h"
 #include <map>
-#include <curl/curl.h>
 
 namespace jsonrpc
 {
@@ -34,7 +33,6 @@ namespace jsonrpc
         private:
             std::map<std::string,std::string> headers;
             std::string url;
-            CURL* curl;
     };
 
 } /* namespace jsonrpc */

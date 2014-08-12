@@ -63,7 +63,15 @@ namespace jsonrpc
     HttpClient::HttpClient(const std::string& url) throw(JsonRpcException)
         : AbstractClientConnector(), url(url)
     {
-        curl = curl_easy_init();
+    }
+
+    HttpClient::~HttpClient()
+    {
+    }
+
+    void HttpClient::SendMessage(const std::string& message, std::string& result) throw (JsonRpcException)
+    {
+        CURL* curl = curl_easy_init();
         if (!curl)
         {
             throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, ": libcurl initialization error");
@@ -71,18 +79,7 @@ namespace jsonrpc
 
         curl_easy_setopt(curl, CURLOPT_URL, this->url.c_str());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunc);
-    }
 
-    HttpClient::~HttpClient()
-    {
-        if (curl)
-        {
-            curl_easy_cleanup(curl);
-        }
-    }
-
-    void HttpClient::SendMessage(const std::string& message, std::string& result) throw (JsonRpcException)
-    {
         CURLcode res;
 
         struct string s;
@@ -120,12 +117,16 @@ namespace jsonrpc
             }
             throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, str.str());
         }
+
+        if (curl)
+        {
+            curl_easy_cleanup(curl);
+        }
     }
 
     void HttpClient::SetUrl(const std::string& url)
     {
         this->url = url;
-        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     }
 
     void HttpClient::AddHeader(const std::string attr, const std::string val) {
