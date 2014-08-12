@@ -97,7 +97,7 @@ namespace jsonrpc
             else
             {
                 const char *options[] =
-                { "listening_ports", port, "ssl_certificate", "num_threads", threads, this->sslcert.c_str(), NULL };
+                { "listening_ports", port, "ssl_certificate", this->sslcert.c_str(), "num_threads", threads, NULL };
                 this->ctx = mg_start(&callbacks, this, options);
             }
 
