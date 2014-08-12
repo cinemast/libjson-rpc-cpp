@@ -3,6 +3,29 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/test)
 
 if (HTTP_CONNECTOR)
 	set(COMMON_SOURCES server.cpp)
+
+	if (NOT("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" AND ${CMAKE_SYSTEM_NAME} MATCHES "Linux"))
+		include(CheckCXXCompilerFlag)
+		CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+		CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+		if(COMPILER_SUPPORTS_CXX11)
+			ADD_DEFINITIONS(-std=c++11)
+		elseif(COMPILER_SUPPORTS_CXX0X)
+			ADD_DEFINITIONS(-std=c++0x)
+		endif()
+
+		if (COMPILER_SUPPORTS_CXX11 OR COMPILER_SUPPORTS_CXX0X)
+			if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+				ADD_DEFINITIONS(-stdlib=libc++)
+			endif()
+
+			add_executable(concurrency concurrency.cpp ${COMMON_SOURCES})
+			target_link_libraries(concurrency jsonrpc)
+
+			ADD_TEST(concurrency ${TEST_BINARIES}/concurrency)
+		endif()
+	endif()
+
 	add_executable(helloworld helloworld.cpp ${COMMON_SOURCES})
 	target_link_libraries(helloworld jsonrpc)
 
