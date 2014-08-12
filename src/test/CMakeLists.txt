@@ -29,6 +29,12 @@ if (HTTP_CONNECTOR)
 	ADD_TEST(specification ${TEST_BINARIES}/specification)
 endif()
 
+if (SOCKET_CONNECTOR)
+	set(COMMON_SOURCES server.cpp)
+	add_executable(tcpconnector tcpconnector.cpp ${COMMON_SOURCES})
+	target_link_libraries(tcpconnector jsonrpc)
+  ADD_TEST(tcpconnector ${TEST_BINARIES}/tcpconnector)
+endif()
 
 add_executable(parametervalidation parametervalidation.cpp)
 target_link_libraries(parametervalidation jsonrpc)

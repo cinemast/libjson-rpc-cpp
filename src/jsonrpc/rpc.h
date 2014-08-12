@@ -21,6 +21,12 @@
   #include "connectors/httpclient.h"
 #endif
 
+#ifdef SOCKET_CONNECTOR
+  #include "connectors/socketserver.h"
+  #include "connectors/socketclient.h"
+#endif
+
+
 #include "specificationparser.h"
 #include "specificationwriter.h"
 
