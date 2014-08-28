@@ -56,6 +56,7 @@ string ServerStubGenerator::generateBindings()
         {
             tmp = TEMPLATE_SERVER_NOTIFICATIONBINDING;
         }
+        replaceAll(tmp, "<rpcprocedurename>", proc->GetProcedureName());
         replaceAll(tmp, "<procedurename>", normalizeString(proc->GetProcedureName()));
         replaceAll(tmp, "<returntype>", toString(proc->GetReturnType()));
         replaceAll(tmp, "<parameterlist>", generateBindingParameterlist(proc));
@@ -91,7 +92,7 @@ string ServerStubGenerator::generateProcedureDefinitions()
         {
             tmp = TEMPLATE_SERVER_NOTIFICAITONDEFINITION;
         }
-        replaceAll(tmp,"<procedurename>", proc->GetProcedureName());
+        replaceAll(tmp,"<procedurename>", normalizeString(proc->GetProcedureName()));
         replaceAll(tmp,"<parametermapping>", this->generateParameterMapping(proc));
         result << tmp << endl;
     }
@@ -114,7 +115,7 @@ string ServerStubGenerator::generateAbstractDefinitions()
             returntype = toCppType(proc->GetReturnType());
         }
         replaceAll(tmp, "<returntype>", returntype);
-        replaceAll(tmp, "<procedurename>", proc->GetProcedureName());
+        replaceAll(tmp, "<procedurename>", normalizeString(proc->GetProcedureName()));
         replaceAll(tmp, "<parameterlist>", generateParameterDeclarationList(*proc));
         result << tmp;
     }
