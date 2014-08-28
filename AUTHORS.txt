@@ -9,6 +9,7 @@ contributions (chronological order):
 
     Bertrand Cachet <bertrand.cachet@gmail.com>
         adapted build file for opt out of HTTP connectors
+        various bugfixes and support
 
     Marc Trudel <mtrudel@wizcorp.jp>
         extended HTTP client connector
