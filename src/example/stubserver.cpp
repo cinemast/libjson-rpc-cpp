@@ -8,7 +8,7 @@
  ************************************************************************/
 #include <jsonrpc/rpc.h>
 #include <iostream>
-
+#include <jsonrpc/connectors/httpserver.h>
 #include "abstractmystubserver.h"
 
 using namespace jsonrpc;
