@@ -106,18 +106,12 @@ error:
           CloseOldestConnection(clients);
         }
         
-  #ifdef __INTIME__
-    threadCreate(&clients.back()->thread, (ThreadStartRoutine)ConnectionHandler, clients.back(), (DWORD)5*1024);
-  #else
     threadCreate(&clients.back()->thread, (ThreadStartRoutine)ConnectionHandler, clients.back());
-  #endif
       }
     }
     CloseAllConnections(clients);
     mutexDestroy(&lock);
-#ifndef __INTIME__
     return 0;
-#endif
   }
 
   THREAD_ROUTINE_RETURN SocketServer::ConnectionHandler(void* data)
@@ -140,9 +134,7 @@ error:
       memset(client_message, 0, MAX_SIZE);
     }
     connection->finished = true;
-#ifndef __INTIME__
     return 0;
-#endif
   }
 
   void SocketServer::CreateSocket() throw (JsonRpcException) {
