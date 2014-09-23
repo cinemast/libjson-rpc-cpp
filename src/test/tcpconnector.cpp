@@ -6,6 +6,7 @@
  * @author  Bertrand Cachet <bertrand.cachet@gmail.com>
  * @license See attached LICENSE.txt
  ************************************************************************/
+
 #include <jsonrpc/rpc.h>
 
 #include <stdio.h>
@@ -22,11 +23,11 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-#ifdef _WIN32
-   WORD wVersionRequested;
+#if defined(_WIN32) && !defined(__INTIME__)
+    WORD wVersionRequested;
     WSADATA wsaData;
     wVersionRequested = MAKEWORD(2, 2);
-	WSAStartup(wVersionRequested, &wsaData);
+    WSAStartup(wVersionRequested, &wsaData);
 #endif
 
     SocketServer server_connector = SocketServer("8888", SOCK_STREAM, 2);
@@ -35,7 +36,7 @@ int main(int argc, char** argv)
     SocketClient client_connector2 = SocketClient("127.0.0.1", "8888");
     Client client = Client(&client_connector);
     Client client2 = Client(&client_connector2);
-	int status = 0;
+  int status = 0;
 
     cout << SpecificationWriter::toString(server.GetProtocolHanlder()->GetProcedures()) << endl;
 
@@ -63,9 +64,9 @@ int main(int argc, char** argv)
             goto cleanup;
         }
 
+        server.StopListening();
+
         cout << argv[0] << " passed" << endl;
-
-
     } catch(jsonrpc::JsonRpcException e) {
 
         cerr << "Exception occured: " << e.what() << endl;
@@ -73,7 +74,7 @@ int main(int argc, char** argv)
         goto cleanup;
     }
 cleanup:
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(__INTIME__)
   WSACleanup();
 #endif
   return status;
