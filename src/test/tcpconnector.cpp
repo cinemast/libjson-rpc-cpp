@@ -36,7 +36,7 @@ int main(int argc, char** argv)
     SocketClient client_connector2 = SocketClient("127.0.0.1", "8888");
     Client client = Client(&client_connector);
     Client client2 = Client(&client_connector2);
-	int status = 0;
+  int status = 0;
 
     cout << SpecificationWriter::toString(server.GetProtocolHanlder()->GetProcedures()) << endl;
 
@@ -64,9 +64,9 @@ int main(int argc, char** argv)
             goto cleanup;
         }
 
+        server.StopListening();
+
         cout << argv[0] << " passed" << endl;
-
-
     } catch(jsonrpc::JsonRpcException e) {
 
         cerr << "Exception occured: " << e.what() << endl;

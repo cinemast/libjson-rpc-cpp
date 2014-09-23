@@ -13,7 +13,12 @@
 
   int threadJoin(ThreadHandle thread)
   {
-    return WaitForSingleObject(thread, INFINITE) != WAIT_FAILED ? 0 : -1;
+  if (WaitForSingleObject(thread, INFINITE) != WAIT_FAILED) {
+    CloseHandle(thread);
+    return 0;
+  }
+  else
+    return -1;
   }
 
   int mutexCreate(MutexHandle* mutex)

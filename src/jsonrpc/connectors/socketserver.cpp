@@ -9,26 +9,27 @@ namespace jsonrpc {
       shutdown(connection->socket, BOTH_DIRECTION);
       closesocket(connection->socket);
       threadJoin(connection->thread);
-      delete connection;
     }
 
     void CloseAllConnections(std::vector<SocketServer::Connection*>& clients) {
-        for(std::vector<SocketServer::Connection*>::iterator it = clients.begin(); it != clients.end(); ++it ) {
-          CloseConnection(*it);
-        }
-        clients.clear();
+      for(std::vector<SocketServer::Connection*>::iterator it = clients.begin(); it != clients.end(); ++it ) {
+        CloseConnection(*it);
+        delete *it;
+      }
+      clients.clear();
     }
 
     void CloseFinishedConnections(std::vector<SocketServer::Connection*>& clients) {
-        std::vector<SocketServer::Connection*>::iterator it = clients.begin();
-        while (it != clients.end()) {
-            if ((*it)->finished) {
-                CloseConnection(*it);
-                it = clients.erase(it);
-            }
-            else
-                ++it;
-        }
+      std::vector<SocketServer::Connection*>::iterator it = clients.begin();
+      while (it != clients.end()) {
+          if ((*it)->finished) {
+            CloseConnection(*it);
+            delete *it;
+            it = clients.erase(it);
+          }
+          else
+            ++it;
+      }
     }
 
     void CloseOldestConnection(std::vector<SocketServer::Connection*>& clients) {
@@ -49,7 +50,7 @@ namespace jsonrpc {
     hint.ai_socktype = type;
     hint.ai_flags = AI_PASSIVE;
     int status = getaddrinfo(NULL, port.c_str(), &hint, &host_info_);
-  CHECK(status);
+    CHECK(status);
     return;
 error:
     throw JsonRpcException(Errors::ERROR_SERVER_CONNECTOR);
@@ -105,8 +106,7 @@ error:
         if (clients.size() > server->poolSize_) {
           CloseOldestConnection(clients);
         }
-        
-    threadCreate(&clients.back()->thread, (ThreadStartRoutine)ConnectionHandler, clients.back());
+        threadCreate(&clients.back()->thread, (ThreadStartRoutine)ConnectionHandler, clients.back());
       }
     }
     CloseAllConnections(clients);
