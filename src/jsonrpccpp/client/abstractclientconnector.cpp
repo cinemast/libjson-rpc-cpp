@@ -12,17 +12,16 @@
 
 using namespace std;
 
-namespace jsonrpc
+using namespace jsonrpc;
+
+AbstractClientConnector::~AbstractClientConnector()
 {
-    AbstractClientConnector::~AbstractClientConnector()
-    {
 
-    }
+}
 
-    string AbstractClientConnector::SendMessage(const string &message) throw (JsonRpcException)
-    {
-        string result;
-        this->SendMessage(message, result);
-        return result;
-    }
+string AbstractClientConnector::SendRPCMessage(const string &message) throw (JsonRpcException)
+{
+    string result;
+    this->SendRPCMessage(message, result);
+    return result;
 }

@@ -7,8 +7,8 @@
  * @license See attached LICENSE.txt
  ************************************************************************/
 
-#ifndef ERRORS_H_
-#define ERRORS_H_
+#ifndef JSONRPC_CPP_ERRORS_H_
+#define JSONRPC_CPP_ERRORS_H_
 
 #include <map>
 #include <string>
@@ -74,4 +74,4 @@ namespace jsonrpc
             static std::map<int, std::string> possibleErrors;
     };
 } /* namespace jsonrpc */
-#endif /* ERRORS_H_ */
+#endif /* JSONRPC_CPP_ERRORS_H_ */

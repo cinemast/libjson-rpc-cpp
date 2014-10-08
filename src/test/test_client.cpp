@@ -27,18 +27,18 @@ BOOST_AUTO_TEST_CASE(test_client_httpclient_error)
 {
     HttpClient c("absdfasöj");
     string result;
-    BOOST_CHECK_EXCEPTION(c.SendMessage("foo", result), JsonRpcException, check_exception1);
+    BOOST_CHECK_EXCEPTION(c.SendRPCMessage("foo", result), JsonRpcException, check_exception1);
 }
 
 BOOST_AUTO_TEST_CASE(test_client_httpclient_success)
 {
     HttpClient c("http://www.google.at");
     string result;
-    c.SendMessage("foo", result);
+    c.SendRPCMessage("foo", result);
     BOOST_CHECK_EQUAL(result.substr(0, 15), "<!DOCTYPE html>");
 
     c.SetUrl("http://docs.google.com");
-    c.SendMessage("foo", result);
+    c.SendRPCMessage("foo", result);
     BOOST_CHECK_EQUAL(result.substr(0, 15), "<!DOCTYPE html>");
 }
 

@@ -7,22 +7,21 @@
  * @license See attached LICENSE.txt
  ************************************************************************/
 
-#ifndef HTTPCLIENT_H_
-#define HTTPCLIENT_H_
+#ifndef JSONRPC_CPP_HTTPCLIENT_H_
+#define JSONRPC_CPP_HTTPCLIENT_H_
 
 #include "../abstractclientconnector.h"
-#include "../../common/exception.h"
+#include <jsonrpccpp/common/exception.h>
 #include <map>
 
 namespace jsonrpc
 {
-
     class HttpClient : public AbstractClientConnector
     {
         public:
             HttpClient(const std::string& url) throw (JsonRpcException);
 
-            virtual void SendMessage(const std::string& message, std::string& result) throw (JsonRpcException);
+            virtual void SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException);
 
             void SetUrl(const std::string& url);
 
@@ -35,4 +34,4 @@ namespace jsonrpc
     };
 
 } /* namespace jsonrpc */
-#endif /* HTTPCLIENT_H_ */
+#endif /* JSONRPC_CPP_HTTPCLIENT_H_ */

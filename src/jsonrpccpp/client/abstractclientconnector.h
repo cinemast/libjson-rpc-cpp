@@ -7,21 +7,11 @@
  * @license See attached LICENSE.txt
  ************************************************************************/
 
-#ifndef CLIENTCONNECTOR_H_
-#define CLIENTCONNECTOR_H_
+#ifndef JSONRPC_CPP_CLIENTCONNECTOR_H_
+#define JSONRPC_CPP_CLIENTCONNECTOR_H_
 
 #include <string>
-#include "../common/exception.h"
-
-
-#ifdef _WINUSER_
-  // WinUser.h has a preprocessor macro to replace SendMessage with SendMessageW or SendMessageA
-  // We need to undef this macro to be sure that our AbstractClientConnector::SendMessage methods are not
-  // modified by this preprocessor macro
-  #ifdef SendMessage
-  #undef SendMessage
-  #endif
-#endif
+#include <jsonrpccpp/common/exception.h>
 
 namespace jsonrpc
 {
@@ -34,9 +24,9 @@ namespace jsonrpc
              * This method should take the message and send it via the concrete connector.
              * The result of the request must be returned as string.
              */
-            virtual std::string SendMessage(const std::string& message) throw(JsonRpcException);
+            virtual std::string SendRPCMessage(const std::string& message) throw(JsonRpcException);
 
-            virtual void SendMessage(const std::string& message, std::string& result) throw(JsonRpcException) = 0;
+            virtual void SendRPCMessage(const std::string& message, std::string& result) throw(JsonRpcException) = 0;
     };
 } /* namespace jsonrpc */
-#endif /* CLIENTCONNECTOR_H_ */
+#endif /* JSONRPC_CPP_CLIENTCONNECTOR_H_ */

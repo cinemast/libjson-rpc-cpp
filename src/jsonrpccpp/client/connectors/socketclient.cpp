@@ -4,14 +4,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+using namespace jsonrpc;
 
-namespace jsonrpc {
-
-  SocketClient::SocketClient(const std::string& url, const std::string& port, const int type) throw (JsonRpcException) :
-      AbstractClientConnector(),
-      socket_(-1),
-      server_info_(NULL)
-  {
+SocketClient::SocketClient(const std::string& url, const std::string& port, const int type) throw (JsonRpcException) :
+    AbstractClientConnector(),
+    socket_(-1),
+    server_info_(NULL)
+{
     struct addrinfo hints;
     memset(&hints, 0, sizeof(struct addrinfo));
     hints.ai_family = AF_UNSPEC;
@@ -21,32 +20,32 @@ namespace jsonrpc {
     return;
 error:
     if (server_info_ != NULL)
-      freeaddrinfo(server_info_);
+        freeaddrinfo(server_info_);
     server_info_ = NULL;
     throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR);
-  }
+}
 
-  SocketClient::~SocketClient()
-  {
+SocketClient::~SocketClient()
+{
     shutdown(socket_, BOTH_DIRECTION);
     closesocket(socket_);
     freeaddrinfo(server_info_);
-  }
+}
 
-  void SocketClient::SendMessage(const std::string& message, std::string& result) throw (JsonRpcException) {
+void SocketClient::SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException) {
     int read_size;
     const int MAX_SIZE = 5000;
     char server_message[MAX_SIZE];
     struct addrinfo *ptr;
     if (socket_ == -1) {
-      for (ptr = server_info_; ptr != NULL; ptr = ptr->ai_next) {
-        socket_ = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
-        CHECK_SOCKET(socket_);
-        if (connect(socket_, ptr->ai_addr, (int)ptr->ai_addrlen) == 0) {
-          break;
+        for (ptr = server_info_; ptr != NULL; ptr = ptr->ai_next) {
+            socket_ = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
+            CHECK_SOCKET(socket_);
+            if (connect(socket_, ptr->ai_addr, (int)ptr->ai_addrlen) == 0) {
+                break;
+            }
+            closesocket(socket_);
         }
-        closesocket(socket_);
-      }
     }
     memset(server_message, 0, MAX_SIZE);
     CHECK_STATUS(send(socket_, message.c_str(), message.length(), 0));
@@ -56,10 +55,10 @@ error:
     return;
 error:
     if (socket_ != -1) {
-      shutdown(socket_, BOTH_DIRECTION);
-      closesocket(socket_);
+        shutdown(socket_, BOTH_DIRECTION);
+        closesocket(socket_);
     }
     socket_ = -1;
     throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR);
-  }
 }
+

@@ -7,8 +7,8 @@
  * @license See attached LICENSE.txt
  ************************************************************************/
 
-#ifndef HTTPSERVERCONNECTOR_H_
-#define HTTPSERVERCONNECTOR_H_
+#ifndef JSONRPC_CPP_HTTPSERVERCONNECTOR_H_
+#define JSONRPC_CPP_HTTPSERVERCONNECTOR_H_
 
 #include "mongoose.h"
 #include "../abstractserverconnector.h"
@@ -52,4 +52,4 @@ namespace jsonrpc
     };
 
 } /* namespace jsonrpc */
-#endif /* HTTPSERVERCONNECTOR_H_ */
+#endif /* JSONRPC_CPP_HTTPSERVERCONNECTOR_H_ */

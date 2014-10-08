@@ -19,7 +19,7 @@ void Client::CallMethod(const std::string &name, const Json::Value &paramter, Js
 {
     std::string request, response;
     protocol.BuildRequest(name, paramter, request, false);
-    connector.SendMessage(request, response);
+    connector.SendRPCMessage(request, response);
     protocol.HandleResponse(response, result);
 }
 
@@ -27,7 +27,7 @@ void Client::CallProcedures(const BatchCall &calls, batchProcedureResponse &resu
 {
     std::string request, response;
     request = calls.toString();
-    connector.SendMessage(request, response);
+    connector.SendRPCMessage(request, response);
     Json::Reader reader;
     Json::Value tmpresult;
 
@@ -63,5 +63,5 @@ void Client::CallNotification(const std::string& name, const Json::Value& parame
 {
     std::string request, response;
     protocol.BuildRequest(name, parameter, request, true);
-    connector.SendMessage(request, response);
+    connector.SendRPCMessage(request, response);
 }

@@ -7,8 +7,8 @@
  * @license See attached LICENSE.txt
  ************************************************************************/
 
-#ifndef EXCEPTION_H_
-#define EXCEPTION_H_
+#ifndef JSONRPC_CPP_EXCEPTION_H_
+#define JSONRPC_CPP_EXCEPTION_H_
 
 #include <string>
 #include <sstream>
@@ -18,7 +18,6 @@
 
 namespace jsonrpc
 {
-    
     class JsonRpcException: public std::exception
     {
         public:
@@ -45,4 +44,4 @@ namespace jsonrpc
     };
 
 } /* namespace jsonrpc */
-#endif /* EXCEPTION_H_ */
+#endif /* JSONRPC_CPP_EXCEPTION_H_ */

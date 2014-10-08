@@ -9,15 +9,14 @@
 #ifndef JSONRPC_SOCKET_SERVER_H_
 #define JSONRPC_SOCKET_SERVER_H_
 
-#include "../../common/helper/threads.h"
-#include "../../common/helper/socket.h"
+#include <jsonrpccpp/common/helper/threads.h>
+#include <jsonrpccpp/common/helper/socket.h>
+#include <jsonrpccpp/common/exception.h>
 
 #include <string>
 #include <exception>
 
 #include "../abstractserverconnector.h"
-#include "../../common/exception.h"
-
 
 namespace jsonrpc {
 
