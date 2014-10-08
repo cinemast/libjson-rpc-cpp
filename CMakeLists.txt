@@ -18,11 +18,23 @@ SET(MAJOR_VERSION 0)
 SET(MINOR_VERSION 3)
 SET(PATCH_VERSION 0)
 
+#possible modules that can be enabled/disabled
 SET(HTTP_SERVER_MONGOOSE YES CACHE BOOL "Include HTTP server using mongoose")
 SET(HTTP_CLIENT_CURL YES CACHE BOOL "Include HTTP client support using curl")
 SET(SOCKET_SERVER NO CACHE BOOL "Include Win32 Socket support")
 SET(SOCKET_CLIENT NO CACHE BOOL "Include Win32 Socket support")
 
+SET(COMPILE_TESTS YES CACHE BOOL "Compile test framework")
+
+#the core framework
 add_subdirectory(src/jsonrpccpp)
 
-
+find_package(Boost COMPONENTS unit_test_framework)
+IF(Boost_FOUND)
+    IF (COMPILE_TESTS)
+        message(STATUS "Found Bosst Unit Suite -> Enabling test cases")
+        ENABLE_TESTING()
+        set(CTEST_OUTPUT_ON_FAILURE TRUE)
+        add_subdirectory(src/test)
+    ENDIF()
+ENDIF()

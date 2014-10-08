@@ -7,8 +7,8 @@
  * @license See attached LICENSE.txt
  ************************************************************************/
 
-#ifndef SERVERCONNECTOR_H_
-#define SERVERCONNECTOR_H_
+#ifndef JSONRPC_CPP_SERVERCONNECTOR_H_
+#define JSONRPC_CPP_SERVERCONNECTOR_H_
 
 #include <string>
 #include "rpcprotocolserver.h"
@@ -20,7 +20,6 @@ namespace jsonrpc
     {
         public:
             AbstractServerConnector();
-            virtual ~AbstractServerConnector();
 
             /**
              * This method should signal the Connector to start waiting for requests, in any way that is appropriate for the derived connector class.
@@ -39,8 +38,7 @@ namespace jsonrpc
              * @param addInfo - additional Info, that the Connector might need for responding.
              * @return returns true on success, false otherwise
              */
-            bool virtual SendResponse(const std::string& response,
-                    void* addInfo = NULL) = 0;
+            bool virtual SendResponse(const std::string& response, void* addInfo = NULL) = 0;
 
             /**
              * This method must be called, when a request is recognised. It will do everything else for you (including sending the response).
@@ -49,13 +47,11 @@ namespace jsonrpc
              */
             bool OnRequest(const std::string& request, void* addInfo = NULL);
 
-            std::string GetSpecification();
-
             void SetHandler(RpcProtocolServer& handler);
 
         private:
-            RpcProtocolServer* handler;
+            RpcProtocolServer *handler;
     };
 
 } /* namespace jsonrpc */
-#endif /* SERVERCONNECTOR_H_ */
+#endif /* JSONRPC_CPP_ERVERCONNECTOR_H_ */

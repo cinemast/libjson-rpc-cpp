@@ -1,53 +1,39 @@
 /*************************************************************************
  * libjson-rpc-cpp
  *************************************************************************
- * @file    abstractserverconnector.cpp
+ * @file    serverconnector.cpp
  * @date    31.12.2012
  * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>
  * @license See attached LICENSE.txt
  ************************************************************************/
 
 #include "abstractserverconnector.h"
-#include "../common/specificationwriter.h"
+#include <jsonrpccpp/common/specificationwriter.h>
 #include <cstdlib>
 
 using namespace std;
+using namespace jsonrpc;
 
-namespace jsonrpc
+AbstractServerConnector::AbstractServerConnector()
 {
-    
-    AbstractServerConnector::AbstractServerConnector()
-    {
-        this->handler = NULL;
-    }
-    
-    AbstractServerConnector::~AbstractServerConnector()
-    {
-    }
-    
-    bool AbstractServerConnector::OnRequest(const std::string& request, void* addInfo)
-    {
-        string response;
-        if (this->handler != NULL)
-        {
-            this->handler->HandleRequest(request, response);
-            this->SendResponse(response, addInfo);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
+    this->handler = NULL;
+}
 
-    string AbstractServerConnector::GetSpecification()
+bool AbstractServerConnector::OnRequest(const std::string& request, void* addInfo)
+{
+    string response;
+    if (this->handler != NULL)
     {
-        return SpecificationWriter::toString(this->handler->GetProcedures());
+        this->handler->HandleRequest(request, response);
+        this->SendResponse(response, addInfo);
+        return true;
     }
-
-    void AbstractServerConnector::SetHandler(RpcProtocolServer& handler)
+    else
     {
-        this->handler = &handler;
+        return false;
     }
-
-} /* namespace jsonrpc */
+}
+void AbstractServerConnector::SetHandler(RpcProtocolServer& handler)
+{
+    this->handler = &handler;
+}

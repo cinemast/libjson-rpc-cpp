@@ -10,7 +10,6 @@
 #ifndef JSONRPCCPP_CLIENT_H_
 #define JSONRPCCPP_CLIENT_H_
 
-#include <jsonrpc/client/client.h>
-#include <jsonrpc/client/batchcall.h>
+#include <jsonrpccpp/client/client.h>
 
 #endif /* JSONRPCCPP_CLIENT_H_ */

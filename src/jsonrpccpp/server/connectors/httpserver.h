@@ -11,7 +11,7 @@
 #define HTTPSERVERCONNECTOR_H_
 
 #include "mongoose.h"
-#include "../serverconnector.h"
+#include "../abstractserverconnector.h"
 
 namespace jsonrpc
 {
@@ -32,7 +32,6 @@ namespace jsonrpc
              * @param sslcert - defines the path to a SSL certificate, if this path is != "", then SSL/HTTPS is used with the given certificate.
              */
             HttpServer(int port, bool enableSpecification = true, const std::string& sslcert = "", int threads = 50);
-            virtual ~HttpServer();
 
             virtual bool StartListening();
             virtual bool StopListening();

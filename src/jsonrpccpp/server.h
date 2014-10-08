@@ -10,9 +10,7 @@
 #ifndef JSONRPCCPP_SERVER_H_
 #define JSONRPCCPP_SERVER_H_
 
-#include <jsonrpc/server/abstractserver.h>
-#include <jsonrpc/server/abstractrequesthandler.h>
-#include <jsonrpc/server/httpserver.h>
-#include <jsonrpc/server/rpcprotocolserver.h>
+#include <jsonrpccpp/server/abstractserver.h>
+
 
 #endif /* JSONRPCCPP_SERVER_H_ */

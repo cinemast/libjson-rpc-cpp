@@ -7,13 +7,12 @@
  * @license See attached LICENSE.txt
  ************************************************************************/
 
-#ifndef SPECIFICATION_H
-#define SPECIFICATION_H
+#ifndef JSONRPC_CPP_SPECIFICATION_H
+#define JSONRPC_CPP_SPECIFICATION_H
 
-#define KEY_METHOD_NAME "method"
-#define KEY_NOTIFICATION_NAME "notification"
-#define KEY_PROCEDURE_PARAMETERS "params"
-#define KEY_RETURN_TYPE "returns"
+#define KEY_SPEC_PROCEDURE_NAME          "name"
+#define KEY_SPEC_PROCEDURE_PARAMETERS    "params"
+#define KEY_SPEC_RETURN_TYPE             "returns"
 
 namespace jsonrpc
 {
@@ -41,4 +40,4 @@ namespace jsonrpc
     } ;
 }
 
-#endif // SPECIFICATION_H
+#endif // JSONRPC_CPP_SPECIFICATION_H

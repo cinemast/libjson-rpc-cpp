@@ -25,11 +25,7 @@ namespace jsonrpc
 
         if (strcmp(request_info->request_method, "GET") == 0)
         {
-            if(_this->showSpec)
-            {
-                _this->SendResponse(_this->GetSpecification(), conn);
-                return 1;
-            }
+
             //Mark the request as unprocessed.
             return 0;
         }
@@ -69,11 +65,6 @@ namespace jsonrpc
         sslcert(sslcert),
         threads(threads)
     {
-    }
-
-    HttpServer::~HttpServer()
-    {
-        this->StopListening();
     }
 
     bool HttpServer::StartListening()

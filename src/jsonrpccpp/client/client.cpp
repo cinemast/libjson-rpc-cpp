@@ -8,38 +8,60 @@
  ************************************************************************/
 
 #include "client.h"
-#include "rpcprotocolclient.h"
-#include "../common/exception.h"
+using namespace jsonrpc;
 
-
-namespace jsonrpc
+Client::Client(AbstractClientConnector &connector)
+    : connector(connector)
 {
-    Client::Client(AbstractClientConnector* connector)
-            : connector(connector)
+}
+
+void Client::CallMethod(const std::string &name, const Json::Value &paramter, Json::Value& result) throw(JsonRpcException)
+{
+    std::string request, response;
+    protocol.BuildRequest(name, paramter, request, false);
+    connector.SendMessage(request, response);
+    protocol.HandleResponse(response, result);
+}
+
+void Client::CallProcedures(const BatchCall &calls, batchProcedureResponse &result) throw(JsonRpcException)
+{
+    std::string request, response;
+    request = calls.toString();
+    connector.SendMessage(request, response);
+    Json::Reader reader;
+    Json::Value tmpresult;
+
+    if (!reader.parse(response, tmpresult) || !tmpresult.isArray())
     {
+        throw JsonRpcException(Errors::ERROR_CLIENT_INVALID_RESPONSE, "Array expected.");
     }
 
-    void Client::CallMethod(const std::string &name, const Json::Value &paramter, Json::Value& result) throw(JsonRpcException)
+    for (unsigned int i=0; i < tmpresult.size(); i++)
     {
-        std::string request, response;
-        protocol.BuildRequest(name, paramter, request, false);
-        connector->SendMessage(request, response);
-        protocol.HandleResponse(response, result);
+        Json::Value singleResult;
+        int id = this->protocol.HandleResponse(tmpresult[i], singleResult);
+        result[id] = singleResult;
     }
+}
 
-    Json::Value Client::CallMethod(const std::string& name,
-                                   const Json::Value& parameter) throw(JsonRpcException)
-    {
-        Json::Value result;
-        this->CallMethod(name, parameter, result);
-        return result;
-    }
+batchProcedureResponse Client::CallProcedures(const BatchCall &calls) throw(JsonRpcException)
+{
+    batchProcedureResponse result;
+    this->CallProcedures(calls, result);
+    return result;
+}
 
-    void Client::CallNotification(const std::string& name, const Json::Value& parameter) throw(JsonRpcException)
-    {
-        std::string request, response;
-        protocol.BuildRequest(name, parameter, request, true);
-        connector->SendMessage(request, response);
-    }
+Json::Value Client::CallMethod(const std::string& name,
+                               const Json::Value& parameter) throw(JsonRpcException)
+{
+    Json::Value result;
+    this->CallMethod(name, parameter, result);
+    return result;
+}
 
-} /* namespace jsonrpc */
+void Client::CallNotification(const std::string& name, const Json::Value& parameter) throw(JsonRpcException)
+{
+    std::string request, response;
+    protocol.BuildRequest(name, parameter, request, true);
+    connector.SendMessage(request, response);
+}

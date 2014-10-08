@@ -14,8 +14,8 @@ namespace jsonrpc
 {
     class AbstractRequestHandler {
         public:
-            virtual void handleMethodCall(Procedure* proc, const Json::Value& input, Json::Value& output) = 0;
-            virtual void handleNotificationCall(Procedure* proc, const Json::Value& input) = 0;
+            virtual void handleMethodCall(Procedure& proc, const Json::Value& input, Json::Value& output) = 0;
+            virtual void handleNotificationCall(Procedure& proc, const Json::Value& input) = 0;
     };
 }
 

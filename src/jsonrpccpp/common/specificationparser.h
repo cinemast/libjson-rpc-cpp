@@ -7,27 +7,30 @@
  * @license See attached LICENSE.txt
  ************************************************************************/
 
-#ifndef SPECIFICATIONPARSER_H
-#define SPECIFICATIONPARSER_H
+#ifndef JSONRPC_CPP_SPECIFICATIONPARSER_H
+#define JSONRPC_CPP_SPECIFICATIONPARSER_H
 
 #include "procedure.h"
 #include "exception.h"
 
 namespace jsonrpc {
 
-    typedef std::map<std::string, Procedure*> procedurelist_t;
-
     class SpecificationParser
     {
         public:
-            static procedurelist_t* GetProceduresFromFile(const std::string& filename) throw (JsonRpcException);
-            static procedurelist_t* GetProceduresFromString(const std::string& spec) throw (JsonRpcException);
-
+            static std::vector<Procedure> GetProceduresFromFile(const std::string& filename)    throw (JsonRpcException);
+            static std::vector<Procedure> GetProceduresFromString(const std::string& spec)      throw (JsonRpcException);
 
         private:
-            static Procedure* GetProcedure(Json::Value& val);
-            static void GetFileContent(const std::string& filename, std::string& target);
-            static jsontype_t toJsonType(Json::Value& val);
+            static void         GetProcedure    (Json::Value& val, Procedure &target);
+            static void         GetMethod       (Json::Value& val, Procedure &target);
+            static void         GetNotification (Json::Value& val, Procedure &target);
+            static void         GetFileContent  (const std::string& filename, std::string& target);
+            static jsontype_t   toJsonType      (Json::Value& val);
+
+            static void         GetPositionalParameters (Json::Value &val, Procedure &target);
+            static void         GetNamedParameters      (Json::Value &val, Procedure &target);
+
     };
 }
-#endif // SPECIFICATIONPARSER_H
+#endif // JSONRPC_CPP_SPECIFICATIONPARSER_H

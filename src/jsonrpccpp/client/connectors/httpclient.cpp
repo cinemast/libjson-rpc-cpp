@@ -65,10 +65,6 @@ namespace jsonrpc
     {
     }
 
-    HttpClient::~HttpClient()
-    {
-    }
-
     void HttpClient::SendMessage(const std::string& message, std::string& result) throw (JsonRpcException)
     {
         CURL* curl = curl_easy_init();

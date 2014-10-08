@@ -7,33 +7,32 @@
  * @license See attached LICENSE.txt
  ************************************************************************/
 
-#ifndef REQUESTHANDLER_H_
-#define REQUESTHANDLER_H_
+#ifndef JSONRPC_CPP_RPCPROTOCOLSERVER_H_
+#define JSONRPC_CPP_RPCPROTOCOLSERVER_H_
 
 #include <string>
 #include <vector>
 #include <map>
 
-#include "../common/specificationparser.h"
+#include <jsonrpccpp/common/specificationparser.h>
 #include "abstractrequesthandler.h"
 
-#define KEY_REQUEST_METHODNAME "method"
-#define KEY_REQUEST_VERSION "jsonrpc"
-#define KEY_REQUEST_ID "id"
-#define KEY_REQUEST_PARAMETERS "params"
-#define KEY_RESPONSE_ERROR "error"
-#define KEY_RESPONSE_RESULT "result"
-#define KEY_AUTHENTICATION "auth"
-
-#define JSON_RPC_VERSION "2.0"
+#define KEY_REQUEST_METHODNAME  "method"
+#define KEY_REQUEST_VERSION     "jsonrpc"
+#define KEY_REQUEST_ID          "id"
+#define KEY_REQUEST_PARAMETERS  "params"
+#define KEY_RESPONSE_ERROR      "error"
+#define KEY_RESPONSE_RESULT     "result"
+#define KEY_AUTHENTICATION      "auth"
+#define JSON_RPC_VERSION        "2.0"
 
 namespace jsonrpc
 {
     class RpcProtocolServer
     {
         public:
-            RpcProtocolServer(AbstractRequestHandler* server, procedurelist_t* procedures);
-            RpcProtocolServer(AbstractRequestHandler* server);
+            RpcProtocolServer(AbstractRequestHandler &requestHandler, std::vector<Procedure> &procedures);
+            RpcProtocolServer(AbstractRequestHandler &requestHandler);
 
             virtual ~RpcProtocolServer();
 
@@ -45,13 +44,17 @@ namespace jsonrpc
             void HandleRequest(const std::string& request, std::string& retValue);
 
             /**
-             * @brief addMethod adds a new method to the RpcProtocolServer. The added Procedure object is
-             * deleted automatically by this class.
+             * @brief addMethod adds a new method to the RpcProtocolServer. The added Procedure object is copied internally.
              * @param procedure
+             */
+            void AddProcedure(Procedure& procedure);
+
+            /**
+             * @brief AddProcedure
+             * @param procedure the pointer provided as parameter here will be deleted by the RpcProtocolServer destructor.
              */
             void AddProcedure(Procedure* procedure);
 
-            procedurelist_t& GetProcedures();
 
         private:
 
@@ -73,13 +76,10 @@ namespace jsonrpc
             /**
              * This map holds all procedures. The string holds the name of each procedure.
              */
-            procedurelist_t* procedures;
-            /**
-             * this objects decides whether a request is allowed to be processed or not.
-             */
-            AbstractRequestHandler* server;
+            std::map<std::string, Procedure*> procedures;
+            AbstractRequestHandler &requestHandler;
 
     };
 
 } /* namespace jsonrpc */
-#endif /* REQUESTHANDLER_H_ */
+#endif /* JSONRPC_CPP_RPCPROTOCOLSERVER_H_ */

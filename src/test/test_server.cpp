@@ -1,14 +1,11 @@
 /*************************************************************************
  * libjson-rpc-cpp
  *************************************************************************
- * @file    server.cpp
- * @date    30.12.2012
+ * @file    test_server.cpp
+ * @date    28.09.2013
  * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>
  * @license See attached LICENSE.txt
  ************************************************************************/
 
-#include "server.h"
-#include "../common/exception.h"
-#include <fstream>
-
-using namespace std;
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MODULE
