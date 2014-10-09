@@ -22,6 +22,8 @@
 using namespace jsonrpc;
 using namespace std;
 
+BOOST_AUTO_TEST_SUITE(integration)
+
 BOOST_AUTO_TEST_CASE(test_helloworld)
 {
     HttpServer sconn(8383);
@@ -139,3 +141,4 @@ BOOST_AUTO_TEST_CASE(test_jsonrpcprotocol)
     BOOST_CHECK_THROW(client.CallMethod("incrementCounter", v), JsonRpcException);
 }
 
+BOOST_AUTO_TEST_SUITE_END()
