@@ -7,5 +7,11 @@
  * @license See attached LICENSE.txt
  ************************************************************************/
 
+#include <boost/test/unit_test.hpp>
+
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE
+
+BOOST_AUTO_TEST_SUITE(server)
+
+BOOST_AUTO_TEST_SUITE_END()
