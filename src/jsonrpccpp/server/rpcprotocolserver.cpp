@@ -83,7 +83,7 @@ void RpcProtocolServer::HandleBatchRequest  (Json::Value &req, Json::Value& resp
     for (unsigned int i = 0; i < req.size(); i++)
     {
         Json::Value result;
-        this->HandleSingleRequest(req[i], result[i]);
+        this->HandleSingleRequest(req[i], result);
         response.append(result);
     }
 }

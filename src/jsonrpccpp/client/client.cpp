@@ -38,9 +38,13 @@ void Client::CallProcedures(const BatchCall &calls, batchProcedureResponse &resu
 
     for (unsigned int i=0; i < tmpresult.size(); i++)
     {
-        Json::Value singleResult;
-        int id = this->protocol.HandleResponse(tmpresult[i], singleResult);
-        result[id] = singleResult;
+        if (tmpresult[i].isObject()) {
+            Json::Value singleResult;
+            int id = this->protocol.HandleResponse(tmpresult[i], singleResult);
+            result[id] = singleResult;
+        }
+        else
+            throw JsonRpcException(Errors::ERROR_CLIENT_INVALID_RESPONSE, "Object in Array expected.");
     }
 }
 
