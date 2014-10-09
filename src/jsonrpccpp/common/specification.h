@@ -11,6 +11,8 @@
 #define JSONRPC_CPP_SPECIFICATION_H
 
 #define KEY_SPEC_PROCEDURE_NAME          "name"
+#define KEY_SPEC_PROCEDURE_METHOD        "method"       //legacy format -> use name now
+#define KEY_SPEC_PROCEDURE_NOTIFICATION  "notification" //legacy format -> use name now
 #define KEY_SPEC_PROCEDURE_PARAMETERS    "params"
 #define KEY_SPEC_RETURN_TYPE             "returns"
 

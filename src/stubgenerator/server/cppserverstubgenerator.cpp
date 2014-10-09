@@ -17,8 +17,8 @@
 #define TEMPLATE_CPPSERVER_METHODBINDING       "this->bindAndAddMethod(new jsonrpc::Procedure(\"<procedurename>\", <paramtype>, <returntype>, <parameterlist> NULL), &<stubname>::<procedurename>I);"
 #define TEMPLATE_CPPSERVER_NOTIFICATIONBINDING "this->bindAndAddNotification(new jsonrpc::Procedure(\"<procedurename>\", <paramtype>, <parameterlist> NULL), &<stubname>::<procedurename>I);"
 
-#define TEMPLATE_CPPSERVER_GUARD1 "#ifndef _<STUBNAME>_H_"
-#define TEMPLATE_CPPSERVER_GUARD2 "#define _<STUBNAME>_H_"
+#define TEMPLATE_CPPSERVER_GUARD1 "#ifndef JSONRPC_CPP_STUB_<STUBNAME>_H_"
+#define TEMPLATE_CPPSERVER_GUARD2 "#define JSONRPC_CPP_STUB_<STUBNAME>_H_"
 
 #define TEMPLATE_CPPSERVER_SIGCLASS "class <stubname> : public jsonrpc::AbstractServer<<stubname>>"
 #define TEMPLATE_CPPSERVER_SIGCONSTRUCTOR "<stubname>(jsonrpc::AbstractServerConnector &conn) : jsonrpc::AbstractServer<<stubname>>(conn)"
@@ -53,7 +53,7 @@ void CPPServerStubGenerator::generateStub()
     cg.writeLine(replaceAll(TEMPLATE_CPPSERVER_GUARD2, "<STUBNAME>", stub_upper));
     cg.writeNewLine();
 
-    cg.writeLine("#include <jsonrpc/server.h>");
+    cg.writeLine("#include <jsonrpccpp/server.h>");
     cg.writeNewLine();
 
     cg.writeLine(replaceAll(TEMPLATE_CPPSERVER_SIGCLASS, "<stubname>", this->stubname));

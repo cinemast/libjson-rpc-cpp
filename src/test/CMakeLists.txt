@@ -1,6 +1,5 @@
 
 message(STATUS "Found Bosst Unit Suite -> Enabling test cases")
-ENABLE_TESTING()
 set(CTEST_OUTPUT_ON_FAILURE TRUE)
 
 file(GLOB_RECURSE test_source *.cpp)

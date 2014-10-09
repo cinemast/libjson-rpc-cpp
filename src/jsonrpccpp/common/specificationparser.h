@@ -30,6 +30,7 @@ namespace jsonrpc {
 
             static void         GetPositionalParameters (Json::Value &val, Procedure &target);
             static void         GetNamedParameters      (Json::Value &val, Procedure &target);
+            static std::string  GetProcedureName        (Json::Value &signature);
 
     };
 }

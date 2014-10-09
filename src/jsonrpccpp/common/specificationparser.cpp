@@ -43,12 +43,13 @@ void                SpecificationParser::GetProcedure           (Json::Value &si
 {
     if (signature.isMember(KEY_SPEC_PROCEDURE_NAME) && signature.isMember(KEY_SPEC_PROCEDURE_PARAMETERS))
     {
-        if (signature[KEY_SPEC_PROCEDURE_NAME].isString() &&
+        if (GetProcedureName(signature) != "" &&
                 (signature[KEY_SPEC_PROCEDURE_PARAMETERS].isObject() ||
                  signature[KEY_SPEC_PROCEDURE_PARAMETERS].isNull()   ||
-                 signature[KEY_SPEC_PROCEDURE_PARAMETERS].isArray()))
+                 signature[KEY_SPEC_PROCEDURE_PARAMETERS].isArray())
+        )
         {
-            result.SetProcedureName(signature[KEY_SPEC_PROCEDURE_NAME].asString());
+            result.SetProcedureName(GetProcedureName(signature));
             if (signature.isMember(KEY_SPEC_RETURN_TYPE))
             {
                 result.SetProcedureType(RPC_METHOD);
@@ -146,4 +147,17 @@ void                SpecificationParser::GetNamedParameters(Json::Value &val, Pr
     {
         result.AddParameter(parameters.at(i), toJsonType(val[KEY_SPEC_PROCEDURE_PARAMETERS][parameters.at(i)]));
     }
+}
+
+string SpecificationParser::GetProcedureName(Json::Value &signature)
+{
+    if(signature[KEY_SPEC_PROCEDURE_NAME].isString())
+        return signature[KEY_SPEC_PROCEDURE_NAME].asString();
+
+    if (signature[KEY_SPEC_PROCEDURE_METHOD].isString())
+        return signature[KEY_SPEC_PROCEDURE_METHOD].asString();
+
+    if (signature[KEY_SPEC_PROCEDURE_NOTIFICATION].isString())
+        return signature[KEY_SPEC_PROCEDURE_NOTIFICATION].asString();
+    return "";
 }
