@@ -56,7 +56,7 @@ void        RpcProtocolClient::HandleResponse       (const std::string &response
 
 int RpcProtocolClient::HandleResponse(const Json::Value &value, Json::Value &result) throw(JsonRpcException)
 {
-    if(value.isMember(KEY_ID) && value.isMember(KEY_PROTOCOL_VERSION) && value[KEY_PROTOCOL_VERSION] == "2.0" && (value.isMember(KEY_RESULT) || value.isMember(KEY_ERROR)))
+    if(value.isObject() && value.isMember(KEY_ID) && value.isMember(KEY_PROTOCOL_VERSION) && value[KEY_PROTOCOL_VERSION] == "2.0" && (value.isMember(KEY_RESULT) || value.isMember(KEY_ERROR)))
     {
         if(value.isMember(KEY_RESULT))
         {

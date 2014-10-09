@@ -85,14 +85,14 @@ BOOST_AUTO_TEST_CASE(test_client_invalidresponse)
     BOOST_CHECK_EXCEPTION(client.CallMethod("abcd", Json::nullValue), JsonRpcException, check_exception2);
     c.SetResponse("{\"jsonrpc\":\"1.0\", \"id\": 1, \"result\": 23}");
     BOOST_CHECK_EXCEPTION(client.CallMethod("abcd", Json::nullValue), JsonRpcException, check_exception2);
-   /* c.SetResponse("\"id\": 1, \"result\": 23}");
+    c.SetResponse("{\"id\": 1, \"result\": 23}");
     BOOST_CHECK_EXCEPTION(client.CallMethod("abcd", Json::nullValue), JsonRpcException, check_exception2);
     c.SetResponse("{\"jsonrpc\":\"2.0\", \"result\": 23}");
     BOOST_CHECK_EXCEPTION(client.CallMethod("abcd", Json::nullValue), JsonRpcException, check_exception2);
     c.SetResponse("{}");
     BOOST_CHECK_EXCEPTION(client.CallMethod("abcd", Json::nullValue), JsonRpcException, check_exception2);
     c.SetResponse("[]");
-    BOOST_CHECK_EXCEPTION(client.CallMethod("abcd", Json::nullValue), JsonRpcException, check_exception2);*/
+    BOOST_CHECK_EXCEPTION(client.CallMethod("abcd", Json::nullValue), JsonRpcException, check_exception2);
 }
 
 
