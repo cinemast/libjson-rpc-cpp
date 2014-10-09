@@ -13,6 +13,7 @@
 #include "abstractclientconnector.h"
 #include "rpcprotocolclient.h"
 #include "batchcall.h"
+#include "batchresponse.h"
 #include <jsoncpp/json/json.h>
 
 #include <vector>
@@ -28,8 +29,8 @@ namespace jsonrpc
             void        CallMethod          (const std::string &name, const Json::Value &paramter, Json::Value& result) throw (JsonRpcException);
             Json::Value CallMethod          (const std::string &name, const Json::Value &paramter) throw (JsonRpcException);
 
-            void                    CallProcedures      (const BatchCall &calls, batchProcedureResponse &response) throw (JsonRpcException);
-            batchProcedureResponse  CallProcedures      (const BatchCall &calls) throw (JsonRpcException);
+            void           CallProcedures      (const BatchCall &calls, BatchResponse &response) throw (JsonRpcException);
+            BatchResponse  CallProcedures      (const BatchCall &calls) throw (JsonRpcException);
 
             void        CallNotification    (const std::string& name, const Json::Value& paramter) throw (JsonRpcException);
 

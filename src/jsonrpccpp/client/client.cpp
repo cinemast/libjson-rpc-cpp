@@ -23,7 +23,7 @@ void Client::CallMethod(const std::string &name, const Json::Value &paramter, Js
     protocol.HandleResponse(response, result);
 }
 
-void Client::CallProcedures(const BatchCall &calls, batchProcedureResponse &result) throw(JsonRpcException)
+void Client::CallProcedures(const BatchCall &calls, BatchResponse &result) throw(JsonRpcException)
 {
     std::string request, response;
     request = calls.toString();
@@ -40,17 +40,25 @@ void Client::CallProcedures(const BatchCall &calls, batchProcedureResponse &resu
     {
         if (tmpresult[i].isObject()) {
             Json::Value singleResult;
-            int id = this->protocol.HandleResponse(tmpresult[i], singleResult);
-            result[id] = singleResult;
+            try {
+                int id = this->protocol.HandleResponse(tmpresult[i], singleResult);
+                result.addResponse(id, singleResult, false);
+            }
+            catch (JsonRpcException ex) {
+                int id = -1;
+                if(tmpresult[i].isMember("id"))
+                    id = tmpresult[i]["id"].asInt();
+                result.addResponse(id, tmpresult[i]["error"], true);
+            }
         }
         else
             throw JsonRpcException(Errors::ERROR_CLIENT_INVALID_RESPONSE, "Object in Array expected.");
     }
 }
 
-batchProcedureResponse Client::CallProcedures(const BatchCall &calls) throw(JsonRpcException)
+BatchResponse Client::CallProcedures(const BatchCall &calls) throw(JsonRpcException)
 {
-    batchProcedureResponse result;
+    BatchResponse result;
     this->CallProcedures(calls, result);
     return result;
 }

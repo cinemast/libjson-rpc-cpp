@@ -16,8 +16,6 @@
 
 namespace jsonrpc {
 
-    typedef std::multimap<const std::string, const Json::Value> batchProcedureCall_t;
-
     //int defines id field
     typedef std::map<int, Json::Value> batchProcedureResponse;
 

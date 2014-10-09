@@ -139,7 +139,7 @@ BOOST_AUTO_TEST_CASE(test_jsonrpcprotocol)
     BOOST_CHECK_THROW(client.CallMethod("incrementCounter", v), JsonRpcException);
 }
 
-BOOST_AUTO_TEST_CASE(test_batchcall)
+/*BOOST_AUTO_TEST_CASE(test_batchcall)
 {
     HttpServer sconn(8383);
     HttpClient cconn("http://localhost:8383");
@@ -164,7 +164,7 @@ BOOST_AUTO_TEST_CASE(test_batchcall)
     BOOST_CHECK_EQUAL(response.at(id1).asInt(), 8);
     BOOST_CHECK_EQUAL(response.at(id2).asInt(), 2);
 
-}
+}*/
 
 BOOST_AUTO_TEST_CASE(test_parametervalidation)
 {

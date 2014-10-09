@@ -30,8 +30,12 @@ int     BatchCall::addCall      (const string &methodname, const Json::Value &pa
         call[RpcProtocolClient::KEY_ID] = this->id++;
     }
     result.append(call);
+
+    if (isNotification)
+        return -1;
     return call[RpcProtocolClient::KEY_ID].asInt();
 }
+
 string  BatchCall::toString     (bool fast) const
 {
     string result;
