@@ -12,4 +12,4 @@ compiler:
   - clang
   - gcc
 
-script: cd build && cmake -DHTTP_CONNECTOR=${HTTP_CONN} -DSOCKET_CONNECTOR=${SOCKET_CONN} .. && make && make test
+script: mkdir -p build && cd build && cmake -DHTTP_CONNECTOR=${HTTP_CONN} -DSOCKET_CONNECTOR=${SOCKET_CONN} .. && make && make test
