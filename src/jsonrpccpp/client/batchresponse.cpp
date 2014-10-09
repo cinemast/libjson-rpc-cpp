@@ -35,7 +35,10 @@ Json::Value BatchResponse::getResult(int id)
 
 void BatchResponse::getResult(int id, Json::Value &result)
 {
-    result = responses[id];
+    if (getErrorCode(id) == 0)
+        result = responses[id];
+    else
+        result = Json::nullValue;
 }
 
 int BatchResponse::getErrorCode(int id)

@@ -131,5 +131,25 @@ BOOST_AUTO_TEST_CASE(test_client_batchcall_success)
     BOOST_CHECK_EQUAL(response.getResult(3).isNull(),true);
 }
 
+BOOST_AUTO_TEST_CASE(test_client_batchcall_error)
+{
+    MockClientConnector c;
+    Client client(c);
+
+    BatchCall bc;
+    BOOST_CHECK_EQUAL(bc.addCall("abc", Json::nullValue, false),1);
+    BOOST_CHECK_EQUAL(bc.addCall("def", Json::nullValue, false),2);
+    BOOST_CHECK_EQUAL(bc.addCall("abc", Json::nullValue, false),3);
+
+    c.SetResponse("[{\"jsonrpc\":\"2.0\", \"id\": 1, \"result\": 23},{\"jsonrpc\":\"2.0\", \"id\": 2, \"error\": {\"code\": -32001, \"message\": \"error1\"}},{\"jsonrpc\":\"2.0\", \"id\": null, \"error\": {\"code\": -32002, \"message\": \"error2\"}}]");
+
+    BatchResponse response = client.CallProcedures(bc);
+
+    BOOST_CHECK_EQUAL(response.hasErrors(), true);
+    BOOST_CHECK_EQUAL(response.getResult(1).asInt(), 23);
+    BOOST_CHECK_EQUAL(response.getResult(2).isNull(), true);
+    BOOST_CHECK_EQUAL(response.getResult(3).isNull(),true);
+}
+
 
 BOOST_AUTO_TEST_SUITE_END()
