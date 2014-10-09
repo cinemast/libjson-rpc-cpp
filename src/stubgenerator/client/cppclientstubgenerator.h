@@ -24,6 +24,8 @@ namespace jsonrpc
 
         private:
             void generateMethod(Procedure& proc);
+            void generateAssignments(Procedure& proc);
+            void generateProcCall(Procedure &proc);
     };
 }
 #endif // JSONRPC_CPP_CLIENTSTUBGENERATOR_H
