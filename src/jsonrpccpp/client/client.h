@@ -32,7 +32,6 @@ namespace jsonrpc
             batchProcedureResponse  CallProcedures      (const BatchCall &calls) throw (JsonRpcException);
 
             void        CallNotification    (const std::string& name, const Json::Value& paramter) throw (JsonRpcException);
-            void        CallNotifications   (const batchProcedureCall_t &calls) throw (JsonRpcException);
 
         private:
            AbstractClientConnector &connector;

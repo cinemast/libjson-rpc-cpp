@@ -1,0 +1,35 @@
+/*************************************************************************
+ * libjson-rpc-cpp
+ *************************************************************************
+ * @file    mockclientconnector.h
+ * @date    10/9/2014
+ * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>
+ * @license See attached LICENSE.txt
+ ************************************************************************/
+
+#ifndef JSONRPC_MOCKCLIENTCONNECTOR_H
+#define JSONRPC_MOCKCLIENTCONNECTOR_H
+
+#include <jsonrpccpp/client/abstractclientconnector.h>
+
+namespace jsonrpc {
+
+    class MockClientConnector : public AbstractClientConnector
+    {
+        public:
+            MockClientConnector();
+
+            void SetResponse(const std::string &response);
+
+            std::string GetRequest();
+            Json::Value GetJsonRequest();
+            virtual void SendRPCMessage(const std::string& message, std::string& result) throw(JsonRpcException);
+
+        private:
+            std::string response;
+            std::string request;
+    };
+
+} // namespace jsonrpc
+
+#endif // JSONRPC_MOCKCLIENTCONNECTOR_H
