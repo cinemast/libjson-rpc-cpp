@@ -12,6 +12,7 @@
 
 #include <string>
 #include <jsonrpccpp/common/procedure.h>
+#include "../codegenerator.h"
 
 namespace jsonrpc
 {
@@ -24,6 +25,10 @@ namespace jsonrpc
             static std::string isCppConversion(jsontype_t);
             static std::string toString         (jsontype_t type);
             static std::string generateParameterDeclarationList(Procedure& proc);
+
+            static void prolog(CodeGenerator &cg, const std::string &stubname);
+            static void epilog(CodeGenerator &cg, const std::string &stubname);
+
     };
 }
 

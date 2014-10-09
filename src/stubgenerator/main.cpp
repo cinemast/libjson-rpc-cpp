@@ -15,8 +15,10 @@
 
 #include <argtable2.h>
 
-//#include "cppclientstubgenerator.h"
+#include "client/cppclientstubgenerator.h"
 #include "server/cppserverstubgenerator.h"
+
+#define EXIT_ERROR(X) cerr << X << endl;arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));return 1;
 
 using namespace std;
 using namespace jsonrpc;
@@ -50,16 +52,12 @@ int main(int argc, char** argv)
 
     if (inputfile->count == 0 || classname->count == 0)
     {
-        cerr << "Invalid arguments: -i|--input and -c|--class parameter must be provided" << endl;
-        arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));
-        return 1;
+        EXIT_ERROR("Invalid arguments: -i|--input and -c|--class parameter must be provided")
     }
 
     std::vector<Procedure> procedures = SpecificationParser::GetProceduresFromFile(inputfile->filename[0]);
 
     CodeGenerator cg(server->sval[0]);
-    CPPServerStubGenerator stubgenerator("FoobarStub", procedures, cg);
-    stubgenerator.generateStub();
 
     try {
         if (server->count > 0)
@@ -67,11 +65,18 @@ int main(int argc, char** argv)
             CPPServerStubGenerator serverstub(classname->sval[0], procedures, cg);
             serverstub.generateStub();
         }
-    } catch (const JsonRpcException &ex)
+
+        if (cppclient->count > 0)
+        {
+            CPPClientStubGenerator cppclientstub(classname->sval[0], procedures, cg);
+            cppclientstub.generateStub();
+
+        }
+    }
+    catch (const JsonRpcException &ex)
     {
-        cerr << ex.what() << endl;
-        arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));
-        return 1;
+        EXIT_ERROR(ex.what())
     }
     return 0;
+
 }

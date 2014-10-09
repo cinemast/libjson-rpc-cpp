@@ -11,17 +11,19 @@
 #define JSONRPC_CPP_CLIENTSTUBGENERATOR_H
 
 #include "../stubgenerator.h"
-/*namespace jsonrpc
+#include "../codegenerator.h"
+
+namespace jsonrpc
 {
     class CPPClientStubGenerator : public StubGenerator
     {
         public:
             CPPClientStubGenerator(const std::string& stubname, std::vector<Procedure> &procedures, CodeGenerator &cg);
 
-            virtual std::string generateStub();
+            virtual void generateStub();
 
         private:
-            static std::string generateMethod(Procedure& proc);
+            void generateMethod(Procedure& proc);
     };
-}*/
+}
 #endif // JSONRPC_CPP_CLIENTSTUBGENERATOR_H
