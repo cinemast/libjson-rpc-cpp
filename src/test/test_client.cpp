@@ -129,6 +129,14 @@ BOOST_AUTO_TEST_CASE(test_client_batchcall_success)
     BOOST_CHECK_EQUAL(response.getResult(1).asInt(), 23);
     BOOST_CHECK_EQUAL(response.getResult(2).asInt(), 24);
     BOOST_CHECK_EQUAL(response.getResult(3).isNull(),true);
+
+    Json::Value request = c.GetJsonRequest();
+    BOOST_CHECK_EQUAL(request.size(), 3);
+    BOOST_CHECK_EQUAL(request[0]["method"].asString(), "abc");
+    BOOST_CHECK_EQUAL(request[0]["id"].asInt(), 1);
+    BOOST_CHECK_EQUAL(request[1]["method"].asString(), "def");
+    BOOST_CHECK_EQUAL(request[1]["id"].isNull(), true);
+    BOOST_CHECK_EQUAL(request[2]["id"].asInt(), 2);
 }
 
 BOOST_AUTO_TEST_CASE(test_client_batchcall_error)
