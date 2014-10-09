@@ -114,7 +114,7 @@ string  CPPHelper::normalizeString                  (const string &text)
     string result = text;
     for(unsigned int i=0; i < text.length(); i++)
     {
-        if (!((text[i] >= 'a' && text[i] <= 'z') || (text[i] >= 'A' && text[i] <= 'Z') || (text[i] >= '0' && text[i] <= '9')))
+        if (!((text[i] >= 'a' && text[i] <= 'z') || (text[i] >= 'A' && text[i] <= 'Z') || (text[i] >= '0' && text[i] <= '9') || text[i] == '_'))
         {
             result[i] = '_';
         }
