@@ -1,115 +1,77 @@
-/**
- * @file main.cpp
- * @date 03.01.2013
- * @author Peter Spiess-Knafl <peter.knafl@gmail.com>
- * @brief This application generates stubs for all specified methods
- * and notifications of a given file
- */
+/*************************************************************************
+ * libjson-rpc-cpp
+ *************************************************************************
+ * @file    main.cpp
+ * @date    29.09.2013
+ * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>
+ * @license See attached LICENSE.txt
+ ************************************************************************/
 
 #include <string>
-#include <fstream>
 #include <iostream>
-#include <algorithm>
-#include <sstream>
-#include <cstdlib>
-#include <cstring>
 
-#include <jsonrpc/rpc.h>
-#include <jsonrpc/procedure.h>
+#include <jsonrpccpp/server.h>
+#include <jsonrpccpp/client.h>
 
-#include "clientstubgenerator.h"
-#include "serverstubgenerator.h"
+#include <argtable2.h>
+
+//#include "cppclientstubgenerator.h"
+#include "server/cppserverstubgenerator.h"
 
 using namespace std;
 using namespace jsonrpc;
 
-void printHelp()
-{
-    cout << "jsonrpcstub Usage: jsonrpcstub {-s | -c} [-o /home/somepath/] inputfile stubname" << endl;
-    cout << "Warning: stubname parameter may not contain any characters dissalowed in a C++ class name" << endl << endl;
-    cout << "Options: " << endl;
-    cout << "\t -h, --help\t\tPrint this menu" << endl;
-    cout << "\t -s, --server\tCreate stub for server" << endl;
-    cout << "\t -c, --client\tCreate stub for client" << endl;
-    //   cout << "\t -b, --both\t\tCreate stub for client and server" << endl;
-    cout << "\t -o, --output\tSpecify output path for stubfile. If not specified, outputpath will be CWD" << endl << endl;
-
-    cout << "Example for client stub:" << endl;
-    cout << "\tjsonrpcstub -c /home/user/procedures.json MyStub" << endl << endl;
-
-    cout << "Example for server stub:" << endl;
-    cout << "\tjsonrpcstub -s /home/user/procedures.json MyStub" << endl << endl;
-}
-
 int main(int argc, char** argv)
 {
-    if(argc == 1)
-    {
-        cerr << "Not enough arguments! Use --help for further info." << endl;
-        return -1;
-    }
-    else if(argc < 3 && !(strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0))
-    {
-        cerr << "Not enough arguments! Use --help for further info." << endl;
-        return -1;
-    }
-    else
-    {
-        bool createClient = false;
-        bool createServer = false;
-        string inpath = string(argv[argc-2]);
-        string stubname = string(argv[argc-1]);
-        string outpath = "./";
+    struct arg_lit *help        = arg_lit0("h","help", "print this help and exit");
+    struct arg_file *inputfile  = arg_file0("i", "input", "<inputfile>.json", "path of input specification file");
+    struct arg_str *classname   = arg_str0("c", "class", NULL, "name of the class");
+    struct arg_str *server      = arg_str0("s", "server", "<filename>.h", "name of the server stubfile");
+    struct arg_str *cppclient   = arg_str0(NULL, "cpp", "<filename>.h", "name of the cpp client stubfile");
+    struct arg_end *end         = arg_end(20);
+    void* argtable[] = {help, inputfile, classname, server, cppclient, end};
 
-        for(int i=1; i < argc-2; i++)
-        {
-            if(strcmp(argv[i], "-s") == 0 || strcmp(argv[i], "--server") == 0)
-            {
-                createServer = true;
-            }
-            else if(strcmp(argv[i], "-c") == 0 || strcmp(argv[i], "--client") == 0)
-            {
-                createClient = true;
-            }
-            else if(strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0)
-            {
-                printHelp();
-                return 0;
-            }
-            else if((strcmp(argv[i], "-o") == 0 || strcmp(argv[i], "--output") == 0) && i+1 < argc -2)
-            {
-                outpath = string(argv[++i]);
-            }
-            else
-            {
-                cerr << "Unrecognized option or missing parameter, use --help." << endl;
-                return -1;
-            }
-        }
-
-        if(argc == 2)
-        {
-            printHelp();
-        }
-
-        try
-        {
-            if(createClient)
-            {
-                ClientStubGenerator stub(stubname, inpath);
-                cout << "Client Stub genearted to: " << stub.generateStubToFile(outpath) << endl;
-            }
-            if(createServer)
-            {
-                ServerStubGenerator stub(stubname, inpath);
-                cout << "Server Stub genearted to: " + stub.generateStubToFile(outpath) << endl;
-            }
-        }
-        catch(JsonRpcException e)
-        {
-            cerr << e.what() << endl;
-        }
+    if (arg_parse(argc,argv,argtable) > 0)
+    {
+        //  cerr << "Invalid arguments: try --help for more information" << endl;
+        arg_print_errors(stderr, end, argv[0]);
+        arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));
+        return 1;
     }
 
+    if (help->count > 0 || argc == 1)
+    {
+        cout << "Usage: " << argv[0] << " "; cout.flush();
+        arg_print_syntax(stdout,argtable,"\n"); cout << endl;
+        arg_print_glossary_gnu(stdout, argtable);
+        arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));
+        return 0;
+    }
+
+    if (inputfile->count == 0 || classname->count == 0)
+    {
+        cerr << "Invalid arguments: -i|--input and -c|--class parameter must be provided" << endl;
+        arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));
+        return 1;
+    }
+
+    std::vector<Procedure> procedures = SpecificationParser::GetProceduresFromFile(inputfile->filename[0]);
+
+    CodeGenerator cg(server->sval[0]);
+    CPPServerStubGenerator stubgenerator("FoobarStub", procedures, cg);
+    stubgenerator.generateStub();
+
+    try {
+        if (server->count > 0)
+        {
+            CPPServerStubGenerator serverstub(classname->sval[0], procedures, cg);
+            serverstub.generateStub();
+        }
+    } catch (const JsonRpcException &ex)
+    {
+        cerr << ex.what() << endl;
+        arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));
+        return 1;
+    }
     return 0;
 }
