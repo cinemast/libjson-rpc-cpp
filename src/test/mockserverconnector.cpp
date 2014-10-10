@@ -13,6 +13,10 @@ using namespace jsonrpc;
 using namespace std;
 
 
+MockServerConnector::MockServerConnector()
+{
+}
+
 bool MockServerConnector::StartListening()
 {
     return true;
@@ -32,6 +36,17 @@ bool MockServerConnector::SendResponse(const string &response, void *addInfo)
 void MockServerConnector::SetRequest(const string &request)
 {
     this->request = request;
+    this->OnRequest(request, NULL);
+}
+
+Json::Value MockServerConnector::GetJsonRequest()
+{
+    Json::Reader reader;
+    Json::Value result;
+    if (reader.parse(request, result))
+        return result;
+    else
+        return Json::nullValue;
 }
 
 string MockServerConnector::GetResponse()

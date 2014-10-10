@@ -20,7 +20,7 @@ TestServer::TestServer(AbstractServerConnector &connector) :
     this->bindAndAddMethod(new Procedure("sayHello", PARAMS_BY_NAME, JSON_STRING, "name", JSON_STRING, NULL), &TestServer::sayHello);
     this->bindAndAddMethod(new Procedure("getCounterValue", PARAMS_BY_NAME, JSON_INTEGER, NULL), &TestServer::getCounterValue);
     this->bindAndAddMethod(new Procedure("add", PARAMS_BY_NAME, JSON_INTEGER, "value1", JSON_INTEGER, "value2", JSON_INTEGER, NULL), &TestServer::add);
-    this->bindAndAddMethod(new Procedure("sub", PARAMS_BY_NAME, JSON_INTEGER, "value1", JSON_INTEGER, "value2", JSON_INTEGER, NULL), &TestServer::sub);
+    this->bindAndAddMethod(new Procedure("sub", PARAMS_BY_POSITION, JSON_INTEGER, "value1", JSON_INTEGER, "value2", JSON_INTEGER, NULL), &TestServer::sub);
 
     this->bindAndAddNotification(new Procedure("initCounter", PARAMS_BY_NAME, "value", JSON_INTEGER, NULL), &TestServer::initCounter);
     this->bindAndAddNotification(new Procedure("incrementCounter", PARAMS_BY_NAME, "value", JSON_INTEGER, NULL), &TestServer::incrementCounter);
@@ -43,7 +43,7 @@ void TestServer::add(const Json::Value &request, Json::Value &response)
 
 void TestServer::sub(const Json::Value &request, Json::Value &response)
 {
-    response = request["value1"].asInt() - request["value2"].asInt();
+    response = request[0].asInt() - request[1].asInt();
 }
 
 void TestServer::initCounter(const Json::Value &request)
@@ -53,6 +53,11 @@ void TestServer::initCounter(const Json::Value &request)
 
 void TestServer::incrementCounter(const Json::Value &request)
 {
-    cnt++;
+    cnt+= request["value"].asInt();
+}
+
+int TestServer::getCnt()
+{
+    return cnt;
 }
 

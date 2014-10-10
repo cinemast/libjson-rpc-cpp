@@ -28,6 +28,8 @@ class TestServer : public jsonrpc::AbstractServer<TestServer>
         //Notifications
         void initCounter(const Json::Value& request);
         void incrementCounter(const Json::Value& request);
+
+        int getCnt();
     private:
         int cnt;
 };
