@@ -36,7 +36,7 @@ bool MockServerConnector::SendResponse(const string &response, void *addInfo)
 void MockServerConnector::SetRequest(const string &request)
 {
     this->request = request;
-    this->OnRequest(request, NULL);
+    this->OnRequest(this->request, NULL);
 }
 
 Json::Value MockServerConnector::GetJsonRequest()

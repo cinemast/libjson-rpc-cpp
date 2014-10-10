@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE(test_client_notification_success)
     BOOST_CHECK_EQUAL(v.isMember("id"), false);
 }
 
-BOOST_AUTO_TEST_CASE(test_client_error)
+BOOST_AUTO_TEST_CASE(test_client_errorresponse)
 {
     MockClientConnector c;
     Client client(c);

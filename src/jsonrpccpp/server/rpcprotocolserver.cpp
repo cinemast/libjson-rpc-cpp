@@ -93,6 +93,8 @@ int  RpcProtocolServer::ValidateRequest     (const Json::Value& request)
     Procedure* proc;
     if (!request.isObject() || !(request.isMember(KEY_REQUEST_METHODNAME)
           && request.isMember(KEY_REQUEST_VERSION)
+          && request[KEY_REQUEST_VERSION].isString()
+          && request[KEY_REQUEST_VERSION].asString() == "2.0"
           && request.isMember(KEY_REQUEST_PARAMETERS)))
     {
         error = Errors::ERROR_RPC_INVALID_REQUEST;
