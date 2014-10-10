@@ -95,6 +95,18 @@ BOOST_AUTO_TEST_CASE(test_server_invalidrequest)
     c.SetRequest("{\"jsonrpc\":\"2.0\", \"id\": 1, \"method\": 3,\"params\":{\"name\":\"Peter\"}}");
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32600);
     BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
+
+    c.SetRequest("{}");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32600);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
+
+    c.SetRequest("[]");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32600);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
+
+    c.SetRequest("23");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32600);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
 }
 
 BOOST_AUTO_TEST_CASE(test_server_batchcall_success)

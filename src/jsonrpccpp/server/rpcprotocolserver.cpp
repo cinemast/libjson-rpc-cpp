@@ -52,6 +52,10 @@ void RpcProtocolServer::HandleRequest       (const string& request, string& retV
         {
             this->HandleSingleRequest(req, response);
         }
+        else
+        {
+            response = Errors::GetErrorBlock(Json::nullValue, Errors::ERROR_RPC_INVALID_REQUEST);
+        }
     }
     else
     {
@@ -80,11 +84,16 @@ void RpcProtocolServer::HandleSingleRequest (Json::Value &req, Json::Value& resp
 }
 void RpcProtocolServer::HandleBatchRequest  (Json::Value &req, Json::Value& response)
 {
-    for (unsigned int i = 0; i < req.size(); i++)
+    if (req.size() == 0)
+        response = Errors::GetErrorBlock(Json::nullValue, Errors::ERROR_RPC_INVALID_REQUEST);
+    else
     {
-        Json::Value result;
-        this->HandleSingleRequest(req[i], result);
-        response.append(result);
+        for (unsigned int i = 0; i < req.size(); i++)
+        {
+            Json::Value result;
+            this->HandleSingleRequest(req[i], result);
+            response.append(result);
+        }
     }
 }
 int  RpcProtocolServer::ValidateRequest     (const Json::Value& request)
@@ -92,10 +101,12 @@ int  RpcProtocolServer::ValidateRequest     (const Json::Value& request)
     int error = 0;
     Procedure* proc;
     if (!request.isObject() || !(request.isMember(KEY_REQUEST_METHODNAME)
-          && request.isMember(KEY_REQUEST_VERSION)
-          && request[KEY_REQUEST_VERSION].isString()
-          && request[KEY_REQUEST_VERSION].asString() == "2.0"
-          && request.isMember(KEY_REQUEST_PARAMETERS)))
+                                 && request[KEY_REQUEST_METHODNAME].isString()
+                                 && request.isMember(KEY_REQUEST_VERSION)
+                                 && request[KEY_REQUEST_VERSION].isString()
+                                 && request[KEY_REQUEST_VERSION].asString() == "2.0"
+                                 && request.isMember(KEY_REQUEST_PARAMETERS)
+                                 && (request[KEY_REQUEST_PARAMETERS].isObject() || request[KEY_REQUEST_PARAMETERS].isArray() || request[KEY_REQUEST_PARAMETERS].isNull())) || (request.isMember("id") && !request["id"].isInt()))
     {
         error = Errors::ERROR_RPC_INVALID_REQUEST;
     }
@@ -133,7 +144,7 @@ void RpcProtocolServer::ProcessRequest      (const Json::Value& request, Json::V
     if (method->GetProcedureType() == RPC_METHOD)
     {
         requestHandler.handleMethodCall(*method, request[KEY_REQUEST_PARAMETERS],
-                                 result);
+                                        result);
         response[KEY_REQUEST_VERSION] = JSON_RPC_VERSION;
         response[KEY_RESPONSE_RESULT] = result;
         response[KEY_REQUEST_ID] = request[KEY_REQUEST_ID];
