@@ -109,15 +109,79 @@ BOOST_AUTO_TEST_CASE(test_server_invalidrequest)
     BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
 }
 
+BOOST_AUTO_TEST_CASE(test_server_method_error)
+{
+    MockServerConnector c;
+    TestServer server(c);
+
+    c.SetRequest("{\"jsonrpc\":\"2.0\", \"id\": 1, \"method\": \"sayHello2\",\"params\":{\"name\":\"Peter\"}}");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32601);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
+
+    c.SetRequest("{\"jsonrpc\":\"2.0\", \"id\": 1, \"method\": \"initCounter\",\"params\":{\"value\":3}}");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32605);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
+
+    c.SetRequest("{\"jsonrpc\":\"2.0\", \"method\": \"sayHello\",\"params\":{\"name\":\"Peter\"}}");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32604);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
+
+    c.SetRequest("{\"jsonrpc\":\"2.0\", \"method\": \"sub\",\"params\":{\"value1\":3, \"value\": 4}}");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32604);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
+
+    c.SetRequest("{\"jsonrpc\":\"2.0\", \"method\": \"add\",\"params\":[3,4]}");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32604);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
+}
+
+BOOST_AUTO_TEST_CASE(test_server_params_error)
+{
+    MockServerConnector c;
+    TestServer server(c);
+
+    c.SetRequest("{\"jsonrpc\":\"2.0\", \"id\": 1, \"method\": \"sayHello\",\"params\":{\"name\":23}}");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32602);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
+
+    c.SetRequest("{\"jsonrpc\":\"2.0\", \"id\": 1, \"method\": \"sayHello\",\"params\":{\"name2\":\"Peter\"}}");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32602);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
+
+    c.SetRequest("{\"jsonrpc\":\"2.0\", \"id\": 1, \"method\": \"sayHello\",\"params\":[\"Peter\"]}");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32602);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
+}
+
 BOOST_AUTO_TEST_CASE(test_server_batchcall_success)
 {
+    MockServerConnector c;
+    TestServer server(c);
+
+    //Simple Batchcall with only methods
+    c.SetRequest("[{\"jsonrpc\":\"2.0\", \"id\": 1, \"method\": \"sayHello\",\"params\":{\"name\":\"Peter\"}},{\"jsonrpc\":\"2.0\", \"id\": 2, \"method\": \"add\",\"params\":{\"value1\":23,\"value2\": 33}}]");
+
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().size(), 2);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()[0]["result"].asString(), "Hello: Peter!");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()[0]["id"].asInt(), 1);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()[1]["result"].asInt(), 56);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()[1]["id"].asInt(), 2);
+
+    //Batchcall containing methods and notifications
+    c.SetRequest("[{\"jsonrpc\":\"2.0\", \"id\": 1, \"method\": \"sayHello\",\"params\":{\"name\":\"Peter\"}},{\"jsonrpc\":\"2.0\", \"method\": \"initCounter\",\"params\":{\"value\":23}}]");
+
+    cout << c.GetResponse() << endl;
+
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().size(), 1);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()[0]["result"].asString(), "Hello: Peter!");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()[0]["id"].asInt(), 1);
+    BOOST_CHECK_EQUAL(server.getCnt(), 23);
 
 }
 
 BOOST_AUTO_TEST_CASE(test_server_batchcall_error)
 {
-
+    //same ids in batchcall
 }
-
 
 BOOST_AUTO_TEST_SUITE_END()
