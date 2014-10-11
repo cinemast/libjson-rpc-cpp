@@ -170,12 +170,15 @@ BOOST_AUTO_TEST_CASE(test_server_batchcall_success)
     //Batchcall containing methods and notifications
     c.SetRequest("[{\"jsonrpc\":\"2.0\", \"id\": 1, \"method\": \"sayHello\",\"params\":{\"name\":\"Peter\"}},{\"jsonrpc\":\"2.0\", \"method\": \"initCounter\",\"params\":{\"value\":23}}]");
 
-    cout << c.GetResponse() << endl;
-
     BOOST_CHECK_EQUAL(c.GetJsonResponse().size(), 1);
     BOOST_CHECK_EQUAL(c.GetJsonResponse()[0]["result"].asString(), "Hello: Peter!");
     BOOST_CHECK_EQUAL(c.GetJsonResponse()[0]["id"].asInt(), 1);
     BOOST_CHECK_EQUAL(server.getCnt(), 23);
+
+    //Batchcall containing only notifications
+    c.SetRequest("[{\"jsonrpc\":\"2.0\", \"method\": \"initCounter\",\"params\":{\"value\":23}},{\"jsonrpc\":\"2.0\", \"method\": \"initCounter\",\"params\":{\"value\":23}}]");
+
+    BOOST_CHECK_EQUAL(c.GetResponse(), "");
 
 }
 

@@ -61,7 +61,9 @@ void RpcProtocolServer::HandleRequest       (const string& request, string& retV
     {
         response = Errors::GetErrorBlock(Json::nullValue, Errors::ERROR_RPC_JSON_PARSE_ERROR);
     }
-    retValue = w.write(response);
+
+    if (response != Json::nullValue)
+        retValue = w.write(response);
 }
 void RpcProtocolServer::HandleSingleRequest (Json::Value &req, Json::Value& response)
 {
