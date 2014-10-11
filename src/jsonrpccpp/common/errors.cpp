@@ -65,7 +65,7 @@ Json::Value Errors::GetErrorBlock(const Json::Value& request, const int& errorCo
     error["error"]["code"] = errorCode;
     error["error"]["message"] = GetErrorMessage(errorCode);
 
-    if(request["id"].isNull() || request["id"].isInt() || request["id"].isUInt() || request["id"].isString())
+    if(request.isObject() && request.isMember("id") && (request["id"].isNull() || request["id"].isInt() || request["id"].isUInt() || request["id"].isString()))
     {
         error["id"] = request["id"];
     }

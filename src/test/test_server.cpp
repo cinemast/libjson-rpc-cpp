@@ -184,7 +184,25 @@ BOOST_AUTO_TEST_CASE(test_server_batchcall_success)
 
 BOOST_AUTO_TEST_CASE(test_server_batchcall_error)
 {
-    //same ids in batchcall
+    MockServerConnector c;
+    TestServer server(c);
+
+    //success and error responses
+    c.SetRequest("[{\"jsonrpc\":\"2.0\", \"id\": 1, \"method\": \"sayHello\",\"params\":{\"name\":\"Peter\"}},{},{\"jsonrpc\":\"2.0\", \"id\": 3, \"method\": \"sayHello\",\"params\":{\"name\":\"Peter3\"}}]");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().size(), 3);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()[0]["result"].asString(), "Hello: Peter!");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()[0]["id"].asInt(), 1);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()[1]["error"]["code"].asInt(), -32600);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()[1]["id"].isNull(), true);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()[2]["result"].asString(), "Hello: Peter3!");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()[2]["id"].asInt(), 3);
+
+    //only invalid requests
+    c.SetRequest("[1,2,3]");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().size(), 3);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()[0]["error"]["code"].asInt(), -32600);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()[1]["error"]["code"].asInt(), -32600);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()[2]["error"]["code"].asInt(), -32600);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
