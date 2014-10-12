@@ -26,6 +26,7 @@ add_custom_command(OUTPUT xbmcremote.h
                    VERBATIM)
 
 
+
 add_executable(simpleserversample simpleserver.cpp)
 target_link_libraries(simpleserversample jsonrpcserver)
 

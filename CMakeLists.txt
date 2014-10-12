@@ -1,9 +1,6 @@
-LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
-
 cmake_minimum_required(VERSION 2.6)
 project(libjson-rpc-cpp)
 
-include_directories(${CMAKE_SOURCE_DIR}/src/jsonrpccpp)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
@@ -31,18 +28,27 @@ SET(COMPILE_EXAMPLES YES CACHE BOOL "Compile example programs")
 #the core framework
 add_subdirectory(src/jsonrpccpp)
 
+#the test suite
 find_package(Boost COMPONENTS unit_test_framework)
-IF(Boost_FOUND)
-    IF(COMPILE_TESTS)
-        ENABLE_TESTING()
-        add_subdirectory(src/test)
-    ENDIF()
+IF(Boost_FOUND AND COMPILE_TESTS)
+    ENABLE_TESTING()
+    add_subdirectory(src/test)
 ENDIF()
 
+#the stubgenerator
 IF(COMPILE_STUBGEN)
     add_subdirectory(src/stubgenerator)
 ENDIF()
 
-IF(COMPILE_EXAMPLES)
+#the examples
+IF(COMPILE_EXAMPLES AND HTTP_SERVER_MONGOOSE AND HTTP_CLIENT_CURL)
     add_subdirectory(src/examples)
 ENDIF()
+
+# uninstall target
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+    IMMEDIATE @ONLY)
+add_custom_target(uninstall
+COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
