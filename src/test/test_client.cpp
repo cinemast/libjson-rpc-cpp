@@ -7,12 +7,12 @@
  * @license See attached LICENSE.txt
  ************************************************************************/
 
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MODULE
+
 #include <boost/test/unit_test.hpp>
 #include <jsonrpccpp/client.h>
 #include "mockclientconnector.h"
-
-#define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE
 
 using namespace jsonrpc;
 using namespace std;
