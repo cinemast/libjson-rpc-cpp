@@ -5,7 +5,8 @@
  * @brief This is a simple client example.
  */
 
-#include <jsonrpc/rpc.h>
+#include <jsonrpccpp/client.h>
+#include <jsonrpccpp/client/connectors/httpclient.h>
 #include <iostream>
 
 using namespace jsonrpc;
@@ -13,8 +14,8 @@ using namespace std;
 
 int main()
 {
-    HttpClient* httpClient = new HttpClient("http://localhost:8080");
-    Client c(httpClient);
+    HttpClient client("https://localhost:8080");
+    Client c(client);
 
     Json::Value params;
     params["name"] = "Peter";
@@ -28,5 +29,5 @@ int main()
         cerr << e.what() << endl;
     }
 
-    delete httpClient;
+
 }

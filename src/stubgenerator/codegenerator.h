@@ -13,6 +13,7 @@
 #include <string>
 #include <ostream>
 #include <fstream>
+#include <sstream>
 
 namespace jsonrpc
 {
@@ -37,8 +38,8 @@ namespace jsonrpc
         private:
             std::ostream *output;
             std::ofstream file;
-            int indentation;
             std::string indentSymbol;
+            int indentation;
             bool atBeginning;
     };
 }

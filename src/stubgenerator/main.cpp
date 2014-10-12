@@ -57,17 +57,18 @@ int main(int argc, char** argv)
 
     std::vector<Procedure> procedures = SpecificationParser::GetProceduresFromFile(inputfile->filename[0]);
 
-    CodeGenerator cg(server->sval[0]);
 
     try {
         if (server->count > 0)
         {
+            CodeGenerator cg(server->sval[0]);
             CPPServerStubGenerator serverstub(classname->sval[0], procedures, cg);
             serverstub.generateStub();
         }
 
         if (cppclient->count > 0)
         {
+            CodeGenerator cg(cppclient->sval[0]);
             CPPClientStubGenerator cppclientstub(classname->sval[0], procedures, cg);
             cppclientstub.generateStub();
 

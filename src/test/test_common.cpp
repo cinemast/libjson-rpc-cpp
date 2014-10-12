@@ -39,7 +39,6 @@ BOOST_AUTO_TEST_CASE(test_procedure_parametervalidation)
     param3.append(4711);
     param3.append("Peter");
     BOOST_CHECK_EQUAL(proc1.ValidateNamedParameters(param3), false);
-
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -7,18 +7,18 @@
  * @license See attached LICENSE.txt
  ************************************************************************/
 
-#include <jsonrpc/rpc.h>
 #include <iostream>
 
-#include "mystubclient.h"
+#include "gen/stubclient.h"
+#include <jsonrpccpp/client/connectors/httpclient.h>
 
 using namespace jsonrpc;
 using namespace std;
 
 int main()
 {
-    HttpClient* httpClient = new HttpClient("http://localhost:8080");
-    MyStubClient c(httpClient);
+    HttpClient httpclient("http://localhost:8383");
+    StubClient c(httpclient);
 
     try
     {
@@ -26,6 +26,9 @@ int main()
         c.notifyServer();
 
         cout << " 3 + 5 = " << c.addNumbers(3,5) << endl;
+        cout << " 3.2 + 5.3 = " << c.addNumbers2(3.2,5.3) << endl;
+        cout << "Compare: " << c.isEqual("Peter", "peter") << endl;
+        cout << "Build object: " << c.buildObject("Peter", 1990) << endl;
 
     }
     catch (JsonRpcException e)
@@ -33,6 +36,6 @@ int main()
         cerr << e.what() << endl;
     }
 
-    delete httpClient;
+
 }
 

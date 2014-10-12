@@ -26,6 +26,7 @@ SET(SOCKET_CLIENT NO CACHE BOOL "Include Client Socket support")
 
 SET(COMPILE_TESTS YES CACHE BOOL "Compile test framework")
 SET(COMPILE_STUBGEN YES CACHE BOOL "Compile the stubgenerator")
+SET(COMPILE_EXAMPLES YES CACHE BOOL "Compile example programs")
 
 #the core framework
 add_subdirectory(src/jsonrpccpp)
@@ -40,4 +41,8 @@ ENDIF()
 
 IF(COMPILE_STUBGEN)
     add_subdirectory(src/stubgenerator)
+ENDIF()
+
+IF(COMPILE_EXAMPLES)
+    add_subdirectory(src/examples)
 ENDIF()

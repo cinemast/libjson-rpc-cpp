@@ -7,14 +7,15 @@
  * @license See attached LICENSE.txt
  ************************************************************************/
 
-#include "XbmcRemoteClient.h"
+#include "gen/xbmcremote.h"
+#include <jsonrpccpp/client/connectors/httpclient.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <termios.h>
 #include <time.h>
-#include <unistd.h>
+
 #include <iostream>
 
 using namespace jsonrpc;
@@ -85,8 +86,8 @@ int main(int argc, char** argv) {
     {
         cout << "XBMC Remote: a,s,d,w for navigation, enter for select, escape or backspace for back button" << endl;
         try {
-            HttpClient* httpClient = new HttpClient(argv[1]);
-            XbmcRemoteClient stub(httpClient);
+            HttpClient httpclient(argv[1]);
+            XbmcRemoteClient stub(httpclient);
             int key = 0;
             for (;;) {
 #ifdef __APPLE__
@@ -112,7 +113,6 @@ int main(int argc, char** argv) {
                 }
                 cout << "Pressed: " << key << endl;
             }
-            delete httpClient;
         } catch(jsonrpc::JsonRpcException e) {
             cerr << e.what() << endl;
         }

@@ -55,6 +55,15 @@ void CPPServerStubGenerator::generateStub()
     cg.writeNewLine();
 
     this->generateProcedureDefinitions();
+
+    this->generateAbstractDefinitions();
+
+    cg.decreaseIndentation();
+    cg.decreaseIndentation();
+    cg.writeLine("};");
+    cg.writeNewLine();
+
+    CPPHelper::epilog(cg,this->stubname);
 }
 
 
@@ -73,18 +82,18 @@ void CPPServerStubGenerator::generateBindings()
         {
             tmp = TEMPLATE_CPPSERVER_NOTIFICATIONBINDING;
         }
-        replaceAll(tmp, "<procedurename>", CPPHelper::normalizeString(proc.GetProcedureName()));
-        replaceAll(tmp, "<returntype>", CPPHelper::toString(proc.GetReturnType()));
-        replaceAll(tmp, "<parameterlist>", generateBindingParameterlist(proc));
-        replaceAll(tmp, "<stubname>", this->stubname);
+        replaceAll2(tmp, "<procedurename>", CPPHelper::normalizeString(proc.GetProcedureName()));
+        replaceAll2(tmp, "<returntype>", CPPHelper::toString(proc.GetReturnType()));
+        replaceAll2(tmp, "<parameterlist>", generateBindingParameterlist(proc));
+        replaceAll2(tmp, "<stubname>", this->stubname);
 
         if(proc.GetParameterDeclarationType() == PARAMS_BY_NAME)
         {
-            replaceAll(tmp, "<paramtype>", "jsonrpc::PARAMS_BY_NAME");
+            replaceAll2(tmp, "<paramtype>", "jsonrpc::PARAMS_BY_NAME");
         }
         else
         {
-            replaceAll(tmp, "<paramtype>", "jsonrpc::PARAMS_BY_POSITION");
+            replaceAll2(tmp, "<paramtype>", "jsonrpc::PARAMS_BY_POSITION");
         }
 
         this->cg.writeLine(tmp);
@@ -92,36 +101,34 @@ void CPPServerStubGenerator::generateBindings()
     this->cg.decreaseIndentation();
 }
 
-string CPPServerStubGenerator::generateProcedureDefinitions()
+void CPPServerStubGenerator::generateProcedureDefinitions()
 {
-    stringstream result;
-    string tmp;
     for(vector<Procedure>::iterator it = this->procedures.begin(); it != this->procedures.end(); it++)
     {
         Procedure &proc = *it;
         if(proc.GetProcedureType() == RPC_METHOD)
-        {
             this->cg.writeLine(replaceAll(TEMPLATE_CPPSERVER_SIGMETHOD, "<procedurename>", proc.GetProcedureName()));
-        }
         else
-        {
             this->cg.writeLine(replaceAll(TEMPLATE_CPPSERVER_SIGNOTIFICATION, "<procedurename>", proc.GetProcedureName()));
-        }
+
         this->cg.writeLine("{");
         this->cg.increaseIndentation();
+
+        if (proc.GetProcedureType() == RPC_METHOD)
+            this->cg.write("response = ");
+        cg.write("this->");
+        cg.write(CPPHelper::normalizeString(proc.GetProcedureName())+"(");
         this->generateParameterMapping(proc);
+        cg.writeLine(");");
+
         this->cg.decreaseIndentation();
         this->cg.writeLine("}");
-        result << tmp << endl;
     }
-    return result.str();
 }
 
-string CPPServerStubGenerator::generateAbstractDefinitions()
+void CPPServerStubGenerator::generateAbstractDefinitions()
 {
-    stringstream result;
     string tmp;
-
     for(vector<Procedure>::iterator it = this->procedures.begin(); it != this->procedures.end(); it++)
     {
         Procedure& proc = *it;
@@ -131,12 +138,11 @@ string CPPServerStubGenerator::generateAbstractDefinitions()
         {
             returntype = CPPHelper::toCppType(proc.GetReturnType());
         }
-        replaceAll(tmp, "<returntype>", returntype);
-        replaceAll(tmp, "<procedurename>", proc.GetProcedureName());
-        replaceAll(tmp, "<parameterlist>", CPPHelper::generateParameterDeclarationList(proc));
-        result << tmp;
+        replaceAll2(tmp, "<returntype>", returntype);
+        replaceAll2(tmp, "<procedurename>", proc.GetProcedureName());
+        replaceAll2(tmp, "<parameterlist>", CPPHelper::generateParameterDeclarationList(proc));
+        cg.writeLine(tmp);
     }
-    return result.str();
 }
 
 string CPPServerStubGenerator::generateBindingParameterlist(Procedure &proc)
@@ -168,7 +174,7 @@ void CPPServerStubGenerator::generateParameterMapping(Procedure &proc)
             tmp2 << "request["<< i << "u]" << CPPHelper::toCppConversion(it2->second);
             tmp = tmp2.str();
         }
-        this->cg.writeLine(tmp);
+        this->cg.write(tmp);
         if(it2 != --params.end())
         {
             this->cg.write(", ");

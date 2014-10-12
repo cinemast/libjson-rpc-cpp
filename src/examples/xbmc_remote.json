@@ -1,31 +1,31 @@
 [
 {
-    "method": "Input.Left",
+    "name": "Input.Left",
             "params": null,
             "returns": "string"
 },
 {
-    "method": "Input.Right",
+    "name": "Input.Right",
             "params": null,
             "returns": "string"
 },
 {
-    "method": "Input.Up",
+    "name": "Input.Up",
             "params": null,
             "returns": "string"
 },
 {
-    "method": "Input.Down",
+    "name": "Input.Down",
             "params": null,
             "returns": "string"
 },
 {
-    "method": "Input.Back",
+    "name": "Input.Back",
             "params": null,
             "returns": "string"
 },
 {
-    "method": "Input.Select",
+    "name": "Input.Select",
             "params": null,
             "returns": "string"
 }

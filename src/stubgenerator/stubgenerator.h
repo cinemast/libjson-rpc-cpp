@@ -30,7 +30,7 @@ namespace jsonrpc
             virtual void generateStub() = 0;
 
             static std::string replaceAll(const std::string& text, const std::string& fnd, const std::string& rep);
-            static void replaceAll(std::string &text, const std::string &find, const std::string &replace);
+            static void replaceAll2(std::string &text, const std::string &find, const std::string &replace);
 
         protected:
             std::string             stubname;

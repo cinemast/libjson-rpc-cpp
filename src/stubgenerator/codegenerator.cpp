@@ -12,17 +12,19 @@
 using namespace jsonrpc;
 using namespace std;
 
-CodeGenerator::CodeGenerator(const ::string &filename)
+CodeGenerator::CodeGenerator(const ::string &filename) :
+    indentation(0),
+    atBeginning(true)
 {
     this->file.open(filename.c_str());
     this->output = &this->file;
     this->indentSymbol = "    ";
-    this->atBeginning = true;
 }
 
 CodeGenerator::CodeGenerator(::ostream &outputstream) :
     output(&outputstream),
     indentSymbol("    "),
+    indentation(0),
     atBeginning(true)
 {
 }

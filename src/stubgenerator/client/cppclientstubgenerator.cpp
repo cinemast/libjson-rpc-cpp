@@ -19,8 +19,8 @@
 #define TEMPLATE_NAMED_ASSIGNMENT "p[\"<paramname>\"] = <paramname>;"
 #define TEMPLATE_POSITION_ASSIGNMENT "p.append(<paramname>);"
 
-#define TEMPLATE_METHODCALL "Json::Value result = this->client->CallMethod(\"<name>\",p);"
-#define TEMPLATE_NOTIFICATIONCALL "this->client->CallNotification(\"<name>\",p);"
+#define TEMPLATE_METHODCALL "Json::Value result = this->CallMethod(\"<name>\",p);"
+#define TEMPLATE_NOTIFICATIONCALL "this->CallNotification(\"<name>\",p);"
 
 #define TEMPLATE_RETURNCHECK "if (result<cast>)"
 #define TEMPLATE_RETURN "return result<cast>;"
@@ -48,6 +48,7 @@ void CPPClientStubGenerator::generateStub()
     cg.increaseIndentation();
 
     cg.writeLine(replaceAll(TEMPLATE_CPPCLIENT_SIGCONSTRUCTOR, "<stubname>", this->stubname));
+    cg.writeNewLine();
 
     for (unsigned int i=0; i < procedures.size(); i++)
     {
@@ -57,6 +58,7 @@ void CPPClientStubGenerator::generateStub()
     cg.decreaseIndentation();
     cg.decreaseIndentation();
     cg.writeLine("};");
+    cg.writeNewLine();
 
     CPPHelper::epilog(cg, this->stubname);
 }
@@ -68,9 +70,9 @@ void CPPClientStubGenerator::generateMethod(Procedure &proc)
     if (proc.GetProcedureType() == RPC_NOTIFICATION)
         returntype = "void";
 
-    replaceAll(procsignature, "<returntype>", returntype);
-    replaceAll(procsignature, "<methodname>", proc.GetProcedureName());
-    replaceAll(procsignature, "<parameters>", CPPHelper::generateParameterDeclarationList(proc));
+    replaceAll2(procsignature, "<returntype>", returntype);
+    replaceAll2(procsignature, "<methodname>", CPPHelper::normalizeString(proc.GetProcedureName()));
+    replaceAll2(procsignature, "<parameters>", CPPHelper::generateParameterDeclarationList(proc));
 
     cg.writeLine(procsignature);
     cg.writeLine("{");
@@ -103,7 +105,7 @@ void CPPClientStubGenerator::generateAssignments(Procedure &proc)
             {
                 assignment = TEMPLATE_POSITION_ASSIGNMENT;
             }
-            replaceAll(assignment, "<paramname>", it->first);
+            replaceAll2(assignment, "<paramname>", it->first);
             cg.writeLine(assignment);
         }
     }
@@ -120,13 +122,13 @@ void CPPClientStubGenerator::generateProcCall(Procedure &proc)
     if (proc.GetProcedureType() == RPC_METHOD)
     {
         call = TEMPLATE_METHODCALL;
-        replaceAll(call, "<name>", proc.GetProcedureName());
+        cg.writeLine(replaceAll(call, "<name>", proc.GetProcedureName()));
         call = TEMPLATE_RETURNCHECK;
-        replaceAll(call,"<cast>", CPPHelper::isCppConversion(proc.GetReturnType()));
+        replaceAll2(call,"<cast>", CPPHelper::isCppConversion(proc.GetReturnType()));
         cg.writeLine(call);
         cg.increaseIndentation();
         call = TEMPLATE_RETURN;
-        replaceAll(call,"<cast>", CPPHelper::toCppConversion(proc.GetReturnType()));
+        replaceAll2(call,"<cast>", CPPHelper::toCppConversion(proc.GetReturnType()));
         cg.writeLine(call);
         cg.decreaseIndentation();
         cg.writeLine("else");
@@ -137,7 +139,7 @@ void CPPClientStubGenerator::generateProcCall(Procedure &proc)
     else
     {
         call = TEMPLATE_NOTIFICATIONCALL;
-        replaceAll(call, "<name>", proc.GetProcedureName());
+        replaceAll2(call, "<name>", proc.GetProcedureName());
         cg.writeLine(call);
     }
 

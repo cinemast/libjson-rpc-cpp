@@ -24,8 +24,8 @@ namespace jsonrpc
 
         private:
             void generateBindings();
-            std::string generateProcedureDefinitions();
-            std::string generateAbstractDefinitions();
+            void generateProcedureDefinitions();
+            void generateAbstractDefinitions();
             std::string generateBindingParameterlist(Procedure &proc);
             void generateParameterMapping(Procedure &proc);
     };

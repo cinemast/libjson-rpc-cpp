@@ -30,11 +30,11 @@ StubGenerator::~StubGenerator   ()
 string    StubGenerator::replaceAll                       (const string &text, const string &fnd, const string &rep)
 {
     string result = text;
-    replaceAll(result, fnd, rep);
+    replaceAll2(result, fnd, rep);
     return result;
 }
 
-void StubGenerator::replaceAll(string &result, const string &find, const string &replace)
+void StubGenerator::replaceAll2(string &result, const string &find, const string &replace)
 {
     size_t pos = result.find(find);
     while (pos != string::npos)
