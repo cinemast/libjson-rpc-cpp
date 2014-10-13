@@ -10,7 +10,7 @@ It is fully JSON-RPC 2.0 compatible ([JSON-RPC 2.0](http://www.jsonrpc.org/speci
 
 ![libjson-rpc-cpp logo](https://github.com/cinemast/libjson-rpc-cpp/blob/master/dev/artwork/logo.png?raw=true)
 
-5 good reasons why you should use libjson-rpc-cpp in your next project:
+5 good reasons for using libjson-rpc-cpp in your next RPC project:
 ---------
 - Full JSON-RPC 2.0 Support (batch requests, parameter type and name checking, ...).
 - jsonrpcstub: Generates automatically C++ stub-classes for your json-rpc client AND server.
@@ -24,14 +24,13 @@ It is fully JSON-RPC 2.0 compatible ([JSON-RPC 2.0](http://www.jsonrpc.org/speci
 - Very verbose error reporting.
 - Easy to use [cmake](http://www.cmake.org) cross platform build system.
 - Clean and simple architecture.
-- Authentication Interface: to restrict certain methods to certain user/groups only.
-- Tested under MacOS X (10.7,10.8), Linux (Ubuntu 12.10 64bit, LinuxMint 14 64bit).
+- Tested under MacOS X (10.7,10.8), Linux (Debian 8 64-bit).
 - Tested under RaspberryPi (raspbian). This library offers great opportunities to remotely control your raspberry pi.
 - Automated testing using `make test`
-- Useful Examples provided. g.g. XBMC Remote using json-rpc client part and stub generator.
+- Useful Examples provided. e.g. XBMC Remote using json-rpc client part and stub generator.
  
-Build the library
--------------
+Build the framework
+------------------
 
 You will need [Git](http://git-scm.com/downloads) and [CMake](http://www.cmake.org/cmake/resources/software.html). You can click on the links to download the latest versions. [libcurl](http://curl.haxx.se/libcurl/) is also required but should already be installed on most systems.
 CMake must be Version 2.6 or later.
@@ -46,69 +45,44 @@ Open a terminal and copy the following commands:
 
 ```sh
 git clone git://github.com/cinemast/libjson-rpc-cpp.git
+mkdir -p libjson-rpc-cpp/build
 cd libjson-rpc-cpp/build
 cmake .. && make
-#Not required, but makes it easier to use
-sudo make install
-#only required for linux
-sudo ldconfig	
+sudo make install 	#Not required, but makes it easier to use
+sudo ldconfig		#only required for linux
 ```
-To uninstall the library and the stubgenerator, type:
+That's it!
 
+If you are not happy with it, simply uninstall it from your system using (inside the build the directory):
 ```sh
-cd build && sudo make uninstall
+sudo make uninstall
 ```
-
-That's all you need.
-
-
-Under CentOS based (automake) systems type:
-
-```sh
-sudo yum install automake autoconf libtool libcurl-devel
-```
-
-Open a terminal and copy the following commands:
-
-```sh
-git clone git://github.com/cinemast/libjson-rpc-cpp.git
-cd libjson-rpc-cpp/
-autoreconf -if
-cd build
-../configure
-make
-#Not required, but makes it easier to use
-sudo make install
-#only required for linux
-sudo ldconfig	
-```
-To build RPM package for Fedora/Redhat/CentOS systems type:
-
-```sh
-sudo yum install rpm-build
-cd libjson-rpc-cpp/build
-../configure
-make rpm
-```
-Your packages will be available under libjson-rpc-cpp/build/RPMBUILD/RPMS folder
+**Build options:**
+- `-DCOMPILE_TESTS=NO` disables unit test suite.
+- `-DCOMPILE_STUBGEN=NO` disables building the stubgenerator.
+- `-DCOMPILE_EXAMPLES=NO` disables examples.
+- `-DHTTP_SERVER_MONGOOSE=NO` disable the embedded mongoose webserver.
+- `-DHTTP_CLIENT_CURL=NO` disable the curl client.
+- `-DSOCKET_SERVER=YES` enable the socket server.
+- `-DSOCKET_CLIENT=YES` enable the socket client.
 
 Simple Example
---------
-This example will show the most simple way to create a rpc server and client. If you only need the server, ignore step 4. If you only need the client, ignore step 3. You can find all resources of this sample in the `src/example` directory of this repository.
+---------------
+This example will show the most simple way to create a rpc server and client. If you only need the server, ignore step 4. If you only need the client, ignore step 3. You can find all resources of this sample in the `src/examples` directory of this repository.
 
 ### Step 1: Writing the specification file ###
 
 ```json
 [
 	{
-		"method": "sayHello",
+		"name": "sayHello",
 		"params": { 
 			"name": "Peter"
 		},
 		"returns" : "Hello Peter"
 	},
 	{
-		"notification" : "notifyServer",
+		"name" : "notifyServer",
 		"params": null
 	}
 ]
@@ -120,16 +94,16 @@ The type of a return value or parameter is defined by the literal assigned to it
 
 Call jsonrpcstub:
 ```sh
-jsonrpcstub -s -c -o /Users/cinemast/Desktop spec.json MyStub
+jsonrpcstub --input=spec.json --class=MyStub --server=abstractstubserver.h --cpp=stubclient.h
 ```
 
-This generates the server (-s) and the client (-c) stub to the specified output directory (-o). `spec.json` is the specification file. `MyStub` defines the name of the stub classes.
+This generates the abstract server (`--server`) and the C++ client (`--cpp`) stub. `spec.json` is the specification file we have defined in Step 1. `--class` defines the class name of the stub. This can also be a namespaced classname like `myapplication::MyStub`.
 
 You should see the following on your command line: 
 
 ```sh
-Client Stub genearted to: /Users/cinemast/Desktop/MyStubClient.h
-Server Stub genearted to: /Users/cinemast/Desktop/AbstractMyStubServer.h
+C++ Client Stub genearted to: stubclient.h
+Server Stub genearted to: abstractstubserver.h
 ```
 
 ### Step 3: implement the abstract server stub ###
@@ -137,44 +111,7 @@ Server Stub genearted to: /Users/cinemast/Desktop/AbstractMyStubServer.h
 Extend the abstract server stub and implement all pure virtual (abstract) methods defined in `spec.json`.
 
 ```cpp
-#include <jsonrpc/rpc.h>
-#include <iostream>
-
-#include "abstractmystubserver.h"
-
-using namespace jsonrpc;
-using namespace std;
-
-class MyStubServer : public AbstractMyStubServer
-{
-    public:
-        MyStubServer();
-
-        virtual void notifyServer();
-        virtual std::string sayHello(const std::string& name);
-};
-
-MyStubServer::MyStubServer() :
-    AbstractMyStubServer(new HttpServer(8080))
-{
-}
-void MyStubServer::notifyServer()
-{
-    cout << "Server got notified" << endl;
-}
-string MyStubServer::sayHello(const string &name)
-{
-    return "Hello " + name;
-}
-
-int main()
-{
-    MyStubServer s;
-    s.StartListening();
-    getchar();
-    s.StopListening();
-    return 0;
-}
+TBD.
 ```
 
 In the main function the concrete server is instantiated and started. That is all for the server. Any JSON-RPC 2.0 compliant client can now connect to your server.
@@ -182,41 +119,18 @@ In the main function the concrete server is instantiated and started. That is al
 Compile the server with:
 
 ```sh
-g++ main.cpp -ljsonrpc -o sampleserver
+g++ main.cpp -ljsonrpccppserver -o sampleserver
 ```
 
 ### Step 4: Create the client application
 ```cpp
-#include <jsonrpc/rpc.h>
-#include <iostream>
-
-#include "mystubclient.h"
-
-using namespace jsonrpc;
-using namespace std;
-
-int main()
-{
-    HttpClient* httpClient = new HttpClient("http://localhost:8080");
-    MyStubClient c(httpClient);
-    try
-    {
-        cout << c.sayHello("Peter Knafl") << endl;
-        c.notifyServer();
-    }
-    catch (JsonRpcException e)
-    {
-        cerr << e.what() << endl;
-    }
-    delete httpClient;
-    return 0;
-}
+TBD
 ```
 
 Compile the client with:
 
 ```sh
-g++ main.cpp -ljsonrpc -o sampleclient
+g++ main.cpp -ljsonrpccppclient -o sampleclient
 ```
 
 References
@@ -229,18 +143,31 @@ References
 
 If you use this library and find it useful, I would be very pleased if you let me know about it.
 
-Roadmap for v0.3
---------
-- Provide .deb package
-- Documentation for extending libjson-rpc-cpp (implementing more connectors, authentication manager)
+Roadmap for next release
+------------------------
+- JSON RPC 1 legacy support
+- libmicrohttpd server connector (to replace mongoose, because of license issues)
+- Generate client stubs for other languages.
+
+Changes in v0.3
+---------------
+- Split up server and client into separate libraries
+- Lot's of refactorings in the build system and stubgenerator.
+- libjson-cpp is no longer directly embedded.
+- Simplified spec format: a procedure specification without `return` field is a notification.
+- Introduced a boost-test based unit testing suite, which makes testing more flexible.
+- Added CMake options to enable/disable Stubgenerator, Examples, Connectors and Testsuite.
+- Removed Autotools support (because of all the changes in this release).
+- Bugfix: renamed .so files to avoid collisions with makerbot's libjsonrpc.
+- Bugfix: Invalid Batchcalls in Client and Server caused runtime exceptions.
+
 
 Changes in v0.2.1
----------
-
+-----------------
 - Added support for positional parameters. (see at [example specification](https://github.com/cinemast/libjson-rpc-cpp/blob/master/src/example/spec.json) how to declare them)
 
 Changes in v0.2
----------
+---------------
 - Minor bugfixes.
 - Refactored architecture.
 - stub generator for client and server.
@@ -263,7 +190,7 @@ Licsense
 This framework is licensed under [MIT](http://en.wikipedia.org/wiki/MIT_License).
 
 ```
-Copyright (C) 2011-2013 Peter Spiess-Knafl
+Copyright (C) 2011-2014 Peter Spiess-Knafl
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of 
 this software and associated documentation files (the "Software"), to deal in the 
