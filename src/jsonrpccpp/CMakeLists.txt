@@ -87,8 +87,8 @@ install(FILES ${jsonrpc_header}        DESTINATION include/jsonrpccpp)
 install(FILES ${jsonrpc_header_common} DESTINATION include/jsonrpccpp/common)
 install(FILES ${jsonrpc_header_client} DESTINATION include/jsonrpccpp/client)
 install(FILES ${jsonrpc_header_server} DESTINATION include/jsonrpccpp/server)
-install(FILES ${client_connector_header} DESTINATION include/jsonrpccpp/client/conectors)
-install(FILES ${server_connector_header} DESTINATION include/jsonrpccpp/server/conectors)
+install(FILES ${client_connector_header} DESTINATION include/jsonrpccpp/client/connectors)
+install(FILES ${server_connector_header} DESTINATION include/jsonrpccpp/server/connectors)
 
 install(TARGETS jsonrpccommon jsonrpccommonStatic jsonrpcclient jsonrpcclientStatic jsonrpcserver jsonrpcserverStatic
                       LIBRARY DESTINATION lib
