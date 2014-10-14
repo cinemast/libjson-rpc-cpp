@@ -29,6 +29,10 @@ It is fully JSON-RPC 2.0 compatible ([JSON-RPC 2.0](http://www.jsonrpc.org/speci
 - Automated testing using `make test`
 - Useful Examples provided. e.g. XBMC Remote using json-rpc client part and stub generator.
  
+ Overview
+ ---------
+ ![libjson-rpc-cpp logo](https://github.com/cinemast/libjson-rpc-cpp/blob/develop/dev/artwork/overview.png?raw=true)
+ 
 Build the framework
 ------------------
 
@@ -94,54 +98,24 @@ The type of a return value or parameter is defined by the literal assigned to it
 
 Call jsonrpcstub:
 ```sh
-jsonrpcstub spec.json --cpp-server=AbstractStubServer --cpp-client=StubClient
+jsonrpcstub --input=spec.json --class=MyStub --server=abstractstubserver.h --cpp=stubclient.h
 ```
 
-This generates a serverstub and a clientstub class.
+This generates the abstract server (`--server`) and the C++ client (`--cpp`) stub. `spec.json` is the specification file we have defined in Step 1. `--class` defines the class name of the stub. This can also be a namespaced classname like `myapplication::MyStub`.
 
+You should see the following on your command line: 
+
+```sh
+C++ Client Stub genearted to: stubclient.h
+Server Stub genearted to: abstractstubserver.h
+```
 
 ### Step 3: implement the abstract server stub ###
 
 Extend the abstract server stub and implement all pure virtual (abstract) methods defined in `spec.json`.
 
 ```cpp
-#include "abstractsubserver.h"
-#include <jsonrpccpp/server/connectors/httpserver.h>
-
-using namespace jsonrpc;
-using namespace std;
-
-class MyStubServer : public AbstractStubServer
-{
-    public:
-        MyStubServer(AbstractServerConnector &connector);
-
-        virtual void notifyServer();
-        virtual std::string sayHello(const std::string& name);
-};
-
-MyStubServer::MyStubServer(AbstractServerConnector &connector) :
-    AbstractStubServer(connector)
-{
-}
-void MyStubServer::notifyServer()
-{
-    cout << "Server got notified" << endl;
-}
-string MyStubServer::sayHello(const string &name)
-{
-    return "Hello " + name;
-}
-
-int main()
-{
-    HttpServer httpserver(8383);
-    MyStubServer s(httpserver);
-    s.StartListening();
-    getchar();
-    s.StopListening();
-    return 0;
-}
+TBD.
 ```
 
 In the main function the concrete server is instantiated and started. That is all for the server. Any JSON-RPC 2.0 compliant client can now connect to your server.
@@ -154,28 +128,7 @@ g++ main.cpp -ljsonrpccppserver -o sampleserver
 
 ### Step 4: Create the client application
 ```cpp
-#include <iostream>
-
-#include "stubclient.h"
-#include <jsonrpccpp/client/connectors/httpclient.h>
-
-using namespace jsonrpc;
-using namespace std;
-
-int main()
-{
-    HttpClient httpclient("http://localhost:8383");
-    StubClient c(httpclient);
-    try
-    {
-        cout << c.sayHello("Peter Knafl") << endl;
-        c.notifyServer();
-    }
-    catch (JsonRpcException e)
-    {
-        cerr << e.what() << endl;
-    }
-}
+TBD
 ```
 
 Compile the client with:
@@ -186,7 +139,7 @@ g++ main.cpp -ljsonrpccppclient -o sampleclient
 
 References
 -------------
-- [NASA Ames Research Center](http://www.nasa.gov/centers/ames/home/): use it to obtain aircraft state information from an aircraft simulator.
+- [NASA Ames Research Center](http://www.nasa.gov/centers/ames/home/): used it to obtain aircraft state information from an aircraft simulator.
 - [LaseShark 3D Printer](https://github.com/macpod/lasershark_3dp): used to control the firmware of the 3D printer.
 - [cpp-ethereum](https://github.com/ethereum/cpp-ethereum): a distributed computing framework.
 - [mage-sdk-cpp](https://github.com/mage/mage-sdk-cpp): a game engine.
@@ -200,9 +153,37 @@ Roadmap for next release
 - libmicrohttpd server connector (to replace mongoose, because of license issues)
 - Generate client stubs for other languages.
 
-Changelogs
-----------
-Changelogs can be found [here](https://github.com/cinemast/libjson-rpc-cpp/blob/master/CHANGELOG.md)
+Changes in v0.3
+---------------
+- Split up server and client into separate libraries
+- Lot's of refactorings in the build system and stubgenerator.
+- Added namespace/package support for generated stub classes.
+- libjson-cpp is no longer directly embedded.
+- Simplified spec format: a procedure specification without `return` field is a notification.
+- Introduced a boost-test based unit testing suite, which makes testing more flexible.
+- Added CMake options to enable/disable Stubgenerator, Examples, Connectors and Testsuite.
+- Removed Autotools support (because of all the changes in this release).
+- Bugfix: renamed .so files to avoid collisions with makerbot's libjsonrpc.
+- Bugfix: Invalid Batchcalls in Client and Server caused runtime exceptions.
+
+
+Changes in v0.2.1
+-----------------
+- Added support for positional parameters. (see at [example specification](https://github.com/cinemast/libjson-rpc-cpp/blob/master/src/example/spec.json) how to declare them)
+
+Changes in v0.2
+---------------
+- Minor bugfixes.
+- Refactored architecture.
+- stub generator for client and server.
+- removed mandatory configuration files (making it more compatible for embedded use cases).
+- Introduced SpecificationWriter to generate Specifications from RPC-Server definitions.
+- Introduced SpecificationParser to parse a Specification file and generate Methods for the RPC-Server.
+- Updated JsonCPP library
+- Update Mongoose library
+- Enable SSL Support (provided by mongoose)
+- Introduced automated testing after build phase (using `make test`)
+- Embedding dependent libraries (to avoid naming conflicts)
 
 Known issues
 -------------
@@ -210,10 +191,31 @@ Known issues
 
 Licsense
 --------
+
 This framework is licensed under [MIT](http://en.wikipedia.org/wiki/MIT_License).
 
+```
+Copyright (C) 2011-2014 Peter Spiess-Knafl
 
-Dependencies
+Permission is hereby granted, free of charge, to any person obtaining a copy of 
+this software and associated documentation files (the "Software"), to deal in the 
+Software without restriction, including without limitation the rights to 
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of 
+the Software, and to permit persons to whom the Software is furnished to do so, 
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all 
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
+PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE 
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE 
+OR OTHER DEALINGS IN THE SOFTWARE.
+```
+
+Used Libraries
 ---------------
 
 - [jsoncpp](http://jsoncpp.sourceforge.net) (licensed under MIT)
@@ -224,5 +226,5 @@ mongoose is a http server that can be easily embedded into other applications.
 It is used here for the HttpConnector to provide HTTP json-rpc Requests.
 - [curl](http://curl.haxx.se)
 lib curl is used for the HttpClient connections.
-- [argtable2](http://argtable.sourceforge.net/) (licensed under LGPL)
-libargtable2 is used for handling commandline parameters of the jsonrpcstub tool.
+
+Thanks go to **Baptiste Lepilleur** and **Sergey Lyubka** for providing jsoncpp and mongoose.
