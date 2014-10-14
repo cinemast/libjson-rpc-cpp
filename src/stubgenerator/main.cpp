@@ -14,7 +14,7 @@
 #include <jsonrpccpp/client.h>
 
 #include <argtable2.h>
-
+#include "helper/cpphelper.h"
 #include "client/cppclientstubgenerator.h"
 #include "server/cppserverstubgenerator.h"
 
@@ -25,17 +25,19 @@ using namespace jsonrpc;
 
 int main(int argc, char** argv)
 {
-    struct arg_lit *help        = arg_lit0("h","help", "print this help and exit");
-    struct arg_file *inputfile  = arg_file0("i", "input", "<inputfile>.json", "path of input specification file");
-    struct arg_str *classname   = arg_str0("c", "class", NULL, "name of the class");
-    struct arg_str *server      = arg_str0("s", "server", "<filename>.h", "name of the server stubfile");
-    struct arg_str *cppclient   = arg_str0(NULL, "cpp", "<filename>.h", "name of the cpp client stubfile");
+    struct arg_file *inputfile      = arg_file0(NULL, NULL, "<specfile>", "path of input specification file");
+    struct arg_lit *help            = arg_lit0("h","help", "print this help and exit");
+    struct arg_lit *verbose         = arg_lit0("v","verbose", "print more information about what is happening");
+    struct arg_str *cppserver       = arg_str0(NULL, "cpp-server", "<namespace::classname>", "name of the C++ server stub class");
+    struct arg_str *cppserverfile   = arg_str0(NULL, "cpp-server-file", "<filename.h>", "name of the C++ server stub file");
+    struct arg_str *cppclient       = arg_str0(NULL, "cpp-client", "<namespace::classname>", "name of the C++ client stub class");
+    struct arg_str *cppclientfile   = arg_str0(NULL, "cpp-client-file", "<namespace::classname>", "name of the C++ client stub file");
+
     struct arg_end *end         = arg_end(20);
-    void* argtable[] = {help, inputfile, classname, server, cppclient, end};
+    void* argtable[] = {inputfile, help, verbose, cppserver, cppserverfile, cppclient, cppclientfile, end};
 
     if (arg_parse(argc,argv,argtable) > 0)
     {
-        //  cerr << "Invalid arguments: try --help for more information" << endl;
         arg_print_errors(stderr, end, argv[0]);
         arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));
         return 1;
@@ -50,34 +52,60 @@ int main(int argc, char** argv)
         return 0;
     }
 
-    if (inputfile->count == 0 || classname->count == 0)
-    {
-        EXIT_ERROR("Invalid arguments: -i|--input and -c|--class parameter must be provided")
+    if (inputfile->count == 0) {
+        EXIT_ERROR("Invalid arguments: specfile must be provided.")
     }
 
-    std::vector<Procedure> procedures = SpecificationParser::GetProceduresFromFile(inputfile->filename[0]);
-
-
     try {
-        if (server->count > 0)
+        std::vector<Procedure> procedures = SpecificationParser::GetProceduresFromFile(inputfile->filename[0]);
+
+        if (verbose->count > 0)
         {
-            CodeGenerator cg(server->sval[0]);
-            CPPServerStubGenerator serverstub(classname->sval[0], procedures, cg);
+            cout << "Found " << procedures.size() << " procedures in " << inputfile->filename[0] << endl;
+            for (unsigned int i; i < procedures.size(); i++) {
+                if (procedures.at(i).GetProcedureType() == RPC_METHOD)
+                    cout << "\t[Method]         ";
+                else
+                    cout << "\t[Notification]   ";
+                cout << procedures.at(i).GetProcedureName() << endl;
+            }
+            cout << endl;
+        }
+
+        if (cppserver->count > 0)
+        {
+            string filename;
+            if (cppserverfile->count > 0)
+                filename = cppserverfile->sval[0];
+            else
+                filename = CPPHelper::class2Filename(cppserver->sval[0]);
+            if (verbose->count > 0)
+                cout << "Generating C++ Serverstub to: " << CPPHelper::class2Filename(cppserver->sval[0]) << endl;
+            CodeGenerator cg(filename);
+            CPPServerStubGenerator serverstub(cppserver->sval[0], procedures, cg);
             serverstub.generateStub();
         }
 
         if (cppclient->count > 0)
         {
-            CodeGenerator cg(cppclient->sval[0]);
-            CPPClientStubGenerator cppclientstub(classname->sval[0], procedures, cg);
+            string filename;
+            if (cppclientfile->count > 0)
+                filename = cppclientfile->sval[0];
+            else
+                filename = CPPHelper::class2Filename(cppclient->sval[0]);
+            if (verbose->count > 0)
+                cout << "Generating C++ Clientstub to: " << CPPHelper::class2Filename(cppclient->sval[0]) << endl;
+            CodeGenerator cg(filename);
+            CPPClientStubGenerator cppclientstub(cppclient->sval[0], procedures, cg);
             cppclientstub.generateStub();
-
         }
     }
     catch (const JsonRpcException &ex)
     {
         EXIT_ERROR(ex.what())
     }
-    return 0;
 
+    if (verbose->count > 0)
+        cout << "Successfully completed stubgeneration." << endl;
+    return 0;
 }

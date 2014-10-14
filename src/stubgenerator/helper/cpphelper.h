@@ -11,6 +11,7 @@
 #define JSONRPC_CPP_CPPHELPER_H
 
 #include <string>
+#include <vector>
 #include <jsonrpccpp/common/procedure.h>
 #include "../codegenerator.h"
 
@@ -26,8 +27,14 @@ namespace jsonrpc
             static std::string toString         (jsontype_t type);
             static std::string generateParameterDeclarationList(Procedure& proc);
 
+            static std::string class2Filename(const std::string &classname);
+            static std::vector<std::string> splitPackages(const std::string &classname);
+
             static void prolog(CodeGenerator &cg, const std::string &stubname);
             static void epilog(CodeGenerator &cg, const std::string &stubname);
+
+            static int namespaceOpen(CodeGenerator &cg, const std::string &classname);
+            static void namespaceClose(CodeGenerator &cg, int depth);
 
     };
 }

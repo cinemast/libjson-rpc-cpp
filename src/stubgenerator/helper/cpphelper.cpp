@@ -18,7 +18,7 @@ using namespace jsonrpc;
 #define TEMPLATE_CPPSERVER_GUARD1 "#ifndef JSONRPC_CPP_STUB_<STUBNAME>_H_"
 #define TEMPLATE_CPPSERVER_GUARD2 "#define JSONRPC_CPP_STUB_<STUBNAME>_H_"
 
-#define TEMPLATE_EPILOG "#endif //_<STUBNAME>_H_"
+#define TEMPLATE_EPILOG "#endif //JSONRPC_CPP_<STUBNAME>_H_"
 
 string  CPPHelper::toCppType                        (jsontype_t type, bool isConst, bool isReference)
 {
@@ -117,6 +117,28 @@ string  CPPHelper::generateParameterDeclarationList (Procedure &proc)
     return param_string.str();
 }
 
+string CPPHelper::class2Filename(const string &classname)
+{
+    vector<string> packages = splitPackages(classname);
+    string data = packages.at(packages.size()-1);
+    std::transform(data.begin(), data.end(), data.begin(), ::tolower);
+    return data+".h";
+}
+
+std::vector<string> CPPHelper::splitPackages(const string &classname)
+{
+    string s = classname;
+    string delimiter = "::";
+    size_t pos = 0;
+    vector<string> tokens;
+    while ((pos = s.find(delimiter)) != string::npos) {
+        tokens.push_back(s.substr(0, pos));
+        s.erase(0, pos + delimiter.length());
+    }
+    tokens.push_back(s);
+    return tokens;
+}
+
 void CPPHelper::prolog(CodeGenerator &cg, const string &stubname)
 {
     cg.writeLine("/**");
@@ -128,7 +150,6 @@ void CPPHelper::prolog(CodeGenerator &cg, const string &stubname)
     std::transform(stub_upper.begin(), stub_upper.end(), stub_upper.begin(),
                    ::toupper);
 
-
     cg.writeLine(StubGenerator::replaceAll(TEMPLATE_CPPSERVER_GUARD1, "<STUBNAME>", stub_upper));
     cg.writeLine(StubGenerator::replaceAll(TEMPLATE_CPPSERVER_GUARD2, "<STUBNAME>", stub_upper));
     cg.writeNewLine();
@@ -139,6 +160,29 @@ void CPPHelper::epilog(CodeGenerator &cg, const string &stubname)
     string stub_upper = stubname;
     std::transform(stub_upper.begin(), stub_upper.end(), stub_upper.begin(),::toupper);
     cg.writeLine(StubGenerator::replaceAll(TEMPLATE_EPILOG, "<STUBNAME>", stub_upper));
+}
+
+int CPPHelper::namespaceOpen(CodeGenerator &cg, const string &classname)
+{
+    vector<string> namespaces = splitPackages(classname);
+
+    for (unsigned int i=0; i < namespaces.size() -1; i++)
+    {
+        cg.write("namespace ");
+        cg.write(namespaces.at(i));
+        cg.writeLine(" {");
+        cg.increaseIndentation();
+    }
+    return namespaces.size()-1;
+}
+
+void CPPHelper::namespaceClose(CodeGenerator &cg, int depth)
+{
+    for (int i=0; i < depth; i++)
+    {
+        cg.decreaseIndentation();
+        cg.writeLine("}");
+    }
 }
 
 string  CPPHelper::normalizeString                  (const string &text)

@@ -153,6 +153,7 @@ Changes in v0.3
 ---------------
 - Split up server and client into separate libraries
 - Lot's of refactorings in the build system and stubgenerator.
+- Added namespace/package support for generated stub classes.
 - libjson-cpp is no longer directly embedded.
 - Simplified spec format: a procedure specification without `return` field is a notification.
 - Introduced a boost-test based unit testing suite, which makes testing more flexible.

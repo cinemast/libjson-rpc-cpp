@@ -36,18 +36,20 @@ CPPClientStubGenerator::CPPClientStubGenerator(const string &stubname, std::vect
 
 void CPPClientStubGenerator::generateStub()
 {
-    CPPHelper::prolog(cg, this->stubname);
-
+    vector<string> classname = CPPHelper::splitPackages(this->stubname);
+    CPPHelper::prolog(cg, classname.at(classname.size()-1));
     cg.writeLine("#include <jsonrpccpp/client.h>");
     cg.writeNewLine();
 
-    cg.writeLine(replaceAll(TEMPLATE_CPPCLIENT_SIGCLASS, "<stubname>", this->stubname));
+    int depth = CPPHelper::namespaceOpen(cg, stubname);
+
+    cg.writeLine(replaceAll(TEMPLATE_CPPCLIENT_SIGCLASS, "<stubname>", classname.at(classname.size()-1)));
     cg.writeLine("{");
     cg.increaseIndentation();
     cg.writeLine("public:");
     cg.increaseIndentation();
 
-    cg.writeLine(replaceAll(TEMPLATE_CPPCLIENT_SIGCONSTRUCTOR, "<stubname>", this->stubname));
+    cg.writeLine(replaceAll(TEMPLATE_CPPCLIENT_SIGCONSTRUCTOR, "<stubname>", classname.at(classname.size()-1)));
     cg.writeNewLine();
 
     for (unsigned int i=0; i < procedures.size(); i++)
@@ -60,6 +62,7 @@ void CPPClientStubGenerator::generateStub()
     cg.writeLine("};");
     cg.writeNewLine();
 
+    CPPHelper::namespaceClose(cg, depth);
     CPPHelper::epilog(cg, this->stubname);
 }
 

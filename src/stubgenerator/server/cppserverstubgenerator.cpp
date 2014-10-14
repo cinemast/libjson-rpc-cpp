@@ -36,18 +36,21 @@ CPPServerStubGenerator::CPPServerStubGenerator(const std::string &stubname, vect
 
 void CPPServerStubGenerator::generateStub()
 {
-    CPPHelper::prolog(cg, this->stubname);
+    vector<string> classname = CPPHelper::splitPackages(this->stubname);
+    CPPHelper::prolog(cg, classname.at(classname.size()-1));
 
     cg.writeLine("#include <jsonrpccpp/server.h>");
     cg.writeNewLine();
 
-    cg.writeLine(replaceAll(TEMPLATE_CPPSERVER_SIGCLASS, "<stubname>", this->stubname));
+    int depth = CPPHelper::namespaceOpen(cg, stubname);
+
+    cg.writeLine(replaceAll(TEMPLATE_CPPSERVER_SIGCLASS, "<stubname>", classname.at(classname.size()-1)));
     cg.writeLine("{");
     cg.increaseIndentation();
     cg.writeLine("public:");
     cg.increaseIndentation();
 
-    cg.writeLine(replaceAll(TEMPLATE_CPPSERVER_SIGCONSTRUCTOR, "<stubname>", this->stubname));
+    cg.writeLine(replaceAll(TEMPLATE_CPPSERVER_SIGCONSTRUCTOR, "<stubname>", classname.at(classname.size()-1)));
     cg.writeLine("{");
     this->generateBindings();
     cg.writeLine("}");
@@ -63,6 +66,7 @@ void CPPServerStubGenerator::generateStub()
     cg.writeLine("};");
     cg.writeNewLine();
 
+    CPPHelper::namespaceClose(cg, depth);
     CPPHelper::epilog(cg,this->stubname);
 }
 
