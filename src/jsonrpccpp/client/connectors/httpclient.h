@@ -24,6 +24,7 @@ namespace jsonrpc
             virtual void SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException);
 
             void SetUrl(const std::string& url);
+            void SetTimeout(long timeout);
 
             void AddHeader(const std::string attr, const std::string val);
             void RemoveHeader(const std::string attr);
@@ -31,6 +32,11 @@ namespace jsonrpc
         private:
             std::map<std::string,std::string> headers;
             std::string url;
+
+            /**
+             * @brief timeout for http request in milliseconds
+             */
+            long timeout;
     };
 
 } /* namespace jsonrpc */

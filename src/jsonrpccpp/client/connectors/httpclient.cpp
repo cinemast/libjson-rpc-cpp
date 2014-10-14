@@ -27,8 +27,8 @@ struct string
 };
 
 /**
-     * Callback for libcurl
-     */
+  * Callback for libcurl
+  */
 static size_t writefunc(void *ptr, size_t size, size_t nmemb,
                         struct string *s)
 {
@@ -61,6 +61,7 @@ void init_string(struct string *s)
 HttpClient::HttpClient(const std::string& url) throw(JsonRpcException)
     : AbstractClientConnector(), url(url)
 {
+    this->timeout = 1000;
 }
 
 void HttpClient::SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException)
@@ -92,6 +93,7 @@ void HttpClient::SendRPCMessage(const std::string& message, std::string& result)
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, message.c_str());
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &s);
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, timeout);
 
     res = curl_easy_perform(curl);
 
@@ -109,6 +111,7 @@ void HttpClient::SendRPCMessage(const std::string& message, std::string& result)
         {
             str << ": libcurl error: " << res;
         }
+        curl_easy_cleanup(curl);
         throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, str.str());
     }
 
@@ -121,6 +124,11 @@ void HttpClient::SendRPCMessage(const std::string& message, std::string& result)
 void HttpClient::SetUrl(const std::string& url)
 {
     this->url = url;
+}
+
+void HttpClient::SetTimeout(long timeout)
+{
+    this->timeout = timeout;
 }
 
 void HttpClient::AddHeader(const std::string attr, const std::string val) {
