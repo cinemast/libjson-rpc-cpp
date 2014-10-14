@@ -94,24 +94,54 @@ The type of a return value or parameter is defined by the literal assigned to it
 
 Call jsonrpcstub:
 ```sh
-jsonrpcstub --input=spec.json --class=MyStub --server=abstractstubserver.h --cpp=stubclient.h
+jsonrpcstub spec.json --cpp-server=AbstractStubServer --cpp-client=StubClient
 ```
 
 This generates the abstract server (`--server`) and the C++ client (`--cpp`) stub. `spec.json` is the specification file we have defined in Step 1. `--class` defines the class name of the stub. This can also be a namespaced classname like `myapplication::MyStub`.
 
-You should see the following on your command line: 
-
-```sh
-C++ Client Stub genearted to: stubclient.h
-Server Stub genearted to: abstractstubserver.h
-```
 
 ### Step 3: implement the abstract server stub ###
 
 Extend the abstract server stub and implement all pure virtual (abstract) methods defined in `spec.json`.
 
 ```cpp
-TBD.
+#include "abstractsubserver.h"
+#include <jsonrpccpp/server/connectors/httpserver.h>
+
+using namespace jsonrpc;
+using namespace std;
+
+class MyStubServer : public AbstractStubServer
+{
+    public:
+        MyStubServer(AbstractServerConnector &connector);
+
+        virtual void notifyServer();
+        virtual std::string sayHello(const std::string& name);
+};
+
+MyStubServer::MyStubServer(AbstractServerConnector &connector) :
+    AbstractStubServer(connector)
+{
+}
+void MyStubServer::notifyServer()
+{
+    cout << "Server got notified" << endl;
+}
+string MyStubServer::sayHello(const string &name)
+{
+    return "Hello " + name;
+}
+
+int main()
+{
+    HttpServer httpserver(8383);
+    MyStubServer s(httpserver);
+    s.StartListening();
+    getchar();
+    s.StopListening();
+    return 0;
+}
 ```
 
 In the main function the concrete server is instantiated and started. That is all for the server. Any JSON-RPC 2.0 compliant client can now connect to your server.
@@ -124,7 +154,28 @@ g++ main.cpp -ljsonrpccppserver -o sampleserver
 
 ### Step 4: Create the client application
 ```cpp
-TBD
+#include <iostream>
+
+#include "stubclient.h"
+#include <jsonrpccpp/client/connectors/httpclient.h>
+
+using namespace jsonrpc;
+using namespace std;
+
+int main()
+{
+    HttpClient httpclient("http://localhost:8383");
+    StubClient c(httpclient);
+    try
+    {
+        cout << c.sayHello("Peter Knafl") << endl;
+        c.notifyServer();
+    }
+    catch (JsonRpcException e)
+    {
+        cerr << e.what() << endl;
+    }
+}
 ```
 
 Compile the client with:
