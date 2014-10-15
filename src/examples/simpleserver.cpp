@@ -42,7 +42,7 @@ int main(int argc, char** argv)
 {
     try
     {
-        HttpServer server(8080, true, "ssl_cert.pem");
+        HttpServer server(8383);
         SampleServer serv(server);
         if (serv.StartListening())
         {

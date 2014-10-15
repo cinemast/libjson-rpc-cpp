@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <termios.h>
+#include <unistd.h>
 #include <time.h>
 
 #include <iostream>
