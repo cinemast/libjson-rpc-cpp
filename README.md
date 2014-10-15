@@ -42,7 +42,7 @@ CMake must be Version 2.6 or later.
 Under Debian based systems type:
 
 ```sh
-sudo apt-get install libcurl4-openssl-dev cmake
+sudo apt-get install libcurl4-openssl-dev libjsoncpp-dev libargtable2-dev libboost-test-dev cmake
 ```
 
 Open a terminal and copy the following commands:
