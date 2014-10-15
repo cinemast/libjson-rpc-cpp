@@ -5,30 +5,23 @@
 jsonrpcstub \- genearate stubs for the libjson\-rpc\-cpp framework.
 .SH SYNOPSIS
 .B
-jsonrpcstub \-\-input=specfile.json \-\-class=ClassName 
-[\-\-server=abstractserverstub.h] [\-\-cpp=clientstub.h]
+jsonrpcstub specfile.json [\-\-cpp\-server=namespace::ClassName]
+[\-\-cpp\-server\-file=classname.h] [\-\-cpp\-client=namespace::ClassName]
+[\-\-cpp\-client-file=classname.h]
 .PP
 .B
 jsonrpcstub -i specfile.json -c ClassName 
 [-s abstractserverstub.h] [--cpp=clientstub.h]
 .SH DESCRIPTION
 .PP
-jsonrpcstub is a little tool to generate C++ classes, PHP classes, Java Classes and so on from a procedure especification file.
-.SH OPTIONS
-.IP \-h, \-\-help
-Print usage help to stdout.
-.IP \-i, \-\-input=specification.json
-specifies the path to the input specification file.
-.IP \-s, \-\-server=serverfile.h
-tells the stubgenerator to genarate an abstract class for the server component into the file serverfile.h
-.IP \-\-cpp=client.hq
-tells the stubgenerator to generate a stub client for C++.
+jsonrpcstub is a little tool to generate C++ classes from a procedure especification file.
+
 .SH EXAMPLES
 .PP
-Generate C++ Stubs for Server and Client, the classes will be named AbstractSampleStubServer and SampleStubClient:
+Generate C++ Stubs for Server and Client, the classes will be named AbstractStubServer and StubClient:
 .PP
 .Vb 1
-\&  	  jsonrpcstub \-i <spec.json> -s <abstractserverstub.h> \-c SampleStub
+\&  	  jsonrpcstub  <spec.json> --cpp--server=AbstractStubServer<abstractserverstub.h> --cpp-client=StubClient
 .Ve
 .SH SEE ALSO
 https://github.com/cinemast/libjson\-rpc\-cpp
@@ -37,7 +30,7 @@ No known bugs. Please report found bugs as an issue on github or send me an emai
 
 .SH COPYRIGHT
 
-Copyright (C) 2011\-2013 Peter Spiess-Knafl
+Copyright (C) 2011\-2014 Peter Spiess-Knafl
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of 
 this software and associated documentation files (the "Software"), to deal in the 
