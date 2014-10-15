@@ -64,8 +64,8 @@ ENDIF()
 
 add_library(jsonrpccommon SHARED ${jsonrpc_source_common})
 add_library(jsonrpccommonStatic STATIC ${jsonrpc_source_common})
-target_link_libraries(jsonrpccommon ${JSONCPP_LIBRARY})
-target_link_libraries(jsonrpccommonStatic ${JSONCPP_LIBRARY})
+target_link_libraries(jsonrpccommon ${JSONCPP_LIBRARIES})
+target_link_libraries(jsonrpccommonStatic ${JSONCPP_LIBRARIES})
 set_target_properties(jsonrpccommonStatic PROPERTIES OUTPUT_NAME jsonrpccppcommon)
 
 add_library(jsonrpcclient SHARED ${jsonrpc_source_client} ${client_connector_source})

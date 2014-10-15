@@ -5,7 +5,7 @@ INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src)
 find_package(Argtable REQUIRED)
 
 add_executable(jsonrpcstub ${jsonrpcstub_source})
-target_link_libraries(jsonrpcstub jsonrpccommon ${Argtable_LIBRARY})
+target_link_libraries(jsonrpcstub jsonrpccommon ${ARGTABLE_LIBRARIES})
 
 #Generate manpage
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
