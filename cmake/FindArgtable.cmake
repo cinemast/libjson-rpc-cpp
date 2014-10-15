@@ -1,11 +1,11 @@
-# - Try to find Argtable
+# - Try to find ARGTABLE
 # Once done this will define
 #
-#  Argtable_FOUND - system has Argtable
-#  Argtable_INCLUDES - the Argtable include directory
-#  Argtable_LIBRARY - Link these to use Argtable
+#  ARGTABLE_FOUND - system has ARGTABLE
+#  ARGTABLE_INCLUDES - the ARGTABLE include directory
+#  ARGTABLE_LIBRARY - Link these to use ARGTABLE
 
-FIND_LIBRARY (Argtable_LIBRARY NAMES argtable2
+FIND_LIBRARY (ARGTABLE_LIBRARIES NAMES argtable2
     PATHS
     ENV LD_LIBRARY_PATH
     ENV LIBRARY_PATH
@@ -15,31 +15,34 @@ FIND_LIBRARY (Argtable_LIBRARY NAMES argtable2
     /usr/local/lib
     /opt/local/lib
 	 ${ARGTABLE_ROOT}/lib
+	${CMAKE_SOURCE_DIR}/win32-deps/lib
     )
 
-FIND_PATH (Argtable_INCLUDES argtable2.h
+FIND_PATH (ARGTABLE_INCLUDE_DIRS argtable2.h
     ENV CPATH
 	${ARGTABLE_ROOT}/include
     /usr/include
     /usr/local/include
     /opt/local/include
+	${CMAKE_SOURCE_DIR}/win32-deps/include
+
     )
 
-IF(Argtable_INCLUDES AND Argtable_LIBRARY)
-    SET(Argtable_FOUND TRUE)
-ENDIF(Argtable_INCLUDES AND Argtable_LIBRARY)
+IF(ARGTABLE_INCLUDE_DIRS AND ARGTABLE_LIBRARIES)
+    SET(ARGTABLE_FOUND TRUE)
+ENDIF(ARGTABLE_INCLUDE_DIRS AND ARGTABLE_LIBRARIES)
 
-IF(Argtable_FOUND)
-  IF(NOT Argtable_FIND_QUIETLY)
-    MESSAGE(STATUS "Found Argtable: ${Argtable_LIBRARY}")
-  ENDIF(NOT Argtable_FIND_QUIETLY)
-ELSE(Argtable_FOUND)
-  IF(Argtable_FIND_REQUIRED)
-    MESSAGE(FATAL_ERROR "Could not find Argtable")
-  ENDIF(Argtable_FIND_REQUIRED)
-ENDIF(Argtable_FOUND)
+IF(ARGTABLE_FOUND)
+  IF(NOT ARGTABLE_FIND_QUIETLY)
+    MESSAGE(STATUS "Found ARGTABLE: ${ARGTABLE_LIBRARIES}")
+  ENDIF(NOT ARGTABLE_FIND_QUIETLY)
+ELSE(ARGTABLE_FOUND)
+  IF(ARGTABLE_FIND_REQUIRED)
+    MESSAGE(FATAL_ERROR "Could not find ARGTABLE")
+  ENDIF(ARGTABLE_FIND_REQUIRED)
+ENDIF(ARGTABLE_FOUND)
 
 MARK_AS_ADVANCED(
-  Argtable_LIBRARY
-  Argtable_INCLUDES
+  ARGTABLE_LIBRARIES
+  ARGTABLE_INCLUDE_DIRS
   )
