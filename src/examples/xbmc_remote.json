@@ -1,0 +1,32 @@
+[
+{
+    "name": "Input.Left",
+            "params": null,
+            "returns": "string"
+},
+{
+    "name": "Input.Right",
+            "params": null,
+            "returns": "string"
+},
+{
+    "name": "Input.Up",
+            "params": null,
+            "returns": "string"
+},
+{
+    "name": "Input.Down",
+            "params": null,
+            "returns": "string"
+},
+{
+    "name": "Input.Back",
+            "params": null,
+            "returns": "string"
+},
+{
+    "name": "Input.Select",
+            "params": null,
+            "returns": "string"
+}
+]

@@ -7,41 +7,37 @@
  * @license See attached LICENSE.txt
  ************************************************************************/
 
-#ifndef STUBGENERATOR_H
-#define STUBGENERATOR_H
+#ifndef JSONRPC_CPP_STUBGENERATOR_H
+#define JSONRPC_CPP_STUBGENERATOR_H
 
 #include <string>
-#include <jsonrpc/procedure.h>
+#include <jsonrpccpp/common/procedure.h>
+
+#include "codegenerator.h"
 
 namespace jsonrpc
 {
+    enum connectiontype_t {CONNECTION_HTTP};
+
     class StubGenerator
     {
         public:
-            StubGenerator(const std::string& stubname, const std::string& filename);
+            StubGenerator(const std::string& stubname, std::vector<Procedure> &procedures, CodeGenerator &cg);
+            virtual ~StubGenerator();
 
-            ~StubGenerator();
 
-            virtual std::string generateStub() = 0;
-            std::string generateStubToFile(const std::string& outputpath);
-            std::string getStubName();
+            virtual std::string getStubName();
+            virtual void generateStub() = 0;
 
-            static void replaceAll(std::string& text, const std::string& fnd, const std::string& rep);
+            static std::string replaceAll(const std::string& text, const std::string& fnd, const std::string& rep);
+            static void replaceAll2(std::string &text, const std::string &find, const std::string &replace);
 
         protected:
-            procedurelist_t* procedures;
-            std::string stubname;
-
-            static std::string toCppType(jsontype_t type, bool isConst = false, bool isReference = false);
-            static std::string toCppConversion(jsontype_t);
-            static std::string isCppConversion(jsontype_t);
-            static std::string toString(jsontype_t type);
-
-            static std::string generateParameterDeclarationList(Procedure& proc);
-
-            static std::string normalizeString(const std::string &text);
+            std::string             stubname;
+            std::vector<Procedure>  &procedures;
+            CodeGenerator           &cg;
     };
 }
 
 
-#endif // STUBGENERATOR_H
+#endif // JSONRPC_CPP_STUBGENERATOR_H
