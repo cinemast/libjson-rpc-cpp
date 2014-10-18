@@ -81,7 +81,7 @@ target_link_libraries(jsonrpcserverStatic jsonrpccommonStatic ${server_connector
 set_target_properties(jsonrpcserverStatic PROPERTIES OUTPUT_NAME jsonrpccppserver)
 
 set(VERSION_STRING ${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION})
-set_target_properties(jsonrpccommon jsonrpccommonStatic jsonrpcclient jsonrpcclientStatic jsonrpcserver jsonrpcserverStatic PROPERTIES VERSION "${VERSION_STRING}" SOVERSION "${VERSION_MAJOR}")
+set_target_properties(jsonrpccommon jsonrpccommonStatic jsonrpcclient jsonrpcclientStatic jsonrpcserver jsonrpcserverStatic PROPERTIES VERSION "${VERSION_STRING}" SOVERSION "${MAJOR_VERSION}.${MINOR_VERSION}")
 
 install(FILES ${jsonrpc_header}        DESTINATION include/jsonrpccpp)
 install(FILES ${jsonrpc_header_common} DESTINATION include/jsonrpccpp/common)
