@@ -24,7 +24,7 @@ It is fully JSON-RPC 2.0 compatible ([JSON-RPC 2.0](http://www.jsonrpc.org/speci
 - Very verbose error reporting.
 - Easy to use [cmake](http://www.cmake.org) cross platform build system.
 - Clean and simple architecture.
-- Tested under MacOS X (10.7,10.8), Linux (Debian 8 64-bit).
+- Tested under MacOS X (10.9), Linux (Debian 8 64-bit).
 - Tested under RaspberryPi (raspbian). This library offers great opportunities to remotely control your raspberry pi.
 - Automated testing using `make test`
 - Useful Examples provided. e.g. XBMC Remote using json-rpc client part and stub generator.
@@ -39,11 +39,24 @@ Build the framework
 You will need [Git](http://git-scm.com/downloads) and [CMake](http://www.cmake.org/cmake/resources/software.html). You can click on the links to download the latest versions. [libcurl](http://curl.haxx.se/libcurl/) is also required but should already be installed on most systems.
 CMake must be Version 2.6 or later.
 
-Under Debian based systems type:
+**Install the dependencies:**
+
+*Debian based systems:*
 
 ```sh
 sudo apt-get install libcurl4-openssl-dev libjsoncpp-dev libargtable2-dev libboost-test-dev cmake
 ```
+
+*Mac OS X*
+
+You need [Brew](http://brew.sh) installed and type the following commands
+```sh
+brew install argtable cmake boost
+```
+
+[jsoncpp](https://github.com/open-source-parsers/jsoncpp) needs to be built by hand, because jsoncpp is not merged into brew yet. [See here](https://github.com/Homebrew/homebrew/pull/32916). 
+
+**Build and install this framework**
 
 Open a terminal and copy the following commands:
 
@@ -153,7 +166,7 @@ In the main function the concrete server is instantiated and started. That is al
 Compile the server with:
 
 ```sh
-g++ main.cpp -ljsonrpccppserver -o sampleserver
+g++ main.cpp -ljsonrpccpp-server -o sampleserver
 ```
 
 ### Step 4: Create the client application
@@ -185,7 +198,7 @@ int main()
 Compile the client with:
 
 ```sh
-g++ main.cpp -ljsonrpccppclient -o sampleclient
+g++ main.cpp -ljsonrpccpp-client -o sampleclient
 ```
 
 References
@@ -208,18 +221,12 @@ Changelogs
 ----------
 Changelogs can be found [here](https://github.com/cinemast/libjson-rpc-cpp/blob/master/CHANGELOG.md).
 
-Known issues
--------------
-- Due to a bug in gcc 4.6.2 this project is not compiling under Mac OS gcc. Use clang++ instead. [See here](http://stackoverflow.com/questions/8887864/template-base-constructor-call-in-member-initialization-list-error)
-
 Licsense
 --------
 This framework is licensed under [MIT](http://en.wikipedia.org/wiki/MIT_License).
 
-
 Dependencies
 ---------------
-
 - [jsoncpp](http://jsoncpp.sourceforge.net) (licensed under MIT)
 jsoncpp is a very easy to use and powerful json library. 
 It is used for all the JSON parsing and generation inside this library.
