@@ -62,10 +62,12 @@ void                SpecificationParser::GetProcedure           (Json::Value &si
 
             if (signature[KEY_SPEC_PROCEDURE_PARAMETERS].isArray())
             {
+                result.SetParameterDeclarationType(PARAMS_BY_POSITION);
                 GetPositionalParameters(signature, result);
             }
             else if (signature[KEY_SPEC_PROCEDURE_PARAMETERS].isObject())
             {
+                result.SetParameterDeclarationType(PARAMS_BY_NAME);
                 GetNamedParameters(signature, result);
             }
         }
