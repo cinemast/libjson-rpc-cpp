@@ -257,7 +257,7 @@ Known issues
 -------------
 - Due to a bug in gcc 4.6.2 this project is not compiling under Mac OS gcc. Use clang++ instead. [See here](http://stackoverflow.com/questions/8887864/template-base-constructor-call-in-member-initialization-list-error)
 
-Licsense
+License
 --------
 
 This framework is licensed under [MIT](http://en.wikipedia.org/wiki/MIT_License).
