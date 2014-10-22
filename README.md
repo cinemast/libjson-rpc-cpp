@@ -28,6 +28,7 @@ It is fully JSON-RPC 2.0 compatible ([JSON-RPC 2.0](http://www.jsonrpc.org/speci
 - Tested under RaspberryPi (raspbian). This library offers great opportunities to remotely control your raspberry pi.
 - Automated testing using `make test`
 - Useful Examples provided. e.g. XBMC Remote using json-rpc client part and stub generator.
+- JavaScript client stub generation.
 
  Overview
  ---------
@@ -51,10 +52,8 @@ sudo apt-get install libcurl4-openssl-dev libjsoncpp-dev libargtable2-dev libboo
 
 You need [Brew](http://brew.sh) installed and type the following commands
 ```sh
-brew install argtable cmake boost
+brew install argtable cmake boost jsoncpp
 ```
-
-[jsoncpp](https://github.com/open-source-parsers/jsoncpp) needs to be built by hand, because jsoncpp is not merged into brew yet. [See here](https://github.com/Homebrew/homebrew/pull/32916). 
 
 **Build and install this framework**
 
