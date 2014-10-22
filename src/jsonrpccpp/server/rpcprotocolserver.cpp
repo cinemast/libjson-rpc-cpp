@@ -103,13 +103,7 @@ int  RpcProtocolServer::ValidateRequest     (const Json::Value& request)
 {
     int error = 0;
     Procedure* proc;
-    if (!request.isObject() || !(request.isMember(KEY_REQUEST_METHODNAME)
-                                 && request[KEY_REQUEST_METHODNAME].isString()
-                                 && request.isMember(KEY_REQUEST_VERSION)
-                                 && request[KEY_REQUEST_VERSION].isString()
-                                 && request[KEY_REQUEST_VERSION].asString() == "2.0"
-                                 && request.isMember(KEY_REQUEST_PARAMETERS)
-                                 && (request[KEY_REQUEST_PARAMETERS].isObject() || request[KEY_REQUEST_PARAMETERS].isArray() || request[KEY_REQUEST_PARAMETERS].isNull())) || (request.isMember("id") && !request["id"].isInt()))
+    if (!this->ValidateRequestFields(request))
     {
         error = Errors::ERROR_RPC_INVALID_REQUEST;
     }
@@ -138,6 +132,20 @@ int  RpcProtocolServer::ValidateRequest     (const Json::Value& request)
         }
     }
     return error;
+}
+bool RpcProtocolServer::ValidateRequestFields(const Json::Value &request)
+{
+    if (!request.isObject())
+        return false;
+    if (!(request.isMember(KEY_REQUEST_METHODNAME) && request[KEY_REQUEST_METHODNAME].isString()))
+        return false;
+    if (!(request.isMember(KEY_REQUEST_VERSION) && request[KEY_REQUEST_VERSION].isString() && request[KEY_REQUEST_VERSION].asString() == JSON_RPC_VERSION))
+        return false;
+    if (request.isMember(KEY_REQUEST_ID) && !(request[KEY_REQUEST_ID].isInt() || request[KEY_REQUEST_ID].isString() || request[KEY_REQUEST_ID].isNull()))
+        return false;
+    if (request.isMember(KEY_REQUEST_PARAMETERS) && !(request[KEY_REQUEST_PARAMETERS].isObject() || request[KEY_REQUEST_PARAMETERS].isArray() || request[KEY_REQUEST_ID].isNull()))
+        return false;
+    return true;
 }
 void RpcProtocolServer::ProcessRequest      (const Json::Value& request, Json::Value& response)
 {

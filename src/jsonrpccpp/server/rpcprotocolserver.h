@@ -62,6 +62,7 @@ namespace jsonrpc
             void HandleBatchRequest(Json::Value& requests, Json::Value& response);
 
             int ValidateRequest(const Json::Value &val);
+            bool ValidateRequestFields(const Json::Value &val);
 
             /**
              * @pre the request must be a valid request

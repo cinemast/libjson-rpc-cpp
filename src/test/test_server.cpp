@@ -38,6 +38,16 @@ BOOST_AUTO_TEST_CASE(test_server_method_success)
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["result"].asInt(),-2);
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["id"].asInt(), 1);
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["jsonrpc"].asString(), "2.0");
+
+    c.SetRequest("{\"jsonrpc\":\"2.0\", \"id\": null, \"method\": \"sub\",\"params\":[5,7]}");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["result"].asInt(),-2);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["id"].isNull(), true);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["jsonrpc"].asString(), "2.0");
+
+    c.SetRequest("{\"jsonrpc\":\"2.0\", \"id\": \"1\", \"method\": \"sub\",\"params\":[5,7]}");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["result"].asInt(),-2);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["id"].asString(), "1");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["jsonrpc"].asString(), "2.0");
 }
 
 BOOST_AUTO_TEST_CASE(test_server_notification_success)
@@ -80,15 +90,11 @@ BOOST_AUTO_TEST_CASE(test_server_invalidrequest)
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32600);
     BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
 
-    c.SetRequest("{\"jsonrpc\":\"2.0\", \"id\": 1, \"method\": \"sayHello\"}");
-    BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32600);
-    BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
-
     c.SetRequest("{\"jsonrpc\":\"2.0\", \"id\": 1, \"method\": \"sayHello\",\"params\":1}");
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32600);
     BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
 
-    c.SetRequest("{\"jsonrpc\":\"2.0\", \"id\": \"1\", \"method\": \"sayHello\",\"params\":{\"name\":\"Peter\"}}");
+    c.SetRequest("{\"jsonrpc\":\"2.0\", \"id\": 3.2, \"method\": \"sayHello\",\"params\":{\"name\":\"Peter\"}}");
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32600);
     BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
 
@@ -149,6 +155,10 @@ BOOST_AUTO_TEST_CASE(test_server_params_error)
     BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
 
     c.SetRequest("{\"jsonrpc\":\"2.0\", \"id\": 1, \"method\": \"sayHello\",\"params\":[\"Peter\"]}");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32602);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
+
+    c.SetRequest("{\"jsonrpc\":\"2.0\", \"id\": 1, \"method\": \"sayHello\"}");
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32602);
     BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
 }
