@@ -1,3 +1,9 @@
+Changes in v0.3.1
+- Bugfixes
+- Changed SOVERSION
+- Added experimental Javascript client stub to stubgenerator
+- Adapted HTTP Server to enable CORS.
+
 Changes in v0.3
 ---------------
 - Split up server and client into separate libraries
