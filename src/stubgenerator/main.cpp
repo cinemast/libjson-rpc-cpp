@@ -16,6 +16,7 @@
 #include <argtable2.h>
 #include "helper/cpphelper.h"
 #include "client/cppclientstubgenerator.h"
+#include "client/jsclientstubgenerator.h"
 #include "server/cppserverstubgenerator.h"
 
 #define EXIT_ERROR(X) cerr << X << endl;arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));return 1;
@@ -32,9 +33,12 @@ int main(int argc, char** argv)
     struct arg_str *cppserverfile   = arg_str0(NULL, "cpp-server-file", "<filename.h>", "name of the C++ server stub file");
     struct arg_str *cppclient       = arg_str0(NULL, "cpp-client", "<namespace::classname>", "name of the C++ client stub class");
     struct arg_str *cppclientfile   = arg_str0(NULL, "cpp-client-file", "<namespace::classname>", "name of the C++ client stub file");
+    struct arg_str *jsclient        = arg_str0(NULL, "js-client", "<classname>", "name of the JavaScript client stub class");
+    struct arg_str *jsclientfile    = arg_str0(NULL, "js-client-file", "<filename.js>", "name of the JavaScript client stub file");
+
 
     struct arg_end *end         = arg_end(20);
-    void* argtable[] = {inputfile, help, verbose, cppserver, cppserverfile, cppclient, cppclientfile, end};
+    void* argtable[] = {inputfile, help, verbose, cppserver, cppserverfile, cppclient, cppclientfile, jsclient, jsclientfile,end};
 
     if (arg_parse(argc,argv,argtable) > 0)
     {
@@ -80,7 +84,7 @@ int main(int argc, char** argv)
             else
                 filename = CPPHelper::class2Filename(cppserver->sval[0]);
             if (verbose->count > 0)
-                cout << "Generating C++ Serverstub to: " << CPPHelper::class2Filename(cppserver->sval[0]) << endl;
+                cout << "Generating C++ Serverstub to: " << filename << endl;
             CodeGenerator cg(filename);
             CPPServerStubGenerator serverstub(cppserver->sval[0], procedures, cg);
             serverstub.generateStub();
@@ -94,10 +98,25 @@ int main(int argc, char** argv)
             else
                 filename = CPPHelper::class2Filename(cppclient->sval[0]);
             if (verbose->count > 0)
-                cout << "Generating C++ Clientstub to: " << CPPHelper::class2Filename(cppclient->sval[0]) << endl;
+                cout << "Generating C++ Clientstub to: " << filename << endl;
             CodeGenerator cg(filename);
             CPPClientStubGenerator cppclientstub(cppclient->sval[0], procedures, cg);
             cppclientstub.generateStub();
+        }
+
+        if (jsclient->count > 0)
+        {
+            string filename;
+            if (jsclientfile->count > 0)
+                filename = jsclientfile->sval[0];
+            else
+                filename = JSClientStubGenerator::class2Filename(jsclient->sval[0]);
+
+            if (verbose->count > 0)
+                cout << "Generating JavaScript Clientstub to: " << filename << endl;
+            CodeGenerator cg(filename);
+            JSClientStubGenerator jsclientstub(jsclient->sval[0], procedures, cg);
+            jsclientstub.generateStub();
         }
     }
     catch (const JsonRpcException &ex)

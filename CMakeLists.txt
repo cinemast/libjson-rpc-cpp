@@ -12,7 +12,7 @@ SET(CMAKE_C_FLAGS_DEBUG     "${CMAKE_C_FLAGS_DEBUG} -Wall --coverage")
 
 SET(MAJOR_VERSION 0)
 SET(MINOR_VERSION 3)
-SET(PATCH_VERSION 0)
+SET(PATCH_VERSION 1)
 
 #possible modules that can be enabled/disabled
 SET(HTTP_SERVER_MONGOOSE YES CACHE BOOL "Include HTTP server using mongoose")

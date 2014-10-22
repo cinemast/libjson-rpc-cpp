@@ -126,6 +126,7 @@ bool HttpServer::SendResponse(const std::string& response, void* addInfo)
     if (mg_printf(conn, "HTTP/1.1 200 OK\r\n"
                   "Content-Type: application/json\r\n"
                   "Content-Length: %d\r\n"
+                  "Access-Control-Allow-Origin: *\r\n"
                   "\r\n"
                   "%s",(int)response.length(), response.c_str()) > 0)
     {
