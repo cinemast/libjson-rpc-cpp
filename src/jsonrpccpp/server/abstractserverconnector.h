@@ -11,7 +11,7 @@
 #define JSONRPC_CPP_SERVERCONNECTOR_H_
 
 #include <string>
-#include "rpcprotocolserver.h"
+#include "iclientconnectionhandler.h"
 
 namespace jsonrpc
 {
@@ -47,10 +47,10 @@ namespace jsonrpc
              */
             bool OnRequest(const std::string& request, void* addInfo = NULL);
 
-            void SetHandler(RpcProtocolServer& handler);
+            void SetHandler(IClientConnectionHandler* handler);
 
         private:
-            RpcProtocolServer *handler;
+            IClientConnectionHandler *handler;
     };
 
 } /* namespace jsonrpc */

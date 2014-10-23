@@ -11,5 +11,7 @@
 #define JSONRPCCPP_CLIENT_H_
 
 #include <jsonrpccpp/client/client.h>
+#include <jsonrpccpp/common/exception.h>
+
 
 #endif /* JSONRPCCPP_CLIENT_H_ */

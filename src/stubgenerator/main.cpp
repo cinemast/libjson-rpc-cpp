@@ -12,6 +12,7 @@
 
 #include <jsonrpccpp/server.h>
 #include <jsonrpccpp/client.h>
+#include <jsonrpccpp/common/specificationparser.h>
 
 #include <argtable2.h>
 #include "helper/cpphelper.h"
