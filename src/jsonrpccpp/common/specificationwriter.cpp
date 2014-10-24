@@ -9,8 +9,15 @@
 
 #include "specificationwriter.h"
 #include <fstream>
+
+#ifdef __linux
+#include <jsoncpp/json/json.h>
+#include <jsoncpp/json/writer.h>
+#else
 #include <json/json.h>
 #include <json/writer.h>
+#endif
+
 #include <iostream>
 
 using namespace std;

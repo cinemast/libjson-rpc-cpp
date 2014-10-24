@@ -11,7 +11,13 @@
 #define RESPONSEHANDLER_H
 
 #include <jsonrpccpp/common/exception.h>
+
+#ifdef __linux
+#include <jsoncpp/json/value.h>
+#else
 #include <json/value.h>
+#endif
+
 #include <string>
 
 namespace jsonrpc {
