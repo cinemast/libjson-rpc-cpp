@@ -1,5 +1,13 @@
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/gen)
 
+find_package(Argtable REQUIRED)
+find_package(JSONCPP REQUIRED)
+find_package(Threads REQUIRED)
+
+include_directories(${JSONCPP_INCLUDE_DIRS})
+include_directories(${CURL_INCLUDE_DIRS})
+include_directories(${ARGTABLE_INCLUDE_DIRS})
+
 add_custom_command(OUTPUT abstractstubserver.h
                    COMMAND jsonrpcstub ARGS ${CMAKE_CURRENT_SOURCE_DIR}/spec.json --cpp-server=AbstractStubServer --cpp-server-file=${CMAKE_BINARY_DIR}/gen/abstractsubserver.h
                    MAIN_DEPENDENCY spec.json

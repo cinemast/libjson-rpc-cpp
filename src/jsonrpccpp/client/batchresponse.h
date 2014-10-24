@@ -11,7 +11,7 @@
 #define JSONRPC_BATCHRESPONSE_H
 
 #include <map>
-#include <jsoncpp/json/json.h>
+#include <json/json.h>
 
 namespace jsonrpc {
 

@@ -3,6 +3,12 @@ file(GLOB_RECURSE jsonrpcstub_source *.cpp)
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src)
 
 find_package(Argtable REQUIRED)
+find_package(JSONCPP REQUIRED)
+find_package(Threads REQUIRED)
+
+include_directories(${JSONCPP_INCLUDE_DIRS})
+include_directories(${CURL_INCLUDE_DIRS})
+include_directories(${ARGTABLE_INCLUDE_DIRS})
 
 add_executable(jsonrpcstub ${jsonrpcstub_source})
 target_link_libraries(jsonrpcstub jsonrpccommon ${ARGTABLE_LIBRARIES})

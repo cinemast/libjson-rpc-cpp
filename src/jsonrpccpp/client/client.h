@@ -14,7 +14,7 @@
 #include "rpcprotocolclient.h"
 #include "batchcall.h"
 #include "batchresponse.h"
-#include <jsoncpp/json/json.h>
+#include <json/json.h>
 
 #include <vector>
 #include <map>
