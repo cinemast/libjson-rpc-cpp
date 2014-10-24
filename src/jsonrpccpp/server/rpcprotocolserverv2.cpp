@@ -19,38 +19,23 @@ RpcProtocolServerV2::RpcProtocolServerV2(IProcedureInvokationHandler &handler) :
 {
 }
 
-void RpcProtocolServerV2::HandleRequest       (const string& request, string& retValue)
+void RpcProtocolServerV2::HandleJsonRequest       (const Json::Value &req, Json::Value &response)
 {
-    Json::Reader reader;
-    Json::Value req;
-    Json::Value response, resp;
-    Json::FastWriter w;
-
-    if (reader.parse(request, req, false))
+    //It could be a Batch Request
+    if (req.isArray())
     {
-        //It could be a Batch Request
-        if (req.isArray())
-        {
-            this->HandleBatchRequest(req, response);
-        } //It could be a simple Request
-        else if (req.isObject())
-        {
-            this->HandleSingleRequest(req, response);
-        }
-        else
-        {
-            response = Errors::GetErrorBlock(Json::nullValue, Errors::ERROR_RPC_INVALID_REQUEST);
-        }
+        this->HandleBatchRequest(req, response);
+    } //It could be a simple Request
+    else if (req.isObject())
+    {
+        this->HandleSingleRequest(req, response);
     }
     else
     {
-        response = Errors::GetErrorBlock(Json::nullValue, Errors::ERROR_RPC_JSON_PARSE_ERROR);
+        this->WrapError(Json::nullValue, Errors::ERROR_RPC_INVALID_REQUEST, Errors::GetErrorMessage(Errors::ERROR_RPC_INVALID_REQUEST), response);
     }
-
-    if (response != Json::nullValue)
-        retValue = w.write(response);
 }
-void RpcProtocolServerV2::HandleSingleRequest (Json::Value &req, Json::Value& response)
+void RpcProtocolServerV2::HandleSingleRequest (const Json::Value &req, Json::Value& response)
 {
     int error = this->ValidateRequest(req);
     if (error == 0)
@@ -61,18 +46,18 @@ void RpcProtocolServerV2::HandleSingleRequest (Json::Value &req, Json::Value& re
         }
         catch (const JsonRpcException & exc)
         {
-            response = Errors::GetErrorBlock(req, exc);
+            this->WrapError(req, exc.GetCode(), exc.GetMessage(), response);
         }
     }
     else
     {
-        response = Errors::GetErrorBlock(req, error);
+        this->WrapError(req, error, Errors::GetErrorMessage(error),response);
     }
 }
-void RpcProtocolServerV2::HandleBatchRequest  (Json::Value &req, Json::Value& response)
+void RpcProtocolServerV2::HandleBatchRequest  (const Json::Value &req, Json::Value& response)
 {
     if (req.size() == 0)
-        response = Errors::GetErrorBlock(Json::nullValue, Errors::ERROR_RPC_INVALID_REQUEST);
+        this->WrapError(Json::nullValue, Errors::ERROR_RPC_INVALID_REQUEST, Errors::GetErrorMessage(Errors::ERROR_RPC_INVALID_REQUEST), response);
     else
     {
         for (unsigned int i = 0; i < req.size(); i++)
@@ -84,47 +69,13 @@ void RpcProtocolServerV2::HandleBatchRequest  (Json::Value &req, Json::Value& re
         }
     }
 }
-int  RpcProtocolServerV2::ValidateRequest     (const Json::Value& request)
-{
-    int error = 0;
-    Procedure proc;
-    if (!this->ValidateRequestFields(request))
-    {
-        error = Errors::ERROR_RPC_INVALID_REQUEST;
-    }
-    else
-    {
-        map<string, Procedure>::iterator it = this->procedures.find(request[KEY_REQUEST_METHODNAME].asString());
-        if (it != this->procedures.end())
-        {
-            proc = it->second;
-            if(request.isMember(KEY_REQUEST_ID) && proc.GetProcedureType() == RPC_NOTIFICATION)
-            {
-                error = Errors::ERROR_SERVER_PROCEDURE_IS_NOTIFICATION;
-            }
-            else if(!request.isMember(KEY_REQUEST_ID) && proc.GetProcedureType() == RPC_METHOD)
-            {
-                error = Errors::ERROR_SERVER_PROCEDURE_IS_METHOD;
-            }
-            else if (!proc.ValdiateParameters(request[KEY_REQUEST_PARAMETERS]))
-            {
-                error = Errors::ERROR_RPC_INVALID_PARAMS;
-            }
-        }
-        else
-        {
-            error = Errors::ERROR_RPC_METHOD_NOT_FOUND;
-        }
-    }
-    return error;
-}
 bool RpcProtocolServerV2::ValidateRequestFields(const Json::Value &request)
 {
     if (!request.isObject())
         return false;
     if (!(request.isMember(KEY_REQUEST_METHODNAME) && request[KEY_REQUEST_METHODNAME].isString()))
         return false;
-    if (!(request.isMember(KEY_REQUEST_VERSION) && request[KEY_REQUEST_VERSION].isString() && request[KEY_REQUEST_VERSION].asString() == JSON_RPC_VERSION))
+    if (!(request.isMember(KEY_REQUEST_VERSION) && request[KEY_REQUEST_VERSION].isString() && request[KEY_REQUEST_VERSION].asString() == JSON_RPC_VERSION2))
         return false;
     if (request.isMember(KEY_REQUEST_ID) && !(request[KEY_REQUEST_ID].isInt() || request[KEY_REQUEST_ID].isString() || request[KEY_REQUEST_ID].isNull()))
         return false;
@@ -132,22 +83,33 @@ bool RpcProtocolServerV2::ValidateRequestFields(const Json::Value &request)
         return false;
     return true;
 }
-void RpcProtocolServerV2::ProcessRequest      (const Json::Value& request, Json::Value& response)
-{
-    Procedure& method = this->procedures[request[KEY_REQUEST_METHODNAME].asString()];
-    Json::Value result;
 
-    if (method.GetProcedureType() == RPC_METHOD)
+void RpcProtocolServerV2::WrapResult(const Json::Value &request, Json::Value &response, Json::Value &result)
+{
+    response[KEY_REQUEST_VERSION] = JSON_RPC_VERSION2;
+    response[KEY_RESPONSE_RESULT] = result;
+    response[KEY_REQUEST_ID] = request[KEY_REQUEST_ID];
+}
+
+void RpcProtocolServerV2::WrapError(const Json::Value &request, int code, const string &message, Json::Value &result)
+{
+    result["jsonrpc"] = "2.0";
+    result["error"]["code"] = code;
+    result["error"]["message"] = message;
+
+    if(request.isObject() && request.isMember("id") && (request["id"].isNull() || request["id"].isInt() || request["id"].isUInt() || request["id"].isString()))
     {
-        handler.HandleMethodCall(method, request[KEY_REQUEST_PARAMETERS],
-                                        result);
-        response[KEY_REQUEST_VERSION] = JSON_RPC_VERSION;
-        response[KEY_RESPONSE_RESULT] = result;
-        response[KEY_REQUEST_ID] = request[KEY_REQUEST_ID];
+        result["id"] = request["id"];
     }
     else
     {
-        handler.HandleNotificationCall(method, request[KEY_REQUEST_PARAMETERS]);
-        response = Json::Value::null;
+        result["id"] = Json::nullValue;
     }
+}
+
+procedure_t RpcProtocolServerV2::GetRequestType(const Json::Value &request)
+{
+    if (request.isMember(KEY_REQUEST_ID))
+        return RPC_METHOD;
+    return RPC_NOTIFICATION;
 }

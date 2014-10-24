@@ -17,14 +17,9 @@
 #include <jsonrpccpp/common/specificationparser.h>
 #include "abstractprotocolhandler.h"
 
-#define KEY_REQUEST_METHODNAME  "method"
+
 #define KEY_REQUEST_VERSION     "jsonrpc"
-#define KEY_REQUEST_ID          "id"
-#define KEY_REQUEST_PARAMETERS  "params"
-#define KEY_RESPONSE_ERROR      "error"
-#define KEY_RESPONSE_RESULT     "result"
-#define KEY_AUTHENTICATION      "auth"
-#define JSON_RPC_VERSION        "2.0"
+#define JSON_RPC_VERSION2        "2.0"
 
 namespace jsonrpc
 {
@@ -33,26 +28,15 @@ namespace jsonrpc
         public:
             RpcProtocolServerV2(IProcedureInvokationHandler &handler);
 
-            virtual void HandleRequest(const std::string& request, std::string& retValue);
+            void HandleJsonRequest(const Json::Value& request, Json::Value& response);
+            bool ValidateRequestFields(const Json::Value &val);
+            void WrapResult(const Json::Value& request, Json::Value& response, Json::Value& retValue);
+            void WrapError(const Json::Value& request, int code, const std::string &message, Json::Value& result);
+            procedure_t GetRequestType(const Json::Value& request);
 
         private:
-
-            void HandleSingleRequest(Json::Value& request, Json::Value& response);
-            void HandleBatchRequest(Json::Value& requests, Json::Value& response);
-
-            int ValidateRequest(const Json::Value &val);
-            bool ValidateRequestFields(const Json::Value &val);
-
-            /**
-             * @pre the request must be a valid request
-             * @param request - the request Object compliant to Json-RPC 2.0
-             * @param retValue - a reference to an object which will hold the returnValue afterwards.
-             *
-             * after calling this method, the requested Method will be executed.
-             * It is important, that this method only gets called once per request.
-             */
-            void ProcessRequest(const Json::Value &request,
-                    Json::Value &retValue);
+            void HandleSingleRequest(const Json::Value& request, Json::Value& response);
+            void HandleBatchRequest(const Json::Value& requests, Json::Value& response);
     };
 
 } /* namespace jsonrpc */

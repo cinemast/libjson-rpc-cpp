@@ -19,7 +19,12 @@ namespace jsonrpc {
         public:
             RpcProtocolServerV1(IProcedureInvokationHandler &handler);
 
-            virtual void HandleRequest(const std::string& request, std::string& retValue);
+            bool ValidateRequestFields(const Json::Value &request);
+            void HandleJsonRequest(const Json::Value &request, Json::Value &response);
+            void WrapResult(const Json::Value& request, Json::Value& response, Json::Value& retValue);
+            void WrapError(const Json::Value& request, int code, const std::string &message, Json::Value& result);
+            procedure_t GetRequestType(const Json::Value& request);
+
     };
 
 } // namespace jsonrpc
