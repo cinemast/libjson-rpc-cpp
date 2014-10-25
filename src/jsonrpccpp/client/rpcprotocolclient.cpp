@@ -108,6 +108,8 @@ bool RpcProtocolClient::ValidateResponse(const Json::Value& response)
             return false;
         if(!response[KEY_RESULT].isNull() && !response[KEY_ERROR].isNull())
             return false;
+        if (!response[KEY_ERROR].isNull() && !(response[KEY_ERROR].isObject() && response[KEY_ERROR].isMember(KEY_ERROR_CODE) && response[KEY_ERROR][KEY_ERROR_CODE].isInt()))
+            return false;
     }
     else if (this->version == JSONRPC_CLIENT_V2)
     {
@@ -117,10 +119,9 @@ bool RpcProtocolClient::ValidateResponse(const Json::Value& response)
             return false;
         if (!response.isMember(KEY_RESULT) && !response.isMember(KEY_ERROR))
             return false;
+        if (response.isMember(KEY_ERROR) && !(response[KEY_ERROR].isObject() && response[KEY_ERROR].isMember(KEY_ERROR_CODE) && response[KEY_ERROR][KEY_ERROR_CODE].isInt()))
+            return false;
     }
-
-    if (response.isMember(KEY_ERROR) && !(response[KEY_ERROR].isObject() && response[KEY_ERROR].isMember(KEY_ERROR_CODE) && response[KEY_ERROR][KEY_ERROR_CODE].isInt()))
-        return false;
 
     return true;
 }
