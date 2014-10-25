@@ -14,17 +14,17 @@
 
 using namespace jsonrpc;
 
-IProtocolHandler *RequestHandlerFactory::createProtocolHandler(requesthandler_t type, IProcedureInvokationHandler &handler)
+IProtocolHandler *RequestHandlerFactory::createProtocolHandler(serverVersion_t type, IProcedureInvokationHandler &handler)
 {
     IProtocolHandler* result = NULL;
     switch (type) {
-        case JSONRPC_V1:
+        case JSONRPC_SERVER_V1:
             result = new RpcProtocolServerV1(handler);
             break;
-        case JSONRPC_V2:
+        case JSONRPC_SERVER_V2:
             result = new RpcProtocolServerV2(handler);
             break;
-        case JSONRPC_V1V2:
+        case JSONRPC_SERVER_V1V2:
             result = new RpcProtocolServer12(handler);
             break;
     }

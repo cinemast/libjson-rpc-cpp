@@ -19,13 +19,15 @@ namespace jsonrpc {
     //int defines id field
     typedef std::map<int, Json::Value> batchProcedureResponse;
 
+    typedef enum {JSONRPC_CLIENT_V1, JSONRPC_CLIENT_V2} clientVersion_t;
+
     /**
      * @brief The RpcProtocolClient class handles the json-rpc 2.0 protocol for the client side.
      */
     class RpcProtocolClient
     {
         public:
-            RpcProtocolClient();
+            RpcProtocolClient(clientVersion_t version = JSONRPC_CLIENT_V2);
 
             /**
              * @brief This method builds a valid json-rpc 2.0 request object based on passed paramters.
@@ -87,8 +89,12 @@ namespace jsonrpc {
 
         private:
             int id;
+            clientVersion_t version;
 
             void BuildRequest(int id, const std::string& method, const Json::Value& parameter, Json::Value& result, bool isNotification);
+            bool ValidateResponse(const Json::Value &response);
+            bool HasError(const Json::Value &response);
+            void throwErrorException(const Json::Value &response);
     };
 }
 #endif // RESPONSEHANDLER_H

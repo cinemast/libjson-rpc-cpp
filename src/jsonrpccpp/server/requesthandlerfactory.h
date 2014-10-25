@@ -14,12 +14,12 @@
 
 namespace jsonrpc {
 
-    typedef enum {JSONRPC_V1, JSONRPC_V2, JSONRPC_V1V2} requesthandler_t;
+    typedef enum {JSONRPC_SERVER_V1, JSONRPC_SERVER_V2, JSONRPC_SERVER_V1V2} serverVersion_t;
 
     class RequestHandlerFactory
     {
         public:
-            static IProtocolHandler* createProtocolHandler(requesthandler_t type, IProcedureInvokationHandler& handler);
+            static IProtocolHandler* createProtocolHandler(serverVersion_t type, IProcedureInvokationHandler& handler);
     };
 
 } // namespace jsonrpc

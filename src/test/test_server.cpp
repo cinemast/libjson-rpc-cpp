@@ -254,7 +254,7 @@ BOOST_AUTO_TEST_CASE(test_server_v2_batchcall_error)
 BOOST_AUTO_TEST_CASE(test_server_v1_method_success)
 {
     MockServerConnector c;
-    TestServer server(c, JSONRPC_V1);
+    TestServer server(c, JSONRPC_SERVER_V1);
 
     c.SetRequest("{\"id\": 1, \"method\": \"sub\",\"params\":[5,7]}}");
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["result"].asInt(), -2);
@@ -281,7 +281,7 @@ BOOST_AUTO_TEST_CASE(test_server_v1_method_success)
 BOOST_AUTO_TEST_CASE(test_server_v1_notification_success)
 {
     MockServerConnector c;
-    TestServer server(c, JSONRPC_V1);
+    TestServer server(c, JSONRPC_SERVER_V1);
 
     c.SetRequest("{\"id\": null, \"method\": \"initZero\", \"params\": null}");
     BOOST_CHECK_EQUAL(server.getCnt(), 0);
@@ -291,7 +291,7 @@ BOOST_AUTO_TEST_CASE(test_server_v1_notification_success)
 BOOST_AUTO_TEST_CASE(test_server_v1_method_invalid_request)
 {
     MockServerConnector c;
-    TestServer server(c, JSONRPC_V1);
+    TestServer server(c, JSONRPC_SERVER_V1);
 
     c.SetRequest("{\"method\": \"sub\", \"params\": []}");
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32600);
@@ -325,7 +325,7 @@ BOOST_AUTO_TEST_CASE(test_server_v1_method_invalid_request)
 BOOST_AUTO_TEST_CASE(test_server_v1_method_error)
 {
     MockServerConnector c;
-    TestServer server(c, JSONRPC_V1);
+    TestServer server(c, JSONRPC_SERVER_V1);
 
     c.SetRequest("{\"id\": 1, \"method\": \"sub\", \"params\": [33]}");
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32602);
@@ -349,7 +349,7 @@ BOOST_AUTO_TEST_CASE(test_server_v1_method_error)
 BOOST_AUTO_TEST_CASE(test_server_hybrid)
 {
     MockServerConnector c;
-    TestServer server(c, JSONRPC_V1V2);
+    TestServer server(c, JSONRPC_SERVER_V1V2);
 
     c.SetRequest("{\"id\": 1, \"method\": \"sub\",\"params\":[5,7]}}");
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["result"].asInt(), -2);

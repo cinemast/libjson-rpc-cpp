@@ -29,7 +29,7 @@ namespace jsonrpc
             typedef void(S::*methodPointer_t)       (const Json::Value &parameter, Json::Value &result);
             typedef void(S::*notificationPointer_t) (const Json::Value &parameter);
 
-            AbstractServer(AbstractServerConnector &connector, requesthandler_t type = JSONRPC_V2) :
+            AbstractServer(AbstractServerConnector &connector, serverVersion_t type = JSONRPC_SERVER_V2) :
                 connection(connector)
             {
                 this->handler = RequestHandlerFactory::createProtocolHandler(type, *this);

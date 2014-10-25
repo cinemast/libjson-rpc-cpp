@@ -10,7 +10,7 @@
 #include "client.h"
 using namespace jsonrpc;
 
-Client::Client(AbstractClientConnector &connector)
+Client::Client(AbstractClientConnector &connector, clientVersion_t version)
     : connector(connector)
 {
 }
