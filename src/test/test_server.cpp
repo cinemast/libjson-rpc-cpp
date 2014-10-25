@@ -19,7 +19,7 @@ using namespace std;
 
 BOOST_AUTO_TEST_SUITE(server)
 
-BOOST_AUTO_TEST_CASE(test_server_method_success)
+BOOST_AUTO_TEST_CASE(test_server_v2_method_success)
 {
     MockServerConnector c;
     TestServer server(c);
@@ -28,41 +28,52 @@ BOOST_AUTO_TEST_CASE(test_server_method_success)
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["result"].asString(),"Hello: Peter!");
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["id"].asInt(), 1);
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["jsonrpc"].asString(), "2.0");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("error"), false);
 
     c.SetRequest("{\"jsonrpc\":\"2.0\", \"id\": 1, \"method\": \"add\",\"params\":{\"value1\":5,\"value2\":7}}");
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["result"].asInt(),12);
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["id"].asInt(), 1);
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["jsonrpc"].asString(), "2.0");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("error"), false);
+
 
     c.SetRequest("{\"jsonrpc\":\"2.0\", \"id\": 1, \"method\": \"sub\",\"params\":[5,7]}");
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["result"].asInt(),-2);
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["id"].asInt(), 1);
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["jsonrpc"].asString(), "2.0");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("error"), false);
+
 
     c.SetRequest("{\"jsonrpc\":\"2.0\", \"id\": null, \"method\": \"sub\",\"params\":[5,7]}");
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["result"].asInt(),-2);
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["id"].isNull(), true);
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["jsonrpc"].asString(), "2.0");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("error"), false);
+
 
     c.SetRequest("{\"jsonrpc\":\"2.0\", \"id\": \"1\", \"method\": \"sub\",\"params\":[5,7]}");
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["result"].asInt(),-2);
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["id"].asString(), "1");
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["jsonrpc"].asString(), "2.0");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("error"), false);
 }
 
-BOOST_AUTO_TEST_CASE(test_server_notification_success)
+BOOST_AUTO_TEST_CASE(test_server_v2_notification_success)
 {
     MockServerConnector c;
     TestServer server(c);
 
     c.SetRequest("{\"jsonrpc\":\"2.0\", \"method\": \"initCounter\",\"params\":{\"value\": 33}}");
     BOOST_CHECK_EQUAL(server.getCnt(), 33);
+    BOOST_CHECK_EQUAL(c.GetResponse(), "");
 
     c.SetRequest("{\"jsonrpc\":\"2.0\", \"method\": \"incrementCounter\",\"params\":{\"value\": 33}}");
     BOOST_CHECK_EQUAL(server.getCnt(), 66);
+    BOOST_CHECK_EQUAL(c.GetResponse(), "");
+
 }
 
-BOOST_AUTO_TEST_CASE(test_server_invalidjson)
+BOOST_AUTO_TEST_CASE(test_server_v2_invalidjson)
 {
     MockServerConnector c;
     TestServer server(c);
@@ -73,7 +84,7 @@ BOOST_AUTO_TEST_CASE(test_server_invalidjson)
     BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
 }
 
-BOOST_AUTO_TEST_CASE(test_server_invalidrequest)
+BOOST_AUTO_TEST_CASE(test_server_v2_invalidrequest)
 {
     MockServerConnector c;
     TestServer server(c);
@@ -115,7 +126,7 @@ BOOST_AUTO_TEST_CASE(test_server_invalidrequest)
     BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
 }
 
-BOOST_AUTO_TEST_CASE(test_server_method_error)
+BOOST_AUTO_TEST_CASE(test_server_v2_method_error)
 {
     MockServerConnector c;
     TestServer server(c);
@@ -141,7 +152,7 @@ BOOST_AUTO_TEST_CASE(test_server_method_error)
     BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
 }
 
-BOOST_AUTO_TEST_CASE(test_server_params_error)
+BOOST_AUTO_TEST_CASE(test_server_v2_params_error)
 {
     MockServerConnector c;
     TestServer server(c);
@@ -163,7 +174,7 @@ BOOST_AUTO_TEST_CASE(test_server_params_error)
     BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
 }
 
-BOOST_AUTO_TEST_CASE(test_server_batchcall_success)
+BOOST_AUTO_TEST_CASE(test_server_v2_batchcall_success)
 {
     MockServerConnector c;
     TestServer server(c);
@@ -192,7 +203,7 @@ BOOST_AUTO_TEST_CASE(test_server_batchcall_success)
 
 }
 
-BOOST_AUTO_TEST_CASE(test_server_batchcall_error)
+BOOST_AUTO_TEST_CASE(test_server_v2_batchcall_error)
 {
     MockServerConnector c;
     TestServer server(c);
@@ -213,6 +224,44 @@ BOOST_AUTO_TEST_CASE(test_server_batchcall_error)
     BOOST_CHECK_EQUAL(c.GetJsonResponse()[0]["error"]["code"].asInt(), -32600);
     BOOST_CHECK_EQUAL(c.GetJsonResponse()[1]["error"]["code"].asInt(), -32600);
     BOOST_CHECK_EQUAL(c.GetJsonResponse()[2]["error"]["code"].asInt(), -32600);
+}
+
+BOOST_AUTO_TEST_CASE(test_server_v1_method_success)
+{
+    MockServerConnector c;
+    TestServer server(c, JSONRPC_V1);
+
+    c.SetRequest("{\"id\": 1, \"method\": \"sub\",\"params\":[5,7]}}");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["result"].asInt(), -2);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["id"].asInt(), 1);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("jsonrpc"), false);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("error"), true);
+    BOOST_CHECK_EQUAL(c.GetJsonRequest()["error"], Json::nullValue);
+
+    c.SetRequest("{\"id\": \"1\", \"method\": \"sub\",\"params\":[5,7]}");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["result"].asInt(),-2);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["id"].asString(), "1");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("jsonrpc"), false);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("error"), true);
+    BOOST_CHECK_EQUAL(c.GetJsonRequest()["error"], Json::nullValue);
+
+    c.SetRequest("{\"jsonrpc\":\"2.0\", \"id\": \"1\", \"method\": \"sub\",\"params\":[5,7]}");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["result"].asInt(),-2);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["id"].asString(), "1");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("jsonrpc"), false);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("error"), true);
+    BOOST_CHECK_EQUAL(c.GetJsonRequest()["error"], Json::nullValue);
+}
+
+BOOST_AUTO_TEST_CASE(test_server_v1_notification_success)
+{
+    MockServerConnector c;
+    TestServer server(c, JSONRPC_V1);
+
+    c.SetRequest("{\"id\": null, \"method\": \"initZero\", \"params\": null}");
+    BOOST_CHECK_EQUAL(server.getCnt(), 0);
+    BOOST_CHECK_EQUAL(c.GetResponse(), "");
+
 }
 
 BOOST_AUTO_TEST_SUITE_END()

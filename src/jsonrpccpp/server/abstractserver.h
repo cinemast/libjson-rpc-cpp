@@ -93,10 +93,6 @@ namespace jsonrpc
             }
 
         private:
-            /**
-             * @brief connection
-             * @deprecated
-             */
             AbstractServerConnector                         &connection;
             AbstractProtocolHandler                         *handler;
             std::map<std::string, methodPointer_t>          methods;

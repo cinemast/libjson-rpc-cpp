@@ -18,7 +18,7 @@
 class TestServer : public jsonrpc::AbstractServer<TestServer>
 {
     public:
-        TestServer(jsonrpc::AbstractServerConnector &connector);
+        TestServer(jsonrpc::AbstractServerConnector &connector, jsonrpc::requesthandler_t type = jsonrpc::JSONRPC_V2);
 
         void sayHello(const Json::Value& request, Json::Value& response);
         void getCounterValue(const Json::Value& request, Json::Value& response);
@@ -28,6 +28,7 @@ class TestServer : public jsonrpc::AbstractServer<TestServer>
         //Notifications
         void initCounter(const Json::Value& request);
         void incrementCounter(const Json::Value& request);
+        void initZero(const Json::Value& request);
 
         int getCnt();
     private:

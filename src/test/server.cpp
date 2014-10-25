@@ -13,9 +13,9 @@
 using namespace std;
 using namespace jsonrpc;
 
-TestServer::TestServer(AbstractServerConnector &connector) :
-    AbstractServer<TestServer>(connector),
-    cnt(0)
+TestServer::TestServer(AbstractServerConnector &connector, requesthandler_t type) :
+    AbstractServer<TestServer>(connector, type),
+    cnt(-1)
 {
     this->bindAndAddMethod(new Procedure("sayHello", PARAMS_BY_NAME, JSON_STRING, "name", JSON_STRING, NULL), &TestServer::sayHello);
     this->bindAndAddMethod(new Procedure("getCounterValue", PARAMS_BY_NAME, JSON_INTEGER, NULL), &TestServer::getCounterValue);
@@ -24,6 +24,7 @@ TestServer::TestServer(AbstractServerConnector &connector) :
 
     this->bindAndAddNotification(new Procedure("initCounter", PARAMS_BY_NAME, "value", JSON_INTEGER, NULL), &TestServer::initCounter);
     this->bindAndAddNotification(new Procedure("incrementCounter", PARAMS_BY_NAME, "value", JSON_INTEGER, NULL), &TestServer::incrementCounter);
+    this->bindAndAddNotification(new Procedure("initZero", PARAMS_BY_POSITION, NULL), &TestServer::initZero);
 }
 
 void TestServer::sayHello(const Json::Value &request, Json::Value& response)
@@ -54,6 +55,11 @@ void TestServer::initCounter(const Json::Value &request)
 void TestServer::incrementCounter(const Json::Value &request)
 {
     cnt+= request["value"].asInt();
+}
+
+void TestServer::initZero(const Json::Value &request)
+{
+    cnt = 0;
 }
 
 int TestServer::getCnt()
