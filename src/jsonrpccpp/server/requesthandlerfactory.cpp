@@ -10,6 +10,7 @@
 #include "requesthandlerfactory.h"
 #include "rpcprotocolserverv1.h"
 #include "rpcprotocolserverv2.h"
+#include "rpcprotocolserver12.h"
 
 using namespace jsonrpc;
 
@@ -24,6 +25,7 @@ AbstractProtocolHandler *RequestHandlerFactory::createProtocolHandler(requesthan
             result = new RpcProtocolServerV2(handler);
             break;
         case JSONRPC_V1V2:
+            result = new RpcProtocolServer12(handler);
             break;
     }
     return result;

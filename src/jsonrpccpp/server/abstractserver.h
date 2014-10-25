@@ -86,6 +86,7 @@ namespace jsonrpc
                 {
                     this->handler->AddProcedure(*proc);
                     this->notifications[proc->GetProcedureName()] = pointer;
+                    delete proc;
                     return true;
                 }
                 return false;
