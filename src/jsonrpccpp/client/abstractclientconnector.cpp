@@ -16,12 +16,4 @@ using namespace jsonrpc;
 
 AbstractClientConnector::~AbstractClientConnector()
 {
-
-}
-
-string AbstractClientConnector::SendRPCMessage(const string &message) throw (JsonRpcException)
-{
-    string result;
-    this->SendRPCMessage(message, result);
-    return result;
 }

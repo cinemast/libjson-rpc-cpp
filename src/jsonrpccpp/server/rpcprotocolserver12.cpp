@@ -8,11 +8,11 @@
  ************************************************************************/
 
 #include "rpcprotocolserver12.h"
+#include <jsoncpp/json/json.h>
 
 using namespace jsonrpc;
 
 RpcProtocolServer12::RpcProtocolServer12(IProcedureInvokationHandler &handler) :
-    AbstractProtocolHandler(handler),
     rpc1(handler),
     rpc2(handler)
 {
@@ -24,29 +24,23 @@ void RpcProtocolServer12::AddProcedure(Procedure &procedure)
     this->rpc2.AddProcedure(procedure);
 }
 
-void RpcProtocolServer12::HandleJsonRequest(const Json::Value &request, Json::Value &response)
+void RpcProtocolServer12::HandleRequest(const std::string &request, std::string &retValue)
 {
-    this->GetHandler(request).HandleJsonRequest(request, response);
-}
+    Json::Reader reader;
+    Json::Value req;
+    Json::Value resp;
+    Json::FastWriter w;
 
-bool RpcProtocolServer12::ValidateRequestFields(const Json::Value &val)
-{
-    return this->GetHandler(val).ValidateRequestFields(val);
-}
-
-void RpcProtocolServer12::WrapResult(const Json::Value &request, Json::Value &response, Json::Value &retValue)
-{
-    this->GetHandler(request).WrapResult(request,response, retValue);
-}
-
-void RpcProtocolServer12::WrapError(const Json::Value &request, int code, const std::string &message, Json::Value &result)
-{
-    this->GetHandler(request).WrapError(request, code, message, result);
-}
-
-procedure_t RpcProtocolServer12::GetRequestType(const Json::Value &request)
-{
-    return this->GetHandler(request).GetRequestType(request);
+    if (reader.parse(request, req, false))
+    {
+        this->GetHandler(req).HandleJsonRequest(req, resp);
+    }
+    else
+    {
+        this->GetHandler(req).WrapError(Json::nullValue, Errors::ERROR_RPC_JSON_PARSE_ERROR, Errors::GetErrorMessage(Errors::ERROR_RPC_JSON_PARSE_ERROR), resp);
+    }
+    if (resp != Json::nullValue)
+        retValue = w.write(resp);
 }
 
 AbstractProtocolHandler &RpcProtocolServer12::GetHandler(const Json::Value &request)

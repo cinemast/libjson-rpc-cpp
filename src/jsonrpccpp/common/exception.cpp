@@ -21,7 +21,10 @@ namespace jsonrpc
     JsonRpcException::JsonRpcException(int code, const std::string& message)
             : code(code)
     {
-        this->message = Errors::GetErrorMessage(code) +": "+ message;
+        this->message = Errors::GetErrorMessage(code);
+        if (this->message != "")
+                this->message = this->message + ": ";
+        this->message = this->message + message;
         this->setWhatMessage();
     }
 

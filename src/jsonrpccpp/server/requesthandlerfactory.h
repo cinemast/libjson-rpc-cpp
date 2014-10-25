@@ -19,7 +19,7 @@ namespace jsonrpc {
     class RequestHandlerFactory
     {
         public:
-            static AbstractProtocolHandler* createProtocolHandler(requesthandler_t type, IProcedureInvokationHandler& handler);
+            static IProtocolHandler* createProtocolHandler(requesthandler_t type, IProcedureInvokationHandler& handler);
     };
 
 } // namespace jsonrpc

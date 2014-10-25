@@ -23,7 +23,7 @@ namespace jsonrpc
 {
 
     template<class S>
-    class AbstractServer : public IProcedureInvokationHandler, public IClientConnectionHandler
+    class AbstractServer : public IProcedureInvokationHandler
     {
         public:
             typedef void(S::*methodPointer_t)       (const Json::Value &parameter, Json::Value &result);
@@ -49,11 +49,6 @@ namespace jsonrpc
             bool StopListening()
             {
                 return connection.StopListening();
-            }
-
-            virtual void HandleRequest(const std::string& request, std::string& retValue)
-            {
-                this->handler->HandleRequest(request, retValue);
             }
 
             virtual void HandleMethodCall(Procedure &proc, const Json::Value& input, Json::Value& output)
@@ -94,7 +89,7 @@ namespace jsonrpc
 
         private:
             AbstractServerConnector                         &connection;
-            AbstractProtocolHandler                         *handler;
+            IProtocolHandler                                *handler;
             std::map<std::string, methodPointer_t>          methods;
             std::map<std::string, notificationPointer_t>    notifications;
     };

@@ -165,6 +165,12 @@ BOOST_AUTO_TEST_CASE(test_server_v2_method_error)
     c.SetRequest("{\"jsonrpc\":\"2.0\", \"method\": \"add\",\"params\":[3,4]}");
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32604);
     BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
+
+    //userspace exception
+    c.SetRequest("{\"jsonrpc\":\"2.0\", \"id\": 1, \"method\": \"exceptionMethod\",\"params\":null}");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32099);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["message"], "User exception");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
 }
 
 BOOST_AUTO_TEST_CASE(test_server_v2_params_error)
@@ -328,6 +334,16 @@ BOOST_AUTO_TEST_CASE(test_server_v1_method_error)
     c.SetRequest("{\"id\": 1, \"method\": \"sub\", \"params\": [33, \"foo\"]}");
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32602);
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["result"],Json::nullValue);
+
+    c.SetRequest("{\"id\": 1, \"method\": \"sub\"}");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32600);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["result"],Json::nullValue);
+
+    //userspace exception
+    c.SetRequest("{\"id\": 1, \"method\": \"exceptionMethod\",\"params\":null}");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32099);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["message"], "User exception");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["result"],Json::nullValue);
 }
 
 BOOST_AUTO_TEST_CASE(test_server_hybrid)
@@ -336,7 +352,6 @@ BOOST_AUTO_TEST_CASE(test_server_hybrid)
     TestServer server(c, JSONRPC_V1V2);
 
     c.SetRequest("{\"id\": 1, \"method\": \"sub\",\"params\":[5,7]}}");
-    cout << c.GetJsonResponse() << endl;
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["result"].asInt(), -2);
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["id"].asInt(), 1);
     BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("jsonrpc"), false);
@@ -356,6 +371,14 @@ BOOST_AUTO_TEST_CASE(test_server_hybrid)
     c.SetRequest("{\"jsonrpc\":\"2.0\", \"method\": \"initCounter\",\"params\":{\"value\": 33}}");
     BOOST_CHECK_EQUAL(server.getCnt(), 33);
     BOOST_CHECK_EQUAL(c.GetResponse(), "");
+
+    c.SetRequest("{\"jsonrpc\":\"2.0\", \"params\":{\"value\": 33}}");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32600);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
+
+    c.SetRequest("{\"jsonrpc\":\"2.0\", \"params\":{\"value\": 33");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32700);
+    BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

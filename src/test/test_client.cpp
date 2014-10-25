@@ -138,6 +138,8 @@ BOOST_AUTO_TEST_CASE(test_client_batchcall_success)
     BOOST_CHECK_EQUAL(request[1]["method"].asString(), "def");
     BOOST_CHECK_EQUAL(request[1]["id"].isNull(), true);
     BOOST_CHECK_EQUAL(request[2]["id"].asInt(), 2);
+
+    bc.toString(false);
 }
 
 BOOST_AUTO_TEST_CASE(test_client_batchcall_error)

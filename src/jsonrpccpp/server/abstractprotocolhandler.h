@@ -24,7 +24,8 @@
 
 namespace jsonrpc {
 
-    class AbstractProtocolHandler : public IClientConnectionHandler {
+    class AbstractProtocolHandler : public IProtocolHandler
+    {
         public:
             AbstractProtocolHandler(IProcedureInvokationHandler &handler);
             virtual ~AbstractProtocolHandler();

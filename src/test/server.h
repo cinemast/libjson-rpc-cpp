@@ -25,12 +25,15 @@ class TestServer : public jsonrpc::AbstractServer<TestServer>
         void add(const Json::Value& request, Json::Value& response);
         void sub(const Json::Value& request, Json::Value& response);
 
+        void exceptionMethod(const Json::Value& request, Json::Value& response);
+
         //Notifications
         void initCounter(const Json::Value& request);
         void incrementCounter(const Json::Value& request);
         void initZero(const Json::Value& request);
 
         int getCnt();
+
     private:
         int cnt;
 };

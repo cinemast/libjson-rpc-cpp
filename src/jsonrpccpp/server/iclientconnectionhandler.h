@@ -14,11 +14,20 @@
 
 namespace jsonrpc
 {
+    class Procedure;
     class IClientConnectionHandler {
         public:
             virtual ~IClientConnectionHandler() {}
 
             virtual void HandleRequest(const std::string& request, std::string& retValue) = 0;
+    };
+
+    class IProtocolHandler : public IClientConnectionHandler
+    {
+        public:
+            virtual ~IProtocolHandler(){}
+
+            virtual void AddProcedure(Procedure& procedure) = 0;
     };
 }
 
