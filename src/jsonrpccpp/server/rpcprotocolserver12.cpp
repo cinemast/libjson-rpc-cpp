@@ -18,6 +18,12 @@ RpcProtocolServer12::RpcProtocolServer12(IProcedureInvokationHandler &handler) :
 {
 }
 
+void RpcProtocolServer12::AddProcedure(Procedure &procedure)
+{
+    this->rpc1.AddProcedure(procedure);
+    this->rpc2.AddProcedure(procedure);
+}
+
 void RpcProtocolServer12::HandleJsonRequest(const Json::Value &request, Json::Value &response)
 {
     this->GetHandler(request).HandleJsonRequest(request, response);

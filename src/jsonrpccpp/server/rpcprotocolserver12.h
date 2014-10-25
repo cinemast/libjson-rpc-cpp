@@ -21,6 +21,8 @@ namespace jsonrpc {
         public:
             RpcProtocolServer12(IProcedureInvokationHandler &handler);
 
+            virtual void AddProcedure(Procedure& procedure);
+
             void HandleJsonRequest(const Json::Value& request, Json::Value& response);
             bool ValidateRequestFields(const Json::Value &val);
             void WrapResult(const Json::Value& request, Json::Value& response, Json::Value& retValue);
