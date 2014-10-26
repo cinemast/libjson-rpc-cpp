@@ -50,14 +50,6 @@ BOOST_AUTO_TEST_CASE(test_client_v2_method_success)
     BOOST_CHECK_EQUAL(v["params"][0].asInt(), 23);
     BOOST_CHECK_EQUAL(v["jsonrpc"].asString(), "2.0");
     BOOST_CHECK_EQUAL(v["id"].asInt(), 1);
-
-    response = client.CallMethod("abcd", params);
-    v = c.GetJsonRequest();
-
-    BOOST_CHECK_EQUAL(v["method"].asString(), "abcd");
-    BOOST_CHECK_EQUAL(v["params"][0].asInt(), 23);
-    BOOST_CHECK_EQUAL(v["jsonrpc"].asString(), "2.0");
-    BOOST_CHECK_EQUAL(v["id"].asInt(), 2);
 }
 
 BOOST_AUTO_TEST_CASE(test_client_v2_notification_success)
