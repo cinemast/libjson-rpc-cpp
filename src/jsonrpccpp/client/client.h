@@ -11,7 +11,6 @@
 #define JSONRPC_CPP_CLIENT_H_
 
 #include "iclientconnector.h"
-#include "rpcprotocolclient.h"
 #include "batchcall.h"
 #include "batchresponse.h"
 #include <jsoncpp/json/json.h>
@@ -21,10 +20,15 @@
 
 namespace jsonrpc
 {
+    class RpcProtocolClient;
+
+    typedef enum {JSONRPC_CLIENT_V1, JSONRPC_CLIENT_V2} clientVersion_t;
+
     class Client
     {
         public:
             Client(IClientConnector &connector, clientVersion_t version = JSONRPC_CLIENT_V2);
+            virtual ~Client();
 
             void        CallMethod          (const std::string &name, const Json::Value &paramter, Json::Value& result) throw (JsonRpcException);
             Json::Value CallMethod          (const std::string &name, const Json::Value &paramter) throw (JsonRpcException);
@@ -35,8 +39,8 @@ namespace jsonrpc
             void        CallNotification    (const std::string& name, const Json::Value& paramter) throw (JsonRpcException);
 
         private:
-           IClientConnector &connector;
-           RpcProtocolClient protocol;
+           IClientConnector  &connector;
+           RpcProtocolClient *protocol;
 
     };
 

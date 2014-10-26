@@ -8,20 +8,27 @@
  ************************************************************************/
 
 #include "client.h"
+#include "rpcprotocolclient.h"
+
 using namespace jsonrpc;
 
 Client::Client(IClientConnector &connector, clientVersion_t version) :
-    connector(connector),
-    protocol(version)
+    connector(connector)
 {
+    this->protocol = new RpcProtocolClient(version);
+}
+
+Client::~Client()
+{
+    delete this->protocol;
 }
 
 void Client::CallMethod(const std::string &name, const Json::Value &paramter, Json::Value& result) throw(JsonRpcException)
 {
     std::string request, response;
-    protocol.BuildRequest(name, paramter, request, false);
+    protocol->BuildRequest(name, paramter, request, false);
     connector.SendRPCMessage(request, response);
-    protocol.HandleResponse(response, result);
+    protocol->HandleResponse(response, result);
 }
 
 void Client::CallProcedures(const BatchCall &calls, BatchResponse &result) throw(JsonRpcException)
@@ -42,7 +49,7 @@ void Client::CallProcedures(const BatchCall &calls, BatchResponse &result) throw
         if (tmpresult[i].isObject()) {
             Json::Value singleResult;
             try {
-                int id = this->protocol.HandleResponse(tmpresult[i], singleResult);
+                int id = this->protocol->HandleResponse(tmpresult[i], singleResult);
                 result.addResponse(id, singleResult, false);
             }
             catch (JsonRpcException ex) {
@@ -75,6 +82,6 @@ Json::Value Client::CallMethod(const std::string& name,
 void Client::CallNotification(const std::string& name, const Json::Value& parameter) throw(JsonRpcException)
 {
     std::string request, response;
-    protocol.BuildRequest(name, parameter, request, true);
+    protocol->BuildRequest(name, parameter, request, true);
     connector.SendRPCMessage(request, response);
 }

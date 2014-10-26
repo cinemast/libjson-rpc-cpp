@@ -13,13 +13,10 @@
 #include <jsonrpccpp/common/exception.h>
 #include <jsoncpp/json/value.h>
 #include <string>
+#include "client.h"
 
 namespace jsonrpc {
 
-    //int defines id field
-    typedef std::map<int, Json::Value> batchProcedureResponse;
-
-    typedef enum {JSONRPC_CLIENT_V1, JSONRPC_CLIENT_V2} clientVersion_t;
 
     /**
      * @brief The RpcProtocolClient class handles the json-rpc 2.0 protocol for the client side.
