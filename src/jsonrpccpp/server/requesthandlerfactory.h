@@ -10,7 +10,8 @@
 #ifndef JSONRPC_REQUESTHANDLERFACTORY_H
 #define JSONRPC_REQUESTHANDLERFACTORY_H
 
-#include "abstractprotocolhandler.h"
+#include "iprocedureinvokationhandler.h"
+#include "iclientconnectionhandler.h"
 
 namespace jsonrpc {
 
