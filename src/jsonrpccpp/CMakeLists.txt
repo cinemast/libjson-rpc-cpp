@@ -7,8 +7,19 @@ file(GLOB jsonrpc_source_server server/*.c*)
 list(APPEND jsonrpc_source_server server/abstractserver.h)
 
 file(GLOB jsonrpc_header_common common/*.h)
-file(GLOB jsonrpc_header_client client/*.h)
-file(GLOB jsonrpc_header_server server/*.h)
+file(GLOB jsonrpc_header_client
+    client/batchcall.h
+    client/batchresponse.h
+    client/client.h
+    client/iclientconnector.h
+)
+file(GLOB jsonrpc_header_server
+    server/requesthandlerfactory.h
+    server/abstractserver.h
+    server/abstractserverconnector.h
+    server/iclientconnectionlistener.h
+    server/iprocedureinvokationhandler.h
+)
 file(GLOB jsonrpc_header *.h)
 
 set(client_connector_source "")
@@ -65,24 +76,24 @@ IF(SOCKET_CLIENT OR SOCKET_SERVER)
     list(APPEND jsonrpc_helper_source_common "common/helper/threads.cpp")
 ENDIF()
 
-add_library(jsonrpccommon SHARED ${jsonrpc_source_common} ${jsonrpc_helper_source_common})
-add_library(jsonrpccommonStatic STATIC ${jsonrpc_source_common} ${jsonrpc_helper_source_common})
+add_library(jsonrpccommon SHARED ${jsonrpc_source_common} ${jsonrpc_header} ${jsonrpc_helper_source_common})
+add_library(jsonrpccommonStatic STATIC ${jsonrpc_source_common} ${jsonrpc_header} ${jsonrpc_helper_source_common})
 target_link_libraries(jsonrpccommon ${JSONCPP_LIBRARIES})
 target_link_libraries(jsonrpccommonStatic ${JSONCPP_LIBRARIES})
 set_target_properties(jsonrpccommonStatic PROPERTIES OUTPUT_NAME jsonrpccpp-common)
 set_target_properties(jsonrpccommon PROPERTIES OUTPUT_NAME jsonrpccpp-common)
 
 
-add_library(jsonrpcclient SHARED ${jsonrpc_source_client} ${client_connector_source})
-add_library(jsonrpcclientStatic STATIC ${jsonrpc_source_client} ${client_connector_source})
+add_library(jsonrpcclient SHARED ${jsonrpc_source_client} ${jsonrpc_header} ${jsonrpc_header_client} ${client_connector_source})
+add_library(jsonrpcclientStatic STATIC ${jsonrpc_source_client} ${jsonrpc_header} ${jsonrpc_header_client} ${client_connector_source})
 target_link_libraries(jsonrpcclient jsonrpccommon ${client_connector_libs})
 target_link_libraries(jsonrpcclientStatic jsonrpccommonStatic ${client_connector_libs})
 set_target_properties(jsonrpcclientStatic PROPERTIES OUTPUT_NAME jsonrpccpp-client)
 set_target_properties(jsonrpcclient PROPERTIES OUTPUT_NAME jsonrpccpp-client)
 
 
-add_library(jsonrpcserver SHARED ${jsonrpc_source_server} ${server_connector_source})
-add_library(jsonrpcserverStatic STATIC ${jsonrpc_source_server} ${server_connector_source})
+add_library(jsonrpcserver SHARED ${jsonrpc_source_server} ${jsonrpc_header} ${jsonrpc_header_server} ${server_connector_source})
+add_library(jsonrpcserverStatic STATIC ${jsonrpc_source_server} ${jsonrpc_header} ${jsonrpc_header_server} ${server_connector_source})
 target_link_libraries(jsonrpcserver jsonrpccommon ${server_connector_libs})
 target_link_libraries(jsonrpcserverStatic jsonrpccommonStatic ${server_connector_libs})
 set_target_properties(jsonrpcserverStatic PROPERTIES OUTPUT_NAME jsonrpccpp-server)
