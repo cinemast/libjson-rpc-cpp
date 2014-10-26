@@ -10,11 +10,11 @@
 #ifndef JSONRPC_MOCKCLIENTCONNECTOR_H
 #define JSONRPC_MOCKCLIENTCONNECTOR_H
 
-#include <jsonrpccpp/client/abstractclientconnector.h>
+#include <jsonrpccpp/client/iclientconnector.h>
 
 namespace jsonrpc {
 
-    class MockClientConnector : public AbstractClientConnector
+    class MockClientConnector : public IClientConnector
     {
         public:
             MockClientConnector();

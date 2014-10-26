@@ -6,15 +6,15 @@ libjson-rpc-cpp
 This C++ library provides a json-rpc (remote procedure call) framework for Linux and MacOS (or any other UNIX derivate).
 It is fully JSON-RPC 2.0 compatible ([JSON-RPC 2.0](http://www.jsonrpc.org/specification)) and provides additional features, such as generic authentication mechanisms.
 
-**Notice: This framework is currently in a beta phase. Bug Reports are very welcome!**
+**Notice: This framework is currently in a beta phase. Bug reports as well as contributions are very welcome! Heavy API/ABI changes might occur regularly but you can always find stable versions in the [Releases section](https://github.com/cinemast/libjson-rpc-cpp/releases)**
 
 ![libjson-rpc-cpp logo](https://github.com/cinemast/libjson-rpc-cpp/blob/master/dev/artwork/logo.png?raw=true)
 
 5 good reasons for using libjson-rpc-cpp in your next RPC project:
 ---------
-- Full JSON-RPC 2.0 Support (batch requests, parameter type and name checking, ...).
-- jsonrpcstub: Generates automatically C++ stub-classes for your json-rpc client AND server.
-- Embedded HTTP server to provide simple interfaces for your json-rpc server application.
+- Full JSON-RPC 2.0/1.0 Client and Server Support
+- jsonrpcstub: Generates automatically C++ stub-classes for your JSON-RPC client AND server.
+- Embedded HTTP server to provide simple interfaces for your JSON-RPC server application.
 - Embedded HTTP client to connect easily via HTTP protocol.
 - Super liberal [MIT-License](http://en.wikipedia.org/wiki/MIT_License). 
 
@@ -208,12 +208,14 @@ References
 - [mage-sdk-cpp](https://github.com/mage/mage-sdk-cpp): a game engine.
 - [bitcodin](http://www.bitmovin.net): a scaleable cloud based video transcoding platform.
 - [wgslib](http://wgslib.com/): A web geostatistics library.
+- [bitcoin-api-cpp](https://github.com/minium/bitcoin-api-cpp): a C++ interface to bitcoin.
 
 If you use this library and find it useful, I would be very pleased if you let me know about it.
 
 Roadmap for next release
 ------------------------
-- JSON RPC 1 legacy support
+- Official win32/64 build support.
+- Review socket connectors
 - libmicrohttpd server connector (to replace mongoose, because of license issues)
 - Generate client stubs for other languages.
 

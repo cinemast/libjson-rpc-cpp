@@ -13,73 +13,51 @@
 #include <map>
 #include <string>
 #include <vector>
-
-#include "rpcprotocolserver.h"
+#include <jsonrpccpp/common/procedure.h>
 #include "abstractserverconnector.h"
+#include "iprocedureinvokationhandler.h"
+#include "iclientconnectionhandler.h"
+#include "requesthandlerfactory.h"
 
 namespace jsonrpc
 {
+
     template<class S>
-    class AbstractServer : public AbstractRequestHandler
+    class AbstractServer : public IProcedureInvokationHandler
     {
         public:
             typedef void(S::*methodPointer_t)       (const Json::Value &parameter, Json::Value &result);
             typedef void(S::*notificationPointer_t) (const Json::Value &parameter);
 
-            AbstractServer(AbstractServerConnector &connector) :
-                connection(connector),
-                handler(*this)
-            {
-                connector.SetHandler(this->handler);
-            }
-
-            AbstractServer(const std::string &configfile, AbstractServerConnector &connector) :
-                handler(this, SpecificationParser::GetProceduresFromFile(configfile)),
+            AbstractServer(AbstractServerConnector &connector, serverVersion_t type = JSONRPC_SERVER_V2) :
                 connection(connector)
             {
+                this->handler = RequestHandlerFactory::createProtocolHandler(type, *this);
                 connector.SetHandler(this->handler);
             }
 
             virtual ~AbstractServer()
             {
-                this->StopListening();
+                delete this->handler;
             }
 
-            /**
-             * @brief StartListening starts the AbstractServerConnector to listen for incoming requests.
-             * @return
-             */
-            virtual bool StartListening()
+            bool StartListening()
             {
-                return this->connection.StartListening();
+                return connection.StartListening();
             }
 
-
-            /**
-             * @brief StopListening stops the AbstractServerConnector, no more requests will be answered.
-             * @return
-             */
-            virtual bool StopListening()
+            bool StopListening()
             {
-                return this->connection.StopListening();
+                return connection.StopListening();
             }
 
-            /**
-             * @brief Returns the protocol instance, which can be used to get all registered Methods.
-             * @return
-             */
-            virtual RpcProtocolServer& GetProtocolHanlder()
-            {
-                return this->handler;
-            }
-
-            virtual void handleMethodCall(Procedure &proc, const Json::Value& input, Json::Value& output)
+            virtual void HandleMethodCall(Procedure &proc, const Json::Value& input, Json::Value& output)
             {
                 S* instance = dynamic_cast<S*>(this);
                 (instance->*methods[proc.GetProcedureName()])(input, output);
             }
 
-            virtual void handleNotificationCall(Procedure &proc, const Json::Value& input)
+            virtual void HandleNotificationCall(Procedure &proc, const Json::Value& input)
             {
                 S* instance = dynamic_cast<S*>(this);
                 (instance->*notifications[proc.GetProcedureName()])(input);
@@ -90,7 +68,7 @@ namespace jsonrpc
             {
                 if(proc->GetProcedureType() == RPC_METHOD)
                 {
-                    this->handler.AddProcedure(*proc);
+                    this->handler->AddProcedure(*proc);
                     this->methods[proc->GetProcedureName()] = pointer;
                     return true;
                 }
@@ -101,8 +79,9 @@ namespace jsonrpc
             {
                 if(proc->GetProcedureType() == RPC_NOTIFICATION)
                 {
-                    this->handler.AddProcedure(*proc);
+                    this->handler->AddProcedure(*proc);
                     this->notifications[proc->GetProcedureName()] = pointer;
+                    delete proc;
                     return true;
                 }
                 return false;
@@ -110,7 +89,7 @@ namespace jsonrpc
 
         private:
             AbstractServerConnector                         &connection;
-            RpcProtocolServer                               handler;
+            IProtocolHandler                                *handler;
             std::map<std::string, methodPointer_t>          methods;
             std::map<std::string, notificationPointer_t>    notifications;
     };

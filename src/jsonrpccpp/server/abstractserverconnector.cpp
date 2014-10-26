@@ -33,7 +33,8 @@ bool AbstractServerConnector::OnRequest(const std::string& request, void* addInf
         return false;
     }
 }
-void AbstractServerConnector::SetHandler(RpcProtocolServer& handler)
+
+void AbstractServerConnector::SetHandler(IClientConnectionHandler* handler)
 {
-    this->handler = &handler;
+    this->handler = handler;
 }

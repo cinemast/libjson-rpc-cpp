@@ -58,33 +58,6 @@ Errors::_init::_init() {
     possibleErrors[ERROR_SERVER_CONNECTOR] = "Server connector error";
 }
 
-Json::Value Errors::GetErrorBlock(const Json::Value& request, const int& errorCode)
-{
-    Json::Value error;
-    error["jsonrpc"] = "2.0";
-    error["error"]["code"] = errorCode;
-    error["error"]["message"] = GetErrorMessage(errorCode);
-
-    if(request.isObject() && request.isMember("id") && (request["id"].isNull() || request["id"].isInt() || request["id"].isUInt() || request["id"].isString()))
-    {
-        error["id"] = request["id"];
-    }
-    else
-    {
-        error["id"] = Json::nullValue;
-    }
-    return error;
-}
-
-Json::Value Errors::GetErrorBlock(const Json::Value& request, const JsonRpcException& exc)
-{
-    Json::Value error = GetErrorBlock(request, exc.GetCode());
-    std::string errorMessage = exc.GetMessage();
-    if ( ! errorMessage.empty() )
-        error["error"]["message"] = errorMessage;
-    return error;
-}
-
 std::string Errors::GetErrorMessage(int errorCode)
 {
     if(possibleErrors.find(errorCode) == possibleErrors.end())

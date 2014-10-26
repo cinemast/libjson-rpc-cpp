@@ -59,7 +59,7 @@ void init_string(struct string *s)
 }
 
 HttpClient::HttpClient(const std::string& url) throw(JsonRpcException)
-    : AbstractClientConnector(), url(url)
+    : url(url)
 {
     this->timeout = 1000;
 }

@@ -23,19 +23,6 @@ namespace jsonrpc
     {
         public:
             /**
-             * @param errorCode - the errorCode of which you want to create an errorBlock
-             * @return - returns an error message as described in JSON-RPC 2.0 e.g. \code {"code" : -32600, "message": "INVALID_JSON_REQUEST: The JSON sent is not a valid JSON-RPC Request object" } \endcode
-             * @pre the errorcode must be known, because it is not checked.
-             * @see http://groups.google.com/group/json-rpc/web/json-rpc-1-2-proposal?pli=1#error-object
-             */
-            static Json::Value GetErrorBlock(const Json::Value& request, const int& errorCode);
-
-            /**
-             * Same as previous, but using user-generated exception.
-             */
-            static Json::Value GetErrorBlock(const Json::Value& request, const JsonRpcException& exc);
-
-            /**
              * @return error message to corresponding error code.
              */
             static std::string GetErrorMessage(int errorCode);
