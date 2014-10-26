@@ -14,4 +14,13 @@ compiler:
   - clang
   - gcc
 
-script: mkdir -p build && cd build && cmake -DHTTP_CONNECTOR=${HTTP_CONN} -DSOCKET_CONNECTOR=${SOCKET_CONN} .. && make && make test
+script: 
+    mkdir -p build
+    cd build
+    cmake -DHTTP_CONNECTOR=${HTTP_CONN} -DSOCKET_CONNECTOR=${SOCKET_CONN} .. 
+    make
+    make test
+
+    sudo make install
+    g++ ../src/examples/simpleclient.cpp -ljsonrpccpp-client -ljsoncpp -ljsonrpccpp-common -lcurl -o sampleclient
+    g++ ../src/examples/simpleserver.cpp -ljsonrpccpp-server -ljsoncpp -ljsonrpccpp-common -o sampleserver

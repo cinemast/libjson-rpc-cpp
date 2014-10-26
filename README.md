@@ -165,7 +165,7 @@ In the main function the concrete server is instantiated and started. That is al
 Compile the server with:
 
 ```sh
-g++ main.cpp -ljsonrpccpp-server -o sampleserver
+g++ main.cpp -ljsonrpccpp-server -ljsoncpp -ljsonrpccpp-common -o sampleserver
 ```
 
 ### Step 4: Create the client application
@@ -197,7 +197,7 @@ int main()
 Compile the client with:
 
 ```sh
-g++ main.cpp -ljsonrpccpp-client -o sampleclient
+g++ main.cpp -ljsonrpccpp-client -ljsoncpp -ljsonrpccpp-common -lcurl -o sampleclient
 ```
 
 References

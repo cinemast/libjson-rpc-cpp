@@ -17,8 +17,8 @@ file(GLOB jsonrpc_header_server
     server/requesthandlerfactory.h
     server/abstractserver.h
     server/abstractserverconnector.h
-    server/iclientconnectionlistener.h
     server/iprocedureinvokationhandler.h
+    server/iclientconnectionhandler.h
 )
 file(GLOB jsonrpc_header *.h)
 
