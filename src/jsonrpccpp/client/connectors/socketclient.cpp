@@ -7,7 +7,6 @@
 using namespace jsonrpc;
 
 SocketClient::SocketClient(const std::string& url, const std::string& port, const int type) throw (JsonRpcException) :
-    AbstractClientConnector(),
     socket_(-1),
     server_info_(NULL)
 {

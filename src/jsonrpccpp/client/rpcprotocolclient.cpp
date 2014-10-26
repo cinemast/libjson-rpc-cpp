@@ -23,7 +23,6 @@ const std::string RpcProtocolClient::KEY_ERROR_CODE       = "code";
 const std::string RpcProtocolClient::KEY_ERROR_MESSAGE    = "message";
 
 RpcProtocolClient::RpcProtocolClient(clientVersion_t version) :
-    id(1),
     version(version)
 {
 }
@@ -35,12 +34,7 @@ void        RpcProtocolClient::BuildRequest         (const std::string &method, 
     this->BuildRequest(1, method,parameter,request, isNotification);
     result = writer.write(request);
 }
-Json::Value RpcProtocolClient::HandleResponse       (const std::string &response) throw(JsonRpcException)
-{
-    Json::Value result;
-    this->HandleResponse(response, result);
-    return result;
-}
+
 void        RpcProtocolClient::HandleResponse       (const std::string &response, Json::Value& result) throw(JsonRpcException)
 {
     Json::Reader reader;
@@ -74,10 +68,7 @@ int RpcProtocolClient::HandleResponse(const Json::Value &value, Json::Value &res
     }
     return value[KEY_ID].asInt();
 }
-void        RpcProtocolClient::resetId              ()
-{
-    this->id = 1;
-}
+
 void        RpcProtocolClient::BuildRequest         (int id, const std::string &method, const Json::Value &parameter, Json::Value &result, bool isNotification)
 {
     if (this->version == JSONRPC_CLIENT_V2)
@@ -92,8 +83,8 @@ void        RpcProtocolClient::BuildRequest         (int id, const std::string &
 
 void RpcProtocolClient::throwErrorException(const Json::Value &response)
 {
-    if (response[KEY_ERROR].isMember(KEY_ERROR_CODE) && response[KEY_ERROR][KEY_ERROR_CODE].isString())
-        throw JsonRpcException(response[KEY_ERROR][KEY_ERROR_CODE].asInt(), response[KEY_ERROR][KEY_ERROR_CODE].asString());
+    if (response[KEY_ERROR].isMember(KEY_ERROR_MESSAGE) && response[KEY_ERROR][KEY_ERROR_MESSAGE].isString())
+        throw JsonRpcException(response[KEY_ERROR][KEY_ERROR_CODE].asInt(), response[KEY_ERROR][KEY_ERROR_MESSAGE].asString());
     throw JsonRpcException(response[KEY_ERROR][KEY_ERROR_CODE].asInt());
 }
 
