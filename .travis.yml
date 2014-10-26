@@ -5,8 +5,8 @@ before_install:
  - sudo apt-get install -qq libcurl4-openssl-dev libjsoncpp-dev libargtable2-dev libboost-test-dev
 
 env:
- - HTTP_SERVER_MONGOOSE=YES HTTP_CLIENT_CURL=YES
- - SOCKET_SERVER=YES SOCKET_CLIENT=YES HTTP_SERVER_MONGOOSE=NO HTTP_CLIENT_CURL=NO
+ - SOCKET_SERVER=NO SOCKET_CLIENT=NO HTTP_SERVER_MONGOOSE=YES HTTP_CLIENT_CURL=YES
+ - SOCKET_SERVER=YES SOCKET_CLIENT=YES HTTP_SERVER_MONGOOSE=YES HTTP_CLIENT_CURL=YES
  - COMPILE_STUBGEN=NO
 
 
@@ -15,4 +15,4 @@ compiler:
   - gcc
 
 script: 
-    mkdir -p build && cd build && cmake -DHTTP_CONNECTOR=${HTTP_CONN} -DSOCKET_CONNECTOR=${SOCKET_CONN} .. && make && make test && sudo make install && g++ ../src/examples/simpleclient.cpp -ljsonrpccpp-client -ljsoncpp -ljsonrpccpp-common -lcurl -o sampleclient && g++ ../src/examples/simpleserver.cpp -ljsonrpccpp-server -ljsoncpp -ljsonrpccpp-common -o sampleserver
+    mkdir -p build && cd build && cmake -DSOCKET_SERVER=${SOCKET_SERVER} -DSOCKET_CLIENT=${SOCKET_CLIENT} -DHTTP_CLIENT_CURL=${HTTP_CLIENT_CURL} -DHTTP_SERVER_MONGOOSE=${HTTP_SERVER_MONGOOSE} .. && make && make test && sudo make install && g++ ../src/examples/simpleclient.cpp -ljsonrpccpp-client -ljsoncpp -ljsonrpccpp-common -lcurl -o sampleclient && g++ ../src/examples/simpleserver.cpp -ljsonrpccpp-server -ljsoncpp -ljsonrpccpp-common -o sampleserver
