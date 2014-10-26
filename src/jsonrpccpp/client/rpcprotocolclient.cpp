@@ -22,8 +22,8 @@ const std::string RpcProtocolClient::KEY_ERROR            = "error";
 const std::string RpcProtocolClient::KEY_ERROR_CODE       = "code";
 const std::string RpcProtocolClient::KEY_ERROR_MESSAGE    = "message";
 
-RpcProtocolClient::RpcProtocolClient() :
-    id(1)
+RpcProtocolClient::RpcProtocolClient(clientVersion_t version) :
+    version(version)
 {
 }
 
@@ -34,12 +34,7 @@ void        RpcProtocolClient::BuildRequest         (const std::string &method, 
     this->BuildRequest(1, method,parameter,request, isNotification);
     result = writer.write(request);
 }
-Json::Value RpcProtocolClient::HandleResponse       (const std::string &response) throw(JsonRpcException)
-{
-    Json::Value result;
-    this->HandleResponse(response, result);
-    return result;
-}
+
 void        RpcProtocolClient::HandleResponse       (const std::string &response, Json::Value& result) throw(JsonRpcException)
 {
     Json::Reader reader;
@@ -56,15 +51,15 @@ void        RpcProtocolClient::HandleResponse       (const std::string &response
 
 int RpcProtocolClient::HandleResponse(const Json::Value &value, Json::Value &result) throw(JsonRpcException)
 {
-    if(value.isObject() && value.isMember(KEY_ID) && value.isMember(KEY_PROTOCOL_VERSION) && value[KEY_PROTOCOL_VERSION] == "2.0" && (value.isMember(KEY_RESULT) || value.isMember(KEY_ERROR)))
+    if(this->ValidateResponse(value))
     {
-        if(value.isMember(KEY_RESULT))
+        if (this->HasError(value))
         {
-            result = value[KEY_RESULT];
+            this->throwErrorException(value);
         }
         else
         {
-            throw JsonRpcException(value[KEY_ERROR][KEY_ERROR_CODE].asInt(), value[KEY_ERROR][KEY_ERROR_MESSAGE].asString());
+            result = value[KEY_RESULT];
         }
     }
     else
@@ -73,17 +68,60 @@ int RpcProtocolClient::HandleResponse(const Json::Value &value, Json::Value &res
     }
     return value[KEY_ID].asInt();
 }
-void        RpcProtocolClient::resetId              ()
-{
-    this->id = 1;
-}
+
 void        RpcProtocolClient::BuildRequest         (int id, const std::string &method, const Json::Value &parameter, Json::Value &result, bool isNotification)
 {
-    result[KEY_PROTOCOL_VERSION] = "2.0";
+    if (this->version == JSONRPC_CLIENT_V2)
+        result[KEY_PROTOCOL_VERSION] = "2.0";
     result[KEY_PROCEDURE_NAME] = method;
     result[KEY_PARAMETER] = parameter;
-    if(!isNotification)
-    {
+    if (!isNotification)
         result[KEY_ID] = id;
+    else if (this->version == JSONRPC_CLIENT_V1)
+        result[KEY_ID] = Json::nullValue;
+}
+
+void RpcProtocolClient::throwErrorException(const Json::Value &response)
+{
+    if (response[KEY_ERROR].isMember(KEY_ERROR_MESSAGE) && response[KEY_ERROR][KEY_ERROR_MESSAGE].isString())
+        throw JsonRpcException(response[KEY_ERROR][KEY_ERROR_CODE].asInt(), response[KEY_ERROR][KEY_ERROR_MESSAGE].asString());
+    throw JsonRpcException(response[KEY_ERROR][KEY_ERROR_CODE].asInt());
+}
+
+bool RpcProtocolClient::ValidateResponse(const Json::Value& response)
+{
+    if (!response.isObject() || !response.isMember(KEY_ID))
+        return false;
+
+    if (this->version == JSONRPC_CLIENT_V1)
+    {
+        if (!response.isMember(KEY_RESULT) || !response.isMember(KEY_ERROR))
+            return false;
+        if(!response[KEY_RESULT].isNull() && !response[KEY_ERROR].isNull())
+            return false;
+        if (!response[KEY_ERROR].isNull() && !(response[KEY_ERROR].isObject() && response[KEY_ERROR].isMember(KEY_ERROR_CODE) && response[KEY_ERROR][KEY_ERROR_CODE].isInt()))
+            return false;
     }
+    else if (this->version == JSONRPC_CLIENT_V2)
+    {
+        if (!response.isMember(KEY_PROTOCOL_VERSION) || response[KEY_PROTOCOL_VERSION] != "2.0")
+            return false;
+        if (response.isMember(KEY_RESULT) && response.isMember(KEY_ERROR))
+            return false;
+        if (!response.isMember(KEY_RESULT) && !response.isMember(KEY_ERROR))
+            return false;
+        if (response.isMember(KEY_ERROR) && !(response[KEY_ERROR].isObject() && response[KEY_ERROR].isMember(KEY_ERROR_CODE) && response[KEY_ERROR][KEY_ERROR_CODE].isInt()))
+            return false;
+    }
+
+    return true;
+}
+
+bool RpcProtocolClient::HasError(const Json::Value& response)
+{
+    if (this->version == JSONRPC_CLIENT_V1 && !response[KEY_ERROR].isNull())
+        return true;
+    else if (this->version == JSONRPC_CLIENT_V2 && response.isMember(KEY_ERROR))
+        return true;
+    return false;
 }

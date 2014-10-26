@@ -56,7 +56,7 @@ string BatchResponse::getErrorMessage(int id)
     {
         return responses[id]["message"].asString();
     }
-    return 0;
+    return "";
 }
 
 bool BatchResponse::hasErrors()

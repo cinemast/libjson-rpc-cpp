@@ -10,13 +10,13 @@
 #define JSONRPC_CPP_SOCKETCLIENT_H
 
 
-#include "../abstractclientconnector.h"
+#include "../iclientconnector.h"
 #include <jsonrpccpp/common/exception.h>
 #include <jsonrpccpp/common/helper/socket.h>
 
 namespace jsonrpc
 {
-    class SocketClient : public AbstractClientConnector
+    class SocketClient : public IClientConnector
     {
         public:
             SocketClient(const std::string& url = "0.0.0.0", const std::string& port = "8080", const int type = SOCK_STREAM) throw (JsonRpcException);
