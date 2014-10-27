@@ -11,7 +11,7 @@
 FIND_PATH(JSONCPP_INCLUDE_DIRS json.h
 /usr/include
 /usr/local/include
-${CMAKE_SOURCE_DIR}/win32-deps/include
+${CMAKE_SOURCE_DIR}/win32-deps/include/jsoncpp/json
 PATH_SUFFIXES jsoncpp/json jsoncpp
 )
 

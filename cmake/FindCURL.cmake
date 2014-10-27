@@ -24,7 +24,7 @@ FIND_PATH (CURL_INCLUDE_DIRS curl.h
     /usr/include
     /usr/local/include
     /opt/local/include
-	${CMAKE_SOURCE_DIR}/win32-deps/include
+	${CMAKE_SOURCE_DIR}/win32-deps/include/curl
     PATH_SUFFIXES curl
     )
 

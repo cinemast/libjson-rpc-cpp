@@ -25,6 +25,11 @@ SET(COMPILE_TESTS YES CACHE BOOL "Compile test framework")
 SET(COMPILE_STUBGEN YES CACHE BOOL "Compile the stubgenerator")
 SET(COMPILE_EXAMPLES YES CACHE BOOL "Compile example programs")
 
+IF(WIN32)
+	include_directories(${CMAKE_SOURCE_DIR}/win32-deps/include)
+	SET(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/dist)
+ENDIF()
+
 #the core framework
 add_subdirectory(src/jsonrpccpp)
 
