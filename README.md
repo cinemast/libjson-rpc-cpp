@@ -4,7 +4,7 @@ libjson-rpc-cpp
 ===============
 
 This C++ library provides a json-rpc (remote procedure call) framework for Linux and MacOS (or any other UNIX derivate).
-It is fully JSON-RPC 2.0 compatible ([JSON-RPC 2.0](http://www.jsonrpc.org/specification)) and provides additional features, such as generic authentication mechanisms.
+It is fully JSON-RPC 2.0 & 1.0 compatible ([JSON-RPC 2.0](http://www.jsonrpc.org/specification)).
 
 **Notice: This framework is currently in a beta phase. Bug reports as well as contributions are very welcome! Heavy API/ABI changes might occur regularly but you can always find stable versions in the [Releases section](https://github.com/cinemast/libjson-rpc-cpp/releases)**
 
@@ -54,6 +54,10 @@ You need [Brew](http://brew.sh) installed and type the following commands
 ```sh
 brew install argtable cmake boost jsoncpp
 ```
+
+*Windows*
+- Download the precompiled dependencies form [here](https://spiessknafl.at/libjson-rpc-cpp/win32-deps.zip).
+- Extract it into the cloned repository, so that there is a `win32-deps` folder in the root project directory.
 
 **Build and install this framework**
 
