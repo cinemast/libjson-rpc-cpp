@@ -10,13 +10,13 @@
 #ifndef JSONRPC_CPP_HTTPCLIENT_H_
 #define JSONRPC_CPP_HTTPCLIENT_H_
 
-#include "../abstractclientconnector.h"
+#include "../iclientconnector.h"
 #include <jsonrpccpp/common/exception.h>
 #include <map>
 
 namespace jsonrpc
 {
-    class HttpClient : public AbstractClientConnector
+    class HttpClient : public IClientConnector
     {
         public:
             HttpClient(const std::string& url) throw (JsonRpcException);

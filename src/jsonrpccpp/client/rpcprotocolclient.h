@@ -19,11 +19,10 @@
 #endif
 
 #include <string>
+#include "client.h"
 
 namespace jsonrpc {
 
-    //int defines id field
-    typedef std::map<int, Json::Value> batchProcedureResponse;
 
     /**
      * @brief The RpcProtocolClient class handles the json-rpc 2.0 protocol for the client side.
@@ -31,7 +30,7 @@ namespace jsonrpc {
     class RpcProtocolClient
     {
         public:
-            RpcProtocolClient();
+            RpcProtocolClient(clientVersion_t version = JSONRPC_CLIENT_V2);
 
             /**
              * @brief This method builds a valid json-rpc 2.0 request object based on passed paramters.
@@ -52,15 +51,6 @@ namespace jsonrpc {
              */
             void BuildRequest(const std::string& method, const Json::Value& parameter, std::string& result, bool isNotification);
 
-            /**
-             * @brief This method parses the result of a json-rpc-server and returns the result object according
-             * to the json-rpc 2.0 specification.
-             * In case of an Error, an jsonrpc::Exception is thrown.
-             * @param response - the resonse of a json-rpc server represented as string.
-             * @return The result object inside the json-rpc response message
-             */
-            Json::Value HandleResponse(const std::string& response) throw(JsonRpcException);
-
 
             /**
              * @brief Does the same as Json::Value RpcProtocolClient::HandleResponse(const std::string& response) throw(Exception)
@@ -76,11 +66,6 @@ namespace jsonrpc {
              */
             int HandleResponse(const Json::Value &response, Json::Value &result) throw (JsonRpcException);
 
-            /**
-             * @brief resets the id used for building request objects.
-             */
-            void resetId();
-
             static const std::string KEY_PROTOCOL_VERSION;
             static const std::string KEY_PROCEDURE_NAME;
             static const std::string KEY_ID;
@@ -92,9 +77,12 @@ namespace jsonrpc {
             static const std::string KEY_ERROR_MESSAGE;
 
         private:
-            int id;
+            clientVersion_t version;
 
             void BuildRequest(int id, const std::string& method, const Json::Value& parameter, Json::Value& result, bool isNotification);
+            bool ValidateResponse(const Json::Value &response);
+            bool HasError(const Json::Value &response);
+            void throwErrorException(const Json::Value &response);
     };
 }
 #endif // RESPONSEHANDLER_H

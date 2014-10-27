@@ -1,7 +1,18 @@
+Changes in v0.3.2
+-----------------
+- Bugfixes
+- Additional testcases for client + server -> higher testcoverage
+- JSON-RPC 1 Client + Server support
+- Refactorings in server for JSON-RPC 1 support
+- Hiding irrelevant API headers from installation
+- Renamed AbstractClientConnector to IClientConnector (please regenearte your client stubs after upgrading)
+- Reactivated dev/testcoverage.sh to measure testcoverage.
+
 Changes in v0.3.1
+-----------------
 - Bugfixes
 - Changed SOVERSION
-- Added experimental Javascript client stub to stubgenerator
+- Added experimental Javascript client to stubgenerator
 - Adapted HTTP Server to enable CORS.
 
 Changes in v0.3
