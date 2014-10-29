@@ -110,7 +110,7 @@ void HttpClient::SendRPCMessage(const std::string& message, std::string& result)
             case 28: str << "Operation timed out";
                 break;
             default:
-                str << "ibcurl error: " << res;
+                str << "libcurl error: " << res;
                 break;
         }
         curl_easy_cleanup(curl);

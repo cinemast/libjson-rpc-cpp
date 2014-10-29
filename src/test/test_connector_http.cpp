@@ -27,7 +27,12 @@ BOOST_AUTO_TEST_SUITE(connector_http)
 
 bool check_exception1(JsonRpcException const&ex)
 {
-    return ex.GetCode() == Errors::ERROR_CLIENT_CONNECTOR ;
+    return ex.GetCode() == Errors::ERROR_CLIENT_CONNECTOR;
+}
+
+bool check_exception2(JsonRpcException const&ex)
+{
+    return ex.GetCode() == Errors::ERROR_RPC_INTERNAL_ERROR;
 }
 
 BOOST_AUTO_TEST_CASE(test_http_success)
@@ -76,6 +81,35 @@ BOOST_AUTO_TEST_CASE(test_http_client_timeout)
     BOOST_CHECK_EQUAL(result, "asdf");
     server.StopListening();
     BOOST_CHECK_EXCEPTION(client.SendRPCMessage("Test", result), JsonRpcException, check_exception1);
+}
+
+BOOST_AUTO_TEST_CASE(test_http_server_endpoints)
+{
+    MockClientConnectionHandler handler1;
+    MockClientConnectionHandler handler2;
+
+    handler1.response = "response1";
+    handler2.response = "response2";
+
+    HttpServer server(TEST_PORT);
+    server.SetUrlHandler("/handler1", &handler1);
+    server.SetUrlHandler("/handler2", &handler2);
+
+    server.StartListening();
+    HttpClient client1("http://localhost:8383/handler1");
+    HttpClient client2("http://localhost:8383/handler2");
+    HttpClient client3("http://localhost:8383/handler3");
+
+
+    string response;
+
+    client1.SendRPCMessage("test", response);
+    BOOST_CHECK_EQUAL(response, "response1");
+    client2.SendRPCMessage("test", response);
+    BOOST_CHECK_EQUAL(response, "response2");
+
+    BOOST_CHECK_EXCEPTION(client3.SendRPCMessage("test", response), JsonRpcException, check_exception2);
+    server.StopListening();
 }
 
 BOOST_AUTO_TEST_SUITE_END()
