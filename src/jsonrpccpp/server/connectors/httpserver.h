@@ -11,6 +11,7 @@
 #define JSONRPC_CPP_HTTPSERVERCONNECTOR_H_
 
 #include "mongoose.h"
+#include <map>
 #include "../abstractserverconnector.h"
 
 namespace jsonrpc
@@ -39,6 +40,8 @@ namespace jsonrpc
             bool virtual SendResponse(const std::string& response,
                     void* addInfo = NULL);
 
+            void SetUrlHandler(const std::string &url, IClientConnectionHandler *handler);
+
         private:
             int port;
             struct mg_context *ctx;
@@ -47,7 +50,10 @@ namespace jsonrpc
             std::string sslcert;
             int threads;
 
+            std::map<std::string, IClientConnectionHandler*> urlhandler;
+
             static int callback(struct mg_connection *conn);
+            IClientConnectionHandler* getHandler(const std::string &url);
 
     };
 

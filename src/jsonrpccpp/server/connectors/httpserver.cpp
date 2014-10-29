@@ -14,6 +14,7 @@
 #include <cstring>
 
 using namespace jsonrpc;
+using namespace std;
 
 int HttpServer::callback(struct mg_connection *conn)
 {
@@ -54,6 +55,14 @@ int HttpServer::callback(struct mg_connection *conn)
     {
         return 0;
     }
+}
+
+IClientConnectionHandler *HttpServer::getHandler(const std::string &url)
+{
+    map<string, IClientConnectionHandler*>::iterator it = this->urlhandler.find(url);
+    if (it != this->urlhandler.end())
+        return it->second;
+    return this->GetHandler();
 }
 
 HttpServer::HttpServer(int port, bool enableSpecification, const std::string &sslcert, int threads) :
@@ -120,7 +129,7 @@ bool HttpServer::StopListening()
     return true;
 }
 
-bool HttpServer::SendResponse(const std::string& response, void* addInfo)
+bool HttpServer::SendResponse(const string& response, void* addInfo)
 {
     struct mg_connection* conn = (struct mg_connection*) addInfo;
     if (mg_printf(conn, "HTTP/1.1 200 OK\r\n"
@@ -136,4 +145,10 @@ bool HttpServer::SendResponse(const std::string& response, void* addInfo)
     {
         return false;
     }
+}
+
+void HttpServer::SetUrlHandler(const string &url, IClientConnectionHandler *handler)
+{
+    this->urlhandler[url] = handler;
+    this->SetHandler(NULL);
 }
