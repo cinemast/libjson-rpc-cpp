@@ -9,6 +9,8 @@
 
 #include <boost/test/unit_test.hpp>
 
+#ifdef HTTP_TESTING
+
 #include <jsonrpccpp/server/connectors/httpserver.h>
 #include <jsonrpccpp/client/connectors/httpclient.h>
 
@@ -113,3 +115,5 @@ BOOST_AUTO_TEST_CASE(test_http_server_endpoints)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+
+#endif

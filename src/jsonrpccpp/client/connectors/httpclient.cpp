@@ -117,6 +117,14 @@ void HttpClient::SendRPCMessage(const std::string& message, std::string& result)
         throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, str.str());
     }
 
+    long http_code = 0;
+    curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &http_code);
+
+    if (http_code != 200)
+    {
+        throw JsonRpcException(Errors::ERROR_RPC_INTERNAL_ERROR, result);
+    }
+
     if (curl)
     {
         curl_easy_cleanup(curl);

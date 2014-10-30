@@ -10,14 +10,14 @@
 #ifndef JSONRPC_CPP_HTTPSERVERCONNECTOR_H_
 #define JSONRPC_CPP_HTTPSERVERCONNECTOR_H_
 
-#include "mongoose.h"
 #include <map>
+#include <microhttpd.h>
 #include "../abstractserverconnector.h"
 
 namespace jsonrpc
 {
     /**
-     * This class provides an embedded HTTP Server, based on Mongoose, to handle incoming Requests and send HTTP 1.1
+     * This class provides an embedded HTTP Server, based on libmicrohttpd, to handle incoming Requests and send HTTP 1.1
      * valid responses.
      * Note that this class will always send HTTP-Status 200, even though an JSON-RPC Error might have occurred. Please
      * always check for the JSON-RPC Error Header.
@@ -32,7 +32,7 @@ namespace jsonrpc
              * @param enableSpecification - defines if the specification is returned in case of a GET request
              * @param sslcert - defines the path to a SSL certificate, if this path is != "", then SSL/HTTPS is used with the given certificate.
              */
-            HttpServer(int port, bool enableSpecification = true, const std::string& sslcert = "", int threads = 50);
+            HttpServer(int port, const std::string& sslcert = "");
 
             virtual bool StartListening();
             virtual bool StopListening();
@@ -44,15 +44,15 @@ namespace jsonrpc
 
         private:
             int port;
-            struct mg_context *ctx;
             bool running;
-            bool showSpec;
             std::string sslcert;
-            int threads;
+
+            struct MHD_Daemon *daemon;
 
             std::map<std::string, IClientConnectionHandler*> urlhandler;
 
-            static int callback(struct mg_connection *conn);
+            static int callback(void *cls, struct MHD_Connection *connection, const char *url, const char *method, const char *version, const char *upload_data, size_t *upload_data_size, void **con_cls);
+
             IClientConnectionHandler* getHandler(const std::string &url);
 
     };
