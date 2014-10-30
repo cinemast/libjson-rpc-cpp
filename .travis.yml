@@ -2,7 +2,7 @@ language: cpp
 
 before_install:
  - sudo apt-get update -qq
- - sudo apt-get install -qq libcurl4-openssl-dev libjsoncpp-dev libargtable2-dev libboost-test-dev
+ - sudo apt-get install -qq libcurl4-openssl-dev libjsoncpp-dev libargtable2-dev libboost-test-dev libmicrohttpd-dev
 
 env:
  - SOCKET_SERVER=NO SOCKET_CLIENT=NO HTTP_SERVER=YES HTTP_CLIENT=YES COMPILE_STUBGEN=YES

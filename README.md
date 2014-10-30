@@ -45,11 +45,11 @@ CMake must be Version 2.6 or later.
 *Debian based systems:*
 
 ```sh
-sudo apt-get install libcurl4-openssl-dev libjsoncpp-dev libargtable2-dev libboost-test-dev cmake
+sudo apt-get install libcurl4-openssl-dev libmicrohttpd-dev libjsoncpp-dev libargtable2-dev libboost-test-dev cmake
 ```
 
 *Mac OS X*
-
+**NOTE: libmicrohttpd missing in brew**
 You need [Brew](http://brew.sh) installed and type the following commands
 ```sh
 brew install argtable cmake boost jsoncpp
