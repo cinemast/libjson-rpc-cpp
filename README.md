@@ -223,7 +223,7 @@ Changelogs
 ----------
 Changelogs can be found [here](https://github.com/cinemast/libjson-rpc-cpp/blob/master/CHANGELOG.md).
 
-Licsense
+License
 --------
 This framework is licensed under [MIT](http://en.wikipedia.org/wiki/MIT_License).
 

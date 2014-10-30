@@ -13,7 +13,12 @@
 #include <string>
 #include <map>
 
+#ifdef __linux
 #include <jsoncpp/json/json.h>
+#else
+#include <json/json.h>
+#endif
+
 #include "specification.h"
 
 namespace jsonrpc
