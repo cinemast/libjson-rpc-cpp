@@ -2,7 +2,11 @@ language: cpp
 
 before_install:
  - sudo apt-get update -qq
- - sudo apt-get install -qq libcurl4-openssl-dev libjsoncpp-dev libargtable2-dev libboost-test-dev libmicrohttpd-dev
+ - sudo apt-get install -qq libcurl4-openssl-dev libjsoncpp-dev libargtable2-dev libboost-test-dev
+ - wget http://mirrors.kernel.org/ubuntu/pool/universe/libm/libmicrohttpd/libmicrohttpd-dev_0.9.33-1_amd64.deb
+ - wget http://mirrors.kernel.org/ubuntu/pool/universe/libm/libmicrohttpd/libmicrohttpd10_0.9.33-1_amd64.deb
+ - sudo dpkg -i libmicrohttpd10_0.9.33-1_amd64.deb
+ - sudo dpkg -i libmicrohttpd-dev_0.9.33-1_amd64.deb
 
 env:
  - SOCKET_SERVER=NO SOCKET_CLIENT=NO HTTP_SERVER=YES HTTP_CLIENT=YES COMPILE_STUBGEN=YES
