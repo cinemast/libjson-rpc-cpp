@@ -19,6 +19,10 @@ AbstractServerConnector::AbstractServerConnector()
     this->handler = NULL;
 }
 
+AbstractServerConnector::~AbstractServerConnector()
+{
+}
+
 bool AbstractServerConnector::OnRequest(const std::string& request, void* addInfo)
 {
     string response;

@@ -20,6 +20,7 @@ namespace jsonrpc
     {
         public:
             AbstractServerConnector();
+            virtual ~AbstractServerConnector();
 
             /**
              * This method should signal the Connector to start waiting for requests, in any way that is appropriate for the derived connector class.
