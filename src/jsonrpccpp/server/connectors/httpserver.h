@@ -11,6 +11,7 @@
 #define JSONRPC_CPP_HTTPSERVERCONNECTOR_H_
 
 #include <map>
+#include <stdint.h>
 #include <microhttpd.h>
 #include "../abstractserverconnector.h"
 
