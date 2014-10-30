@@ -12,6 +12,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
+#include <sstream>
 
 using namespace jsonrpc;
 
@@ -58,6 +59,19 @@ int HttpServer::callback(struct mg_connection *conn)
 
 HttpServer::HttpServer(int port, bool enableSpecification, const std::string &sslcert, int threads) :
     AbstractServerConnector(),
+    ctx(NULL),
+    running(false),
+    showSpec(enableSpecification),
+    sslcert(sslcert),
+    threads(threads)
+{
+    std::stringstream ss;
+    ss << port;
+    this->port = ss.str();
+}
+
+HttpServer::HttpServer(const std::string &port, bool enableSpecification, const std::string &sslcert, int threads) :
+    AbstractServerConnector(),
     port(port),
     ctx(NULL),
     running(false),
@@ -71,24 +85,22 @@ bool HttpServer::StartListening()
 {
     if(!this->running)
     {
-        char port[6];
         char threads[6];
         struct mg_callbacks callbacks;
         memset(&callbacks, 0, sizeof(callbacks));
         callbacks.begin_request = callback;
 
-        sprintf(port, "%d", this->port);
         sprintf(threads, "%d", this->threads);
 
         if(this->sslcert == "")
         {
-            const char *options[] = { "listening_ports", port, "num_threads", threads, NULL };
+            const char *options[] = { "listening_ports", this->port.c_str(), "num_threads", threads, NULL };
             this->ctx = mg_start(&callbacks, this, options);
         }
         else
         {
             const char *options[] =
-            { "listening_ports", port, "ssl_certificate", this->sslcert.c_str(), "num_threads", threads, NULL };
+            { "listening_ports", this->port.c_str(), "ssl_certificate", this->sslcert.c_str(), "num_threads", threads, NULL };
             this->ctx = mg_start(&callbacks, this, options);
         }
 

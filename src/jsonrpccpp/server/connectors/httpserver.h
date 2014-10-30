@@ -32,6 +32,7 @@ namespace jsonrpc
              * @param sslcert - defines the path to a SSL certificate, if this path is != "", then SSL/HTTPS is used with the given certificate.
              */
             HttpServer(int port, bool enableSpecification = true, const std::string& sslcert = "", int threads = 50);
+            HttpServer(const std::string& port, bool enableSpecification = true, const std::string& sslcert = "", int threads = 50);
 
             virtual bool StartListening();
             virtual bool StopListening();
@@ -40,7 +41,7 @@ namespace jsonrpc
                     void* addInfo = NULL);
 
         private:
-            int port;
+            std::string port;
             struct mg_context *ctx;
             bool running;
             bool showSpec;
