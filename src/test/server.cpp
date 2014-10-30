@@ -35,6 +35,7 @@ void TestServer::sayHello(const Json::Value &request, Json::Value& response)
 
 void TestServer::getCounterValue(const Json::Value &request, Json::Value &response)
 {
+    (void)request;
     response = cnt;
 }
 
@@ -50,6 +51,8 @@ void TestServer::sub(const Json::Value &request, Json::Value &response)
 
 void TestServer::exceptionMethod(const Json::Value &request, Json::Value &response)
 {
+    (void)request;
+    (void)response;
     throw JsonRpcException(-32099, "User exception");
 }
 
@@ -65,6 +68,7 @@ void TestServer::incrementCounter(const Json::Value &request)
 
 void TestServer::initZero(const Json::Value &request)
 {
+    (void)request;
     cnt = 0;
 }
 

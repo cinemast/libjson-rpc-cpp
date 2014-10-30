@@ -25,6 +25,8 @@ class MyStubServer : public AbstractStubServer
         virtual double addNumbers2(const double &param1, const double &param2);
         virtual bool isEqual(const std::string& str1, const std::string &str2);
         virtual Json::Value buildObject(const std::string &name, const int &age);
+        virtual std::string methodWithoutParameters();
+
 };
 
 MyStubServer::MyStubServer(AbstractServerConnector &connector) :
@@ -63,6 +65,11 @@ Json::Value MyStubServer::buildObject(const string &name, const int &age)
     result["name"] = name;
     result["year"] = age;
     return result;
+}
+
+string MyStubServer::methodWithoutParameters()
+{
+    return "Test";
 }
 
 int main()
