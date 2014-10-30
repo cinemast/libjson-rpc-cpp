@@ -10,8 +10,22 @@
 #ifndef JSONRPC_CPP_HTTPSERVERCONNECTOR_H_
 #define JSONRPC_CPP_HTTPSERVERCONNECTOR_H_
 
-#include <map>
+#include <stdarg.h>
 #include <stdint.h>
+#include <sys/types.h>
+#if defined(_WIN32) && !defined(__CYGWIN__)
+#include <ws2tcpip.h>
+#if defined(_MSC_FULL_VER) && !defined (_SSIZE_T_DEFINED)
+#define _SSIZE_T_DEFINED
+typedef intptr_t ssize_t;
+#endif // !_SSIZE_T_DEFINED */
+#else
+#include <unistd.h>
+#include <sys/time.h>
+#include <sys/socket.h>
+#endif
+
+#include <map>
 #include <microhttpd.h>
 #include "../abstractserverconnector.h"
 
