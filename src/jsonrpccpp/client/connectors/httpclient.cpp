@@ -61,7 +61,7 @@ void init_string(struct string *s)
 HttpClient::HttpClient(const std::string& url) throw(JsonRpcException)
     : url(url)
 {
-    this->timeout = 1000;
+    this->timeout = 10000;
 }
 
 void HttpClient::SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException)

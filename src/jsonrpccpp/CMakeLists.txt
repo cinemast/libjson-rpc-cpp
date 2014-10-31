@@ -48,7 +48,7 @@ IF(HTTP_CLIENT)
 ENDIF()
 
 IF(HTTP_SERVER)
-    message(STATUS "Activated Mongoose HTTP Server")
+    message(STATUS "Activated libmicrohttpd HTTP Server")
     find_package(LibMicroHttpd REQUIRED)
     list(APPEND server_connector_header "server/connectors/httpserver.h")
     list(APPEND server_connector_source "server/connectors/httpserver.cpp")
