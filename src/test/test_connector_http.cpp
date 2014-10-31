@@ -113,6 +113,37 @@ BOOST_AUTO_TEST_CASE(test_http_server_endpoints)
     server.StopListening();
 }
 
+BOOST_AUTO_TEST_CASE(test_http_server_longpost)
+{
+    int mb = 100;
+    unsigned long size = mb * 1024*1024;
+    char* str = (char*) malloc(size * sizeof(char));
+    //5MB of char
+    BOOST_REQUIRE(str != NULL);
+    for (unsigned long i=0; i < 5242880; i++)
+    {
+        str[i] = (char)(((int)'a'+i)%26);
+    }
+    str[size] = '\0';
+
+    MockClientConnectionHandler handler;
+    handler.response = str;
+
+    HttpServer server(TEST_PORT);
+    server.SetHandler(&handler);
+    server.StartListening();
+
+    HttpClient client(CLIENT_URL);
+    string response;
+    client.SendRPCMessage(str, response);
+
+    BOOST_CHECK_EQUAL(handler.request, str);
+    BOOST_CHECK_EQUAL(response, handler.response);
+
+    server.StopListening();
+    free(str);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 
