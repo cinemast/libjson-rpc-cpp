@@ -45,7 +45,6 @@ BOOST_AUTO_TEST_CASE(test_http_success)
     handler.response = "exampleresponse";
     server.SetHandler(&handler);
     server.StartListening();
-
     string result;
     client.SendRPCMessage("examplerequest", result);
 
@@ -66,6 +65,7 @@ BOOST_AUTO_TEST_CASE(test_http_server_multiplestart)
     BOOST_CHECK_EQUAL(server.StopListening(), true);
 }
 
+
 BOOST_AUTO_TEST_CASE(test_http_client_timeout)
 {
     MockClientConnectionHandler handler;
@@ -78,6 +78,7 @@ BOOST_AUTO_TEST_CASE(test_http_client_timeout)
     string result;
     BOOST_CHECK_EXCEPTION(client.SendRPCMessage("Test", result), JsonRpcException, check_exception1);
     handler.timeout = 0;
+    client.SetTimeout(1000);
     handler.response = "asdf";
     client.SendRPCMessage("", result);
     BOOST_CHECK_EQUAL(result, "asdf");
@@ -97,14 +98,12 @@ BOOST_AUTO_TEST_CASE(test_http_server_endpoints)
     server.SetUrlHandler("/handler1", &handler1);
     server.SetUrlHandler("/handler2", &handler2);
 
-    server.StartListening();
+    BOOST_REQUIRE_EQUAL(server.StartListening(), true);
     HttpClient client1("http://localhost:8383/handler1");
     HttpClient client2("http://localhost:8383/handler2");
     HttpClient client3("http://localhost:8383/handler3");
 
-
     string response;
-
     client1.SendRPCMessage("test", response);
     BOOST_CHECK_EQUAL(response, "response1");
     client2.SendRPCMessage("test", response);
@@ -115,5 +114,6 @@ BOOST_AUTO_TEST_CASE(test_http_server_endpoints)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+
 
 #endif
