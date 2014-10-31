@@ -120,11 +120,11 @@ BOOST_AUTO_TEST_CASE(test_http_server_longpost)
     char* str = (char*) malloc(size * sizeof(char));
     //5MB of char
     BOOST_REQUIRE(str != NULL);
-    for (unsigned long i=0; i < 5242880; i++)
+    for (unsigned long i=0; i < size; i++)
     {
         str[i] = (char)(((int)'a'+i)%26);
     }
-    str[size] = '\0';
+    str[size-1] = '\0';
 
     MockClientConnectionHandler handler;
     handler.response = str;
