@@ -61,7 +61,7 @@ void init_string(struct string *s)
 HttpClient::HttpClient(const std::string& url) throw(JsonRpcException)
     : url(url)
 {
-    this->timeout = 1000;
+    this->timeout = 10000;
 }
 
 void HttpClient::SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException)
@@ -103,16 +103,26 @@ void HttpClient::SendRPCMessage(const std::string& message, std::string& result)
     if (res != CURLE_OK)
     {
         std::stringstream str;
-        if(res == 7)
+        switch(res)
         {
-            str << ": Could not connect to " << this->url;
-        }
-        else
-        {
-            str << ": libcurl error: " << res;
+            case 7: str << "Could not connect to " << this->url;
+                break;
+            case 28: str << "Operation timed out";
+                break;
+            default:
+                str << "libcurl error: " << res;
+                break;
         }
         curl_easy_cleanup(curl);
         throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, str.str());
+    }
+
+    long http_code = 0;
+    curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &http_code);
+
+    if (http_code != 200)
+    {
+        throw JsonRpcException(Errors::ERROR_RPC_INTERNAL_ERROR, result);
     }
 
     if (curl)

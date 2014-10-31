@@ -10,6 +10,7 @@
 
 #include "gen/abstractsubserver.h"
 #include <jsonrpccpp/server/connectors/httpserver.h>
+#include <stdio.h>
 
 using namespace jsonrpc;
 using namespace std;

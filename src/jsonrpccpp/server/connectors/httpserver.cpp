@@ -8,132 +8,149 @@
  ************************************************************************/
 
 #include "httpserver.h"
-#include "mongoose.h"
 #include <cstdlib>
-#include <cstdio>
-#include <cstring>
+#include <sstream>
+#include <iostream>
+#include <jsonrpccpp/common/specificationparser.h>
 
 using namespace jsonrpc;
+using namespace std;
 
-int HttpServer::callback(struct mg_connection *conn)
-{
-    const struct mg_request_info *request_info = mg_get_request_info(conn);
-    char* readBuffer = NULL;
-    int postSize = 0;
+#define BUFFERSIZE 65536
 
-    HttpServer* _this = (HttpServer*) request_info->user_data;
+struct mhd_coninfo {
+        struct MHD_PostProcessor *postprocessor;
+        MHD_Connection* connection;
+        stringstream request;
+        HttpServer* server;
+        int code;
+};
 
-    if (strcmp(request_info->request_method, "GET") == 0)
-    {
-
-        //Mark the request as unprocessed.
-        return 0;
-    }
-    else if (strcmp(request_info->request_method, "POST") == 0)
-    {
-        //get size of postData
-        const char* size_header = mg_get_header(conn, "Content-Length");
-        if (size_header != NULL)
-        {
-            sscanf(size_header, "%d", &postSize);
-            readBuffer = (char*) malloc(sizeof(char) * (postSize + 1));
-            mg_read(conn, readBuffer, postSize);
-            _this->OnRequest(readBuffer, conn);
-            free(readBuffer);
-        }
-        else
-        {
-            _this->OnRequest("", conn);
-        }
-
-
-        //Mark the request as processed by our handler.
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
-}
-
-HttpServer::HttpServer(int port, bool enableSpecification, const std::string &sslcert, int threads) :
+HttpServer::HttpServer(int port, const std::string &sslcert, const std::string &sslkey) :
     AbstractServerConnector(),
     port(port),
-    ctx(NULL),
     running(false),
-    showSpec(enableSpecification),
-    sslcert(sslcert),
-    threads(threads)
+    path_sslcert(sslcert),
+    path_sslkey(sslkey),
+    daemon(NULL)
 {
+}
+
+IClientConnectionHandler *HttpServer::GetHandler(const std::string &url)
+{
+    if (AbstractServerConnector::GetHandler() != NULL)
+        return AbstractServerConnector::GetHandler();
+    map<string, IClientConnectionHandler*>::iterator it = this->urlhandler.find(url);
+    if (it != this->urlhandler.end())
+        return it->second;
+    return NULL;
 }
 
 bool HttpServer::StartListening()
 {
     if(!this->running)
     {
-        char port[6];
-        char threads[6];
-        struct mg_callbacks callbacks;
-        memset(&callbacks, 0, sizeof(callbacks));
-        callbacks.begin_request = callback;
-
-        sprintf(port, "%d", this->port);
-        sprintf(threads, "%d", this->threads);
-
-        if(this->sslcert == "")
+        if (this->path_sslcert != "" && this->path_sslkey != "")
         {
-            const char *options[] = { "listening_ports", port, "num_threads", threads, NULL };
-            this->ctx = mg_start(&callbacks, this, options);
+            SpecificationParser::GetFileContent(this->path_sslcert, this->sslcert);
+            SpecificationParser::GetFileContent(this->path_sslkey, this->sslkey);
+
+            this->daemon = MHD_start_daemon(MHD_USE_SSL | MHD_USE_THREAD_PER_CONNECTION, this->port, NULL, NULL, HttpServer::callback, this, MHD_OPTION_HTTPS_MEM_KEY, this->sslkey.c_str(), MHD_OPTION_HTTPS_MEM_CERT, this->sslcert.c_str(), MHD_OPTION_END);
         }
         else
         {
-            const char *options[] =
-            { "listening_ports", port, "ssl_certificate", this->sslcert.c_str(), "num_threads", threads, NULL };
-            this->ctx = mg_start(&callbacks, this, options);
+            this->daemon = MHD_start_daemon(MHD_USE_THREAD_PER_CONNECTION, this->port, NULL, NULL, HttpServer::callback, this, NULL, MHD_OPTION_END);
         }
+        if (this->daemon != NULL)
+            this->running = true;
 
-        if (this->ctx != NULL)
-        {
-            this->running =  true;
-            return true;
-        }
-        else
-        {
-            this->running = false;
-            return false;
-        }
     }
-    else
-    {
-        return true;
-    }
+    return this->running;
 }
 
 bool HttpServer::StopListening()
 {
     if(this->running)
     {
-        mg_stop(this->ctx);
+        MHD_stop_daemon(this->daemon);
         this->running = false;
-        return true;
     }
     return true;
 }
 
-bool HttpServer::SendResponse(const std::string& response, void* addInfo)
+bool HttpServer::SendResponse(const string& response, void* addInfo)
 {
-    struct mg_connection* conn = (struct mg_connection*) addInfo;
-    if (mg_printf(conn, "HTTP/1.1 200 OK\r\n"
-                  "Content-Type: application/json\r\n"
-                  "Content-Length: %d\r\n"
-                  "Access-Control-Allow-Origin: *\r\n"
-                  "\r\n"
-                  "%s",(int)response.length(), response.c_str()) > 0)
-    {
-        return true;
-    }
-    else
-    {
+    struct mhd_coninfo* client_connection = (struct mhd_coninfo*)addInfo;
+    struct MHD_Response *result = MHD_create_response_from_data(response.size(),(void *) response.c_str(), MHD_NO, MHD_NO);
+
+    if (result == NULL)
         return false;
-    }
+
+    MHD_add_response_header(result, "Content-Type", "application/json");
+    MHD_add_response_header(result, "Access-Control-Allow-Origin", "*");
+
+    int ret = MHD_queue_response(client_connection->connection, client_connection->code, result);
+    MHD_destroy_response(result);
+    return ret == MHD_YES;
 }
+
+void HttpServer::SetUrlHandler(const string &url, IClientConnectionHandler *handler)
+{
+    this->urlhandler[url] = handler;
+    this->SetHandler(NULL);
+}
+
+int HttpServer::callback(void *cls, MHD_Connection *connection, const char *url, const char *method, const char *version, const char *upload_data, size_t *upload_data_size, void **con_cls)
+{
+    if (*con_cls == NULL)
+    {
+        struct mhd_coninfo* client_connection = new mhd_coninfo;
+
+        if (client_connection == NULL)
+            return MHD_NO;
+
+        client_connection->connection = connection;
+        client_connection->server = (HttpServer*)cls;
+
+        if (string("POST") == method)
+        {
+            *con_cls = client_connection;
+            return MHD_YES;
+        }
+    }
+    struct mhd_coninfo* client_connection = (struct mhd_coninfo*)*con_cls;
+
+    if (string("POST") == method)
+    {
+        if (*upload_data_size != 0)
+        {
+            client_connection->request.write(upload_data, *upload_data_size);
+            *upload_data_size = 0;
+            return MHD_YES;
+        }
+        else
+        {
+            string response;
+            IClientConnectionHandler* handler = client_connection->server->GetHandler(string(url));
+
+            int ret = MHD_YES;
+            if (handler == NULL)
+            {
+                client_connection->code = MHD_HTTP_INTERNAL_SERVER_ERROR;
+                client_connection->server->SendResponse("No client conneciton handler found", client_connection);
+            }
+            else
+            {
+                client_connection->code = MHD_HTTP_OK;
+                handler->HandleRequest(client_connection->request.str(), response);
+                if (!client_connection->server->SendResponse(response, client_connection))
+                    ret = MHD_NO;
+            }
+            delete client_connection;
+
+            return ret;
+        }
+    }
+    return MHD_NO;
+}
+

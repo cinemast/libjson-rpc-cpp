@@ -16,8 +16,8 @@ SET(PATCH_VERSION 2)
 SET(SO_VERSION    0)
 
 #possible modules that can be enabled/disabled
-SET(HTTP_SERVER_MONGOOSE YES CACHE BOOL "Include HTTP server using mongoose")
-SET(HTTP_CLIENT_CURL YES CACHE BOOL "Include HTTP client support using curl")
+SET(HTTP_SERVER YES CACHE BOOL "Include HTTP server using libmicrohttpd")
+SET(HTTP_CLIENT YES CACHE BOOL "Include HTTP client support using curl")
 SET(SOCKET_SERVER NO CACHE BOOL "Include Server Socket support")
 SET(SOCKET_CLIENT NO CACHE BOOL "Include Client Socket support")
 
@@ -46,7 +46,7 @@ IF(COMPILE_STUBGEN)
 ENDIF()
 
 #the examples
-IF(COMPILE_EXAMPLES AND HTTP_SERVER_MONGOOSE AND HTTP_CLIENT_CURL)
+IF(COMPILE_EXAMPLES AND HTTP_SERVER AND HTTP_CLIENT)
     add_subdirectory(src/examples)
 ENDIF()
 

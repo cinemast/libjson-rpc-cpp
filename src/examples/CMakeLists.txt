@@ -24,14 +24,15 @@ add_custom_command(OUTPUT xbmcremote.h
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src)
 INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR})
 
+IF(HTTP_SERVER AND HTTP_CLIENT)
+    add_executable(simpleserversample simpleserver.cpp)
+    target_link_libraries(simpleserversample jsonrpcserver)
 
-add_executable(simpleserversample simpleserver.cpp)
-target_link_libraries(simpleserversample jsonrpcserver)
+    add_executable(simpleclientsample simpleclient.cpp)
+    target_link_libraries(simpleclientsample jsonrpcclient)
+ENDIF()
 
-add_executable(simpleclientsample simpleclient.cpp)
-target_link_libraries(simpleclientsample jsonrpcclient)
-
-IF(COMPILE_STUBGEN)
+IF(COMPILE_STUBGEN AND HTTP_SERVER AND HTTP_CLIENT)
     add_executable(stubclientsample stubclient.cpp stubclient.h)
     target_link_libraries(stubclientsample jsonrpcclient)
 
