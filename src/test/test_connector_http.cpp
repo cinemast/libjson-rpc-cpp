@@ -135,6 +135,7 @@ BOOST_AUTO_TEST_CASE(test_http_server_longpost)
 
     HttpClient client(CLIENT_URL);
     string response;
+    client.SetTimeout(-1);
     client.SendRPCMessage(str, response);
 
     BOOST_CHECK_EQUAL(handler.request, str);
