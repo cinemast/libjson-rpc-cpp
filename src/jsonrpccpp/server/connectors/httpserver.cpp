@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include <sstream>
 #include <iostream>
+#include <jsonrpccpp/common/specificationparser.h>
 
 using namespace jsonrpc;
 using namespace std;
@@ -25,30 +26,41 @@ struct mhd_coninfo {
         int code;
 };
 
-IClientConnectionHandler *HttpServer::getHandler(const std::string &url)
+HttpServer::HttpServer(int port, const std::string &sslcert, const std::string &sslkey) :
+    AbstractServerConnector(),
+    port(port),
+    running(false),
+    path_sslcert(sslcert),
+    path_sslkey(sslkey),
+    daemon(NULL)
 {
-    if (this->GetHandler() != NULL)
-        return this->GetHandler();
+}
+
+IClientConnectionHandler *HttpServer::GetHandler(const std::string &url)
+{
+    if (AbstractServerConnector::GetHandler() != NULL)
+        return AbstractServerConnector::GetHandler();
     map<string, IClientConnectionHandler*>::iterator it = this->urlhandler.find(url);
     if (it != this->urlhandler.end())
         return it->second;
     return NULL;
 }
 
-HttpServer::HttpServer(int port, const std::string &sslcert) :
-    AbstractServerConnector(),
-    port(port),
-    running(false),
-    sslcert(sslcert),
-    daemon(NULL)
-{
-}
-
 bool HttpServer::StartListening()
 {
     if(!this->running)
     {
-        this->daemon = MHD_start_daemon(MHD_USE_THREAD_PER_CONNECTION, this->port, NULL, NULL, HttpServer::callback, this, NULL, MHD_OPTION_END);
+        if (this->path_sslcert != "" && this->path_sslkey != "")
+        {
+            SpecificationParser::GetFileContent(this->path_sslcert, this->sslcert);
+            SpecificationParser::GetFileContent(this->path_sslkey, this->sslkey);
+
+            this->daemon = MHD_start_daemon(MHD_USE_SSL | MHD_USE_THREAD_PER_CONNECTION, this->port, NULL, NULL, HttpServer::callback, this, MHD_OPTION_HTTPS_MEM_KEY, this->sslkey.c_str(), MHD_OPTION_HTTPS_MEM_CERT, this->sslcert.c_str(), MHD_OPTION_END);
+        }
+        else
+        {
+            this->daemon = MHD_start_daemon(MHD_USE_THREAD_PER_CONNECTION, this->port, NULL, NULL, HttpServer::callback, this, NULL, MHD_OPTION_END);
+        }
         if (this->daemon != NULL)
             this->running = true;
 
@@ -106,10 +118,10 @@ int HttpServer::callback(void *cls, MHD_Connection *connection, const char *url,
             return MHD_YES;
         }
     }
+    struct mhd_coninfo* client_connection = (struct mhd_coninfo*)*con_cls;
 
     if (string("POST") == method)
     {
-        struct mhd_coninfo* client_connection = (struct mhd_coninfo*)*con_cls;
         if (*upload_data_size != 0)
         {
             client_connection->request.write(upload_data, *upload_data_size);
@@ -119,7 +131,7 @@ int HttpServer::callback(void *cls, MHD_Connection *connection, const char *url,
         else
         {
             string response;
-            IClientConnectionHandler* handler = client_connection->server->getHandler(string(url));
+            IClientConnectionHandler* handler = client_connection->server->GetHandler(string(url));
 
             int ret = MHD_YES;
             if (handler == NULL)

@@ -47,7 +47,7 @@ namespace jsonrpc
              * @param enableSpecification - defines if the specification is returned in case of a GET request
              * @param sslcert - defines the path to a SSL certificate, if this path is != "", then SSL/HTTPS is used with the given certificate.
              */
-            HttpServer(int port, const std::string& sslcert = "");
+            HttpServer(int port, const std::string& sslcert = "", const std::string& sslkey = "");
 
             virtual bool StartListening();
             virtual bool StopListening();
@@ -60,7 +60,10 @@ namespace jsonrpc
         private:
             int port;
             bool running;
+            std::string path_sslcert;
+            std::string path_sslkey;
             std::string sslcert;
+            std::string sslkey;
 
             struct MHD_Daemon *daemon;
 
@@ -68,7 +71,7 @@ namespace jsonrpc
 
             static int callback(void *cls, struct MHD_Connection *connection, const char *url, const char *method, const char *version, const char *upload_data, size_t *upload_data_size, void **con_cls);
 
-            IClientConnectionHandler* getHandler(const std::string &url);
+            IClientConnectionHandler* GetHandler(const std::string &url);
 
     };
 
