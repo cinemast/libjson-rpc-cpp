@@ -16,4 +16,4 @@ compiler:
   - gcc
 
 script: 
-    mkdir -p build && cd build && cmake -DSOCKET_SERVER=${SOCKET_SERVER} -DSOCKET_CLIENT=${SOCKET_CLIENT} -DHTTP_CLIENT=${HTTP_CLIENT} -DHTTP_SERVER=${HTTP_SERVER} -DCOMPILE_STUBGEN=${COMPILE_STUBGEN} .. && make && make test && sudo make install && sudo ldconfig && g++ ../src/examples/simpleclient.cpp -ljsonrpccpp-client -ljsoncpp -ljsonrpccpp-common -lcurl -o sampleclient && g++ ../src/examples/simpleserver.cpp -ljsonrpccpp-server -ljsoncpp -ljsonrpccpp-common -lmicrohttpd -o sampleserver && sudo make uninstall
+    mkdir -p build && cd build && cmake -DSOCKET_SERVER=${SOCKET_SERVER} -DSOCKET_CLIENT=${SOCKET_CLIENT} -DHTTP_CLIENT=${HTTP_CLIENT} -DHTTP_SERVER=${HTTP_SERVER} -DCOMPILE_STUBGEN=${COMPILE_STUBGEN} .. && make && ./bin/unit_testsuite && make test && && sudo make install && sudo ldconfig && g++ ../src/examples/simpleclient.cpp -ljsonrpccpp-client -ljsoncpp -ljsonrpccpp-common -lcurl -o sampleclient && g++ ../src/examples/simpleserver.cpp -ljsonrpccpp-server -ljsoncpp -ljsonrpccpp-common -lmicrohttpd -o sampleserver && sudo make uninstall
