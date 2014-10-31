@@ -115,16 +115,16 @@ BOOST_AUTO_TEST_CASE(test_http_server_endpoints)
 
 BOOST_AUTO_TEST_CASE(test_http_server_longpost)
 {
-    int mb = 100;
+    int mb = 1;
     unsigned long size = mb * 1024*1024;
     char* str = (char*) malloc(size * sizeof(char));
-    //5MB of char
     BOOST_REQUIRE(str != NULL);
     for (unsigned long i=0; i < size; i++)
     {
-        str[i] = (char)(((int)'a'+i)%26);
+        str[i] = (char)('a'+(i%26));
     }
     str[size-1] = '\0';
+
 
     MockClientConnectionHandler handler;
     handler.response = str;
@@ -139,6 +139,7 @@ BOOST_AUTO_TEST_CASE(test_http_server_longpost)
 
     BOOST_CHECK_EQUAL(handler.request, str);
     BOOST_CHECK_EQUAL(response, handler.response);
+    BOOST_CHECK_EQUAL(response.size(), size-1);
 
     server.StopListening();
     free(str);
