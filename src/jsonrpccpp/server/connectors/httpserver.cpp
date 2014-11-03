@@ -102,6 +102,7 @@ void HttpServer::SetUrlHandler(const string &url, IClientConnectionHandler *hand
 
 int HttpServer::callback(void *cls, MHD_Connection *connection, const char *url, const char *method, const char *version, const char *upload_data, size_t *upload_data_size, void **con_cls)
 {
+    (void)version;
     if (*con_cls == NULL)
     {
         struct mhd_coninfo* client_connection = new mhd_coninfo;
