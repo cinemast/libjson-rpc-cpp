@@ -235,9 +235,8 @@ Dependencies
 - [jsoncpp](http://jsoncpp.sourceforge.net) (licensed under MIT)
 jsoncpp is a very easy to use and powerful json library. 
 It is used for all the JSON parsing and generation inside this library.
-- [mongoose](https://github.com/valenok/mongoose) (licensed under MIT)
-mongoose is a http server that can be easily embedded into other applications. 
-It is used here for the HttpConnector to provide HTTP json-rpc Requests.
+- [libmicrohttpd]http://www.gnu.org/software/libmicrohttpd/) (licensed under LGPL)
+small gnu http server implementation.
 - [curl](http://curl.haxx.se)
 lib curl is used for the HttpClient connections.
 - [argtable2](http://argtable.sourceforge.net/) (licensed under LGPL)
