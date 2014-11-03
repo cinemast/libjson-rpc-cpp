@@ -34,11 +34,12 @@ class SampleServer : public AbstractServer<SampleServer>
         //notification
         void notifyServer(const Json::Value& request)
         {
+            (void)request;
             cout << "server received some Notification" << endl;
         }
 };
 
-int main(int argc, char** argv)
+int main()
 {
     try
     {

@@ -42,3 +42,6 @@ Julien Jorge <julien.jorge@stuff-o-matic.com>
 
 Pascal Heijnsdijk <pascal@heijnsdijk.nl>
 + Htttp Client timeout bugfix and memory leak.
+
+Kasper Laudrup <laudrup@stacktrace.dk>
++ Code reviews

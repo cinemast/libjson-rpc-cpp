@@ -211,6 +211,7 @@ References
 - [cpp-ethereum](https://github.com/ethereum/cpp-ethereum): a distributed computing framework.
 - [mage-sdk-cpp](https://github.com/mage/mage-sdk-cpp): a game engine.
 - [bitcodin](http://www.bitmovin.net): a scaleable cloud based video transcoding platform.
+- [wgslib](http://wgslib.com/): A web geostatistics library.
 - [bitcoin-api-cpp](https://github.com/minium/bitcoin-api-cpp): a C++ interface to bitcoin.
 
 If you use this library and find it useful, I would be very pleased if you let me know about it.

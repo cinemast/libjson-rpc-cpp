@@ -117,6 +117,8 @@ void CPPServerStubGenerator::generateProcedureDefinitions()
 
         this->cg.writeLine("{");
         this->cg.increaseIndentation();
+        if (proc.GetParameters().empty())
+            cg.writeLine("(void)request;");
 
         if (proc.GetProcedureType() == RPC_METHOD)
             this->cg.write("response = ");

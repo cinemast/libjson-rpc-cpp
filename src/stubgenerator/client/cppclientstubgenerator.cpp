@@ -80,6 +80,7 @@ void CPPClientStubGenerator::generateMethod(Procedure &proc)
     cg.writeLine(procsignature);
     cg.writeLine("{");
     cg.increaseIndentation();
+
     cg.writeLine("Json::Value p;");
 
     generateAssignments(proc);

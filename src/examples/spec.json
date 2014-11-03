@@ -44,5 +44,10 @@
             "name": "peter",
             "year": 1990
         }
+    },
+    {
+        "name" : "methodWithoutParameters",
+        "params": null,
+        "returns": "String"
     }
 ]

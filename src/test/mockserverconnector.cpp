@@ -29,6 +29,7 @@ bool MockServerConnector::StopListening()
 
 bool MockServerConnector::SendResponse(const string &response, void *addInfo)
 {
+    (void)addInfo;
     this->response = response;
     return true;
 }
