@@ -81,7 +81,7 @@ bool HttpServer::StopListening()
 bool HttpServer::SendResponse(const string& response, void* addInfo)
 {
     struct mhd_coninfo* client_connection = (struct mhd_coninfo*)addInfo;
-    struct MHD_Response *result = MHD_create_response_from_data(response.size(),(void *) response.c_str(), MHD_NO, MHD_NO);
+    struct MHD_Response *result = MHD_create_response_from_buffer(response.size(),(void *) response.c_str(), MHD_RESPMEM_MUST_COPY);
 
     if (result == NULL)
         return false;
