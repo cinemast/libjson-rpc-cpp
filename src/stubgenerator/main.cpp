@@ -67,7 +67,7 @@ int main(int argc, char** argv)
         if (verbose->count > 0)
         {
             cout << "Found " << procedures.size() << " procedures in " << inputfile->filename[0] << endl;
-            for (unsigned int i; i < procedures.size(); i++) {
+            for (unsigned int i = 0; i < procedures.size(); i++) {
                 if (procedures.at(i).GetProcedureType() == RPC_METHOD)
                     cout << "\t[Method]         ";
                 else

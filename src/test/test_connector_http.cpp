@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE(test_http_server_endpoints)
 
 BOOST_AUTO_TEST_CASE(test_http_server_longpost)
 {
-    int mb = 1;
+    int mb = 5;
     unsigned long size = mb * 1024*1024;
     char* str = (char*) malloc(size * sizeof(char));
     BOOST_REQUIRE(str != NULL);

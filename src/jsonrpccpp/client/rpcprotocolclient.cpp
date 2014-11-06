@@ -74,7 +74,8 @@ void        RpcProtocolClient::BuildRequest         (int id, const std::string &
     if (this->version == JSONRPC_CLIENT_V2)
         result[KEY_PROTOCOL_VERSION] = "2.0";
     result[KEY_PROCEDURE_NAME] = method;
-    result[KEY_PARAMETER] = parameter;
+    if (parameter != Json::nullValue)
+        result[KEY_PARAMETER] = parameter;
     if (!isNotification)
         result[KEY_ID] = id;
     else if (this->version == JSONRPC_CLIENT_V1)
