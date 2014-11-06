@@ -110,6 +110,11 @@ install(FILES ${jsonrpc_header_server}          DESTINATION include/jsonrpccpp/s
 install(FILES ${client_connector_header}        DESTINATION include/jsonrpccpp/client/connectors)
 install(FILES ${server_connector_header}        DESTINATION include/jsonrpccpp/server/connectors)
 
+IF(WIN32)
+    file(GLOB win32_libs ${CMAKE_SOURCE_DIR}/win32-deps/lib/*.dll)
+    file(COPY ${win32_libs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+ENDIF()
+
 install(TARGETS jsonrpccommon jsonrpccommonStatic jsonrpcclient jsonrpcclientStatic jsonrpcserver jsonrpcserverStatic
                       LIBRARY DESTINATION lib
                       ARCHIVE DESTINATION lib
