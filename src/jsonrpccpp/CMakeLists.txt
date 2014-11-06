@@ -49,7 +49,7 @@ ENDIF()
 
 IF(HTTP_SERVER)
     message(STATUS "Activated libmicrohttpd HTTP Server")
-    find_package(LibMicroHttpd REQUIRED)
+    find_package(MHD REQUIRED)
     list(APPEND server_connector_header "server/connectors/httpserver.h")
     list(APPEND server_connector_source "server/connectors/httpserver.cpp")
     list(APPEND server_connector_libs ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} ${MHD_LIBRARIES})
