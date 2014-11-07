@@ -113,6 +113,8 @@ install(FILES ${server_connector_header}        DESTINATION include/jsonrpccpp/s
 IF(WIN32)
     file(GLOB win32_libs ${CMAKE_SOURCE_DIR}/win32-deps/lib/*.dll)
     file(COPY ${win32_libs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+    install(FILES ${win32_libs} DESTINATION bin)
+    install(DIRECTORY ${CMAKE_SOURCE_DIR}/win32-deps/include DESTINATION .)
 ENDIF()
 
 install(TARGETS jsonrpccommon jsonrpccommonStatic jsonrpcclient jsonrpcclientStatic jsonrpcserver jsonrpcserverStatic
