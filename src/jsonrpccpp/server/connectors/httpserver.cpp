@@ -26,9 +26,10 @@ struct mhd_coninfo {
         int code;
 };
 
-HttpServer::HttpServer(int port, const std::string &sslcert, const std::string &sslkey) :
+HttpServer::HttpServer(int port, const std::string &sslcert, const std::string &sslkey, int threads) :
     AbstractServerConnector(),
     port(port),
+    threads(threads),
     running(false),
     path_sslcert(sslcert),
     path_sslkey(sslkey),
@@ -55,11 +56,11 @@ bool HttpServer::StartListening()
             SpecificationParser::GetFileContent(this->path_sslcert, this->sslcert);
             SpecificationParser::GetFileContent(this->path_sslkey, this->sslkey);
 
-            this->daemon = MHD_start_daemon(MHD_USE_SSL | MHD_USE_THREAD_PER_CONNECTION, this->port, NULL, NULL, HttpServer::callback, this, MHD_OPTION_HTTPS_MEM_KEY, this->sslkey.c_str(), MHD_OPTION_HTTPS_MEM_CERT, this->sslcert.c_str(), MHD_OPTION_END);
+            this->daemon = MHD_start_daemon(MHD_USE_SSL | MHD_USE_SELECT_INTERNALLY, this->port, NULL, NULL, HttpServer::callback, this, MHD_OPTION_HTTPS_MEM_KEY, this->sslkey.c_str(), MHD_OPTION_HTTPS_MEM_CERT, this->sslcert.c_str(), MHD_OPTION_END, this->threads, MHD_OPTION_END);
         }
         else
         {
-            this->daemon = MHD_start_daemon(MHD_USE_THREAD_PER_CONNECTION, this->port, NULL, NULL, HttpServer::callback, this, NULL, MHD_OPTION_END);
+            this->daemon = MHD_start_daemon(MHD_USE_SELECT_INTERNALLY, this->port, NULL, NULL, HttpServer::callback, this,   MHD_OPTION_THREAD_POOL_SIZE, this->threads, MHD_OPTION_END);
         }
         if (this->daemon != NULL)
             this->running = true;
