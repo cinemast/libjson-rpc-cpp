@@ -14,7 +14,7 @@ It is fully JSON-RPC [2.0 & 1.0 compatible](http://www.jsonrpc.org/specification
 - Full JSON-RPC 2.0 & 1.0 Client and Server Support.
 - jsonrpcstub - a tool that generates stub-classes for your JSON-RPC client AND server applications.
 - Ready to use HTTP server and client to provide simple interfaces for your JSON-RPC application.
-- Cross platform build support and [precompiled binaries for WIN32]().
+- Cross platform build support and [precompiled binaries for WIN32](https://spiessknafl.at/libjson-rpc-cpp/libjson-rpc-cpp_win32.zip).
 - Super liberal [MIT-License](http://en.wikipedia.org/wiki/MIT_License). 
 
 **Other good reasons to use libjson-rpc-cpp**
@@ -32,8 +32,6 @@ Overview
 Build the framework
 ===================
 
-You will need [Git](http://git-scm.com/downloads) and [CMake](http://www.cmake.org/cmake/resources/software.html). You can click on the links to download the latest versions.
-
 Installing the dependencies
 ---------------------------
 **Debian based systems**
@@ -42,6 +40,7 @@ sudo apt-get install libcurl4-openssl-dev libmicrohttpd-dev libjsoncpp-dev libar
 ```
 
 **Arch Linux based systems**
+
 For Arch Linux ther is a [PKGBUILD provided in the AUR](https://aur.archlinux.org/packages/libjson-rpc-cpp/). 
 This already takes care of dependencies and the framework itself.
 
@@ -50,12 +49,19 @@ aura -As libjson-rpc-cpp
 ```
 
 **Mac OS X**
+
 You need [Brew](http://brew.sh) installed and type the following commands
 ```sh
 brew install argtable cmake jsoncpp libmicrohttpd
 ```
 
 **Windows**
+
+There is a ready to use compiled package for WIN32 [here](https://spiessknafl.at/libjson-rpc-cpp/libjson-rpc-cpp_win32.zip).
+
+If you want to compile on your own, here is how:
+
+- You will need [Git](http://git-scm.com/downloads) and [CMake](http://www.cmake.org/cmake/resources/software.html).
 - Download the precompiled dependencies form [here](https://spiessknafl.at/libjson-rpc-cpp/win32-deps.zip).
 - Extract it into the cloned repository, so that there is a `win32-deps` folder in the root project directory.
 
