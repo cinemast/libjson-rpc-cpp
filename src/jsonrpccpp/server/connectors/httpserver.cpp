@@ -81,7 +81,7 @@ bool HttpServer::StopListening()
 
 bool HttpServer::SendResponse(const string& response, void* addInfo)
 {
-    struct mhd_coninfo* client_connection = (struct mhd_coninfo*)addInfo;
+    struct mhd_coninfo* client_connection = static_cast<struct mhd_coninfo*>(addInfo);
     struct MHD_Response *result = MHD_create_response_from_data(response.size(),(void *) response.c_str(), 0, 1);
 
     if (result == NULL)
@@ -106,21 +106,20 @@ int HttpServer::callback(void *cls, MHD_Connection *connection, const char *url,
     (void)version;
     if (*con_cls == NULL)
     {
-        struct mhd_coninfo* client_connection = new mhd_coninfo;
-
-        if (client_connection == NULL)
-            return MHD_NO;
-
-        client_connection->connection = connection;
-        client_connection->server = (HttpServer*)cls;
-
         if (string("POST") == method)
         {
+            struct mhd_coninfo* client_connection = new mhd_coninfo;
+
+            if (client_connection == NULL)
+                return MHD_NO;
+
+            client_connection->connection = connection;
+            client_connection->server = static_cast<HttpServer*>(cls);
             *con_cls = client_connection;
             return MHD_YES;
         }
     }
-    struct mhd_coninfo* client_connection = (struct mhd_coninfo*)*con_cls;
+    struct mhd_coninfo* client_connection = static_cast<struct mhd_coninfo*>(*con_cls);
 
     if (string("POST") == method)
     {

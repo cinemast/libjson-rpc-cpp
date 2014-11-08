@@ -81,7 +81,7 @@ void        SpecificationWriter::procedureToJsonValue   (const Procedure &proced
     }
     int i=0;
 
-    for(parameterNameList_t::const_iterator it = procedure.GetParameters().begin(); it != procedure.GetParameters().end(); it++)
+    for(parameterNameList_t::const_iterator it = procedure.GetParameters().begin(); it != procedure.GetParameters().end(); ++it)
     {
         if(procedure.GetParameterDeclarationType() == PARAMS_BY_NAME)
         {

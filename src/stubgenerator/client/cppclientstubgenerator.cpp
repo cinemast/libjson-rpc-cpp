@@ -98,7 +98,7 @@ void CPPClientStubGenerator::generateAssignments(Procedure &proc)
     parameterNameList_t list = proc.GetParameters();
     if(list.size() > 0)
     {
-        for (parameterNameList_t::iterator it = list.begin(); it != list.end(); it++)
+        for (parameterNameList_t::iterator it = list.begin(); it != list.end(); ++it)
         {
 
             if(proc.GetParameterDeclarationType() == PARAMS_BY_NAME)

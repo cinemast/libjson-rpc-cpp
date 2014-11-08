@@ -141,10 +141,10 @@ void HttpClient::SetTimeout(long timeout)
     this->timeout = timeout;
 }
 
-void HttpClient::AddHeader(const std::string attr, const std::string val) {
+void HttpClient::AddHeader(const std::string& attr, const std::string& val) {
     this->headers[attr] = val;
 }
 
-void HttpClient::RemoveHeader(const std::string attr) {
+void HttpClient::RemoveHeader(const std::string& attr) {
     this->headers.erase(attr);
 }

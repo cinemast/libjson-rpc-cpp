@@ -75,7 +75,7 @@ void CPPServerStubGenerator::generateBindings()
 {
     string tmp;
     this->cg.increaseIndentation();
-    for(vector<Procedure>::iterator it = this->procedures.begin(); it != this->procedures.end(); it++)
+    for(vector<Procedure>::iterator it = this->procedures.begin(); it != this->procedures.end(); ++it)
     {
         Procedure &proc = *it;
         if(proc.GetProcedureType() == RPC_METHOD)
@@ -107,7 +107,7 @@ void CPPServerStubGenerator::generateBindings()
 
 void CPPServerStubGenerator::generateProcedureDefinitions()
 {
-    for(vector<Procedure>::iterator it = this->procedures.begin(); it != this->procedures.end(); it++)
+    for(vector<Procedure>::iterator it = this->procedures.begin(); it != this->procedures.end(); ++it)
     {
         Procedure &proc = *it;
         if(proc.GetProcedureType() == RPC_METHOD)
@@ -135,7 +135,7 @@ void CPPServerStubGenerator::generateProcedureDefinitions()
 void CPPServerStubGenerator::generateAbstractDefinitions()
 {
     string tmp;
-    for(vector<Procedure>::iterator it = this->procedures.begin(); it != this->procedures.end(); it++)
+    for(vector<Procedure>::iterator it = this->procedures.begin(); it != this->procedures.end(); ++it)
     {
         Procedure& proc = *it;
         tmp = TEMPLATE_SERVER_ABSTRACTDEFINITION;
@@ -156,7 +156,7 @@ string CPPServerStubGenerator::generateBindingParameterlist(Procedure &proc)
     stringstream parameter;
     const parameterNameList_t& list = proc.GetParameters();
 
-    for(parameterNameList_t::const_iterator it2 = list.begin(); it2 != list.end(); it2++)
+    for(parameterNameList_t::const_iterator it2 = list.begin(); it2 != list.end(); ++it2)
     {
         parameter << "\"" << it2->first << "\"," << CPPHelper::toString(it2->second) << ",";
     }
@@ -168,7 +168,7 @@ void CPPServerStubGenerator::generateParameterMapping(Procedure &proc)
     string tmp;
     const parameterNameList_t& params = proc.GetParameters();
     int i=0;
-    for(parameterNameList_t::const_iterator it2 = params.begin(); it2 != params.end(); it2++)
+    for(parameterNameList_t::const_iterator it2 = params.begin(); it2 != params.end(); ++it2)
     {
         if(proc.GetParameterDeclarationType() == PARAMS_BY_NAME)
         {

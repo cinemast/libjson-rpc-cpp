@@ -29,10 +29,10 @@ using namespace std;
 
 //Taken from: http://stackoverflow.com/questions/2984307/c-key-pressed-in-linux-console
 int kbhit() {
-    static int ch = -1, fd = 0;
+    int ch;
 #ifndef WIN32
     struct termios neu, alt;
-    fd = fileno(stdin);
+    int fd = fileno(stdin);
     tcgetattr(fd, &alt);
     neu = alt;
     neu.c_lflag &= ~(ICANON|ECHO);
@@ -70,11 +70,10 @@ int main(int argc, char** argv) {
         try {
             HttpClient httpclient(argv[1]);
             XbmcRemoteClient stub(httpclient);
-            int key = 0;
             bool run = true;
             while (run) {
 
-                key = kbhit();
+                int key = kbhit();
                 switch(key) {
                     case 97: stub.Input_Left();
                         break;
@@ -94,7 +93,7 @@ int main(int argc, char** argv) {
                         break;
                 }
             }
-        } catch(jsonrpc::JsonRpcException e) {
+        } catch(JsonRpcException& e) {
             cerr << e.what() << endl;
         }
     }
