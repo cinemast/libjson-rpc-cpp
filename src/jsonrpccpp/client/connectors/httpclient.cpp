@@ -37,12 +37,13 @@ static size_t writefunc(void *ptr, size_t size, size_t nmemb,
     if (s->ptr == NULL)
     {
         fprintf(stderr, "realloc() failed\n");
-        exit(EXIT_FAILURE);
     }
-    memcpy(s->ptr + s->len, ptr, size * nmemb);
-    s->ptr[new_len] = '\0';
-    s->len = new_len;
-
+    else
+    {
+        memcpy(s->ptr + s->len, ptr, size * nmemb);
+        s->ptr[new_len] = '\0';
+        s->len = new_len;
+    }
     return size * nmemb;
 }
 
@@ -81,8 +82,7 @@ void HttpClient::SendRPCMessage(const std::string& message, std::string& result)
     init_string(&s);
 
     struct curl_slist * headers = NULL;
-    //Maybe to restrictive
-    //headers = curl_slist_append(headers, "Accept: application/json");
+
     for (std::map<std::string, std::string>::iterator header = this->headers.begin(); header != this->headers.end(); ++header) {
         headers = curl_slist_append(headers, (header->first + ": " + header->second).c_str());
     }
@@ -122,13 +122,11 @@ void HttpClient::SendRPCMessage(const std::string& message, std::string& result)
 
     if (http_code != 200)
     {
+        curl_easy_cleanup(curl);
         throw JsonRpcException(Errors::ERROR_RPC_INTERNAL_ERROR, result);
     }
 
-    if (curl)
-    {
-        curl_easy_cleanup(curl);
-    }
+    curl_easy_cleanup(curl);
 }
 
 void HttpClient::SetUrl(const std::string& url)
