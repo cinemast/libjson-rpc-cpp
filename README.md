@@ -41,11 +41,11 @@ sudo apt-get install libcurl4-openssl-dev libmicrohttpd-dev libjsoncpp-dev libar
 
 **Arch Linux based systems**
 
-For Arch Linux ther is a [PKGBUILD provided in the AUR](https://aur.archlinux.org/packages/libjson-rpc-cpp/). 
+For Arch Linux there is a [PKGBUILD provided in the AUR](https://aur.archlinux.org/packages/libjson-rpc-cpp/). 
 This already takes care of dependencies and the framework itself.
 
 ```sh
-aura -As libjson-rpc-cpp
+sudo aura -A libjson-rpc-cpp
 ```
 
 **Mac OS X**
