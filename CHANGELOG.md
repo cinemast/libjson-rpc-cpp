@@ -1,3 +1,11 @@
+Changes in v0.4
+---------------
+- Memory leak fixes
+- Switched Http Server to libmicrohttpd
+- Added full WIN32 build support
+- Improved test coverage (especially HttpServer and HttpClient)
+- Added JavaScript client stub support
+
 Changes in v0.3.2
 -----------------
 - Bugfixes
