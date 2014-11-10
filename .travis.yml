@@ -27,4 +27,4 @@ script:
     - g++ ../src/examples/simpleserver.cpp -ljsonrpccpp-server -ljsoncpp -ljsonrpccpp-common -lmicrohttpd -o sampleserver
     - sudo make uninstall
 after_success:
-    - coveralls --exclude src/test --gcov-options '\-lp'
+    - coveralls -r ../src -b . --exclude ../src/test --gcov-options '\-lp'
