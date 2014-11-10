@@ -70,7 +70,7 @@ namespace jsonrpc
                 {
                     this->handler->AddProcedure(*proc);
                     this->methods[proc->GetProcedureName()] = pointer;
-                    delete proc;
+                    //delete proc;
                     return true;
                 }
                 delete proc;
