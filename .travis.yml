@@ -27,4 +27,5 @@ script:
     - g++ ../src/examples/simpleserver.cpp -ljsonrpccpp-server -ljsoncpp -ljsonrpccpp-common -lmicrohttpd -o sampleserver
     - sudo make uninstall
 after_success:
-    - coveralls -r ../src -b . --exclude ../src/test --gcov-options '\-lp'
+    - cd ..
+    - coveralls -e src/test -e src/examples -e cmake -e /usr/include -e build/CMakeFiles -E '.*\.h'
