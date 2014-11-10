@@ -19,7 +19,7 @@ script:
     - mkdir -p build && cd build
     - cmake -DSOCKET_SERVER=${SOCKET_SERVER} -DSOCKET_CLIENT=${SOCKET_CLIENT} -DHTTP_CLIENT=${HTTP_CLIENT} -DHTTP_SERVER=${HTTP_SERVER} -DCOMPILE_STUBGEN=${COMPILE_STUBGEN} .. 
     - make
-    - valgrind --leak-check --error-exitcode=1 ./bin/unit_testsuite
+    - valgrind --leak-check=full --error-exitcode=1 ./bin/unit_testsuite
     - make test
     - sudo make install && sudo ldconfig
     - g++ ../src/examples/simpleclient.cpp -ljsonrpccpp-client -ljsoncpp -ljsonrpccpp-common -lcurl -o sampleclient
