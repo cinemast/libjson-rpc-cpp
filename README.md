@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/cinemast/libjson-rpc-cpp.png?branch=master)](https://travis-ci.org/cinemast/libjson-rpc-cpp)
+[![Build Status](https://travis-ci.org/cinemast/libjson-rpc-cpp.png?branch=master)](https://travis-ci.org/cinemast/libjson-rpc-cpp) [![Coverage Status](https://coveralls.io/repos/cinemast/libjson-rpc-cpp/badge.png?branch=develop)](https://coveralls.io/r/cinemast/libjson-rpc-cpp?branch=develop)
 
 libjson-rpc-cpp
 ===============
