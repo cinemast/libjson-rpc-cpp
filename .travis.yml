@@ -3,6 +3,7 @@ language: cpp
 before_install:
  - sudo apt-get update -qq
  - sudo apt-get install -qq libcurl4-openssl-dev libjsoncpp-dev libargtable2-dev libboost-test-dev libmicrohttpd-dev valgrind
+ - sudo pip install cpp-coveralls
 
 
 env:
@@ -25,3 +26,5 @@ script:
     - g++ ../src/examples/simpleclient.cpp -ljsonrpccpp-client -ljsoncpp -ljsonrpccpp-common -lcurl -o sampleclient
     - g++ ../src/examples/simpleserver.cpp -ljsonrpccpp-server -ljsoncpp -ljsonrpccpp-common -lmicrohttpd -o sampleserver
     - sudo make uninstall
+after_success:
+    - coveralls --exclude src/test --gcov-options '\-lp'
