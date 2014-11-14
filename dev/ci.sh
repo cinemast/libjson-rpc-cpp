@@ -35,9 +35,8 @@ test -f sampleserver
 mkdir -p reports
 
 echo "Generating valgrind report"
-cd bin
-valgrind --leak-check=full --xml=yes --xml-file=reports/valgrind.xml ./unit_testsuite --log_format=XML --log_sink=../reports/tests.xml --log_level=all --report_level=no 
-cd ..
+valgrind --leak-check=full --xml=yes --xml-file=reports/valgrind.xml ./bin/unit_testsuite --log_format=XML --log_sink=reports/tests.xml --log_level=all --report_level=no 
+
 
 echo "Generating coverage report"
 gcovr -x -r .. > reports/coverage.xml
