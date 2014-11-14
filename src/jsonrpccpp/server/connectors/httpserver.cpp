@@ -53,10 +53,16 @@ bool HttpServer::StartListening()
     {
         if (this->path_sslcert != "" && this->path_sslkey != "")
         {
-            SpecificationParser::GetFileContent(this->path_sslcert, this->sslcert);
-            SpecificationParser::GetFileContent(this->path_sslkey, this->sslkey);
+            try {
+                SpecificationParser::GetFileContent(this->path_sslcert, this->sslcert);
+                SpecificationParser::GetFileContent(this->path_sslkey, this->sslkey);
 
-            this->daemon = MHD_start_daemon(MHD_USE_SSL | MHD_USE_SELECT_INTERNALLY, this->port, NULL, NULL, HttpServer::callback, this, MHD_OPTION_HTTPS_MEM_KEY, this->sslkey.c_str(), MHD_OPTION_HTTPS_MEM_CERT, this->sslcert.c_str(), MHD_OPTION_END, this->threads, MHD_OPTION_END);
+                this->daemon = MHD_start_daemon(MHD_USE_SSL | MHD_USE_SELECT_INTERNALLY, this->port, NULL, NULL, HttpServer::callback, this, MHD_OPTION_HTTPS_MEM_KEY, this->sslkey.c_str(), MHD_OPTION_HTTPS_MEM_CERT, this->sslcert.c_str(), MHD_OPTION_END, this->threads, MHD_OPTION_END);
+            }
+            catch (JsonRpcException& ex)
+            {
+                return false;
+            }
         }
         else
         {
@@ -84,9 +90,6 @@ bool HttpServer::SendResponse(const string& response, void* addInfo)
     struct mhd_coninfo* client_connection = static_cast<struct mhd_coninfo*>(addInfo);
     struct MHD_Response *result = MHD_create_response_from_data(response.size(),(void *) response.c_str(), 0, 1);
 
-    if (result == NULL)
-        return false;
-
     MHD_add_response_header(result, "Content-Type", "application/json");
     MHD_add_response_header(result, "Access-Control-Allow-Origin", "*");
 
@@ -110,14 +113,12 @@ int HttpServer::callback(void *cls, MHD_Connection *connection, const char *url,
         {
             struct mhd_coninfo* client_connection = new mhd_coninfo;
 
-            if (client_connection == NULL)
-                return MHD_NO;
-
             client_connection->connection = connection;
             client_connection->server = static_cast<HttpServer*>(cls);
             *con_cls = client_connection;
             return MHD_YES;
         }
+        return MHD_NO;
     }
     struct mhd_coninfo* client_connection = static_cast<struct mhd_coninfo*>(*con_cls);
 

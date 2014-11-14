@@ -146,6 +146,16 @@ BOOST_AUTO_TEST_CASE(test_http_server_longpost)
     free(str);
 }
 
+BOOST_AUTO_TEST_CASE(test_http_server_ssl)
+{
+    HttpServer server(TEST_PORT, "/a/b/c", "/d/e/f");
+    BOOST_CHECK_EQUAL(server.StartListening(), false);
+
+    HttpServer server2(TEST_PORT, "server.pem", "server.key");
+    BOOST_CHECK_EQUAL(server2.StartListening(), true);
+    server2.StopListening();
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 
