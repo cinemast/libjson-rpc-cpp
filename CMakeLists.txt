@@ -10,8 +10,8 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 SET(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -Wnon-virtual-dtor -fprofile-arcs -ftest-coverage -fPIC -O0")
 
 SET(MAJOR_VERSION 0)
-SET(MINOR_VERSION 3)
-SET(PATCH_VERSION 2)
+SET(MINOR_VERSION 4)
+SET(PATCH_VERSION 0)
 SET(SO_VERSION    0)
 
 #possible modules that can be enabled/disabled

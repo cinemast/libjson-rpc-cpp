@@ -8,7 +8,7 @@
  ************************************************************************/
 
 #define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE
+#define BOOST_TEST_MODULE client
 
 #include <boost/test/unit_test.hpp>
 #include <jsonrpccpp/client.h>
@@ -34,15 +34,31 @@ bool check_exception3(JsonRpcException const&ex)
 
 BOOST_AUTO_TEST_SUITE(client)
 
-BOOST_AUTO_TEST_CASE(test_client_v2_method_success)
-{
+struct F {
     MockClientConnector c;
-    Client client(c);
-
+    Client client;
     Json::Value params;
+
+    F() : client(c, JSONRPC_CLIENT_V2)
+    {
+    }
+};
+
+struct F1 {
+    MockClientConnector c;
+    Client client;
+    Json::Value params;
+
+    F1() : client(c, JSONRPC_CLIENT_V1)
+    {
+    }
+};
+
+
+BOOST_FIXTURE_TEST_CASE(test_client_v2_method_success, F)
+{
     params.append(23);
     c.SetResponse("{\"jsonrpc\":\"2.0\", \"id\": 1, \"result\": 23}");
-
     Json::Value response = client.CallMethod("abcd", params);
     Json::Value v = c.GetJsonRequest();
 
@@ -52,16 +68,10 @@ BOOST_AUTO_TEST_CASE(test_client_v2_method_success)
     BOOST_CHECK_EQUAL(v["id"].asInt(), 1);
 }
 
-BOOST_AUTO_TEST_CASE(test_client_v2_notification_success)
+BOOST_FIXTURE_TEST_CASE(test_client_v2_notification_success, F)
 {
-    MockClientConnector c;
-    Client client(c);
-
-    Json::Value params;
     params.append(23);
-
     client.CallNotification("abcd", params);
-
     Json::Value v = c.GetJsonRequest();
 
     BOOST_CHECK_EQUAL(v["method"].asString(), "abcd");
@@ -70,28 +80,20 @@ BOOST_AUTO_TEST_CASE(test_client_v2_notification_success)
     BOOST_CHECK_EQUAL(v.isMember("id"), false);
 }
 
-BOOST_AUTO_TEST_CASE(test_client_v2_errorresponse)
+BOOST_FIXTURE_TEST_CASE(test_client_v2_errorresponse, F)
 {
-    MockClientConnector c;
-    Client client(c);
-
     c.SetResponse("{\"jsonrpc\":\"2.0\", \"error\": {\"code\": -32600, \"message\": \"Invalid Request\"}, \"id\": null}");
     BOOST_CHECK_EXCEPTION(client.CallMethod("abcd", Json::nullValue), JsonRpcException, check_exception3);
 }
 
-BOOST_AUTO_TEST_CASE(test_client_v2_invalidjson)
+BOOST_FIXTURE_TEST_CASE(test_client_v2_invalidjson, F)
 {
-    MockClientConnector c;
-    Client client(c);
     c.SetResponse("{\"method\":234");
     BOOST_CHECK_EXCEPTION(client.CallMethod("abcd", Json::nullValue), JsonRpcException, check_exception1);
 }
 
-BOOST_AUTO_TEST_CASE(test_client_v2_invalidresponse)
+BOOST_FIXTURE_TEST_CASE(test_client_v2_invalidresponse, F)
 {
-    MockClientConnector c;
-    Client client(c);
-
     c.SetResponse("{\"jsonrpc\":\"2.0\", \"id\": 1, \"resulto\": 23}");
     BOOST_CHECK_EXCEPTION(client.CallMethod("abcd", Json::nullValue), JsonRpcException, check_exception2);
     c.SetResponse("{\"jsonrpc\":\"2.0\", \"id2\": 1, \"result\": 23}");
@@ -114,11 +116,8 @@ BOOST_AUTO_TEST_CASE(test_client_v2_invalidresponse)
     BOOST_CHECK_EXCEPTION(client.CallMethod("abcd", Json::nullValue), JsonRpcException, check_exception2);
 }
 
-BOOST_AUTO_TEST_CASE(test_client_v2_batchcall_success)
+BOOST_FIXTURE_TEST_CASE(test_client_v2_batchcall_success, F)
 {
-    MockClientConnector c;
-    Client client(c);
-
     BatchCall bc;
     BOOST_CHECK_EQUAL(bc.addCall("abc", Json::nullValue, false),1);
     BOOST_CHECK_EQUAL(bc.addCall("def", Json::nullValue, true), -1);
@@ -144,11 +143,8 @@ BOOST_AUTO_TEST_CASE(test_client_v2_batchcall_success)
     bc.toString(false);
 }
 
-BOOST_AUTO_TEST_CASE(test_client_v2_batchcall_error)
+BOOST_FIXTURE_TEST_CASE(test_client_v2_batchcall_error, F)
 {
-    MockClientConnector c;
-    Client client(c);
-
     BatchCall bc;
     BOOST_CHECK_EQUAL(bc.addCall("abc", Json::nullValue, false),1);
     BOOST_CHECK_EQUAL(bc.addCall("def", Json::nullValue, false),2);
@@ -175,12 +171,8 @@ BOOST_AUTO_TEST_CASE(test_client_v2_batchcall_error)
     BOOST_CHECK_EXCEPTION(client.CallProcedures(bc), JsonRpcException, check_exception2);
 }
 
-BOOST_AUTO_TEST_CASE(test_client_v1_method_success)
+BOOST_FIXTURE_TEST_CASE(test_client_v1_method_success, F1)
 {
-    MockClientConnector c;
-    Client client(c, JSONRPC_CLIENT_V1);
-    Json::Value params;
-
     params.append(23);
     c.SetResponse("{\"id\": 1, \"result\": 23, \"error\": null}");
 
@@ -195,12 +187,8 @@ BOOST_AUTO_TEST_CASE(test_client_v1_method_success)
     BOOST_CHECK_EQUAL(response.asInt(),23);
 }
 
-BOOST_AUTO_TEST_CASE(test_client_v1_notification_success)
+BOOST_FIXTURE_TEST_CASE(test_client_v1_notification_success, F1)
 {
-    MockClientConnector c;
-    Client client(c, JSONRPC_CLIENT_V1);
-
-    Json::Value params;
     params.append(23);
 
     client.CallNotification("abcd", params);
@@ -213,11 +201,8 @@ BOOST_AUTO_TEST_CASE(test_client_v1_notification_success)
     BOOST_CHECK_EQUAL(v["id"], Json::nullValue);
 }
 
-BOOST_AUTO_TEST_CASE(test_client_v1_errorresponse)
+BOOST_FIXTURE_TEST_CASE(test_client_v1_errorresponse, F1)
 {
-    MockClientConnector c;
-    Client client(c, JSONRPC_CLIENT_V1);
-
     c.SetResponse("{\"result\": null, \"error\": {\"code\": -32600, \"message\": \"Invalid Request\"}, \"id\": null}");
     BOOST_CHECK_EXCEPTION(client.CallMethod("abcd", Json::nullValue), JsonRpcException, check_exception3);
 
@@ -225,11 +210,8 @@ BOOST_AUTO_TEST_CASE(test_client_v1_errorresponse)
     BOOST_CHECK_EXCEPTION(client.CallMethod("abcd", Json::nullValue), JsonRpcException, check_exception3);
 }
 
-BOOST_AUTO_TEST_CASE(test_client_v1_invalidresponse)
+BOOST_FIXTURE_TEST_CASE(test_client_v1_invalidresponse, F1)
 {
-    MockClientConnector c;
-    Client client(c, JSONRPC_CLIENT_V1);
-
     c.SetResponse("{\"id\": 1, \"resulto\": 23, \"error\": null}");
     BOOST_CHECK_EXCEPTION(client.CallMethod("abcd", Json::nullValue), JsonRpcException, check_exception2);
     c.SetResponse("{\"id\": 1, \"result\": 23}");

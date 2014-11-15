@@ -1,7 +1,7 @@
 /*************************************************************************
  * libjson-rpc-cpp
  *************************************************************************
- * @file    test_common.cpp
+ * @file    test_connector_http.cpp
  * @date    28.09.2013
  * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>
  * @license See attached LICENSE.txt
@@ -10,14 +10,12 @@
 #include <boost/test/unit_test.hpp>
 
 #ifdef HTTP_TESTING
+#define BOOST_TEST_MODULE connector_http
 
 #include <jsonrpccpp/server/connectors/httpserver.h>
 #include <jsonrpccpp/client/connectors/httpclient.h>
 
 #include "mockclientconnectionhandler.h"
-
-#define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE
 
 using namespace jsonrpc;
 using namespace std;
@@ -26,6 +24,24 @@ using namespace std;
 #define CLIENT_URL "http://localhost:8383"
 
 BOOST_AUTO_TEST_SUITE(connector_http)
+
+struct F {
+    HttpServer server;
+    HttpClient client;
+    MockClientConnectionHandler handler;
+
+    F() :
+        server(TEST_PORT),
+        client(CLIENT_URL)
+    {
+        server.SetHandler(&handler);
+        server.StartListening();
+    }
+    ~F()
+    {
+        server.StopListening();
+    }
+};
 
 bool check_exception1(JsonRpcException const&ex)
 {
@@ -37,21 +53,14 @@ bool check_exception2(JsonRpcException const&ex)
     return ex.GetCode() == Errors::ERROR_RPC_INTERNAL_ERROR;
 }
 
-BOOST_AUTO_TEST_CASE(test_http_success)
+BOOST_FIXTURE_TEST_CASE(test_http_success, F)
 {
-    HttpServer server(TEST_PORT);
-    HttpClient client(CLIENT_URL);
-    MockClientConnectionHandler handler;
     handler.response = "exampleresponse";
-    server.SetHandler(&handler);
-    server.StartListening();
     string result;
     client.SendRPCMessage("examplerequest", result);
 
     BOOST_CHECK_EQUAL(handler.request, "examplerequest");
     BOOST_CHECK_EQUAL(result, "exampleresponse");
-
-    server.StopListening();
 }
 
 BOOST_AUTO_TEST_CASE(test_http_server_multiplestart)
@@ -65,15 +74,9 @@ BOOST_AUTO_TEST_CASE(test_http_server_multiplestart)
     BOOST_CHECK_EQUAL(server.StopListening(), true);
 }
 
-
-BOOST_AUTO_TEST_CASE(test_http_client_timeout)
+BOOST_FIXTURE_TEST_CASE(test_http_client_timeout, F)
 {
-    MockClientConnectionHandler handler;
-    HttpServer server(TEST_PORT);
-    server.SetHandler(&handler);
-    server.StartListening();
     handler.timeout = 20;
-    HttpClient client(CLIENT_URL);
     client.SetTimeout(10);
     string result;
     BOOST_CHECK_EXCEPTION(client.SendRPCMessage("Test", result), JsonRpcException, check_exception1);
@@ -113,7 +116,7 @@ BOOST_AUTO_TEST_CASE(test_http_server_endpoints)
     server.StopListening();
 }
 
-BOOST_AUTO_TEST_CASE(test_http_server_longpost)
+BOOST_FIXTURE_TEST_CASE(test_http_server_longpost, F)
 {
     int mb = 5;
     unsigned long size = mb * 1024*1024;
@@ -125,15 +128,7 @@ BOOST_AUTO_TEST_CASE(test_http_server_longpost)
     }
     str[size-1] = '\0';
 
-
-    MockClientConnectionHandler handler;
     handler.response = str;
-
-    HttpServer server(TEST_PORT);
-    server.SetHandler(&handler);
-    server.StartListening();
-
-    HttpClient client(CLIENT_URL);
     string response;
     client.SetTimeout(-1);
     client.SendRPCMessage(str, response);
@@ -142,7 +137,6 @@ BOOST_AUTO_TEST_CASE(test_http_server_longpost)
     BOOST_CHECK_EQUAL(response, handler.response);
     BOOST_CHECK_EQUAL(response.size(), size-1);
 
-    server.StopListening();
     free(str);
 }
 

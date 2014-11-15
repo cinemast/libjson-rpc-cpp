@@ -11,6 +11,10 @@ IF(HTTP_CLIENT AND HTTP_SERVER)
     add_definitions(-DHTTP_TESTING)
 ENDIF()
 
+IF(SOCKET_SERVER AND SOCKET_CLIENT)
+    add_definitions(-DTCPSOCKET_TESTING)
+ENDIF()
+
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src)
 
 add_executable(unit_testsuite ${test_source})
@@ -24,5 +28,8 @@ IF(HTTP_CLIENT AND HTTP_SERVER)
     ADD_TEST(NAME connector_http WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite --run_test=connector_http )
 ENDIF()
 
+IF(SOCKET_SERVER AND SOCKET_CLIENT)
+    ADD_TEST(NAME connector_tcpsocket COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite --run_test=connector_tcpsocket )
+ENDIF()
 
 ADD_TEST(NAME all WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite)
