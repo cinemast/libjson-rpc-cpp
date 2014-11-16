@@ -30,4 +30,4 @@ script:
     - sudo make uninstall
 after_success:
     - cd ..
-    - coveralls -e src/test -e src/examples -e cmake -e /usr/include -e build/CMakeFiles -E '.*\.h'
+    - coveralls -e src/test -e src/examples -e cmake -e /usr/include -e build/CMakeFiles -E '.*\.h' -E 'libmicrohttpd.*'
