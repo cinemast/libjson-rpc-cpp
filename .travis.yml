@@ -8,7 +8,7 @@ before_install:
  - cd libmicrohttpd-0.9.38
  - ./configure && make
  - sudo make install && sudo ldconfig
- - cd ..
+ - cd .. && sudo rm -rf libmicrohttpd-0.9.38
  - sudo pip install cpp-coveralls
 
 env:
