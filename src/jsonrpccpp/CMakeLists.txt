@@ -55,26 +55,6 @@ IF(HTTP_SERVER)
     list(APPEND server_connector_libs ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} ${MHD_LIBRARIES})
 ENDIF()
 
-IF(SOCKET_CLIENT)
-    find_package(Threads REQUIRED)
-    list(APPEND client_connector_header "client/connectors/socketclient.h")
-    list(APPEND client_connector_source "client/connectors/socketclient.cpp")
-ENDIF()
-
-IF(SOCKET_SERVER)
-    find_package(Threads REQUIRED)
-    list(APPEND server_connector_header "server/connectors/socketserver.h")
-    list(APPEND server_connector_source "server/connectors/socketserver.cpp")
-    list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT})
-
-ENDIF()
-
-IF(SOCKET_CLIENT OR SOCKET_SERVER)
-    list(APPEND jsonrpc_helper_header_common "common/helper/socket.h")
-    list(APPEND jsonrpc_helper_header_common "common/helper/threads.h")
-    list(APPEND jsonrpc_helper_source_common "common/helper/threads.cpp")
-ENDIF()
-
 add_library(jsonrpccommon SHARED ${jsonrpc_source_common} ${jsonrpc_header} ${jsonrpc_helper_source_common})
 add_library(jsonrpccommonStatic STATIC ${jsonrpc_source_common} ${jsonrpc_header} ${jsonrpc_helper_source_common})
 target_link_libraries(jsonrpccommon ${JSONCPP_LIBRARIES})

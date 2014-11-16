@@ -17,8 +17,6 @@ SET(SO_VERSION    0)
 #possible modules that can be enabled/disabled
 SET(HTTP_SERVER YES CACHE BOOL "Include HTTP server using libmicrohttpd")
 SET(HTTP_CLIENT YES CACHE BOOL "Include HTTP client support using curl")
-SET(SOCKET_SERVER NO CACHE BOOL "Include Server Socket support")
-SET(SOCKET_CLIENT NO CACHE BOOL "Include Client Socket support")
 
 SET(COMPILE_TESTS YES CACHE BOOL "Compile test framework")
 SET(COMPILE_STUBGEN YES CACHE BOOL "Compile the stubgenerator")
