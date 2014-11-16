@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE(test_http_client_headers)
 {
     TestHttpServer server(TEST_PORT);
     HttpClient client(CLIENT_URL);
-    server.StartListening();
+    BOOST_REQUIRE_EQUAL(server.StartListening(),true);
     client.AddHeader("X-Auth", "1234");
     server.SetResponse("asdf");
     string result;
