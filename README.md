@@ -89,13 +89,11 @@ sudo make uninstall
 
 Default configuration should be fine for most systems, but here are available compilation flags:
 
-- `-DCOMPILE_TESTS=NO` disables unit test suite.
+- `-DCOMPILE_TESTS=NO` disables unit test suite even if boost libraries are found.
 - `-DCOMPILE_STUBGEN=NO` disables building the stubgenerator.
 - `-DCOMPILE_EXAMPLES=NO` disables examples.
-- `-DHTTP_SERVER_MONGOOSE=NO` disable the embedded mongoose webserver.
-- `-DHTTP_CLIENT_CURL=NO` disable the curl client.
-- `-DSOCKET_SERVER=YES` enable the socket server.
-- `-DSOCKET_CLIENT=YES` enable the socket client.
+- `-DHTTP_SERVER=NO` disable the embedded mongoose webserver.
+- `-DHTTP_CLIENT=NO` disable the curl client.
 
 Simple Example
 ==============
@@ -251,7 +249,7 @@ Dependencies
 - [jsoncpp](http://jsoncpp.sourceforge.net) (licensed under MIT)
 jsoncpp is a very easy to use and powerful json library. 
 It is used for all the JSON parsing and generation inside this library.
-- [libmicrohttpd]http://www.gnu.org/software/libmicrohttpd/) (licensed under LGPL)
+- [libmicrohttpd](http://www.gnu.org/software/libmicrohttpd/) (licensed under LGPL)
 small gnu http server implementation.
 - [curl](http://curl.haxx.se)
 lib curl is used for the HttpClient connections.
@@ -277,5 +275,5 @@ brew install boost
 cmake .. && make test
 ```
 
-Testcoverage can be retrieved by invoking the [dev/ci.sh script](https://github.com/cinemast/libjson-rpc-cpp/blob/master/dev/testcoverage.sh).
+Testcoverage can be retrieved by invoking the [dev/testcoverage.sh script](https://github.com/cinemast/libjson-rpc-cpp/blob/master/dev/testcoverage.sh).
 

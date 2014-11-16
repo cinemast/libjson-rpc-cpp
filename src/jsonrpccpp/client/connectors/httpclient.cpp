@@ -22,28 +22,18 @@ using namespace jsonrpc;
  */
 struct string
 {
-    char *ptr;
-    size_t len;
+        char *ptr;
+        size_t len;
 };
 
-/**
-  * Callback for libcurl
-  */
 static size_t writefunc(void *ptr, size_t size, size_t nmemb,
                         struct string *s)
 {
     size_t new_len = s->len + size * nmemb;
     s->ptr = (char*) realloc(s->ptr, new_len + 1);
-    if (s->ptr == NULL)
-    {
-        fprintf(stderr, "realloc() failed\n");
-    }
-    else
-    {
-        memcpy(s->ptr + s->len, ptr, size * nmemb);
-        s->ptr[new_len] = '\0';
-        s->len = new_len;
-    }
+    memcpy(s->ptr + s->len, ptr, size * nmemb);
+    s->ptr[new_len] = '\0';
+    s->len = new_len;
     return size * nmemb;
 }
 
@@ -51,11 +41,6 @@ void init_string(struct string *s)
 {
     s->len = 0;
     s->ptr = (char*) malloc(s->len + 1);
-    if (s->ptr == NULL)
-    {
-        fprintf(stderr, "malloc() failed\n");
-        exit(EXIT_FAILURE);
-    }
     s->ptr[0] = '\0';
 }
 
@@ -68,11 +53,6 @@ HttpClient::HttpClient(const std::string& url) throw(JsonRpcException)
 void HttpClient::SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException)
 {
     CURL* curl = curl_easy_init();
-    if (!curl)
-    {
-        throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, ": libcurl initialization error");
-    }
-
     curl_easy_setopt(curl, CURLOPT_URL, this->url.c_str());
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunc);
 
@@ -81,7 +61,7 @@ void HttpClient::SendRPCMessage(const std::string& message, std::string& result)
     struct string s;
     init_string(&s);
 
-    struct curl_slist * headers = NULL;
+    struct curl_slist* headers = NULL;
 
     for (std::map<std::string, std::string>::iterator header = this->headers.begin(); header != this->headers.end(); ++header) {
         headers = curl_slist_append(headers, (header->first + ": " + header->second).c_str());
@@ -111,7 +91,6 @@ void HttpClient::SendRPCMessage(const std::string& message, std::string& result)
                 break;
             default:
                 str << "libcurl error: " << res;
-                break;
         }
         curl_easy_cleanup(curl);
         throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, str.str());

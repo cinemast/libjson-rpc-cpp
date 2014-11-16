@@ -16,6 +16,7 @@
 #include <jsonrpccpp/client/connectors/httpclient.h>
 
 #include "mockclientconnectionhandler.h"
+#include "testhttpserver.h"
 
 using namespace jsonrpc;
 using namespace std;
@@ -89,6 +90,25 @@ BOOST_FIXTURE_TEST_CASE(test_http_client_timeout, F)
     BOOST_CHECK_EXCEPTION(client.SendRPCMessage("Test", result), JsonRpcException, check_exception1);
 }
 
+BOOST_AUTO_TEST_CASE(test_http_client_headers)
+{
+    TestHttpServer server(TEST_PORT);
+    HttpClient client(CLIENT_URL);
+    server.StartListening();
+    client.AddHeader("X-Auth", "1234");
+    server.SetResponse("asdf");
+    string result;
+    client.SendRPCMessage("", result);
+    BOOST_CHECK_EQUAL(result, "asdf");
+    BOOST_CHECK_EQUAL(server.GetHeader("X-Auth"), "1234");
+
+    client.RemoveHeader("X-Auth");
+    client.SendRPCMessage("", result);
+    BOOST_CHECK_EQUAL(server.GetHeader("X-Auth"), "");
+
+    server.StopListening();
+}
+
 BOOST_AUTO_TEST_CASE(test_http_server_endpoints)
 {
     MockClientConnectionHandler handler1;
@@ -113,6 +133,11 @@ BOOST_AUTO_TEST_CASE(test_http_server_endpoints)
     BOOST_CHECK_EQUAL(response, "response2");
 
     BOOST_CHECK_EXCEPTION(client3.SendRPCMessage("test", response), JsonRpcException, check_exception2);
+
+    client3.SetUrl("http://localhost:8383/handler2");
+    client3.SendRPCMessage("test", response);
+    BOOST_CHECK_EQUAL(response, "response2");
+
     server.StopListening();
 }
 

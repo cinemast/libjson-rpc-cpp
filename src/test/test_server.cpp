@@ -8,7 +8,7 @@
  ************************************************************************/
 
 #include <boost/test/unit_test.hpp>
-#include "server.h"
+#include "testserver.h"
 #include "mockserverconnector.h"
 
 #define BOOST_TEST_DYN_LINK
@@ -349,6 +349,20 @@ BOOST_AUTO_TEST_CASE(test_server_hybrid)
     c.SetRequest("{\"jsonrpc\":\"2.0\", \"params\":{\"value\": 33");
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32700);
     BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
+}
+
+BOOST_AUTO_TEST_CASE(test_server_abstractserver)
+{
+    MockServerConnector c;
+    TestServer server(c, JSONRPC_SERVER_V1V2);
+
+    BOOST_CHECK_EQUAL(server.bindAndAddNotification(new Procedure("testMethod", PARAMS_BY_NAME, JSON_STRING, "name", JSON_STRING, NULL), &TestServer::initCounter), false);
+
+    BOOST_CHECK_EQUAL(server.bindAndAddMethod(new Procedure("initCounter", PARAMS_BY_NAME, "value", JSON_INTEGER, NULL), &TestServer::sayHello), false);
+
+
+    BOOST_CHECK_EQUAL(server.StartListening(), true);
+    BOOST_CHECK_EQUAL(server.StopListening(), true);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

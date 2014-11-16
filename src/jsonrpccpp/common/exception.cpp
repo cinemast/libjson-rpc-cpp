@@ -29,6 +29,7 @@ JsonRpcException::JsonRpcException(int code, const std::string& message) :
 }
 
 JsonRpcException::JsonRpcException(const std::string& message) :
+    code(0),
     message(message)
 {
     this->setWhatMessage();
@@ -36,7 +37,6 @@ JsonRpcException::JsonRpcException(const std::string& message) :
 
 JsonRpcException::~JsonRpcException() throw ()
 {
-
 }
 
 int JsonRpcException::GetCode() const
@@ -56,7 +56,14 @@ const char* JsonRpcException::what() const throw ()
 
 void JsonRpcException::setWhatMessage()
 {
-    std::stringstream ss;
-    ss << "Exception " << this->code << " : " << this->message;
-    this->whatString = ss.str();
+    if (this->code != 0)
+    {
+        std::stringstream ss;
+        ss << "Exception " << this->code << " : " << this->message;
+        this->whatString = ss.str();
+    }
+    else
+    {
+        this->whatString = this->message;
+    }
 }

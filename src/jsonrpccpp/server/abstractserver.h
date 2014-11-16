@@ -95,6 +95,15 @@ namespace jsonrpc
             IProtocolHandler                                *handler;
             std::map<std::string, methodPointer_t>          methods;
             std::map<std::string, notificationPointer_t>    notifications;
+
+            bool symbolExists(const std::string &name)
+            {
+                if (methods.find(name) != methods.end())
+                    return true;
+                if (notifications.find(name) != notifications.end())
+                    return true;
+                return false;
+            }
     };
 
 } /* namespace jsonrpc */

@@ -1,13 +1,13 @@
 /*************************************************************************
  * libjson-rpc-cpp
  *************************************************************************
- * @file    server.cpp
+ * @file    testserver.cpp
  * @date    08.03.2013
  * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>
  * @license See attached LICENSE.txt
  ************************************************************************/
 
-#include "server.h"
+#include "testserver.h"
 #include <iostream>
 
 using namespace std;
@@ -75,5 +75,15 @@ void TestServer::initZero(const Json::Value &request)
 int TestServer::getCnt()
 {
     return cnt;
+}
+
+bool TestServer::bindAndAddMethod(Procedure *proc, AbstractServer::methodPointer_t pointer)
+{
+    return AbstractServer::bindAndAddMethod(proc, pointer);
+}
+
+bool TestServer::bindAndAddNotification(Procedure *proc, AbstractServer::notificationPointer_t pointer)
+{
+    return AbstractServer::bindAndAddNotification(proc, pointer);
 }
 
