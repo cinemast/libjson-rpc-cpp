@@ -2,7 +2,7 @@ language: cpp
 
 before_install:
  - sudo apt-get update -qq
- - sudo apt-get install -qq libcurl4-openssl-dev libjsoncpp-dev libargtable2-dev libboost-test-dev libgnutls-dev libgcrypt11-dev dpkg-dev devscripts valgrind
+ - sudo apt-get install -qq libcurl4-openssl-dev libjsoncpp-dev libargtable2-dev libboost-test-dev libgnutls-dev libgcrypt11-dev dpkg-dev devscripts quilt valgrind
  - sudo apt-get source libmicrohttpd
  - cd libmicrohttpd-0.4.6
  - debuild -us -uc
