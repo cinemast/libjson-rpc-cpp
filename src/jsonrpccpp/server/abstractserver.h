@@ -64,29 +64,25 @@ namespace jsonrpc
             }
 
         protected:
-            virtual bool bindAndAddMethod(Procedure* proc, methodPointer_t pointer)
+            virtual bool bindAndAddMethod(const Procedure& proc, methodPointer_t pointer)
             {
-                if(proc->GetProcedureType() == RPC_METHOD)
+                if(proc.GetProcedureType() == RPC_METHOD && !this->symbolExists(proc.GetProcedureName()))
                 {
-                    this->handler->AddProcedure(*proc);
-                    this->methods[proc->GetProcedureName()] = pointer;
-                    delete proc;
+                    this->handler->AddProcedure(proc);
+                    this->methods[proc.GetProcedureName()] = pointer;
                     return true;
                 }
-                delete proc;
                 return false;
             }
 
-            virtual bool bindAndAddNotification(Procedure* proc, notificationPointer_t pointer)
+            virtual bool bindAndAddNotification(const Procedure& proc, notificationPointer_t pointer)
             {
-                if(proc->GetProcedureType() == RPC_NOTIFICATION)
+                if(proc.GetProcedureType() == RPC_NOTIFICATION && !this->symbolExists(proc.GetProcedureName()))
                 {
-                    this->handler->AddProcedure(*proc);
-                    this->notifications[proc->GetProcedureName()] = pointer;
-                    delete proc;
+                    this->handler->AddProcedure(proc);
+                    this->notifications[proc.GetProcedureName()] = pointer;
                     return true;
                 }
-                delete proc;
                 return false;
             }
 

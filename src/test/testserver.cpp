@@ -17,15 +17,15 @@ TestServer::TestServer(AbstractServerConnector &connector, serverVersion_t type)
     AbstractServer<TestServer>(connector, type),
     cnt(-1)
 {
-    this->bindAndAddMethod(new Procedure("sayHello", PARAMS_BY_NAME, JSON_STRING, "name", JSON_STRING, NULL), &TestServer::sayHello);
-    this->bindAndAddMethod(new Procedure("getCounterValue", PARAMS_BY_NAME, JSON_INTEGER, NULL), &TestServer::getCounterValue);
-    this->bindAndAddMethod(new Procedure("add", PARAMS_BY_NAME, JSON_INTEGER, "value1", JSON_INTEGER, "value2", JSON_INTEGER, NULL), &TestServer::add);
-    this->bindAndAddMethod(new Procedure("sub", PARAMS_BY_POSITION, JSON_INTEGER, "value1", JSON_INTEGER, "value2", JSON_INTEGER, NULL), &TestServer::sub);
-    this->bindAndAddMethod(new Procedure("exceptionMethod", PARAMS_BY_POSITION, JSON_NULL, NULL), &TestServer::exceptionMethod);
+    this->bindAndAddMethod(Procedure("sayHello", PARAMS_BY_NAME, JSON_STRING, "name", JSON_STRING, NULL), &TestServer::sayHello);
+    this->bindAndAddMethod(Procedure("getCounterValue", PARAMS_BY_NAME, JSON_INTEGER, NULL), &TestServer::getCounterValue);
+    this->bindAndAddMethod(Procedure("add", PARAMS_BY_NAME, JSON_INTEGER, "value1", JSON_INTEGER, "value2", JSON_INTEGER, NULL), &TestServer::add);
+    this->bindAndAddMethod(Procedure("sub", PARAMS_BY_POSITION, JSON_INTEGER, "value1", JSON_INTEGER, "value2", JSON_INTEGER, NULL), &TestServer::sub);
+    this->bindAndAddMethod(Procedure("exceptionMethod", PARAMS_BY_POSITION, JSON_NULL, NULL), &TestServer::exceptionMethod);
 
-    this->bindAndAddNotification(new Procedure("initCounter", PARAMS_BY_NAME, "value", JSON_INTEGER, NULL), &TestServer::initCounter);
-    this->bindAndAddNotification(new Procedure("incrementCounter", PARAMS_BY_NAME, "value", JSON_INTEGER, NULL), &TestServer::incrementCounter);
-    this->bindAndAddNotification(new Procedure("initZero", PARAMS_BY_POSITION, NULL), &TestServer::initZero);
+    this->bindAndAddNotification(Procedure("initCounter", PARAMS_BY_NAME, "value", JSON_INTEGER, NULL), &TestServer::initCounter);
+    this->bindAndAddNotification(Procedure("incrementCounter", PARAMS_BY_NAME, "value", JSON_INTEGER, NULL), &TestServer::incrementCounter);
+    this->bindAndAddNotification(Procedure("initZero", PARAMS_BY_POSITION, NULL), &TestServer::initZero);
 }
 
 void TestServer::sayHello(const Json::Value &request, Json::Value& response)
@@ -77,12 +77,12 @@ int TestServer::getCnt()
     return cnt;
 }
 
-bool TestServer::bindAndAddMethod(Procedure *proc, AbstractServer::methodPointer_t pointer)
+bool TestServer::bindAndAddMethod(const Procedure& proc, AbstractServer::methodPointer_t pointer)
 {
     return AbstractServer::bindAndAddMethod(proc, pointer);
 }
 
-bool TestServer::bindAndAddNotification(Procedure *proc, AbstractServer::notificationPointer_t pointer)
+bool TestServer::bindAndAddNotification(const Procedure& proc, AbstractServer::notificationPointer_t pointer)
 {
     return AbstractServer::bindAndAddNotification(proc, pointer);
 }

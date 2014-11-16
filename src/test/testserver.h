@@ -35,8 +35,8 @@ namespace jsonrpc
 
             int getCnt();
 
-            virtual bool bindAndAddMethod(Procedure* proc, methodPointer_t pointer);
-            virtual bool bindAndAddNotification(Procedure* proc, notificationPointer_t pointer);
+            virtual bool bindAndAddMethod(const Procedure& proc, methodPointer_t pointer);
+            virtual bool bindAndAddNotification(const Procedure& proc, notificationPointer_t pointer);
         private:
             int cnt;
     };

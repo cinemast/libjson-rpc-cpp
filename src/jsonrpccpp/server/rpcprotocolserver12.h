@@ -21,7 +21,7 @@ namespace jsonrpc {
         public:
             RpcProtocolServer12(IProcedureInvokationHandler &handler);
 
-            void AddProcedure(Procedure& procedure);
+            void AddProcedure(const Procedure& procedure);
             void HandleRequest(const std::string& request, std::string& retValue);
 
         private:

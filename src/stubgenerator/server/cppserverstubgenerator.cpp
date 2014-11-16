@@ -14,8 +14,8 @@
 #include <sstream>
 #include <algorithm>
 
-#define TEMPLATE_CPPSERVER_METHODBINDING       "this->bindAndAddMethod(new jsonrpc::Procedure(\"<procedurename>\", <paramtype>, <returntype>, <parameterlist> NULL), &<stubname>::<procedurename>I);"
-#define TEMPLATE_CPPSERVER_NOTIFICATIONBINDING "this->bindAndAddNotification(new jsonrpc::Procedure(\"<procedurename>\", <paramtype>, <parameterlist> NULL), &<stubname>::<procedurename>I);"
+#define TEMPLATE_CPPSERVER_METHODBINDING       "this->bindAndAddMethod(jsonrpc::Procedure(\"<procedurename>\", <paramtype>, <returntype>, <parameterlist> NULL), &<stubname>::<procedurename>I);"
+#define TEMPLATE_CPPSERVER_NOTIFICATIONBINDING "this->bindAndAddNotification(jsonrpc::Procedure(\"<procedurename>\", <paramtype>, <parameterlist> NULL), &<stubname>::<procedurename>I);"
 
 #define TEMPLATE_CPPSERVER_SIGCLASS "class <stubname> : public jsonrpc::AbstractServer<<stubname>>"
 #define TEMPLATE_CPPSERVER_SIGCONSTRUCTOR "<stubname>(jsonrpc::AbstractServerConnector &conn) : jsonrpc::AbstractServer<<stubname>>(conn)"

@@ -21,8 +21,8 @@ class SampleServer : public AbstractServer<SampleServer>
         SampleServer(HttpServer &server) :
             AbstractServer<SampleServer>(server)
         {
-            this->bindAndAddMethod(new Procedure("sayHello", PARAMS_BY_NAME, JSON_STRING, "name", JSON_STRING, NULL), &SampleServer::sayHello);
-            this->bindAndAddNotification(new Procedure("notifyServer", PARAMS_BY_NAME, NULL), &SampleServer::notifyServer);
+            this->bindAndAddMethod(Procedure("sayHello", PARAMS_BY_NAME, JSON_STRING, "name", JSON_STRING, NULL), &SampleServer::sayHello);
+            this->bindAndAddNotification(Procedure("notifyServer", PARAMS_BY_NAME, NULL), &SampleServer::notifyServer);
         }
 
         //method

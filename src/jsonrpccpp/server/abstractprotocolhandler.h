@@ -32,7 +32,7 @@ namespace jsonrpc {
 
             void HandleRequest(const std::string& request, std::string& retValue);
 
-            virtual void AddProcedure(Procedure& procedure);
+            virtual void AddProcedure(const Procedure& procedure);
 
             virtual void HandleJsonRequest(const Json::Value& request, Json::Value& response) = 0;
             virtual bool ValidateRequestFields(const Json::Value &val) = 0;
