@@ -19,11 +19,6 @@ using namespace std;
 
 BOOST_AUTO_TEST_SUITE(common)
 
-void test(const Procedure& proc)
-{
-
-}
-
 BOOST_AUTO_TEST_CASE(test_procedure_parametervalidation)
 {
     Procedure proc1("someprocedure", PARAMS_BY_NAME, JSON_BOOLEAN, "name", JSON_STRING, "ssnr", JSON_INTEGER, NULL);

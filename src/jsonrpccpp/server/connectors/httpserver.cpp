@@ -109,16 +109,11 @@ int HttpServer::callback(void *cls, MHD_Connection *connection, const char *url,
     (void)version;
     if (*con_cls == NULL)
     {
-        if (string("POST") == method)
-        {
-            struct mhd_coninfo* client_connection = new mhd_coninfo;
-
-            client_connection->connection = connection;
-            client_connection->server = static_cast<HttpServer*>(cls);
-            *con_cls = client_connection;
-            return MHD_YES;
-        }
-        return MHD_NO;
+        struct mhd_coninfo* client_connection = new mhd_coninfo;
+        client_connection->connection = connection;
+        client_connection->server = static_cast<HttpServer*>(cls);
+        *con_cls = client_connection;
+        return MHD_YES;
     }
     struct mhd_coninfo* client_connection = static_cast<struct mhd_coninfo*>(*con_cls);
 
@@ -134,8 +129,6 @@ int HttpServer::callback(void *cls, MHD_Connection *connection, const char *url,
         {
             string response;
             IClientConnectionHandler* handler = client_connection->server->GetHandler(string(url));
-
-            int ret = MHD_YES;
             if (handler == NULL)
             {
                 client_connection->code = MHD_HTTP_INTERNAL_SERVER_ERROR;
@@ -145,14 +138,17 @@ int HttpServer::callback(void *cls, MHD_Connection *connection, const char *url,
             {
                 client_connection->code = MHD_HTTP_OK;
                 handler->HandleRequest(client_connection->request.str(), response);
-                if (!client_connection->server->SendResponse(response, client_connection))
-                    ret = MHD_NO;
+                client_connection->server->SendResponse(response, client_connection);
             }
-            delete client_connection;
-
-            return ret;
         }
     }
-    return MHD_NO;
+    else
+    {
+        client_connection->code = MHD_HTTP_METHOD_NOT_ALLOWED;
+        client_connection->server->SendResponse("Not allowed HTTP Method", client_connection);
+    }
+    delete client_connection;
+
+    return MHD_YES;
 }
 
