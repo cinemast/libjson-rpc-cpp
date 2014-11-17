@@ -115,6 +115,7 @@ BOOST_FIXTURE_TEST_CASE(test_http_get,F)
     CURL* curl = curl_easy_init();
 
     curl_easy_setopt(curl, CURLOPT_URL, CLIENT_URL);
+    curl_easy_setopt(curl, CURLOPT_NOBODY, 1);
     CURLcode code = curl_easy_perform(curl);
     BOOST_REQUIRE_EQUAL(code, CURLE_OK);
 

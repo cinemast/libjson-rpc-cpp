@@ -176,10 +176,6 @@ bool    Procedure::ValidateSingleParameter      (jsontype_t expectedType, const 
             if (!value.isArray())
                 ok = false;
             break;
-        case JSON_NULL:
-            if (!value.isNull())
-                ok = false;
-            break;
     }
     return ok;
 }

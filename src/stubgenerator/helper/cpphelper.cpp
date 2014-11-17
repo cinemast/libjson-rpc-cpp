@@ -97,8 +97,6 @@ string  CPPHelper::toString                         (jsontype_t type)
         case JSON_ARRAY:
             result = "jsonrpc::JSON_ARRAY";
             break;
-        case JSON_NULL:
-            result = "jsonrpc::JSON_NULL";
     }
     return result;
 }

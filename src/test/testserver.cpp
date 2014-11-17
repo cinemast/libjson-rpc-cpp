@@ -21,7 +21,7 @@ TestServer::TestServer(AbstractServerConnector &connector, serverVersion_t type)
     this->bindAndAddMethod(Procedure("getCounterValue", PARAMS_BY_NAME, JSON_INTEGER, NULL), &TestServer::getCounterValue);
     this->bindAndAddMethod(Procedure("add", PARAMS_BY_NAME, JSON_INTEGER, "value1", JSON_INTEGER, "value2", JSON_INTEGER, NULL), &TestServer::add);
     this->bindAndAddMethod(Procedure("sub", PARAMS_BY_POSITION, JSON_INTEGER, "value1", JSON_INTEGER, "value2", JSON_INTEGER, NULL), &TestServer::sub);
-    this->bindAndAddMethod(Procedure("exceptionMethod", PARAMS_BY_POSITION, JSON_NULL, NULL), &TestServer::exceptionMethod);
+    this->bindAndAddMethod(Procedure("exceptionMethod", PARAMS_BY_POSITION, JSON_INTEGER, NULL), &TestServer::exceptionMethod);
 
     this->bindAndAddNotification(Procedure("initCounter", PARAMS_BY_NAME, "value", JSON_INTEGER, NULL), &TestServer::initCounter);
     this->bindAndAddNotification(Procedure("incrementCounter", PARAMS_BY_NAME, "value", JSON_INTEGER, NULL), &TestServer::incrementCounter);

@@ -26,9 +26,16 @@ vector<Procedure>   SpecificationParser::GetProceduresFromString(const string &c
 
     Json::Reader reader;
     Json::Value val;
-    if(!reader.parse(content,val)) {
+    if(!reader.parse(content,val))
+    {
         throw JsonRpcException(Errors::ERROR_RPC_JSON_PARSE_ERROR, " specification file contains syntax errors");
     }
+
+    if (!val.isArray())
+    {
+        throw JsonRpcException(Errors::ERROR_RPC_JSON_PARSE_ERROR, " specification file contains syntax errors");
+    }
+
 
     vector<Procedure> result;
     for (unsigned int i = 0; i < val.size(); i++)
@@ -41,12 +48,11 @@ vector<Procedure>   SpecificationParser::GetProceduresFromString(const string &c
 }
 void                SpecificationParser::GetProcedure           (Json::Value &signature, Procedure &result)
 {
-    if (signature.isMember(KEY_SPEC_PROCEDURE_NAME) && signature.isMember(KEY_SPEC_PROCEDURE_PARAMETERS))
+    if (signature.isObject() && GetProcedureName(signature) != "" && signature.isMember(KEY_SPEC_PROCEDURE_PARAMETERS))
     {
-        if (GetProcedureName(signature) != "" &&
-                (signature[KEY_SPEC_PROCEDURE_PARAMETERS].isObject() ||
+        if (signature[KEY_SPEC_PROCEDURE_PARAMETERS].isObject() ||
                  signature[KEY_SPEC_PROCEDURE_PARAMETERS].isNull()   ||
-                 signature[KEY_SPEC_PROCEDURE_PARAMETERS].isArray())
+                 signature[KEY_SPEC_PROCEDURE_PARAMETERS].isArray()
         )
         {
             result.SetProcedureName(GetProcedureName(signature));
@@ -81,7 +87,7 @@ void                SpecificationParser::GetProcedure           (Json::Value &si
     else
     {
         throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,
-                               "procedure declaration does not contain name or paramters: "
+                               "procedure declaration does not contain name or parameters: "
                                + signature.toStyledString());
     }
 }
@@ -124,10 +130,8 @@ jsontype_t          SpecificationParser::toJsonType             (Json::Value &va
         case Json::objectValue:
             result = JSON_OBJECT;
             break;
-        case Json::nullValue:
-            result = JSON_NULL;
         default:
-            throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,"Unknown parameter in "
+            throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,"Unknown parameter type: "
                                    + val.toStyledString());
     }
     return result;
@@ -145,7 +149,7 @@ void                SpecificationParser::GetPositionalParameters(Json::Value &va
 void                SpecificationParser::GetNamedParameters(Json::Value &val, Procedure &result)
 {
     vector<string> parameters = val[KEY_SPEC_PROCEDURE_PARAMETERS].getMemberNames();
-    for (unsigned int i = 0; i < parameters.size(); i++)
+    for (unsigned int i=0; i < parameters.size(); ++i)
     {
         result.AddParameter(parameters.at(i), toJsonType(val[KEY_SPEC_PROCEDURE_PARAMETERS][parameters.at(i)]));
     }

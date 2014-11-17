@@ -66,9 +66,6 @@ Json::Value SpecificationWriter::toJsonLiteral          (jsontype_t type)
         case JSON_INTEGER:
             literal = 1;
             break;
-        case JSON_NULL:
-            literal = Json::nullValue;
-            break;
     }
     return literal;
 }

@@ -48,10 +48,10 @@ Errors::_init::_init() {
     possibleErrors[ERROR_SERVER_PROCEDURE_IS_NOTIFICATION] =
             "PROCEDURE_IS_NOTIFICATION: The requested method is declared as notification";
     possibleErrors[ERROR_SERVER_PROCEDURE_POINTER_IS_NULL] =
-            "PROCEDURE_POINTER_IS_NULL: Server has no function Reference registered: ";
-    possibleErrors[ERROR_SERVER_PROCEDURE_SPECIFICATION_NOT_FOUND] = "Configuration file was not found: ";
+            "PROCEDURE_POINTER_IS_NULL: Server has no function Reference registered";
+    possibleErrors[ERROR_SERVER_PROCEDURE_SPECIFICATION_NOT_FOUND] = "Configuration file was not found";
 
-    possibleErrors[ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX] = "Procedure specification mallformed: ";
+    possibleErrors[ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX] = "Procedure specification mallformed";
 
     possibleErrors[ERROR_CLIENT_INVALID_RESPONSE] = "The response is invalid";
     possibleErrors[ERROR_CLIENT_CONNECTOR] = "Client connector error";
