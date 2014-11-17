@@ -11,6 +11,7 @@
 #include <jsonrpccpp/common/procedure.h>
 #include <jsonrpccpp/common/exception.h>
 #include <jsonrpccpp/common/specificationparser.h>
+#include <jsonrpccpp/common/specificationwriter.h>
 
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE
@@ -106,9 +107,11 @@ BOOST_AUTO_TEST_CASE(test_specificationparser_errors)
     BOOST_CHECK_EXCEPTION(SpecificationParser::GetProceduresFromFile("testspec2.json"), JsonRpcException, check_exception2);
     BOOST_CHECK_EXCEPTION(SpecificationParser::GetProceduresFromFile("testspec3.json"), JsonRpcException, check_exception2);
     BOOST_CHECK_EXCEPTION(SpecificationParser::GetProceduresFromFile("testspec4.json"), JsonRpcException, check_exception2);
-    BOOST_CHECK_EXCEPTION(SpecificationParser::GetProceduresFromString("{}"), JsonRpcException, check_exception1);
+    BOOST_CHECK_EXCEPTION(SpecificationParser::GetProceduresFromString("{}"), JsonRpcException, check_exception2);
 
     BOOST_CHECK_EXCEPTION(SpecificationParser::GetProceduresFromString("[{\"name\":\"proc1\"},{\"name\":\"proc1\"}]"), JsonRpcException, check_exception2);
+    BOOST_CHECK_EXCEPTION(SpecificationParser::GetProceduresFromString("[{\"name\":\"proc1\", \"params\": {\"param1\": null}}]"), JsonRpcException, check_exception2);
+    BOOST_CHECK_EXCEPTION(SpecificationParser::GetProceduresFromString("[{\"name\":\"proc1\", \"params\": 23}]"), JsonRpcException, check_exception2);
 }
 
 BOOST_AUTO_TEST_CASE(test_specificationparser_success)
@@ -133,6 +136,56 @@ BOOST_AUTO_TEST_CASE(test_specificationparser_success)
     BOOST_CHECK_EQUAL(procs[3].GetProcedureName(), "testnotification2");
     BOOST_CHECK_EQUAL(procs[3].GetProcedureType(), RPC_NOTIFICATION);
     BOOST_CHECK_EQUAL(procs[3].GetParameterDeclarationType(), PARAMS_BY_NAME);
+}
+
+BOOST_AUTO_TEST_CASE(test_specificationwriter)
+{
+    vector<Procedure> procedures;
+
+    procedures.push_back(Procedure("testmethod1", PARAMS_BY_NAME, JSON_INTEGER, "param1", JSON_INTEGER, "param2", JSON_REAL, NULL));
+    procedures.push_back(Procedure("testmethod2", PARAMS_BY_POSITION, JSON_INTEGER, "param1", JSON_OBJECT, "param2", JSON_ARRAY, NULL));
+
+    procedures.push_back(Procedure("testnotification1", PARAMS_BY_NAME, "param1", JSON_BOOLEAN, "param2", JSON_STRING, NULL));
+    procedures.push_back(Procedure("testnotification2", PARAMS_BY_POSITION, "param1", JSON_INTEGER, "param2", JSON_STRING, NULL));
+
+    procedures.push_back(Procedure("testnotification3", PARAMS_BY_POSITION, NULL));
+
+
+    Json::Value result = SpecificationWriter::toJsonValue(procedures);
+
+    BOOST_REQUIRE_EQUAL(result.isArray(), true);
+    BOOST_REQUIRE_EQUAL(result.size(), procedures.size());
+
+    BOOST_CHECK_EQUAL(result[0]["name"].asString(), "testmethod1");
+    BOOST_CHECK_EQUAL(result[1]["name"].asString(), "testmethod2");
+    BOOST_CHECK_EQUAL(result[2]["name"].asString(), "testnotification1");
+    BOOST_CHECK_EQUAL(result[3]["name"].asString(), "testnotification2");
+    BOOST_CHECK_EQUAL(result[4]["name"].asString(), "testnotification3");
+
+    BOOST_REQUIRE_EQUAL(result[0]["params"].isObject(), true);
+    BOOST_CHECK_EQUAL(result[0]["params"]["param1"].isInt(), true);
+    BOOST_CHECK_EQUAL(result[0]["params"]["param2"].isDouble(), true);
+
+    BOOST_REQUIRE_EQUAL(result[1]["params"].isArray(), true);
+    BOOST_CHECK_EQUAL(result[1]["params"][0].isObject(), true);
+    BOOST_CHECK_EQUAL(result[1]["params"][1].isArray(), true);
+
+    BOOST_REQUIRE_EQUAL(result[2]["params"].isObject(), true);
+    BOOST_CHECK_EQUAL(result[2]["params"]["param1"].isBool(), true);
+    BOOST_CHECK_EQUAL(result[2]["params"]["param2"].isString(), true);
+
+    BOOST_REQUIRE_EQUAL(result[3]["params"].isArray(), true);
+    BOOST_CHECK_EQUAL(result[3]["params"][0].isInt(), true);
+    BOOST_CHECK_EQUAL(result[3]["params"][1].isString(), true);
+
+    BOOST_CHECK_EQUAL(result[4].isMember("params"), false);
+
+    BOOST_CHECK_EQUAL(result[0]["returns"].isInt(), true);
+    BOOST_CHECK_EQUAL(result[1]["returns"].isInt(), true);
+
+    BOOST_CHECK_EQUAL(SpecificationWriter::toFile("testspec.json", procedures), true);
+    BOOST_CHECK_EQUAL(SpecificationWriter::toFile("/a/b/c/testspec.json", procedures), false);
+
 }
 
 BOOST_AUTO_TEST_SUITE_END()

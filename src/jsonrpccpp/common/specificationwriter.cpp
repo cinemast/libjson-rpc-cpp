@@ -76,8 +76,6 @@ void        SpecificationWriter::procedureToJsonValue   (const Procedure &proced
     {
         target[KEY_SPEC_RETURN_TYPE] = toJsonLiteral(procedure.GetReturnType());
     }
-    int i=0;
-
     for(parameterNameList_t::const_iterator it = procedure.GetParameters().begin(); it != procedure.GetParameters().end(); ++it)
     {
         if(procedure.GetParameterDeclarationType() == PARAMS_BY_NAME)
@@ -88,12 +86,6 @@ void        SpecificationWriter::procedureToJsonValue   (const Procedure &proced
         {
             target[KEY_SPEC_PROCEDURE_PARAMETERS].append(toJsonLiteral(it->second));
         }
-        i++;
-    }
-
-    if(i == 0)
-    {
-        target[KEY_SPEC_PROCEDURE_PARAMETERS] = Json::nullValue;
     }
 }
 
