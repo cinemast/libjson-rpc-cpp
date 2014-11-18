@@ -71,8 +71,7 @@ BatchResponse Client::CallProcedures(const BatchCall &calls) throw(JsonRpcExcept
     return result;
 }
 
-Json::Value Client::CallMethod(const std::string& name,
-                               const Json::Value& parameter) throw(JsonRpcException)
+Json::Value Client::CallMethod(const std::string& name, const Json::Value& parameter) throw(JsonRpcException)
 {
     Json::Value result;
     this->CallMethod(name, parameter, result);
