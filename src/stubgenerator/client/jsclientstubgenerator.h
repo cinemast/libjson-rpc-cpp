@@ -25,6 +25,7 @@ namespace jsonrpc {
 
         private:
             virtual void generateMethod(Procedure &proc);
+            static std::string noramlizeJsLiteral(const std::string &literal);
 
     };
 

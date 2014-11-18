@@ -10,6 +10,7 @@ file(COPY ${CMAKE_SOURCE_DIR}/src/examples/server.key ${CMAKE_SOURCE_DIR}/src/ex
 file(COPY ${test_specs} DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY ${test_specs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
+set(testlibs ${Boost_LIBRARIES} jsonrpccommon jsonrpcclient jsonrpcserver)
 
 IF(HTTP_CLIENT AND HTTP_SERVER)
     add_definitions(-DHTTP_TESTING)
@@ -19,11 +20,17 @@ IF(SOCKET_SERVER AND SOCKET_CLIENT)
     add_definitions(-DTCPSOCKET_TESTING)
 ENDIF()
 
+IF(COMPILE_STUBGEN)
+    add_definitions(-DSTUBGEN_TESTING)
+ENDIF()
+
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src)
 
 add_executable(unit_testsuite ${test_source})
-target_link_libraries(unit_testsuite ${Boost_LIBRARIES} jsonrpccommon jsonrpcclient jsonrpcserver)
-
+target_link_libraries(unit_testsuite ${testlibs})
+IF(COMPILE_STUBGEN)
+    target_link_libraries(unit_testsuite stubgen)
+ENDIF()
 
 ADD_TEST(client ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite --run_test=client)
 ADD_TEST(server ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite --run_test=server)

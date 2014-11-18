@@ -95,7 +95,7 @@ void JSClientStubGenerator::generateMethod(Procedure &proc)
 {
     string method = TEMPLATE_JS_METHOD;
     replaceAll2(method, "<class>", stubname);
-    replaceAll2(method, "<procedure>", proc.GetProcedureName());
+    replaceAll2(method, "<procedure>", noramlizeJsLiteral(proc.GetProcedureName()));
 
     stringstream param_string;
     stringstream params_assignment;
@@ -152,5 +152,17 @@ void JSClientStubGenerator::generateMethod(Procedure &proc)
     cg.decreaseIndentation();
     cg.writeLine("};");
 
+}
 
+string JSClientStubGenerator::noramlizeJsLiteral(const string &literal)
+{
+    string result = literal;
+    for(unsigned int i=0; i < literal.length(); i++)
+    {
+        if (!((literal[i] >= 'a' && literal[i] <= 'z') || (literal[i] >= 'A' && literal[i] <= 'Z') || (literal[i] >= '0' && literal[i] <= '9') || literal[i] == '_'))
+        {
+            result[i] = '_';
+        }
+    }
+    return result;
 }

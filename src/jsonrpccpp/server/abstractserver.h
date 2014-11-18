@@ -64,7 +64,7 @@ namespace jsonrpc
             }
 
         protected:
-            virtual bool bindAndAddMethod(const Procedure& proc, methodPointer_t pointer)
+            bool bindAndAddMethod(const Procedure& proc, methodPointer_t pointer)
             {
                 if(proc.GetProcedureType() == RPC_METHOD && !this->symbolExists(proc.GetProcedureName()))
                 {
@@ -75,7 +75,7 @@ namespace jsonrpc
                 return false;
             }
 
-            virtual bool bindAndAddNotification(const Procedure& proc, notificationPointer_t pointer)
+            bool bindAndAddNotification(const Procedure& proc, notificationPointer_t pointer)
             {
                 if(proc.GetProcedureType() == RPC_NOTIFICATION && !this->symbolExists(proc.GetProcedureName()))
                 {

@@ -25,8 +25,6 @@ namespace jsonrpc
             StubGenerator(const std::string& stubname, std::vector<Procedure> &procedures, CodeGenerator &cg);
             virtual ~StubGenerator();
 
-
-            virtual std::string getStubName();
             virtual void generateStub() = 0;
 
             static std::string replaceAll(const std::string& text, const std::string& fnd, const std::string& rep);

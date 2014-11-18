@@ -37,7 +37,7 @@ CPPClientStubGenerator::CPPClientStubGenerator(const string &stubname, std::vect
 void CPPClientStubGenerator::generateStub()
 {
     vector<string> classname = CPPHelper::splitPackages(this->stubname);
-    CPPHelper::prolog(cg, classname.at(classname.size()-1));
+    CPPHelper::prolog(cg, this->stubname);
     cg.writeLine("#include <jsonrpccpp/client.h>");
     cg.writeNewLine();
 

@@ -25,7 +25,7 @@ namespace jsonrpc {
 
             bool virtual SendResponse(const std::string& response, void* addInfo = NULL);
 
-            void SetRequest(const std::string &request);
+            bool SetRequest(const std::string &request);
             Json::Value GetJsonRequest();
 
             std::string GetResponse();

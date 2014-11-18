@@ -37,7 +37,7 @@ CPPServerStubGenerator::CPPServerStubGenerator(const std::string &stubname, vect
 void CPPServerStubGenerator::generateStub()
 {
     vector<string> classname = CPPHelper::splitPackages(this->stubname);
-    CPPHelper::prolog(cg, classname.at(classname.size()-1));
+    CPPHelper::prolog(cg, this->stubname);
 
     cg.writeLine("#include <jsonrpccpp/server.h>");
     cg.writeNewLine();

@@ -150,7 +150,6 @@ BOOST_AUTO_TEST_CASE(test_specificationwriter)
 
     procedures.push_back(Procedure("testnotification3", PARAMS_BY_POSITION, NULL));
 
-
     Json::Value result = SpecificationWriter::toJsonValue(procedures);
 
     BOOST_REQUIRE_EQUAL(result.isArray(), true);
@@ -185,7 +184,6 @@ BOOST_AUTO_TEST_CASE(test_specificationwriter)
 
     BOOST_CHECK_EQUAL(SpecificationWriter::toFile("testspec.json", procedures), true);
     BOOST_CHECK_EQUAL(SpecificationWriter::toFile("/a/b/c/testspec.json", procedures), false);
-
 }
 
 BOOST_AUTO_TEST_SUITE_END()

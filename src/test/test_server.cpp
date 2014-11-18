@@ -357,12 +357,19 @@ BOOST_AUTO_TEST_CASE(test_server_abstractserver)
     TestServer server(c, JSONRPC_SERVER_V1V2);
 
     BOOST_CHECK_EQUAL(server.bindAndAddNotification(Procedure("testMethod", PARAMS_BY_NAME, JSON_STRING, "name", JSON_STRING, NULL), &TestServer::initCounter), false);
-
     BOOST_CHECK_EQUAL(server.bindAndAddMethod(Procedure("initCounter", PARAMS_BY_NAME, "value", JSON_INTEGER, NULL), &TestServer::sayHello), false);
 
+    BOOST_CHECK_EQUAL(server.bindAndAddMethod(Procedure("testMethod", PARAMS_BY_NAME, JSON_STRING, "name", JSON_STRING, NULL), &TestServer::sayHello), true);
+    BOOST_CHECK_EQUAL(server.bindAndAddMethod(Procedure("testMethod", PARAMS_BY_NAME, JSON_STRING, "name", JSON_STRING, NULL), &TestServer::sayHello), false);
+
+    BOOST_CHECK_EQUAL(server.bindAndAddNotification(Procedure("testNotification", PARAMS_BY_NAME, "value", JSON_INTEGER, NULL), &TestServer::initCounter), true);
+    BOOST_CHECK_EQUAL(server.bindAndAddNotification(Procedure("testNotification", PARAMS_BY_NAME, "value", JSON_INTEGER, NULL), &TestServer::initCounter), false);
 
     BOOST_CHECK_EQUAL(server.StartListening(), true);
     BOOST_CHECK_EQUAL(server.StopListening(), true);
+
+    MockServerConnector c2;
+    BOOST_CHECK_EQUAL(c2.SetRequest("abcd"), false);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
