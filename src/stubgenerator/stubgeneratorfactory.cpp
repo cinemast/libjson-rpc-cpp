@@ -9,7 +9,7 @@
 
 #include "stubgeneratorfactory.h"
 #include <jsonrpccpp/common/specificationparser.h>
-
+#include <iostream>
 #include <argtable2.h>
 #include "helper/cpphelper.h"
 #include "client/cppclientstubgenerator.h"
