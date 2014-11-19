@@ -15,7 +15,6 @@ env:
  - HTTP_SERVER=YES HTTP_CLIENT=YES COMPILE_STUBGEN=YES
 
 compiler:
-  - clang
   - gcc
 
 script: 
