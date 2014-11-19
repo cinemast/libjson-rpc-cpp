@@ -115,6 +115,7 @@ bool StubGeneratorFactory::createStubGenerators(int argc, char **argv, vector<Pr
         arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));
         return false;
     }
+    arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));
     return true;
 }
 
