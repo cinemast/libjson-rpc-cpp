@@ -18,7 +18,10 @@ namespace jsonrpc
     class CPPClientStubGenerator : public StubGenerator
     {
         public:
-            CPPClientStubGenerator(const std::string& stubname, std::vector<Procedure> &procedures, CodeGenerator &cg);
+
+
+            CPPClientStubGenerator(const std::string& stubname, std::vector<Procedure> &procedures, std::ostream& outputstream);
+            CPPClientStubGenerator(const std::string& stubname, std::vector<Procedure> &procedures, const std::string filename);
 
             virtual void generateStub();
 

@@ -25,10 +25,17 @@ using namespace jsonrpc;
 #define EXIT_ERROR(X) cerr << X << endl;arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));return 1;
 
 
-StubGenerator::StubGenerator    (const string &stubname, std::vector<Procedure> &procedures, CodeGenerator &cg) :
+StubGenerator::StubGenerator    (const string &stubname, std::vector<Procedure> &procedures, ostream &outputstream) :
+    CodeGenerator               (outputstream),
     stubname                    (stubname),
-    procedures                  (procedures),
-    cg                          (cg)
+    procedures                  (procedures)
+{
+}
+
+StubGenerator::StubGenerator    (const string &stubname, std::vector<Procedure> &procedures, const std::string &filename) :
+    CodeGenerator               (filename),
+    stubname                    (stubname),
+    procedures                  (procedures)
 {
 }
 

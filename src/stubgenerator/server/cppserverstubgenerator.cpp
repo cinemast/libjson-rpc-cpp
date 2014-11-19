@@ -29,52 +29,57 @@ using namespace std;
 using namespace jsonrpc;
 
 
-CPPServerStubGenerator::CPPServerStubGenerator(const std::string &stubname, vector<Procedure> &procedures, CodeGenerator &cg) :
-    StubGenerator(stubname, procedures, cg)
+CPPServerStubGenerator::CPPServerStubGenerator(const std::string &stubname, vector<Procedure> &procedures, ostream &outputstream) :
+    StubGenerator(stubname, procedures, outputstream)
+{
+}
+
+CPPServerStubGenerator::CPPServerStubGenerator(const string &stubname, std::vector<Procedure> &procedures, const string &filename) :
+    StubGenerator(stubname, procedures, filename)
 {
 }
 
 void CPPServerStubGenerator::generateStub()
 {
     vector<string> classname = CPPHelper::splitPackages(this->stubname);
-    CPPHelper::prolog(cg, this->stubname);
+    CPPHelper::prolog(*this, this->stubname);
 
-    cg.writeLine("#include <jsonrpccpp/server.h>");
-    cg.writeNewLine();
+    this->writeLine("#include <jsonrpccpp/server.h>");
+    this->writeNewLine();
 
-    int depth = CPPHelper::namespaceOpen(cg, stubname);
+    int depth = CPPHelper::namespaceOpen(*this, stubname);
 
-    cg.writeLine(replaceAll(TEMPLATE_CPPSERVER_SIGCLASS, "<stubname>", classname.at(classname.size()-1)));
-    cg.writeLine("{");
-    cg.increaseIndentation();
-    cg.writeLine("public:");
-    cg.increaseIndentation();
+    this->writeLine(replaceAll(TEMPLATE_CPPSERVER_SIGCLASS, "<stubname>", classname.at(classname.size()-1)));
+    this->writeLine("{");
+    this->increaseIndentation();
+    this->writeLine("public:");
+    this->increaseIndentation();
 
-    cg.writeLine(replaceAll(TEMPLATE_CPPSERVER_SIGCONSTRUCTOR, "<stubname>", classname.at(classname.size()-1)));
-    cg.writeLine("{");
+    this->writeLine(replaceAll(TEMPLATE_CPPSERVER_SIGCONSTRUCTOR, "<stubname>", classname.at(classname.size()-1)));
+    this->writeLine("{");
     this->generateBindings();
-    cg.writeLine("}");
+    this->writeLine("}");
 
-    cg.writeNewLine();
+    this->writeNewLine();
 
     this->generateProcedureDefinitions();
 
     this->generateAbstractDefinitions();
 
-    cg.decreaseIndentation();
-    cg.decreaseIndentation();
-    cg.writeLine("};");
-    cg.writeNewLine();
+    this->decreaseIndentation();
+    this->decreaseIndentation();
+    this->writeLine("};");
+    this->writeNewLine();
 
-    CPPHelper::namespaceClose(cg, depth);
-    CPPHelper::epilog(cg,this->stubname);
+    CPPHelper::namespaceClose(*this, depth);
+    CPPHelper::epilog(*this,this->stubname);
 }
 
 
 void CPPServerStubGenerator::generateBindings()
 {
     string tmp;
-    this->cg.increaseIndentation();
+    this->increaseIndentation();
     for(vector<Procedure>::iterator it = this->procedures.begin(); it != this->procedures.end(); ++it)
     {
         Procedure &proc = *it;
@@ -100,9 +105,9 @@ void CPPServerStubGenerator::generateBindings()
             replaceAll2(tmp, "<paramtype>", "jsonrpc::PARAMS_BY_POSITION");
         }
 
-        this->cg.writeLine(tmp);
+        this->writeLine(tmp);
     }
-    this->cg.decreaseIndentation();
+    this->decreaseIndentation();
 }
 
 void CPPServerStubGenerator::generateProcedureDefinitions()
@@ -111,24 +116,24 @@ void CPPServerStubGenerator::generateProcedureDefinitions()
     {
         Procedure &proc = *it;
         if(proc.GetProcedureType() == RPC_METHOD)
-            this->cg.writeLine(replaceAll(TEMPLATE_CPPSERVER_SIGMETHOD, "<procedurename>", proc.GetProcedureName()));
+            this->writeLine(replaceAll(TEMPLATE_CPPSERVER_SIGMETHOD, "<procedurename>", proc.GetProcedureName()));
         else
-            this->cg.writeLine(replaceAll(TEMPLATE_CPPSERVER_SIGNOTIFICATION, "<procedurename>", proc.GetProcedureName()));
+            this->writeLine(replaceAll(TEMPLATE_CPPSERVER_SIGNOTIFICATION, "<procedurename>", proc.GetProcedureName()));
 
-        this->cg.writeLine("{");
-        this->cg.increaseIndentation();
+        this->writeLine("{");
+        this->increaseIndentation();
         if (proc.GetParameters().empty())
-            cg.writeLine("(void)request;");
+            this->writeLine("(void)request;");
 
         if (proc.GetProcedureType() == RPC_METHOD)
-            this->cg.write("response = ");
-        cg.write("this->");
-        cg.write(CPPHelper::normalizeString(proc.GetProcedureName())+"(");
+            this->write("response = ");
+        this->write("this->");
+        this->write(CPPHelper::normalizeString(proc.GetProcedureName())+"(");
         this->generateParameterMapping(proc);
-        cg.writeLine(");");
+        this->writeLine(");");
 
-        this->cg.decreaseIndentation();
-        this->cg.writeLine("}");
+        this->decreaseIndentation();
+        this->writeLine("}");
     }
 }
 
@@ -147,7 +152,7 @@ void CPPServerStubGenerator::generateAbstractDefinitions()
         replaceAll2(tmp, "<returntype>", returntype);
         replaceAll2(tmp, "<procedurename>", proc.GetProcedureName());
         replaceAll2(tmp, "<parameterlist>", CPPHelper::generateParameterDeclarationList(proc));
-        cg.writeLine(tmp);
+        this->writeLine(tmp);
     }
 }
 
@@ -180,10 +185,10 @@ void CPPServerStubGenerator::generateParameterMapping(Procedure &proc)
             tmp2 << "request["<< i << "u]" << CPPHelper::toCppConversion(it2->second);
             tmp = tmp2.str();
         }
-        this->cg.write(tmp);
+        this->write(tmp);
         if(it2 != --params.end())
         {
-            this->cg.write(", ");
+            this->write(", ");
         }
         i++;
     }

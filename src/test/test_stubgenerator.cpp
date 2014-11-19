@@ -17,6 +17,7 @@
 #include <stubgenerator/client/cppclientstubgenerator.h>
 #include <stubgenerator/client/jsclientstubgenerator.h>
 #include <stubgenerator/helper/cpphelper.h>
+#include <stubgenerator/stubgeneratorfactory.h>
 
 #include <sstream>
 
@@ -29,8 +30,7 @@ BOOST_AUTO_TEST_CASE(test_stubgen_cppclient)
 {
     stringstream stream;
     vector<Procedure> procedures = SpecificationParser::GetProceduresFromFile("testspec6.json");
-    CodeGenerator cg(stream);
-    CPPClientStubGenerator stubgen("ns1::ns2::TestStubClient", procedures, cg);
+    CPPClientStubGenerator stubgen("ns1::ns2::TestStubClient", procedures, stream);
     stubgen.generateStub();
     string result = stream.str();
 
@@ -52,8 +52,7 @@ BOOST_AUTO_TEST_CASE(test_stubgen_cppserver)
 {
     stringstream stream;
     vector<Procedure> procedures = SpecificationParser::GetProceduresFromFile("testspec6.json");
-    CodeGenerator cg(stream);
-    CPPServerStubGenerator stubgen("ns1::ns2::TestStubServer", procedures, cg);
+    CPPServerStubGenerator stubgen("ns1::ns2::TestStubServer", procedures, stream);
     stubgen.generateStub();
     string result = stream.str();
 
@@ -73,8 +72,7 @@ BOOST_AUTO_TEST_CASE(test_stubgen_jsclient)
 {
     stringstream stream;
     vector<Procedure> procedures = SpecificationParser::GetProceduresFromFile("testspec6.json");
-    CodeGenerator cg(stream);
-    JSClientStubGenerator stubgen("TestStubClient", procedures, cg);
+    JSClientStubGenerator stubgen("TestStubClient", procedures, stream);
     stubgen.generateStub();
     string result = stream.str();
 
@@ -87,7 +85,7 @@ BOOST_AUTO_TEST_CASE(test_stubgen_jsclient)
     BOOST_CHECK_EQUAL(JSClientStubGenerator::class2Filename("TestClass"), "testclass.js");
 }
 
-BOOST_AUTO_TEST_CASE(tst_stubgen_indentation)
+BOOST_AUTO_TEST_CASE(test_stubgen_indentation)
 {
     stringstream stream;
     CodeGenerator cg(stream);
@@ -104,6 +102,68 @@ BOOST_AUTO_TEST_CASE(tst_stubgen_indentation)
     BOOST_CHECK_EQUAL(stream2.str(), "\tabc");
 }
 
+BOOST_AUTO_TEST_CASE(test_stubgen_factory_help)
+{
+    vector<StubGenerator*> stubgens;
+    vector<Procedure> procedures;
+    const char* argv[2] = {"jsonrpcstub","-h"};
+
+    BOOST_CHECK_EQUAL(StubGeneratorFactory::createStubGenerators(2, (char**)argv, procedures, stubgens), true);
+    BOOST_CHECK_EQUAL(stubgens.empty(), true);
+    BOOST_CHECK_EQUAL(procedures.empty(), true);
+}
+
+BOOST_AUTO_TEST_CASE(test_stubgen_factory_error)
+{
+    vector<StubGenerator*> stubgens;
+    vector<Procedure> procedures;
+    const char* argv[2] = {"jsonrpcstub","--cpp-client=TestClient"};
+
+    BOOST_CHECK_EQUAL(StubGeneratorFactory::createStubGenerators(2, (char**)argv, procedures, stubgens), false);
+    BOOST_CHECK_EQUAL(stubgens.empty(), true);
+    BOOST_CHECK_EQUAL(procedures.empty(), true);
+
+    vector<StubGenerator*> stubgens2;
+    vector<Procedure> procedures2;
+    const char* argv2[2] = {"jsonrpcstub","--cpxp-client=TestClient"};
+
+    BOOST_CHECK_EQUAL(StubGeneratorFactory::createStubGenerators(2, (char**)argv2, procedures2, stubgens2), false);
+    BOOST_CHECK_EQUAL(stubgens2.empty(), true);
+    BOOST_CHECK_EQUAL(procedures2.empty(), true);
+
+    vector<StubGenerator*> stubgens3;
+    vector<Procedure> procedures3;
+    const char* argv3[3] = {"jsonrpcstub", "testspec1.json", "--cpp-client=TestClient"};
+
+    BOOST_CHECK_EQUAL(StubGeneratorFactory::createStubGenerators(3, (char**)argv3, procedures3, stubgens3), false);
+    BOOST_CHECK_EQUAL(stubgens3.empty(), true);
+    BOOST_CHECK_EQUAL(procedures3.empty(), true);
+}
+
+BOOST_AUTO_TEST_CASE(test_stubgen_factory_success)
+{
+    vector<StubGenerator*> stubgens;
+    vector<Procedure> procedures;
+    const char* argv[5] = {"jsonrpcstub", "testspec6.json", "--js-client=TestClient", "--cpp-client=TestClient", "--cpp-server=TestServer"};
+
+    BOOST_CHECK_EQUAL(StubGeneratorFactory::createStubGenerators(5, (char**)argv, procedures, stubgens), true);
+    BOOST_CHECK_EQUAL(stubgens.size(), 3);
+    BOOST_CHECK_EQUAL(procedures.size(), 7);
+
+    StubGeneratorFactory::deleteStubGenerators(stubgens);
+}
+
+BOOST_AUTO_TEST_CASE(test_stubgen_factory_fileoverride)
+{
+    vector<StubGenerator*> stubgens;
+    vector<Procedure> procedures;
+    const char* argv[9] = {"jsonrpcstub", "testspec6.json", "--js-client=TestClient", "--cpp-client=TestClient", "--cpp-server=TestServer", "--cpp-client-file=client.h", "--cpp-server-file=server.h", "--js-client-file=client.js", "-v"};
+
+    BOOST_CHECK_EQUAL(StubGeneratorFactory::createStubGenerators(9, (char**)argv, procedures, stubgens), true);
+    BOOST_CHECK_EQUAL(stubgens.size(), 3);
+    BOOST_CHECK_EQUAL(procedures.size(), 7);
+    StubGeneratorFactory::deleteStubGenerators(stubgens);
+}
 
 BOOST_AUTO_TEST_SUITE_END()
 #endif
