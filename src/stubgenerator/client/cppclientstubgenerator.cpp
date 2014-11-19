@@ -74,7 +74,7 @@ void CPPClientStubGenerator::generateStub()
 void CPPClientStubGenerator::generateMethod(Procedure &proc)
 {
     string procsignature = TEMPLATE_CPPCLIENT_SIGMETHOD;
-    string returntype = CPPHelper::toCppType(proc.GetReturnType());
+    string returntype = CPPHelper::toCppReturntype(proc.GetReturnType());
     if (proc.GetProcedureType() == RPC_NOTIFICATION)
         returntype = "void";
 

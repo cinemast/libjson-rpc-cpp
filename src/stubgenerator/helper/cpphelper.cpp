@@ -106,13 +106,26 @@ string  CPPHelper::generateParameterDeclarationList (Procedure &proc)
     parameterNameList_t list = proc.GetParameters();
     for (parameterNameList_t::iterator it = list.begin(); it != list.end();)
     {
-        param_string << toCppType(it->second, true, true) << " " << it->first;
+        param_string << toCppParamType(it->second) << " " << it->first;
         if (++it != list.end())
         {
             param_string << ", ";
         }
     }
     return param_string.str();
+}
+
+string CPPHelper::toCppReturntype(jsontype_t type)
+{
+    return toCppType(type, false, false);
+}
+
+string CPPHelper::toCppParamType(jsontype_t type)
+{
+    if (type == JSON_ARRAY || type == JSON_OBJECT || type == JSON_STRING)
+        return toCppType(type, true, true);
+    else
+        return toCppType(type, false, false);
 }
 
 string CPPHelper::class2Filename(const string &classname)

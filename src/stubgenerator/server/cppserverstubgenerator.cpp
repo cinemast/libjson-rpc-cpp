@@ -147,7 +147,7 @@ void CPPServerStubGenerator::generateAbstractDefinitions()
         string returntype ="void";
         if(proc.GetProcedureType() == RPC_METHOD)
         {
-            returntype = CPPHelper::toCppType(proc.GetReturnType());
+            returntype = CPPHelper::toCppReturntype(proc.GetReturnType());
         }
         replaceAll2(tmp, "<returntype>", returntype);
         replaceAll2(tmp, "<procedurename>", proc.GetProcedureName());

@@ -27,6 +27,9 @@ namespace jsonrpc
             static std::string toString         (jsontype_t type);
             static std::string generateParameterDeclarationList(Procedure& proc);
 
+            static std::string toCppReturntype  (jsontype_t type);
+            static std::string toCppParamType   (jsontype_t type);
+
             static std::string class2Filename(const std::string &classname);
             static std::vector<std::string> splitPackages(const std::string &classname);
 
