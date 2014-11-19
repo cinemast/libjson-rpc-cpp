@@ -83,7 +83,7 @@ BOOST_FIXTURE_TEST_CASE(test_http_client_timeout, F)
     string result;
     BOOST_CHECK_EXCEPTION(client.SendRPCMessage("Test", result), JsonRpcException, check_exception1);
     handler.timeout = 0;
-    client.SetTimeout(1000);
+    client.SetTimeout(10000);
     handler.response = "asdf";
     client.SendRPCMessage("", result);
     BOOST_CHECK_EQUAL(result, "asdf");
