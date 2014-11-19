@@ -83,15 +83,12 @@ void HttpClient::SendRPCMessage(const std::string& message, std::string& result)
     if (res != CURLE_OK)
     {
         std::stringstream str;
-        switch(res)
-        {
-            case 7: str << "Could not connect to " << this->url;
-                break;
-            case 28: str << "Operation timed out";
-                break;
-            default:
-                str << "libcurl error: " << res;
-        }
+        str << "libcurl error: " << res;
+
+        if (res == 7)
+            str << " -> Could not connect to " << this->url;
+        else if(res == 28)
+            str << " -> Operation timed out";
         curl_easy_cleanup(curl);
         throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, str.str());
     }
