@@ -65,6 +65,7 @@ BOOST_FIXTURE_TEST_CASE(test_http_success, F)
     BOOST_CHECK_EQUAL(result, "exampleresponse");
 }
 
+#ifndef WIN32
 BOOST_AUTO_TEST_CASE(test_http_server_multiplestart)
 {
     HttpServer server(TEST_PORT);
@@ -75,6 +76,7 @@ BOOST_AUTO_TEST_CASE(test_http_server_multiplestart)
 
     BOOST_CHECK_EQUAL(server.StopListening(), true);
 }
+#endif
 
 BOOST_FIXTURE_TEST_CASE(test_http_client_timeout, F)
 {
