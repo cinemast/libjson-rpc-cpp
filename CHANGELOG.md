@@ -3,9 +3,11 @@ Changes in v0.4
 - Memory leak fixes
 - Switched Http Server to libmicrohttpd
 - Added full WIN32 build support
-- Improved test coverage (especially HttpServer and HttpClient)
+- Improved test coverage (100% line coverage)
 - Added JavaScript client stub support
 - Removed TCP Client/Server implementation due to security and codestyle problems.
+- Finally removed dirty pointer stuff in bindAndAddX() methods.
+- Using call by value in generated stubs for primitive data types.
 
 Changes in v0.3.2
 -----------------

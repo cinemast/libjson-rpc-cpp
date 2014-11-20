@@ -111,8 +111,7 @@ This example will show the most simple way to create a rpc server and client. If
 		"returns" : "Hello Peter"
 	},
 	{
-		"name" : "notifyServer",
-		"params": null
+		"name" : "notifyServer"
 	}
 ]
 ```
@@ -178,7 +177,7 @@ In the main function the concrete server is instantiated and started. That is al
 Compile the server with:
 
 ```sh
-g++ main.cpp -ljsonrpccpp-server -ljsoncpp -ljsonrpccpp-common -o sampleserver
+g++ main.cpp -ljsoncpp -lmicrohttpd -ljsonrpccpp-common -ljsonrpccpp-server -o sampleserver
 ```
 
 ### Step 4: Create the client application
@@ -210,7 +209,7 @@ int main()
 Compile the client with:
 
 ```sh
-g++ main.cpp -ljsonrpccpp-client -ljsoncpp -ljsonrpccpp-common -lcurl -o sampleclient
+g++ main.cpp -ljsoncpp -lcurl -ljsonrpccpp-common -ljsonrpccpp-client -o sampleclient
 ```
 
 References
