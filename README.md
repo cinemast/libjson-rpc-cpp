@@ -14,13 +14,13 @@ It is fully JSON-RPC [2.0 & 1.0 compatible](http://www.jsonrpc.org/specification
 - Full JSON-RPC 2.0 & 1.0 Client and Server Support.
 - jsonrpcstub - a tool that generates stub-classes for your JSON-RPC client AND server applications.
 - Ready to use HTTP server and client to provide simple interfaces for your JSON-RPC application.
-- Cross platform build support and [precompiled binaries for WIN32](https://spiessknafl.at/libjson-rpc-cpp/libjson-rpc-cpp_win32.zip).
+- Cross platform build support and [precompiled binaries for WIN32](https://spiessknafl.at/libjson-rpc-cpp/libjson-rpc-cpp-0.4.0-win32.exe).
 - Super liberal [MIT-License](http://en.wikipedia.org/wiki/MIT_License). 
 
 **Other good reasons to use libjson-rpc-cpp**
 - Easy to use [cmake](http://www.cmake.org) cross platform build system.
 - Clean and simple architecture, which makes it easy to extend.
-- Tested under MacOS X (10.9), Linux (Debian 8 64-bit), Windows 7 x64 and Raspbian Wheezy (armhf).
+- Tested under MacOS X (10.9), Linux (Debian 8 64-bit), Windows 7 (MinGW32) and Raspbian Wheezy (armhf).
 - Automated testing using `make test`.
 - Useful Examples provided. e.g. XBMC Remote using json-rpc client part and stub generator.
 - The stubgenerator currently supports C++ and JavaScript.
@@ -62,7 +62,7 @@ There is a ready to use compiled package for WIN32 [here](https://spiessknafl.at
 If you want to compile on your own, here is how:
 
 - You will need [Git](http://git-scm.com/downloads) and [CMake](http://www.cmake.org/cmake/resources/software.html).
-- Download the precompiled dependencies form [here](https://spiessknafl.at/libjson-rpc-cpp/win32-deps.zip).
+- Download the precompiled dependencies form [here](https://spiessknafl.at/libjson-rpc-cpp/libjson-rpc-cpp_win32-deps.zip).
 - Extract it into the cloned repository, so that there is a `win32-deps` folder in the root project directory.
 
 Build and install this framework
@@ -230,9 +230,6 @@ Developer Information
 
 Roadmap for next release
 ------------------------
-- Official win32/64 build support.
-- Review socket connectors
-- libmicrohttpd server connector (to replace mongoose, because of license issues)
 - Generate client stubs for other languages.
 
 Changelogs
