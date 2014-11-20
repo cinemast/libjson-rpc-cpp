@@ -25,6 +25,11 @@ IF(COMPILE_STUBGEN)
 ENDIF()
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src)
+IF(WIN32)
+    INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
+    LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+ENDIF()
+
 
 add_executable(unit_testsuite ${test_source})
 target_link_libraries(unit_testsuite ${testlibs})
