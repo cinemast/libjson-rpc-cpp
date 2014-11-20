@@ -25,7 +25,7 @@ SET(COMPILE_EXAMPLES YES CACHE BOOL "Compile example programs")
 IF(WIN32)
 	include_directories(${CMAKE_SOURCE_DIR}/win32-deps/include)
 	SET(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/dist)
-        SET(BOOST_ROOT "C:\boost_1_57_0")
+        SET(BOOST_ROOT "C:/boost_1_57_0")
 ENDIF()
 
 #the core framework
