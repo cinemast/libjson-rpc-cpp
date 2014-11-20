@@ -31,13 +31,6 @@ ENDIF()
 #the core framework
 add_subdirectory(src/jsonrpccpp)
 
-#the test suite
-find_package(Boost COMPONENTS unit_test_framework)
-IF(Boost_FOUND AND COMPILE_TESTS)
-    ENABLE_TESTING()
-    add_subdirectory(src/test)
-ENDIF()
-
 #the stubgenerator
 IF(COMPILE_STUBGEN)
     add_subdirectory(src/stubgenerator)
@@ -47,6 +40,14 @@ ENDIF()
 IF(COMPILE_EXAMPLES AND HTTP_SERVER AND HTTP_CLIENT)
     add_subdirectory(src/examples)
 ENDIF()
+
+#the test suite
+find_package(Boost COMPONENTS unit_test_framework)
+IF(Boost_FOUND AND COMPILE_TESTS)
+    ENABLE_TESTING()
+    add_subdirectory(src/test)
+ENDIF()
+
 
 # uninstall target
 configure_file(
