@@ -57,7 +57,7 @@ brew install argtable cmake jsoncpp libmicrohttpd
 
 **Windows**
 
-There is a ready to use compiled package for WIN32 [here](https://spiessknafl.at/libjson-rpc-cpp/libjson-rpc-cpp_win32.zip).
+There is a ready to use compiled package for WIN32 [here](https://spiessknafl.at/libjson-rpc-cpp/libjson-rpc-cpp-0.4.0-win32.exe).
 
 If you want to compile on your own, here is how:
 
