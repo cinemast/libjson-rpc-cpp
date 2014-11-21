@@ -1,3 +1,14 @@
+Changes in v0.4
+---------------
+- Memory leak fixes
+- Switched Http Server to libmicrohttpd
+- Added full WIN32 build support
+- Improved test coverage (100% line coverage)
+- Added JavaScript client stub support
+- Removed TCP Client/Server implementation due to security and codestyle problems.
+- Finally removed dirty pointer stuff in bindAndAddX() methods.
+- Using call by value in generated stubs for primitive data types.
+
 Changes in v0.3.2
 -----------------
 - Bugfixes
@@ -48,4 +59,4 @@ Changes in v0.2
 
 Known issues
 -------------
-- Due to a bug in gcc 4.6.2 this project is not compiling under Mac OS gcc. Use clang++ instead. [See here](http://stackoverflow.com/questions/8887864/template-base-constructor-call-in-member-initialization-list-error)
+- Under Ubuntu 12.04 SSL support is not enabled in the libmicrohttpd-dev package that is provided by ubuntu. Look at the [.travis.yml](https://github.com/cinemast/libjson-rpc-cpp/blob/develop/.travis.yml) file to see how I cope with this.

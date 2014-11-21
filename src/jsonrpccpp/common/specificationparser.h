@@ -21,11 +21,12 @@ namespace jsonrpc {
             static std::vector<Procedure> GetProceduresFromFile(const std::string& filename)    throw (JsonRpcException);
             static std::vector<Procedure> GetProceduresFromString(const std::string& spec)      throw (JsonRpcException);
 
+            static void         GetFileContent  (const std::string& filename, std::string& target);
+
         private:
             static void         GetProcedure    (Json::Value& val, Procedure &target);
             static void         GetMethod       (Json::Value& val, Procedure &target);
             static void         GetNotification (Json::Value& val, Procedure &target);
-            static void         GetFileContent  (const std::string& filename, std::string& target);
             static jsontype_t   toJsonType      (Json::Value& val);
 
             static void         GetPositionalParameters (Json::Value &val, Procedure &target);

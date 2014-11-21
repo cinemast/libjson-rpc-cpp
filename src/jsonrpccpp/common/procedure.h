@@ -34,7 +34,7 @@ namespace jsonrpc
              * If no parameters are passed, parameters either do not exist, or cannot be checked for type compliance by the library.
              * @param name
              */
-            Procedure(const std::string name, parameterDeclaration_t paramType, ...);
+            Procedure(const std::string& name, parameterDeclaration_t paramType, ...);
 
             /**
              * @brief Constructor for method with parameters as va_list. The last parameter must be NULL.
@@ -42,7 +42,7 @@ namespace jsonrpc
              * @param name
              * @param returntype
              */
-            Procedure(const std::string name, parameterDeclaration_t paramType, jsontype_t returntype, ...);
+            Procedure(const std::string& name, parameterDeclaration_t paramType, jsontype_t returntype, ...);
 
 
             /**

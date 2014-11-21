@@ -61,5 +61,5 @@ string BatchResponse::getErrorMessage(int id)
 
 bool BatchResponse::hasErrors()
 {
-    return errorResponses.size() > 0;
+    return !errorResponses.empty();
 }

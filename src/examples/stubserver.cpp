@@ -10,6 +10,7 @@
 
 #include "gen/abstractsubserver.h"
 #include <jsonrpccpp/server/connectors/httpserver.h>
+#include <stdio.h>
 
 using namespace jsonrpc;
 using namespace std;
@@ -21,10 +22,10 @@ class MyStubServer : public AbstractStubServer
 
         virtual void notifyServer();
         virtual std::string sayHello(const std::string& name);
-        virtual int addNumbers(const int& param1, const int& param2);
-        virtual double addNumbers2(const double &param1, const double &param2);
+        virtual int addNumbers(int param1, int param2);
+        virtual double addNumbers2(double param1, double param2);
         virtual bool isEqual(const std::string& str1, const std::string &str2);
-        virtual Json::Value buildObject(const std::string &name, const int &age);
+        virtual Json::Value buildObject(const std::string &name, int age);
         virtual std::string methodWithoutParameters();
 
 };
@@ -44,12 +45,12 @@ string MyStubServer::sayHello(const string &name)
     return "Hello " + name;
 }
 
-int MyStubServer::addNumbers(const int &param1, const int &param2)
+int MyStubServer::addNumbers(int param1, int param2)
 {
     return param1 + param2;
 }
 
-double MyStubServer::addNumbers2(const double &param1, const double &param2)
+double MyStubServer::addNumbers2(double param1, double param2)
 {
     return param1 + param2;
 }
@@ -59,7 +60,7 @@ bool MyStubServer::isEqual(const string &str1, const string &str2)
     return str1 == str2;
 }
 
-Json::Value MyStubServer::buildObject(const string &name, const int &age)
+Json::Value MyStubServer::buildObject(const string &name, int age)
 {
     Json::Value result;
     result["name"] = name;

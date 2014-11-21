@@ -31,7 +31,7 @@ int main()
         cout << "Build object: " << c.buildObject("Peter", 1990) << endl;
 
     }
-    catch (JsonRpcException e)
+    catch (JsonRpcException& e)
     {
         cerr << e.what() << endl;
     }

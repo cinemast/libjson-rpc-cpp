@@ -52,7 +52,7 @@ void Client::CallProcedures(const BatchCall &calls, BatchResponse &result) throw
                 int id = this->protocol->HandleResponse(tmpresult[i], singleResult);
                 result.addResponse(id, singleResult, false);
             }
-            catch (JsonRpcException ex) {
+            catch (JsonRpcException& ex) {
                 int id = -1;
                 if(tmpresult[i].isMember("id") && tmpresult[i]["id"].isInt())
                     id = tmpresult[i]["id"].asInt();
@@ -71,8 +71,7 @@ BatchResponse Client::CallProcedures(const BatchCall &calls) throw(JsonRpcExcept
     return result;
 }
 
-Json::Value Client::CallMethod(const std::string& name,
-                               const Json::Value& parameter) throw(JsonRpcException)
+Json::Value Client::CallMethod(const std::string& name, const Json::Value& parameter) throw(JsonRpcException)
 {
     Json::Value result;
     this->CallMethod(name, parameter, result);

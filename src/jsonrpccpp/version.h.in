@@ -7,11 +7,11 @@
  * @license See attached LICENSE.txt
  ************************************************************************/
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#ifndef JSONRPC_CPP_VERSION_H_
+#define JSONRPC_CPP_VERSION_H_
 
-#define JSON_RPC_CPP_MAJOR_VERSION @MAJOR_VERSION@
-#define JSON_RPC_CPP_MINOR_VERSION @MINOR_VERSION@
-#define JSON_RPC_CPP_PATCH_VERSION @PATCH_VERSION@
+#define JSONRPC_CPP_MAJOR_VERSION @MAJOR_VERSION@
+#define JSONRPC_CPP_MINOR_VERSION @MINOR_VERSION@
+#define JSONRPC_CPP_PATCH_VERSION @PATCH_VERSION@
 
-#endif /* VERSION_H_ */
+#endif /* JSONRPC_CPP_VERSION_H_ */

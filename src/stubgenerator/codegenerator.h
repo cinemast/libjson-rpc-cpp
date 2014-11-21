@@ -30,9 +30,6 @@ namespace jsonrpc
             void increaseIndentation();
             void decreaseIndentation();
 
-            void operator++();
-            void operator--();
-
             void setIndentSymbol(const std::string &symbol);
 
         private:

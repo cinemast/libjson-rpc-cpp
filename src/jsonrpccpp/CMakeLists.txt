@@ -40,40 +40,19 @@ configure_file (
 install(FILES ${PROJECT_BINARY_DIR}/version.h DESTINATION include/jsonrpccpp) 
 
 
-IF(HTTP_CLIENT_CURL)
+IF(HTTP_CLIENT)
     find_package(CURL REQUIRED)
     list(APPEND client_connector_header "client/connectors/httpclient.h")
     list(APPEND client_connector_source "client/connectors/httpclient.cpp")
     list(APPEND client_connector_libs ${CURL_LIBRARIES})
 ENDIF()
 
-IF(HTTP_SERVER_MONGOOSE)
-    message(STATUS "Activated Mongoose HTTP Server")
-    list(APPEND server_connector_header "server/connectors/mongoose.h")
-    list(APPEND server_connector_source "server/connectors/mongoose.c")
+IF(HTTP_SERVER)
+    message(STATUS "Activated libmicrohttpd HTTP Server")
+    find_package(MHD REQUIRED)
     list(APPEND server_connector_header "server/connectors/httpserver.h")
     list(APPEND server_connector_source "server/connectors/httpserver.cpp")
-    list(APPEND server_connector_libs ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT})
-ENDIF()
-
-IF(SOCKET_CLIENT)
-    find_package(Threads REQUIRED)
-    list(APPEND client_connector_header "client/connectors/socketclient.h")
-    list(APPEND client_connector_source "client/connectors/socketclient.cpp")
-ENDIF()
-
-IF(SOCKET_SERVER)
-    find_package(Threads REQUIRED)
-    list(APPEND server_connector_header "server/connectors/socketserver.h")
-    list(APPEND server_connector_source "server/connectors/socketserver.cpp")
-    list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT})
-
-ENDIF()
-
-IF(SOCKET_CLIENT OR SOCKET_SERVER)
-    list(APPEND jsonrpc_helper_header_common "common/helper/socket.h")
-    list(APPEND jsonrpc_helper_header_common "common/helper/threads.h")
-    list(APPEND jsonrpc_helper_source_common "common/helper/threads.cpp")
+    list(APPEND server_connector_libs ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} ${MHD_LIBRARIES})
 ENDIF()
 
 add_library(jsonrpccommon SHARED ${jsonrpc_source_common} ${jsonrpc_header} ${jsonrpc_helper_source_common})
@@ -110,6 +89,13 @@ install(FILES ${jsonrpc_header_client}          DESTINATION include/jsonrpccpp/c
 install(FILES ${jsonrpc_header_server}          DESTINATION include/jsonrpccpp/server)
 install(FILES ${client_connector_header}        DESTINATION include/jsonrpccpp/client/connectors)
 install(FILES ${server_connector_header}        DESTINATION include/jsonrpccpp/server/connectors)
+
+IF(WIN32)
+    file(GLOB win32_libs ${CMAKE_SOURCE_DIR}/win32-deps/lib/*.dll)
+    file(COPY ${win32_libs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+    install(FILES ${win32_libs} DESTINATION bin)
+    install(DIRECTORY ${CMAKE_SOURCE_DIR}/win32-deps/include DESTINATION .)
+ENDIF()
 
 install(TARGETS jsonrpccommon jsonrpccommonStatic jsonrpcclient jsonrpcclientStatic jsonrpcserver jsonrpcserverStatic
                       LIBRARY DESTINATION lib

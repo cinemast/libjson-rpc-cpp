@@ -49,6 +49,7 @@ namespace jsonrpc
             bool OnRequest(const std::string& request, void* addInfo = NULL);
 
             void SetHandler(IClientConnectionHandler* handler);
+            IClientConnectionHandler* GetHandler();
 
         private:
             IClientConnectionHandler *handler;

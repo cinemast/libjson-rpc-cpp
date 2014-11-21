@@ -64,24 +64,23 @@ namespace jsonrpc
             }
 
         protected:
-            virtual bool bindAndAddMethod(Procedure* proc, methodPointer_t pointer)
+            bool bindAndAddMethod(const Procedure& proc, methodPointer_t pointer)
             {
-                if(proc->GetProcedureType() == RPC_METHOD)
+                if(proc.GetProcedureType() == RPC_METHOD && !this->symbolExists(proc.GetProcedureName()))
                 {
-                    this->handler->AddProcedure(*proc);
-                    this->methods[proc->GetProcedureName()] = pointer;
+                    this->handler->AddProcedure(proc);
+                    this->methods[proc.GetProcedureName()] = pointer;
                     return true;
                 }
                 return false;
             }
 
-            virtual bool bindAndAddNotification(Procedure* proc, notificationPointer_t pointer)
+            bool bindAndAddNotification(const Procedure& proc, notificationPointer_t pointer)
             {
-                if(proc->GetProcedureType() == RPC_NOTIFICATION)
+                if(proc.GetProcedureType() == RPC_NOTIFICATION && !this->symbolExists(proc.GetProcedureName()))
                 {
-                    this->handler->AddProcedure(*proc);
-                    this->notifications[proc->GetProcedureName()] = pointer;
-                    delete proc;
+                    this->handler->AddProcedure(proc);
+                    this->notifications[proc.GetProcedureName()] = pointer;
                     return true;
                 }
                 return false;
@@ -92,6 +91,15 @@ namespace jsonrpc
             IProtocolHandler                                *handler;
             std::map<std::string, methodPointer_t>          methods;
             std::map<std::string, notificationPointer_t>    notifications;
+
+            bool symbolExists(const std::string &name)
+            {
+                if (methods.find(name) != methods.end())
+                    return true;
+                if (notifications.find(name) != notifications.end())
+                    return true;
+                return false;
+            }
     };
 
 } /* namespace jsonrpc */

@@ -27,7 +27,7 @@ namespace jsonrpc
         public:
             virtual ~IProtocolHandler(){}
 
-            virtual void AddProcedure(Procedure& procedure) = 0;
+            virtual void AddProcedure(const Procedure& procedure) = 0;
     };
 }
 

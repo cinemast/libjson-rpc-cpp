@@ -13,7 +13,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <termios.h>
+#include <time.h>
+#ifndef WIN32
+    #include <termios.h>
+#else
+    #include <conio.h>
+#endif
 #include <unistd.h>
 #include <time.h>
 
@@ -22,80 +27,53 @@
 using namespace jsonrpc;
 using namespace std;
 
-#ifdef __APPLE__
-//Taken from: http://stackoverflow.com/questions/312185/kbhit-in-mac
-int kbhit_mac() {
-    char ch;
-    int error;
-    static struct termios Otty, Ntty;
-    fflush(stdout);
-    tcgetattr(0, &Otty);
-    Ntty = Otty;
-    Ntty.c_iflag  =  0;		/* input mode		*/
-    Ntty.c_oflag  =  0;		/* output mode		*/
-    Ntty.c_lflag &= ~ICANON;	/* line settings 	*/
-#if 1
-    /* disable echoing the char as it is typed */
-    Ntty.c_lflag &= ~ECHO;	/* disable echo 	*/
-#else
-    /* enable echoing the char as it is typed */
-    Ntty.c_lflag |=  ECHO;	/* enable echo	 	*/
-#endif
-    Ntty.c_cc[VMIN]  = CMIN;	/* minimum chars to wait for */
-    Ntty.c_cc[VTIME] = CTIME;	/* minimum wait time	*/
-#if 1
-    /*
-    * use this to flush the input buffer before blocking for new input
-    */
-    #define FLAG TCSAFLUSH
-#else
-    /*
-    * use this to return a char from the current input buffer, or block if
-    * no input is waiting.
-    */
-    #define FLAG TCSANOW
-#endif
-    if ((error = tcsetattr(0, FLAG, &Ntty)) == 0) {
-        error  = read(0, &ch, 1 );	      /* get char from stdin */
-        error += tcsetattr(0, FLAG, &Otty);   /* restore old settings */
-    }
-    return (error == 1 ? (int) ch : -1 );
-}
-#else
 //Taken from: http://stackoverflow.com/questions/2984307/c-key-pressed-in-linux-console
-int kbhit_linux() {
-    static int ch = -1, fd = 0;
+int kbhit() {
+    int ch;
+#ifndef WIN32
     struct termios neu, alt;
-    fd = fileno(stdin);
+    int fd = fileno(stdin);
     tcgetattr(fd, &alt);
     neu = alt;
     neu.c_lflag &= ~(ICANON|ECHO);
     tcsetattr(fd, TCSANOW, &neu);
     ch = getchar();
     tcsetattr(fd, TCSANOW, &alt);
+#else
+    while (!_kbhit()) {
+        usleep(100000);
+    }
+    ch = _getch();
+#endif
     return ch;
 }
-#endif
+
+
 int main(int argc, char** argv) {
 
     if(argc < 2)
     {
-        cerr << "Provide XBMC API URL as argument! e.g.: " << argv[0] << " 127.0.0.1:8080/jsonrpc" << endl;
+        cerr << "Provide XBMC API URL as argument! e.g.: " << argv[0] << " http://127.0.0.1:8080/jsonrpc" << endl;
         return -1;
     }
     else
     {
-        cout << "XBMC Remote: a,s,d,w for navigation, enter for select, escape or backspace for back button" << endl;
+        cout << "XBMC Remote control" << endl;
+        cout << "\ta -> left" << endl;
+        cout << "\td -> right" << endl;
+        cout << "\tw -> up" << endl;
+        cout << "\td -> down" << endl;
+        cout << "\tEsc -> back" << endl;
+        cout << "\tEnter -> select" << endl;
+        cout << "\tx -> exit application" << endl;
+
         try {
             HttpClient httpclient(argv[1]);
             XbmcRemoteClient stub(httpclient);
-            int key = 0;
-            for (;;) {
-#ifdef __APPLE__
-                key = kbhit_mac();
-#else
-                key = kbhit_linux();
-#endif
+            bool run = true;
+            while (run) {
+
+                int key = kbhit();
                 switch(key) {
                     case 97: stub.Input_Left();
                         break;
@@ -111,10 +89,11 @@ int main(int argc, char** argv) {
                     case 127:
                     case 27: stub.Input_Back();
                         break;
+                    case 120: run = false;
+                        break;
                 }
-                cout << "Pressed: " << key << endl;
             }
-        } catch(jsonrpc::JsonRpcException e) {
+        } catch(JsonRpcException& e) {
             cerr << e.what() << endl;
         }
     }

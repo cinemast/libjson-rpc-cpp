@@ -42,3 +42,8 @@ void AbstractServerConnector::SetHandler(IClientConnectionHandler* handler)
 {
     this->handler = handler;
 }
+
+IClientConnectionHandler *AbstractServerConnector::GetHandler()
+{
+    return this->handler;
+}

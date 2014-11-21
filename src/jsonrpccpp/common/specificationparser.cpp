@@ -26,28 +26,36 @@ vector<Procedure>   SpecificationParser::GetProceduresFromString(const string &c
 
     Json::Reader reader;
     Json::Value val;
-    if(!reader.parse(content,val)) {
+    if(!reader.parse(content,val))
+    {
         throw JsonRpcException(Errors::ERROR_RPC_JSON_PARSE_ERROR, " specification file contains syntax errors");
     }
 
+    if (!val.isArray())
+    {
+        throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX, " top level json value is not an array");
+    }
+
     vector<Procedure> result;
+    map<string, Procedure> procnames;
     for (unsigned int i = 0; i < val.size(); i++)
     {
         Procedure proc;
         GetProcedure(val[i], proc);
+        if (procnames.find(proc.GetProcedureName()) != procnames.end())
+        {
+            throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX, "Procedurename not uniqe: " + proc.GetProcedureName());
+        }
+        procnames[proc.GetProcedureName()] = proc;
         result.push_back(proc);
     }
     return result;
 }
 void                SpecificationParser::GetProcedure           (Json::Value &signature, Procedure &result)
 {
-    if (signature.isMember(KEY_SPEC_PROCEDURE_NAME) && signature.isMember(KEY_SPEC_PROCEDURE_PARAMETERS))
+    if (signature.isObject() && GetProcedureName(signature) != "")
     {
-        if (GetProcedureName(signature) != "" &&
-                (signature[KEY_SPEC_PROCEDURE_PARAMETERS].isObject() ||
-                 signature[KEY_SPEC_PROCEDURE_PARAMETERS].isNull()   ||
-                 signature[KEY_SPEC_PROCEDURE_PARAMETERS].isArray())
-        )
+        if (signature[KEY_SPEC_PROCEDURE_PARAMETERS].isObject() ||  signature[KEY_SPEC_PROCEDURE_PARAMETERS].isArray())
         {
             result.SetProcedureName(GetProcedureName(signature));
             if (signature.isMember(KEY_SPEC_RETURN_TYPE))
@@ -60,12 +68,12 @@ void                SpecificationParser::GetProcedure           (Json::Value &si
                 result.SetProcedureType(RPC_NOTIFICATION);
             }
 
-            if (signature[KEY_SPEC_PROCEDURE_PARAMETERS].isArray())
+            if (signature.isMember(KEY_SPEC_PROCEDURE_PARAMETERS) && signature[KEY_SPEC_PROCEDURE_PARAMETERS].isArray())
             {
                 result.SetParameterDeclarationType(PARAMS_BY_POSITION);
                 GetPositionalParameters(signature, result);
             }
-            else if (signature[KEY_SPEC_PROCEDURE_PARAMETERS].isObject())
+            else if (signature.isMember(KEY_SPEC_PROCEDURE_PARAMETERS) && signature[KEY_SPEC_PROCEDURE_PARAMETERS].isObject())
             {
                 result.SetParameterDeclarationType(PARAMS_BY_NAME);
                 GetNamedParameters(signature, result);
@@ -81,7 +89,7 @@ void                SpecificationParser::GetProcedure           (Json::Value &si
     else
     {
         throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,
-                               "procedure declaration does not contain name or paramters: "
+                               "procedure declaration does not contain name or parameters: "
                                + signature.toStyledString());
     }
 }
@@ -124,10 +132,8 @@ jsontype_t          SpecificationParser::toJsonType             (Json::Value &va
         case Json::objectValue:
             result = JSON_OBJECT;
             break;
-        case Json::nullValue:
-            result = JSON_NULL;
         default:
-            throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,"Unknown parameter in "
+            throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,"Unknown parameter type: "
                                    + val.toStyledString());
     }
     return result;
@@ -145,7 +151,7 @@ void                SpecificationParser::GetPositionalParameters(Json::Value &va
 void                SpecificationParser::GetNamedParameters(Json::Value &val, Procedure &result)
 {
     vector<string> parameters = val[KEY_SPEC_PROCEDURE_PARAMETERS].getMemberNames();
-    for (unsigned int i = 0; i < parameters.size(); i++)
+    for (unsigned int i=0; i < parameters.size(); ++i)
     {
         result.AddParameter(parameters.at(i), toJsonType(val[KEY_SPEC_PROCEDURE_PARAMETERS][parameters.at(i)]));
     }

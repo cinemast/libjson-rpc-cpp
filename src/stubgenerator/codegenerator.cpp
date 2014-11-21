@@ -71,16 +71,6 @@ void CodeGenerator::decreaseIndentation()
     this->indentation--;
 }
 
-void CodeGenerator::operator++()
-{
-    this->increaseIndentation();
-}
-
-void CodeGenerator::operator--()
-{
-    this->decreaseIndentation();
-}
-
 void CodeGenerator::setIndentSymbol(const ::string &symbol)
 {
     this->indentSymbol = symbol;

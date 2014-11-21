@@ -18,7 +18,7 @@ using namespace jsonrpc;
 #define TEMPLATE_CPPSERVER_GUARD1 "#ifndef JSONRPC_CPP_STUB_<STUBNAME>_H_"
 #define TEMPLATE_CPPSERVER_GUARD2 "#define JSONRPC_CPP_STUB_<STUBNAME>_H_"
 
-#define TEMPLATE_EPILOG "#endif //JSONRPC_CPP_<STUBNAME>_H_"
+#define TEMPLATE_EPILOG "#endif //JSONRPC_CPP_STUB_<STUBNAME>_H_"
 
 string  CPPHelper::toCppType                        (jsontype_t type, bool isConst, bool isReference)
 {
@@ -97,8 +97,6 @@ string  CPPHelper::toString                         (jsontype_t type)
         case JSON_ARRAY:
             result = "jsonrpc::JSON_ARRAY";
             break;
-        case JSON_NULL:
-            result = "jsonrpc::JSON_NULL";
     }
     return result;
 }
@@ -108,13 +106,26 @@ string  CPPHelper::generateParameterDeclarationList (Procedure &proc)
     parameterNameList_t list = proc.GetParameters();
     for (parameterNameList_t::iterator it = list.begin(); it != list.end();)
     {
-        param_string << toCppType(it->second, true, true) << " " << it->first;
+        param_string << toCppParamType(it->second) << " " << it->first;
         if (++it != list.end())
         {
             param_string << ", ";
         }
     }
     return param_string.str();
+}
+
+string CPPHelper::toCppReturntype(jsontype_t type)
+{
+    return toCppType(type, false, false);
+}
+
+string CPPHelper::toCppParamType(jsontype_t type)
+{
+    if (type == JSON_ARRAY || type == JSON_OBJECT || type == JSON_STRING)
+        return toCppType(type, true, true);
+    else
+        return toCppType(type, false, false);
 }
 
 string CPPHelper::class2Filename(const string &classname)
@@ -149,6 +160,7 @@ void CPPHelper::prolog(CodeGenerator &cg, const string &stubname)
     string stub_upper = stubname;
     std::transform(stub_upper.begin(), stub_upper.end(), stub_upper.begin(),
                    ::toupper);
+    StubGenerator::replaceAll2(stub_upper, "::", "_");
 
     cg.writeLine(StubGenerator::replaceAll(TEMPLATE_CPPSERVER_GUARD1, "<STUBNAME>", stub_upper));
     cg.writeLine(StubGenerator::replaceAll(TEMPLATE_CPPSERVER_GUARD2, "<STUBNAME>", stub_upper));
@@ -159,6 +171,7 @@ void CPPHelper::epilog(CodeGenerator &cg, const string &stubname)
 {
     string stub_upper = stubname;
     std::transform(stub_upper.begin(), stub_upper.end(), stub_upper.begin(),::toupper);
+    StubGenerator::replaceAll2(stub_upper, "::", "_");
     cg.writeLine(StubGenerator::replaceAll(TEMPLATE_EPILOG, "<STUBNAME>", stub_upper));
 }
 
@@ -219,9 +232,6 @@ string  CPPHelper::isCppConversion                  (jsontype_t type)
             break;
         case JSON_ARRAY:
             result = ".isArray()";
-            break;
-        default:
-            result = "";
             break;
     }
     return result;

@@ -1,6 +1,6 @@
 .\" Manpage for jsonrpcstub.
 .\" Contact peter.knafl@gmail.com to correct errors or typos.
-.TH man 1 "06 May 2010" "0.3" "jsonrpcstub man page"
+.TH man 1 "06 May 2010" "0.4" "jsonrpcstub man page"
 .SH NAME
 jsonrpcstub \- genearate stubs for the libjson\-rpc\-cpp framework.
 .SH SYNOPSIS
@@ -8,14 +8,12 @@ jsonrpcstub \- genearate stubs for the libjson\-rpc\-cpp framework.
 jsonrpcstub specfile.json [\-\-cpp\-server=namespace::ClassName]
 [\-\-cpp\-server\-file=classname.h] [\-\-cpp\-client=namespace::ClassName]
 [\-\-cpp\-client-file=classname.h] [\-\-js\-client=ClassName]
-[\-\-js-client-file=classname.js]
+[\-\-js-client-file=classname.js] [\-h] [\-v]
 .PP
-.B
-jsonrpcstub -i specfile.json -c ClassName 
-[-s abstractserverstub.h] [--cpp=clientstub.h]
+
 .SH DESCRIPTION
 .PP
-jsonrpcstub is a little tool to generate C++ classes from a procedure especification file.
+jsonrpcstub is a tool to generate C++ and JavaScript classes from a procedure specification file.
 
 .SH EXAMPLES
 .PP

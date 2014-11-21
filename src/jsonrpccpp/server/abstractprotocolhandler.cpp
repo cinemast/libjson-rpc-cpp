@@ -26,7 +26,7 @@ AbstractProtocolHandler::~AbstractProtocolHandler()
 {
 }
 
-void AbstractProtocolHandler::AddProcedure(Procedure &procedure)
+void AbstractProtocolHandler::AddProcedure(const Procedure &procedure)
 {
     this->procedures[procedure.GetProcedureName()] = procedure;
 }

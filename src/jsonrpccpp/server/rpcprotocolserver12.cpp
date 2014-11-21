@@ -18,7 +18,7 @@ RpcProtocolServer12::RpcProtocolServer12(IProcedureInvokationHandler &handler) :
 {
 }
 
-void RpcProtocolServer12::AddProcedure(Procedure &procedure)
+void RpcProtocolServer12::AddProcedure(const Procedure &procedure)
 {
     this->rpc1.AddProcedure(procedure);
     this->rpc2.AddProcedure(procedure);

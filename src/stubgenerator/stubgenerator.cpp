@@ -11,15 +11,31 @@
 #include <algorithm>
 #include <jsonrpccpp/common/specificationparser.h>
 
+#include <argtable2.h>
+
 #include "stubgenerator.h"
+#include "helper/cpphelper.h"
+#include "server/cppserverstubgenerator.h"
+#include "client/cppclientstubgenerator.h"
+#include "client/jsclientstubgenerator.h"
 
 using namespace std;
 using namespace jsonrpc;
 
-StubGenerator::StubGenerator    (const string &stubname, std::vector<Procedure> &procedures, CodeGenerator &cg) :
+#define EXIT_ERROR(X) cerr << X << endl;arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));return 1;
+
+
+StubGenerator::StubGenerator    (const string &stubname, std::vector<Procedure> &procedures, ostream &outputstream) :
+    CodeGenerator               (outputstream),
     stubname                    (stubname),
-    procedures                  (procedures),
-    cg                          (cg)
+    procedures                  (procedures)
+{
+}
+
+StubGenerator::StubGenerator    (const string &stubname, std::vector<Procedure> &procedures, const std::string &filename) :
+    CodeGenerator               (filename),
+    stubname                    (stubname),
+    procedures                  (procedures)
 {
 }
 
@@ -42,9 +58,4 @@ void StubGenerator::replaceAll2(string &result, const string &find, const string
         result.replace(pos, find.length(), replace);
         pos = result.find(find, pos + replace.length());
     }
-}
-
-string  StubGenerator::getStubName                      ()
-{
-    return this->stubname;
 }

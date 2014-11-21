@@ -20,7 +20,7 @@ Procedure::Procedure()
 {
 }
 
-Procedure::Procedure(const string name, parameterDeclaration_t paramType, jsontype_t returntype, ...)
+Procedure::Procedure(const string &name, parameterDeclaration_t paramType, jsontype_t returntype, ...)
 {
     va_list parameters;
     va_start(parameters, returntype);
@@ -37,7 +37,7 @@ Procedure::Procedure(const string name, parameterDeclaration_t paramType, jsonty
     this->procedureType = RPC_METHOD;
     this->paramDeclaration = paramType;
 }
-Procedure::Procedure(const string name, parameterDeclaration_t paramType, ...)
+Procedure::Procedure(const string &name, parameterDeclaration_t paramType, ...)
 {
     va_list parameters;
     va_start(parameters, paramType);
@@ -56,7 +56,7 @@ Procedure::Procedure(const string name, parameterDeclaration_t paramType, ...)
 
 bool                        Procedure::ValdiateParameters           (const Json::Value& parameters) const
 {
-    if (this->parametersName.size() == 0)
+    if (this->parametersName.empty())
     {
         return true;
     }
@@ -119,7 +119,7 @@ void    Procedure::AddParameter                 (const string& name, jsontype_t 
 bool    Procedure::ValidateNamedParameters      (const Json::Value &parameters) const
 {
     bool ok = parameters.isObject() || parameters.isNull();
-    for (map<string, jsontype_t>::const_iterator it = this->parametersName.begin(); ok == true && it != this->parametersName.end(); it++)
+    for (map<string, jsontype_t>::const_iterator it = this->parametersName.begin(); ok == true && it != this->parametersName.end(); ++it)
     {
         if (!parameters.isMember(it->first))
         {
@@ -174,10 +174,6 @@ bool    Procedure::ValidateSingleParameter      (jsontype_t expectedType, const 
             break;
         case JSON_ARRAY:
             if (!value.isArray())
-                ok = false;
-            break;
-        case JSON_NULL:
-            if (!value.isNull())
                 ok = false;
             break;
     }

@@ -18,7 +18,8 @@ namespace jsonrpc
     class CPPServerStubGenerator : public StubGenerator
     {
         public:
-            CPPServerStubGenerator(const std::string& stubname, std::vector<Procedure> &procedures, CodeGenerator &cg);
+            CPPServerStubGenerator(const std::string& stubname, std::vector<Procedure> &procedures, std::ostream &outputstream);
+            CPPServerStubGenerator(const std::string& stubname, std::vector<Procedure> &procedures, const std::string &filename);
 
             virtual void generateStub();
 
