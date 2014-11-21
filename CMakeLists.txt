@@ -48,6 +48,14 @@ IF(Boost_FOUND AND COMPILE_TESTS)
     add_subdirectory(src/test)
 ENDIF()
 
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/doc)
+    message(STATUS "Found doxygen: ${DOXYGEN_EXECUTABLE}")
+    configure_file("${CMAKE_SOURCE_DIR}/doc/doxyfile.in" "${CMAKE_BINARY_DIR}/Doxyfile" @ONLY)
+    add_custom_target(doc ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/doc COMMENT "Generating API documentation")
+endif(DOXYGEN_FOUND)
+
 
 # uninstall target
 configure_file(
