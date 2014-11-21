@@ -19,9 +19,9 @@ jsonrpcstub is a tool to generate C++ and JavaScript classes from a procedure sp
 .PP
 Generate C++ Stubs for Server and Client, the classes will be named AbstractStubServer and StubClient:
 .PP
-.Vb 1
+.B
 \&  	  jsonrpcstub  <spec.json> --cpp--server=AbstractStubServer<abstractserverstub.h> --cpp-client=StubClient
-.Ve
+.B
 .SH SEE ALSO
 https://github.com/cinemast/libjson\-rpc\-cpp
 .SH BUGS

@@ -55,35 +55,37 @@ void                SpecificationParser::GetProcedure           (Json::Value &si
 {
     if (signature.isObject() && GetProcedureName(signature) != "")
     {
-        if (signature[KEY_SPEC_PROCEDURE_PARAMETERS].isObject() ||  signature[KEY_SPEC_PROCEDURE_PARAMETERS].isArray())
+        result.SetProcedureName(GetProcedureName(signature));
+        if (signature.isMember(KEY_SPEC_RETURN_TYPE))
         {
-            result.SetProcedureName(GetProcedureName(signature));
-            if (signature.isMember(KEY_SPEC_RETURN_TYPE))
-            {
-                result.SetProcedureType(RPC_METHOD);
-                result.SetReturnType(toJsonType(signature[KEY_SPEC_RETURN_TYPE]));
-            }
-            else
-            {
-                result.SetProcedureType(RPC_NOTIFICATION);
-            }
-
-            if (signature.isMember(KEY_SPEC_PROCEDURE_PARAMETERS) && signature[KEY_SPEC_PROCEDURE_PARAMETERS].isArray())
-            {
-                result.SetParameterDeclarationType(PARAMS_BY_POSITION);
-                GetPositionalParameters(signature, result);
-            }
-            else if (signature.isMember(KEY_SPEC_PROCEDURE_PARAMETERS) && signature[KEY_SPEC_PROCEDURE_PARAMETERS].isObject())
-            {
-                result.SetParameterDeclarationType(PARAMS_BY_NAME);
-                GetNamedParameters(signature, result);
-            }
+            result.SetProcedureType(RPC_METHOD);
+            result.SetReturnType(toJsonType(signature[KEY_SPEC_RETURN_TYPE]));
         }
         else
         {
-            throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,
-                                   "Invalid signature types in fileds: "
-                                   + signature.toStyledString());
+            result.SetProcedureType(RPC_NOTIFICATION);
+        }
+        if (signature.isMember(KEY_SPEC_PROCEDURE_PARAMETERS))
+        {
+            if (signature[KEY_SPEC_PROCEDURE_PARAMETERS].isObject() ||  signature[KEY_SPEC_PROCEDURE_PARAMETERS].isArray())
+            {
+                if (signature[KEY_SPEC_PROCEDURE_PARAMETERS].isArray())
+                {
+                    result.SetParameterDeclarationType(PARAMS_BY_POSITION);
+                    GetPositionalParameters(signature, result);
+                }
+                else if (signature[KEY_SPEC_PROCEDURE_PARAMETERS].isObject())
+                {
+                    result.SetParameterDeclarationType(PARAMS_BY_NAME);
+                    GetNamedParameters(signature, result);
+                }
+            }
+            else
+            {
+                throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,
+                                       "Invalid signature types in fileds: "
+                                       + signature.toStyledString());
+            }
         }
     }
     else
