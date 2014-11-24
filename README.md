@@ -133,7 +133,7 @@ This generates a serverstub and a clientstub class.
 Extend the abstract server stub and implement all pure virtual (abstract) methods defined in `spec.json`.
 
 ```cpp
-#include "abstractsubserver.h"
+#include "abstractstubserver.h"
 #include <jsonrpccpp/server/connectors/httpserver.h>
 
 using namespace jsonrpc;
