@@ -1,3 +1,10 @@
+Changes in v0.4.1
+-----------------
+- Added coverity scan support
+- [Added API compatiblity report](http://upstream.rosalinux.ru/versions/libjson-rpc-cpp.html)
+- Improved manpage
+- Extended Stubgenerator for protocol switches (JSON-RPC 1.0 & 2.0)
+
 Changes in v0.4
 ---------------
 - Memory leak fixes

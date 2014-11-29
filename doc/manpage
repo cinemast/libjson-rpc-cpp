@@ -1,6 +1,6 @@
 .\" Manpage for jsonrpcstub.
 .\" Contact peter.knafl@gmail.com to correct errors or typos.
-.TH man 1 "06 May 2010" "0.4" "jsonrpcstub man page"
+.TH man 1 "06 May 2010" "0.4.1" "jsonrpcstub man page"
 .SH NAME
 jsonrpcstub \- genearate stubs for the libjson\-rpc\-cpp framework.
 .SH SYNOPSIS
