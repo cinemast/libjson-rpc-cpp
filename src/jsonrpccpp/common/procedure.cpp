@@ -52,6 +52,7 @@ Procedure::Procedure(const string &name, parameterDeclaration_t paramType, ...)
     this->procedureName = name;
     this->procedureType = RPC_NOTIFICATION;
     this->paramDeclaration = paramType;
+    this->returntype = JSON_BOOLEAN;
 }
 
 bool                        Procedure::ValdiateParameters           (const Json::Value& parameters) const

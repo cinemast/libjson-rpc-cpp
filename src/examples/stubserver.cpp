@@ -18,7 +18,7 @@ using namespace std;
 class MyStubServer : public AbstractStubServer
 {
     public:
-        MyStubServer(AbstractServerConnector &connector);
+        MyStubServer(AbstractServerConnector &connector, serverVersion_t type);
 
         virtual void notifyServer();
         virtual std::string sayHello(const std::string& name);
@@ -30,8 +30,8 @@ class MyStubServer : public AbstractStubServer
 
 };
 
-MyStubServer::MyStubServer(AbstractServerConnector &connector) :
-    AbstractStubServer(connector)
+MyStubServer::MyStubServer(AbstractServerConnector &connector, serverVersion_t type) :
+    AbstractStubServer(connector, type)
 {
 }
 
@@ -76,9 +76,9 @@ string MyStubServer::methodWithoutParameters()
 int main()
 {
     HttpServer httpserver(8383);
-    MyStubServer s(httpserver);
+    MyStubServer s(httpserver, JSONRPC_SERVER_V1V2); //hybrid server (json-rpc 1.0 & 2.0)
     s.StartListening();
-
+    cout << "Hit enter to stop the server" << endl;
     getchar();
 
     s.StopListening();

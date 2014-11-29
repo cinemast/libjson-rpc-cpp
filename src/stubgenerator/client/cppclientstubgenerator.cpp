@@ -12,7 +12,7 @@
 
 #define TEMPLATE_CPPCLIENT_SIGCLASS "class <stubname> : public jsonrpc::Client"
 
-#define TEMPLATE_CPPCLIENT_SIGCONSTRUCTOR "<stubname>(jsonrpc::IClientConnector &conn) : jsonrpc::Client(conn) {}"
+#define TEMPLATE_CPPCLIENT_SIGCONSTRUCTOR "<stubname>(jsonrpc::IClientConnector &conn, jsonrpc::clientVersion_t type = jsonrpc::JSONRPC_CLIENT_V2) : jsonrpc::Client(conn, type) {}"
 
 #define TEMPLATE_CPPCLIENT_SIGMETHOD "<returntype> <methodname>(<parameters>) throw (jsonrpc::JsonRpcException)"
 
