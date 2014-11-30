@@ -14,7 +14,7 @@ It is fully JSON-RPC [2.0 & 1.0 compatible](http://www.jsonrpc.org/specification
 - Full JSON-RPC 2.0 & 1.0 Client and Server Support.
 - jsonrpcstub - a tool that generates stub-classes for your JSON-RPC client AND server applications.
 - Ready to use HTTP server and client to provide simple interfaces for your JSON-RPC application.
-- Cross platform build support and [precompiled binaries for WIN32](https://spiessknafl.at/libjson-rpc-cpp/libjson-rpc-cpp-0.4.0-win32.exe).
+- Cross platform build support and [precompiled binaries for WIN32](http://spiessknafl.at/libjson-rpc-cpp/libjson-rpc-cpp-win32.exe).
 - Super liberal [MIT-License](http://en.wikipedia.org/wiki/MIT_License). 
 
 **Other good reasons to use libjson-rpc-cpp**
@@ -57,7 +57,7 @@ brew install argtable cmake jsoncpp libmicrohttpd
 
 **Windows**
 
-There is a ready to use compiled package for WIN32 [here](https://spiessknafl.at/libjson-rpc-cpp/libjson-rpc-cpp-0.4.0-win32.exe).
+There is a ready to use compiled package for WIN32 [here](http://spiessknafl.at/libjson-rpc-cpp/libjson-rpc-cpp-win32.exe).
 
 If you want to compile on your own, here is how:
 
