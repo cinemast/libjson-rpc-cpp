@@ -221,6 +221,7 @@ References
 - [bitcodin](http://www.bitmovin.net): a scaleable cloud based video transcoding platform.
 - [wgslib](http://wgslib.com/): A web geostatistics library.
 - [bitcoin-api-cpp](https://github.com/minium/bitcoin-api-cpp): a C++ interface to bitcoin.
+- [NIT DASH Content Server](http://www.nit.eu/offer/research-projects-products/334-http2dash): Dynamic Adaptive Streaming over HTTP server.
 
 If you use this library and find it useful, I would be very pleased if you let me know about it.
 
@@ -239,8 +240,8 @@ API compatiblity
 ----------------
 Can be found [here](http://upstream.rosalinux.ru/versions/libjson-rpc-cpp.html)
 
-Licsense
---------
+License
+-------
 This framework is licensed under [MIT](http://en.wikipedia.org/wiki/MIT_License). 
 All of this libraries dependencies are licensed under MIT compatible licenses.
 
