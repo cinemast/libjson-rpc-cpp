@@ -16,7 +16,11 @@
 using namespace std;
 using namespace jsonrpc;
 
-Procedure::Procedure()
+Procedure::Procedure() :
+    procedureName(""),
+    procedureType(RPC_METHOD),
+    returntype(JSON_BOOLEAN),
+    paramDeclaration(PARAMS_BY_NAME)
 {
 }
 
@@ -27,7 +31,7 @@ Procedure::Procedure(const string &name, parameterDeclaration_t paramType, jsont
     const char* paramname = va_arg(parameters, const char*);
     jsontype_t type;
     while(paramname != NULL) {
-        type = (jsontype_t)va_arg(parameters, int);     //Needs to be tested
+        type = (jsontype_t)va_arg(parameters, int);
         this->AddParameter(paramname, type);
         paramname = va_arg(parameters, const char*);
     }
@@ -44,7 +48,7 @@ Procedure::Procedure(const string &name, parameterDeclaration_t paramType, ...)
     const char* paramname = va_arg(parameters, const char*);
     jsontype_t type;
     while(paramname != NULL) {
-        type = (jsontype_t)va_arg(parameters, int);     //Needs to be tested
+        type = (jsontype_t)va_arg(parameters, int);
         this->AddParameter(paramname, type);
         paramname = va_arg(parameters, const char*);
     }
@@ -52,6 +56,7 @@ Procedure::Procedure(const string &name, parameterDeclaration_t paramType, ...)
     this->procedureName = name;
     this->procedureType = RPC_NOTIFICATION;
     this->paramDeclaration = paramType;
+    this->returntype = JSON_BOOLEAN;
 }
 
 bool                        Procedure::ValdiateParameters           (const Json::Value& parameters) const

@@ -18,7 +18,9 @@ using namespace std;
 int main()
 {
     HttpClient httpclient("http://localhost:8383");
-    StubClient c(httpclient);
+    //StubClient c(httpclient, JSONRPC_CLIENT_V1); //json-rpc 1.0
+    StubClient c(httpclient, JSONRPC_CLIENT_V2);   //json-rpc 2.0
+
 
     try
     {
@@ -35,7 +37,5 @@ int main()
     {
         cerr << e.what() << endl;
     }
-
-
 }
 

@@ -1,6 +1,6 @@
 .\" Manpage for jsonrpcstub.
 .\" Contact psk@autistici.org to correct errors or typos.
-.TH man 1 "22 November 2014" "0.4" "jsonrpcstub man page"
+.TH man 1 "22 November 2014" "0.4.1" "jsonrpcstub man page"
 .SH NAME
 jsonrpcstub \- genearate stubs for the libjson\-rpc\-cpp framework.
 .SH SYNOPSIS
@@ -75,6 +75,8 @@ Generate JavaScript Client class MyRpcClient into file someclient.js:
 .B
 \&  	  jsonrpcstub  spec.json --js--client=MyRpcClient --js-client-file=someclient.js
 .B
+.SH EXIT STATUS
+This command returns 0 if no error occured. In any other case, it returns 1.
 .SH SEE ALSO
 https://github.com/cinemast/libjson\-rpc\-cpp
 .SH BUGS

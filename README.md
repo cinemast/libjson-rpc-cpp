@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/cinemast/libjson-rpc-cpp.png?branch=master)](https://travis-ci.org/cinemast/libjson-rpc-cpp) [![Coverage Status](https://coveralls.io/repos/cinemast/libjson-rpc-cpp/badge.png?branch=develop)](https://coveralls.io/r/cinemast/libjson-rpc-cpp?branch=develop)
+[![Build Status](https://travis-ci.org/cinemast/libjson-rpc-cpp.png?branch=master)](https://travis-ci.org/cinemast/libjson-rpc-cpp) [![Coverage Status](https://coveralls.io/repos/cinemast/libjson-rpc-cpp/badge.png?branch=develop)](https://coveralls.io/r/cinemast/libjson-rpc-cpp?branch=develop) [![Coverity Status](https://scan.coverity.com/projects/3169/badge.svg?flat=1)](https://scan.coverity.com/projects/3169)
 
 libjson-rpc-cpp
 ===============
@@ -14,7 +14,7 @@ It is fully JSON-RPC [2.0 & 1.0 compatible](http://www.jsonrpc.org/specification
 - Full JSON-RPC 2.0 & 1.0 Client and Server Support.
 - jsonrpcstub - a tool that generates stub-classes for your JSON-RPC client AND server applications.
 - Ready to use HTTP server and client to provide simple interfaces for your JSON-RPC application.
-- Cross platform build support and [precompiled binaries for WIN32](https://spiessknafl.at/libjson-rpc-cpp/libjson-rpc-cpp-0.4.0-win32.exe).
+- Cross platform build support and [precompiled binaries for WIN32](http://spiessknafl.at/libjson-rpc-cpp/libjson-rpc-cpp-win32.exe).
 - Super liberal [MIT-License](http://en.wikipedia.org/wiki/MIT_License). 
 
 **Other good reasons to use libjson-rpc-cpp**
@@ -57,7 +57,7 @@ brew install argtable cmake jsoncpp libmicrohttpd
 
 **Windows**
 
-There is a ready to use compiled package for WIN32 [here](https://spiessknafl.at/libjson-rpc-cpp/libjson-rpc-cpp-0.4.0-win32.exe).
+There is a ready to use compiled package for WIN32 [here](http://spiessknafl.at/libjson-rpc-cpp/libjson-rpc-cpp-win32.exe).
 
 If you want to compile on your own, here is how:
 
@@ -221,6 +221,7 @@ References
 - [bitcodin](http://www.bitmovin.net): a scaleable cloud based video transcoding platform.
 - [wgslib](http://wgslib.com/): A web geostatistics library.
 - [bitcoin-api-cpp](https://github.com/minium/bitcoin-api-cpp): a C++ interface to bitcoin.
+- [NIT DASH Content Server](http://www.nit.eu/offer/research-projects-products/334-http2dash): Dynamic Adaptive Streaming over HTTP server.
 
 If you use this library and find it useful, I would be very pleased if you let me know about it.
 
@@ -235,8 +236,12 @@ Changelogs
 ----------
 Changelogs can be found [here](https://github.com/cinemast/libjson-rpc-cpp/blob/master/CHANGELOG.md).
 
-Licsense
---------
+API compatiblity
+----------------
+Can be found [here](http://upstream.rosalinux.ru/versions/libjson-rpc-cpp.html)
+
+License
+-------
 This framework is licensed under [MIT](http://en.wikipedia.org/wiki/MIT_License). 
 All of this libraries dependencies are licensed under MIT compatible licenses.
 
