@@ -1,26 +1,79 @@
 .\" Manpage for jsonrpcstub.
-.\" Contact peter.knafl@gmail.com to correct errors or typos.
-.TH man 1 "06 May 2010" "0.4.1" "jsonrpcstub man page"
+.\" Contact psk@autistici.org to correct errors or typos.
+.TH man 1 "22 November 2014" "0.4.1" "jsonrpcstub man page"
 .SH NAME
 jsonrpcstub \- genearate stubs for the libjson\-rpc\-cpp framework.
 .SH SYNOPSIS
 .B
-jsonrpcstub specfile.json [\-\-cpp\-server=namespace::ClassName]
-[\-\-cpp\-server\-file=classname.h] [\-\-cpp\-client=namespace::ClassName]
-[\-\-cpp\-client-file=classname.h] [\-\-js\-client=ClassName]
-[\-\-js-client-file=classname.js] [\-h] [\-v]
+jsonrpcstub specfile.json [\-\-cpp\-server=namespace::ClassName]  
+ [\-\-cpp\-server\-file=classqname.h]  [\-\-cpp\-client=namespace::ClassName] 
+[\-\-cpp\-client-file=classname.h] [\-\-js\-client=ClassName] 
+[\-\-js-client-file=classname.js]  [\-h] [\-v]
 .PP
 
 .SH DESCRIPTION
 .PP
 jsonrpcstub is a tool to generate C++ and JavaScript classes from a procedure specification file.
+.SS SPECIFICATION SYNTAX
+.PP
+The specifictaion file is a JSON file containing all available JSON-RPC methods and notifications
+with their corresponding parameters and return values contained in a top-level JSON array.
+.PP
+.nf
+[
+	{
+		"name": "method_with_positional_params", 
+		"params": [3,4], 
+		"returns": 7
+	},
+	{
+		"name": "methid_with_named_params", 
+		"params": {"param1": 3, "param2": 4},
+		"returns": 7
+	},
+	{
+		"name": "notification_without_parmas"
+	}
+]
+.fi
 
+.PP
+The literal in each \fB"params"\fP and  \fB"returns"\fP section defines the corresponding type. 
+If the \fb"params"\fP contains an array, the parameters are accepted by position, 
+if it contains an object, they are accepted by name. 
+.SH OPTIONS
+.IP -h
+Print usage information.
+.IP -v
+Print verbose information during generation.
+.IP --cpp-server=ClassName
+Creates a Abstract Server class. Namespaces can be provided using the :: notation 
+(e.g. ns1::ns2::Classname).
+.IP --cpp-server-file=filename.h
+Defines the filename to use when generating the C++ Abstract Server class.
+If this is not provided, the lowercase classname is used.
+.IP --cpp-client=ClassName
+Creates a C++ client class. Namespaces can be provided using the :: notation 
+(e.g. ns1::ns2::Classname).
+.IP --cpp-client-file=filename.h
+Defines the filename to use when generating the C++ client class.
+If this is not provided, the lowercase classname is used.
+.IP --js-client=ClassName
+Creates a JavaScript client class. No namespaces are supported in this option. 
+.IP --js-client-file=filename.js
+Defines the filename to use when generating the JavaScrip client class.
 .SH EXAMPLES
 .PP
 Generate C++ Stubs for Server and Client, the classes will be named AbstractStubServer and StubClient:
+.P P
+.B
+\&  	  jsonrpcstub  spec.json --cpp--server=AbstractStubServer --cpp-client=StubClient
+.B
+.PP
+Generate JavaScript Client class MyRpcClient into file someclient.js:
 .PP
 .B
-\&  	  jsonrpcstub  <spec.json> --cpp--server=AbstractStubServer<abstractserverstub.h> --cpp-client=StubClient
+\&  	  jsonrpcstub  spec.json --js--client=MyRpcClient --js-client-file=someclient.js
 .B
 .SH EXIT STATUS
 This command returns 0 if no error occured. In any other case, it returns 1.
@@ -51,4 +104,4 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR TH
 OR OTHER DEALINGS IN THE SOFTWARE.
 
 .SH AUTHOR
-Peter Spiess-Knafl (peter.knafl@gmail.com)
+Peter Spiess-Knafl (psk@autistici.org)
