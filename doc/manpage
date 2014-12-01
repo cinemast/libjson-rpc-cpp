@@ -22,6 +22,8 @@ Generate C++ Stubs for Server and Client, the classes will be named AbstractStub
 .B
 \&  	  jsonrpcstub  <spec.json> --cpp--server=AbstractStubServer<abstractserverstub.h> --cpp-client=StubClient
 .B
+.SH EXIT STATUS
+This command returns 0 if no error occured. In any other case, it returns 1.
 .SH SEE ALSO
 https://github.com/cinemast/libjson\-rpc\-cpp
 .SH BUGS
