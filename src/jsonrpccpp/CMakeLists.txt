@@ -52,7 +52,7 @@ IF(HTTP_SERVER)
     find_package(MHD REQUIRED)
     list(APPEND server_connector_header "server/connectors/httpserver.h")
     list(APPEND server_connector_source "server/connectors/httpserver.cpp")
-    list(APPEND server_connector_libs ${CMAKE_DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} ${MHD_LIBRARIES})
+    list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT} ${MHD_LIBRARIES})
 ENDIF()
 
 add_library(jsonrpccommon SHARED ${jsonrpc_source_common} ${jsonrpc_header} ${jsonrpc_helper_source_common})
