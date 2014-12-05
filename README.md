@@ -227,6 +227,9 @@ If you use this library and find it useful, I would be very pleased if you let m
 
 Developer Information
 ======================
+Mailing list
+------------
+[libjsonrpccpp-devel@lists.sourceforge.net](https://lists.sourceforge.net/lists/listinfo/libjsonrpccpp-devel)
 
 Roadmap for next release
 ------------------------
