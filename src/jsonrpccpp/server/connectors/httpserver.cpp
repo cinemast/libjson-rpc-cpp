@@ -98,6 +98,21 @@ bool HttpServer::SendResponse(const string& response, void* addInfo)
     return ret == MHD_YES;
 }
 
+bool HttpServer::SendOptionsResponse(void* addInfo)
+{
+    struct mhd_coninfo* client_connection = static_cast<struct mhd_coninfo*>(addInfo);
+    struct MHD_Response *result = MHD_create_response_from_data(0, NULL, 0, 1);
+
+    MHD_add_response_header(result, "Allow", "POST, OPTIONS");
+    MHD_add_response_header(result, "Access-Control-Allow-Origin", "*");
+    MHD_add_response_header(result, "Access-Control-Allow-Headers", "origin, content-type, accept");
+    MHD_add_response_header(result, "DAV", "1");
+
+    int ret = MHD_queue_response(client_connection->connection, client_connection->code, result);
+    MHD_destroy_response(result);
+    return ret == MHD_YES;
+}
+
 void HttpServer::SetUrlHandler(const string &url, IClientConnectionHandler *handler)
 {
     this->urlhandler[url] = handler;
@@ -142,6 +157,10 @@ int HttpServer::callback(void *cls, MHD_Connection *connection, const char *url,
             }
         }
     }
+	else if (string("OPTIONS") == method) {
+        client_connection->code = MHD_HTTP_OK;
+        client_connection->server->SendOptionsResponse(client_connection);
+	}
     else
     {
         client_connection->code = MHD_HTTP_METHOD_NOT_ALLOWED;
