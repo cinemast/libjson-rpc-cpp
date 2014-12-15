@@ -22,6 +22,9 @@ Marc Trudel <mtrudel@wizcorp.jp>
 Yuriy Syrovetskiy <cblp@cblp.su>
 + added user supplied error blocks
 
+Veselin Rachev <veselin.raychev@gmail.com>
++ added HTTP OPTIONS request support
+
 Bugfixes (chronological order)
 ==============================
 
