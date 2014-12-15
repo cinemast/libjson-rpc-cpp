@@ -128,6 +128,22 @@ BOOST_FIXTURE_TEST_CASE(test_http_get,F)
     curl_easy_cleanup(curl);
 }
 
+BOOST_FIXTURE_TEST_CASE(test_http_get_options, F)
+{
+    CURL* curl = curl_easy_init();
+
+    curl_easy_setopt(curl, CURLOPT_URL, CLIENT_URL);
+    curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "OPTIONS");
+    CURLcode code = curl_easy_perform(curl);
+    BOOST_REQUIRE_EQUAL(code, CURLE_OK);
+
+    long http_code = 0;
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+    BOOST_CHECK_EQUAL(http_code, 200);  // No error when server asked for OPTIONS.
+
+    curl_easy_cleanup(curl);
+}
+
 BOOST_AUTO_TEST_CASE(test_http_server_endpoints)
 {
     MockClientConnectionHandler handler1;
