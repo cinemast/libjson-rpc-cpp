@@ -54,6 +54,7 @@ namespace jsonrpc
 
             bool virtual SendResponse(const std::string& response,
                     void* addInfo = NULL);
+            bool virtual SendOptionsResponse(void* addInfo);
 
             void SetUrlHandler(const std::string &url, IClientConnectionHandler *handler);
 
