@@ -1,7 +1,12 @@
+Changes in v0.4.2
+- Fix of spelling mistakes.
+- Use CMAKE versioning in manpage.
+- Fixing include scheme of jsoncpp.
+
 Changes in v0.4.1
 -----------------
 - Added coverity scan support
-- [Added API compatiblity report](http://upstream.rosalinux.ru/versions/libjson-rpc-cpp.html)
+- [Added API compatibility report](http://upstream.rosalinux.ru/versions/libjson-rpc-cpp.html)
 - Improved manpage
 - Extended Stubgenerator for protocol switches (JSON-RPC 1.0 & 2.0)
 

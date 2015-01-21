@@ -27,7 +27,7 @@ namespace jsonrpc {
             RpcProtocolClient(clientVersion_t version = JSONRPC_CLIENT_V2);
 
             /**
-             * @brief This method builds a valid json-rpc 2.0 request object based on passed paramters.
+             * @brief This method builds a valid json-rpc 2.0 request object based on passed parameters.
              * The id starts at 1 and is incremented for each request. To reset this value to one, call
              * the jsonrpc::RpcProRpcProtocolClient::resetId() method.
              * @param method - name of method or notification to be called

@@ -76,7 +76,7 @@ Generate JavaScript Client class MyRpcClient into file someclient.js:
 \&  	  jsonrpcstub  spec.json \-\-js\-client=MyRpcClient \-\-js\-client\-file=someclient.js
 .B
 .SH EXIT STATUS
-This command returns 0 if no error occured. In any other case, it returns 1.
+This command returns 0 if no error occurred. In any other case, it returns 1.
 .SH SEE ALSO
 https://github.com/cinemast/libjson\-rpc\-cpp
 .SH BUGS

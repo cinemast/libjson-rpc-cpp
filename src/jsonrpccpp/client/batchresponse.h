@@ -43,7 +43,7 @@ namespace jsonrpc {
             void getResult(int id, Json::Value &result);
 
             /**
-             * @brief getErrorCode method checks if for a given id, an error occured in the batch request.
+             * @brief getErrorCode method checks if for a given id, an error occurred in the batch request.
              * @param id
              */
             int getErrorCode(int id);
