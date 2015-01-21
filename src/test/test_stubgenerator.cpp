@@ -7,10 +7,8 @@
  * @license See attached LICENSE.txt
  ************************************************************************/
 
-#include <boost/test/unit_test.hpp>
-
 #ifdef STUBGEN_TESTING
-#define BOOST_TEST_MODULE stubgenerator
+#include <boost/test/unit_test.hpp>
 
 #include <jsonrpccpp/common/specificationparser.h>
 #include <stubgenerator/server/cppserverstubgenerator.h>
