@@ -13,7 +13,7 @@ file(COPY ${test_specs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 set(testlibs ${Boost_LIBRARIES} jsonrpccommon jsonrpcclient jsonrpcserver)
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src)
 
-add_definitions(-DBOOST_TEST_DYN_LINK)
+#add_definitions(-DBOOST_TEST_DYN_LINK)
 
 IF(HTTP_CLIENT AND HTTP_SERVER)
     add_definitions(-DHTTP_TESTING)

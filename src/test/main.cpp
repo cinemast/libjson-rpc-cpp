@@ -7,6 +7,7 @@
  * @license See attached LICENSE.txt
  ************************************************************************/
 
-
 #define BOOST_TEST_MODULE "libjson-rpc-cpp test suite"
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>

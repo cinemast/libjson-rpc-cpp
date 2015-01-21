@@ -5,8 +5,6 @@ list(REMOVE_ITEM libstubgen_source "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp")
 find_package(Argtable REQUIRED)
 
 IF(COMPILE_TESTS)
-    message("Foo: ${libstubgen_source}")
-
     add_library(stubgen STATIC ${libstubgen_source})
     target_link_libraries(stubgen jsonrpccommon ${ARGTABLE_LIBRARIES})
 ENDIF()
