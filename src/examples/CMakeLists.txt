@@ -21,7 +21,6 @@ add_custom_command(OUTPUT xbmcremote.h
                    COMMENT "Generating Client XBMC Stubfile"
                    VERBATIM)
 
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src)
 INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR})
 
 IF(HTTP_SERVER AND HTTP_CLIENT)

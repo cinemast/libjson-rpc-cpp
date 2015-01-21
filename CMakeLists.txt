@@ -31,6 +31,10 @@ ENDIF()
 #the core framework
 add_subdirectory(src/jsonrpccpp)
 
+include_directories("${PROJECT_SOURCE_DIR}/src/")
+include_directories("${PROJECT_BINARY_DIR}/gen/")
+include_directories("${PROJECT_BINARY_DIR}/gen/jsonrpccpp/common")
+
 #the stubgenerator
 IF(COMPILE_STUBGEN)
     add_subdirectory(src/stubgenerator)
