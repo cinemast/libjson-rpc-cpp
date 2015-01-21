@@ -50,9 +50,9 @@ sudo aura -A libjson-rpc-cpp
 
 **Mac OS X**
 
-You need [Brew](http://brew.sh) installed and type the following commands
+For OS X a [Brew](http://brew.sh) package is available:
 ```sh
-brew install argtable cmake jsoncpp libmicrohttpd
+brew install libjson-rpc-cpp
 ```
 
 **Windows**
