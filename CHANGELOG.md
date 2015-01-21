@@ -1,7 +1,8 @@
 Changes in v0.4.2
 - Fix of spelling mistakes.
 - Use CMAKE versioning in manpage.
-- Fixing include scheme of jsoncpp.
+- Improving include scheme of jsoncpp.
+- Bugfix in HttpServer with Threading option in SSL startup.
 
 Changes in v0.4.1
 -----------------
