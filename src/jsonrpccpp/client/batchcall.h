@@ -10,7 +10,7 @@
 #ifndef JSONRPC_CPP_BATCHCALL_H
 #define JSONRPC_CPP_BATCHCALL_H
 
-#include <jsoncpp/json/json.h>
+#include <jsonrpccpp/common/jsonparser.h>
 
 namespace jsonrpc
 {

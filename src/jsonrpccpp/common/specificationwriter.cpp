@@ -8,8 +8,8 @@
  ************************************************************************/
 
 #include "specificationwriter.h"
+#include "jsonparser.h"
 #include <fstream>
-#include <jsoncpp/json/json.h>
 #include <jsoncpp/json/writer.h>
 #include <iostream>
 

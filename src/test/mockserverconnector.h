@@ -11,7 +11,7 @@
 #define JSONRPC_MOCKSERVERCONNECTOR_H
 
 #include <jsonrpccpp/server/abstractserverconnector.h>
-#include <jsoncpp/json/json.h>
+#include <jsonrpccpp/common/jsonparser.h>
 
 namespace jsonrpc {
 

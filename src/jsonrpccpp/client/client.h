@@ -13,7 +13,7 @@
 #include "iclientconnector.h"
 #include "batchcall.h"
 #include "batchresponse.h"
-#include <jsoncpp/json/json.h>
+#include <jsonrpccpp/common/jsonparser.h>
 
 #include <vector>
 #include <map>
