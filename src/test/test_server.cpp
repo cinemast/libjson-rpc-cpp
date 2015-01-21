@@ -11,6 +11,7 @@
 #include "testserver.h"
 #include "mockserverconnector.h"
 
+#define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE server
 
 using namespace jsonrpc;
