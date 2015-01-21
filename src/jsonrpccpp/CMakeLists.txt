@@ -29,16 +29,19 @@ set(server_connector_source "")
 set(server_connector_header "")
 set(server_connector_libs   "")
 
-include_directories("${PROJECT_SOURCE_DIR}/src/")
 
 # configure a header file to pass some of the CMake settings
 # to the source code
-configure_file (
-  "${PROJECT_SOURCE_DIR}/src/jsonrpccpp/version.h.in"
-  "${PROJECT_BINARY_DIR}/version.h"
-)
-install(FILES ${PROJECT_BINARY_DIR}/version.h DESTINATION include/jsonrpccpp) 
+file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/gen/jsonrpccpp/common")
+configure_file("${PROJECT_SOURCE_DIR}/src/jsonrpccpp/version.h.in" "${PROJECT_BINARY_DIR}/gen/jsonrpccpp/version.h")
+configure_file("${PROJECT_SOURCE_DIR}/src/jsonrpccpp/common/jsonparser.h.in" "${PROJECT_BINARY_DIR}/gen/jsonrpccpp/common/jsonparser.h")
 
+install(FILES "${PROJECT_BINARY_DIR}/gen/jsonrpccpp/version.h" DESTINATION include/jsonrpccpp)
+install(FILES "${PROJECT_BINARY_DIR}/gen/jsonrpccpp/common/jsonparser.h" DESTINATION include/jsonrpccpp/common)
+
+include_directories("${PROJECT_SOURCE_DIR}/src/")
+include_directories("${PROJECT_BINARY_DIR}/gen/")
+include_directories("${PROJECT_BINARY_DIR}/gen/jsonrpccpp/common")
 
 IF(HTTP_CLIENT)
     find_package(CURL REQUIRED)

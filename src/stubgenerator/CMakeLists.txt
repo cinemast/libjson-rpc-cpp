@@ -2,7 +2,6 @@ file(GLOB_RECURSE jsonrpcstub_source *.cpp)
 file(GLOB_RECURSE libstubgen_source *.cpp)
 list(REMOVE_ITEM libstubgen_source main.cpp)
 
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src)
 
 find_package(Argtable REQUIRED)
 
@@ -16,9 +15,9 @@ target_link_libraries(jsonrpcstub jsonrpccommon ${ARGTABLE_LIBRARIES})
 
 #Generate manpage
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    configure_file("${CMAKE_SOURCE_DIR}/doc/manpage.in" "${CMAKE_BINARY_DIR}/manpage" @ONLY)
     add_custom_command(OUTPUT jsonrpcstub.1.gz
-                   COMMAND gzip -c ${CMAKE_SOURCE_DIR}/doc/manpage > ${CMAKE_BINARY_DIR}/jsonrpcstub.1.gz
-                   MAIN_DEPENDENCY ${CMAKE_SOURCE_DIR}/doc/manpage
+                   COMMAND gzip -c "${CMAKE_BINARY_DIR}/manpage" > ${CMAKE_BINARY_DIR}/jsonrpcstub.1.gz
                    COMMENT "Generating man pages"
                    VERBATIM)
 

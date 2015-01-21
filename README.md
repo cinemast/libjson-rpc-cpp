@@ -218,7 +218,7 @@ References
 - [LaseShark 3D Printer](https://github.com/macpod/lasershark_3dp): used to control the firmware of the 3D printer.
 - [cpp-ethereum](https://github.com/ethereum/cpp-ethereum): a distributed computing framework.
 - [mage-sdk-cpp](https://github.com/mage/mage-sdk-cpp): a game engine.
-- [bitcodin](http://www.bitmovin.net): a scaleable cloud based video transcoding platform.
+- [bitcodin](http://www.bitmovin.net): a scalable cloud based video transcoding platform.
 - [wgslib](http://wgslib.com/): A web geostatistics library.
 - [bitcoin-api-cpp](https://github.com/minium/bitcoin-api-cpp): a C++ interface to bitcoin.
 - [NIT DASH Content Server](http://www.nit.eu/offer/research-projects-products/334-http2dash): Dynamic Adaptive Streaming over HTTP server.
@@ -239,7 +239,7 @@ Changelogs
 ----------
 Changelogs can be found [here](https://github.com/cinemast/libjson-rpc-cpp/blob/master/CHANGELOG.md).
 
-API compatiblity
+API compatibility
 ----------------
 Can be found [here](http://upstream.rosalinux.ru/versions/libjson-rpc-cpp.html)
 

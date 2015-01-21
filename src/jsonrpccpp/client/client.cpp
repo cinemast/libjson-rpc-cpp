@@ -23,10 +23,10 @@ Client::~Client()
     delete this->protocol;
 }
 
-void Client::CallMethod(const std::string &name, const Json::Value &paramter, Json::Value& result) throw(JsonRpcException)
+void Client::CallMethod(const std::string &name, const Json::Value &parameter, Json::Value& result) throw(JsonRpcException)
 {
     std::string request, response;
-    protocol->BuildRequest(name, paramter, request, false);
+    protocol->BuildRequest(name, parameter, request, false);
     connector.SendRPCMessage(request, response);
     protocol->HandleResponse(response, result);
 }

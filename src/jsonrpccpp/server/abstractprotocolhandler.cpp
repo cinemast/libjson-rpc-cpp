@@ -9,9 +9,8 @@
 
 #include "abstractprotocolhandler.h"
 #include <jsonrpccpp/common/errors.h>
-#include <jsoncpp/json/value.h>
-#include <jsoncpp/json/reader.h>
-#include <jsoncpp/json/writer.h>
+#include <jsonrpccpp/common/jsonparser.h>
+
 #include <map>
 
 using namespace jsonrpc;

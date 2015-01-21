@@ -13,7 +13,7 @@
 #include <string>
 #include <map>
 
-#include <jsoncpp/json/json.h>
+#include "jsonparser.h"
 #include "specification.h"
 
 namespace jsonrpc
@@ -72,8 +72,8 @@ namespace jsonrpc
 
             /**
              * @brief AddParameter
-             * @param name describes the name of the parameter. In case of an positional paramters, this value can be anything.
-             * @param type describes the defined type for this paramter.
+             * @param name describes the name of the parameter. In case of an positional parameters, this value can be anything.
+             * @param type describes the defined type for this parameter.
              */
             void AddParameter(const std::string& name, jsontype_t type);
 

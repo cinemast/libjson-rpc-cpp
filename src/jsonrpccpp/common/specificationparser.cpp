@@ -8,7 +8,7 @@
  ************************************************************************/
 
 #include "specificationparser.h"
-#include <jsoncpp/json/reader.h>
+#include <jsonrpccpp/common/jsonparser.h>
 #include <fstream>
 
 using namespace std;

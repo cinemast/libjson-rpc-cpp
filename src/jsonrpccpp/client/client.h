@@ -13,7 +13,7 @@
 #include "iclientconnector.h"
 #include "batchcall.h"
 #include "batchresponse.h"
-#include <jsoncpp/json/json.h>
+#include <jsonrpccpp/common/jsonparser.h>
 
 #include <vector>
 #include <map>
@@ -30,13 +30,13 @@ namespace jsonrpc
             Client(IClientConnector &connector, clientVersion_t version = JSONRPC_CLIENT_V2);
             virtual ~Client();
 
-            void        CallMethod          (const std::string &name, const Json::Value &paramter, Json::Value& result) throw (JsonRpcException);
-            Json::Value CallMethod          (const std::string &name, const Json::Value &paramter) throw (JsonRpcException);
+            void        CallMethod          (const std::string &name, const Json::Value &parameter, Json::Value& result) throw (JsonRpcException);
+            Json::Value CallMethod          (const std::string &name, const Json::Value &parameter) throw (JsonRpcException);
 
             void           CallProcedures      (const BatchCall &calls, BatchResponse &response) throw (JsonRpcException);
             BatchResponse  CallProcedures      (const BatchCall &calls) throw (JsonRpcException);
 
-            void        CallNotification    (const std::string& name, const Json::Value& paramter) throw (JsonRpcException);
+            void        CallNotification    (const std::string& name, const Json::Value& parameter) throw (JsonRpcException);
 
         private:
            IClientConnector  &connector;

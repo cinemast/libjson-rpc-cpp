@@ -11,7 +11,7 @@
 #define JSONRPC_BATCHRESPONSE_H
 
 #include <map>
-#include <jsoncpp/json/json.h>
+#include <jsonrpccpp/common/jsonparser.h>
 
 namespace jsonrpc {
 
@@ -43,7 +43,7 @@ namespace jsonrpc {
             void getResult(int id, Json::Value &result);
 
             /**
-             * @brief getErrorCode method checks if for a given id, an error occured in the batch request.
+             * @brief getErrorCode method checks if for a given id, an error occurred in the batch request.
              * @param id
              */
             int getErrorCode(int id);
