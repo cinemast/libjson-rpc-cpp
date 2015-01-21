@@ -13,8 +13,7 @@
 #include <jsonrpccpp/common/specificationparser.h>
 #include <jsonrpccpp/common/specificationwriter.h>
 
-#define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE
+#define BOOST_TEST_MODULE common
 
 using namespace jsonrpc;
 using namespace std;
