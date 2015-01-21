@@ -10,7 +10,7 @@
 #include "specificationwriter.h"
 #include "jsonparser.h"
 #include <fstream>
-#include <jsoncpp/json/writer.h>
+#include <jsonrpccpp/common/jsonparser.h>
 #include <iostream>
 
 using namespace std;

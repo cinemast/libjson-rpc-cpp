@@ -11,7 +11,7 @@
 #define RESPONSEHANDLER_H
 
 #include <jsonrpccpp/common/exception.h>
-#include <jsoncpp/json/value.h>
+#include <jsonrpccpp/common/jsonparser.h>
 #include <string>
 #include "client.h"
 
