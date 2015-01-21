@@ -7,11 +7,9 @@
  * @license See attached LICENSE.txt
  ************************************************************************/
 
-#include <boost/test/unit_test.hpp>
 
 #ifdef INTEGRATION_TESTING
-#define BOOST_TEST_MODULE integration
-
+#include <boost/test/unit_test.hpp>
 
 #include <jsonrpccpp/server/connectors/httpserver.h>
 #include <jsonrpccpp/client/connectors/httpclient.h>
