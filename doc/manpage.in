@@ -1,6 +1,6 @@
 .\" Manpage for jsonrpcstub.
 .\" Contact psk@autistici.org to correct errors or typos.
-.TH man 1 "22 November 2014" "0.4.1" "jsonrpcstub man page"
+.TH man 1 "22 November 2014" "@MAJOR_VERSION@.@MINOR_VERSION@.@PATCH_VERSION@" "jsonrpcstub man page"
 .SH NAME
 jsonrpcstub \- genearate stubs for the libjson\-rpc\-cpp framework.
 .SH SYNOPSIS

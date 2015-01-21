@@ -11,7 +11,7 @@ SET(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -Wnon-virtua
 
 SET(MAJOR_VERSION 0)
 SET(MINOR_VERSION 4)
-SET(PATCH_VERSION 1)
+SET(PATCH_VERSION 2)
 SET(SO_VERSION    0)
 
 #possible modules that can be enabled/disabled
