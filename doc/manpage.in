@@ -16,8 +16,8 @@ jsonrpcstub specfile.json [\-\-cpp\-server=namespace::ClassName]
 jsonrpcstub is a tool to generate C++ and JavaScript classes from a procedure specification file.
 .SS SPECIFICATION SYNTAX
 .PP
-The specifictaion file is a JSON file containing all available JSON-RPC methods and notifications
-with their corresponding parameters and return values contained in a top-level JSON array.
+The specifictaion file is a JSON file containing all available JSON\-RPC methods and notifications
+with their corresponding parameters and return values contained in a top\-level JSON array.
 .PP
 .nf
 [
@@ -84,7 +84,7 @@ No known bugs. Please report found bugs as an issue on github or send me an emai
 
 .SH COPYRIGHT
 
-Copyright (C) 2011\-2014 Peter Spiess-Knafl
+Copyright (C) 2011\-2015 Peter Spiess\-Knafl
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of 
 this software and associated documentation files (the "Software"), to deal in the 
@@ -104,4 +104,4 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR TH
 OR OTHER DEALINGS IN THE SOFTWARE.
 
 .SH AUTHOR
-Peter Spiess-Knafl (psk@autistici.org)
+Peter Spiess\-Knafl (psk@autistici.org)
