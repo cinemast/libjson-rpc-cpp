@@ -48,3 +48,7 @@ Pascal Heijnsdijk <pascal@heijnsdijk.nl>
 
 Kasper Laudrup <laudrup@stacktrace.dk>
 + Code reviews
+
+Erik Lundin
++ bugfix in cpp-server stubgen
++ bugfix for gcc 4.7 compatibility 

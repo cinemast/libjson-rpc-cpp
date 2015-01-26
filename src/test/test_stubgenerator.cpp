@@ -54,15 +54,18 @@ BOOST_AUTO_TEST_CASE(test_stubgen_cppserver)
     stubgen.generateStub();
     string result = stream.str();
 
+    cout << result << endl;
+
     BOOST_CHECK_NE(result.find("#ifndef JSONRPC_CPP_STUB_NS1_NS2_TESTSTUBSERVER_H_"), string::npos);
     BOOST_CHECK_NE(result.find("#define JSONRPC_CPP_STUB_NS1_NS2_TESTSTUBSERVER_H_"), string::npos);
     BOOST_CHECK_NE(result.find("namespace ns1"), string::npos);
     BOOST_CHECK_NE(result.find("namespace ns2"), string::npos);
     BOOST_CHECK_NE(result.find("class TestStubServer : public jsonrpc::AbstractServer<TestStubServer>"), string::npos);
-    BOOST_CHECK_NE(result.find("virtual std::string test.method(const std::string& name) = 0;"), string::npos);
-    BOOST_CHECK_NE(result.find("virtual void test.notification(const std::string& name) = 0;"), string::npos);
-    BOOST_CHECK_NE(result.find("virtual double test.method2(const Json::Value& object, const Json::Value& values) = 0;"), string::npos);
-    BOOST_CHECK_NE(result.find("virtual void test.notification2(const Json::Value& object, const Json::Value& values) = 0;"), string::npos);
+    BOOST_CHECK_NE(result.find("virtual std::string test_method(const std::string& name) = 0;"), string::npos);
+    BOOST_CHECK_NE(result.find("virtual void test_notification(const std::string& name) = 0;"), string::npos);
+    BOOST_CHECK_NE(result.find("virtual double test_method2(const Json::Value& object, const Json::Value& values) = 0;"), string::npos);
+    BOOST_CHECK_NE(result.find("virtual void test_notification2(const Json::Value& object, const Json::Value& values) = 0;"), string::npos);
+    BOOST_CHECK_NE(result.find("this->bindAndAddMethod(jsonrpc::Procedure(\"test.method\", jsonrpc::PARAMS_BY_NAME, jsonrpc::JSON_STRING, \"name\",jsonrpc::JSON_STRING, NULL), &ns1::ns2::TestStubServer::test_methodI);"), string::npos);
     BOOST_CHECK_NE(result.find("#endif //JSONRPC_CPP_STUB_NS1_NS2_TESTSTUBSERVER_H_"), string::npos);
 }
 

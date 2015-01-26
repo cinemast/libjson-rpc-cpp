@@ -14,8 +14,8 @@
 #include <sstream>
 #include <algorithm>
 
-#define TEMPLATE_CPPSERVER_METHODBINDING       "this->bindAndAddMethod(jsonrpc::Procedure(\"<procedurename>\", <paramtype>, <returntype>, <parameterlist> NULL), &<stubname>::<procedurename>I);"
-#define TEMPLATE_CPPSERVER_NOTIFICATIONBINDING "this->bindAndAddNotification(jsonrpc::Procedure(\"<procedurename>\", <paramtype>, <parameterlist> NULL), &<stubname>::<procedurename>I);"
+#define TEMPLATE_CPPSERVER_METHODBINDING       "this->bindAndAddMethod(jsonrpc::Procedure(\"<rawprocedurename>\", <paramtype>, <returntype>, <parameterlist> NULL), &<stubname>::<procedurename>I);"
+#define  TEMPLATE_CPPSERVER_NOTIFICATIONBINDING "this->bindAndAddNotification(jsonrpc::Procedure(\"<rawprocedurename>\", <paramtype>, <parameterlist> NULL), &<stubname>::<procedurename>I);"
 
 #define TEMPLATE_CPPSERVER_SIGCLASS "class <stubname> : public jsonrpc::AbstractServer<<stubname>>"
 #define TEMPLATE_CPPSERVER_SIGCONSTRUCTOR "<stubname>(jsonrpc::AbstractServerConnector &conn, jsonrpc::serverVersion_t type = jsonrpc::JSONRPC_SERVER_V2) : jsonrpc::AbstractServer<<stubname>>(conn, type)"
@@ -91,6 +91,7 @@ void CPPServerStubGenerator::generateBindings()
         {
             tmp = TEMPLATE_CPPSERVER_NOTIFICATIONBINDING;
         }
+        replaceAll2(tmp, "<rawprocedurename>", proc.GetProcedureName());
         replaceAll2(tmp, "<procedurename>", CPPHelper::normalizeString(proc.GetProcedureName()));
         replaceAll2(tmp, "<returntype>", CPPHelper::toString(proc.GetReturnType()));
         replaceAll2(tmp, "<parameterlist>", generateBindingParameterlist(proc));
@@ -116,9 +117,9 @@ void CPPServerStubGenerator::generateProcedureDefinitions()
     {
         Procedure &proc = *it;
         if(proc.GetProcedureType() == RPC_METHOD)
-            this->writeLine(replaceAll(TEMPLATE_CPPSERVER_SIGMETHOD, "<procedurename>", proc.GetProcedureName()));
+            this->writeLine(replaceAll(TEMPLATE_CPPSERVER_SIGMETHOD, "<procedurename>", CPPHelper::normalizeString(proc.GetProcedureName())));
         else
-            this->writeLine(replaceAll(TEMPLATE_CPPSERVER_SIGNOTIFICATION, "<procedurename>", proc.GetProcedureName()));
+            this->writeLine(replaceAll(TEMPLATE_CPPSERVER_SIGNOTIFICATION, "<procedurename>", CPPHelper::normalizeString(proc.GetProcedureName())));
 
         this->writeLine("{");
         this->increaseIndentation();
@@ -150,7 +151,7 @@ void CPPServerStubGenerator::generateAbstractDefinitions()
             returntype = CPPHelper::toCppReturntype(proc.GetReturnType());
         }
         replaceAll2(tmp, "<returntype>", returntype);
-        replaceAll2(tmp, "<procedurename>", proc.GetProcedureName());
+        replaceAll2(tmp, "<procedurename>", CPPHelper::normalizeString(proc.GetProcedureName()));
         replaceAll2(tmp, "<parameterlist>", CPPHelper::generateParameterDeclarationList(proc));
         this->writeLine(tmp);
     }
