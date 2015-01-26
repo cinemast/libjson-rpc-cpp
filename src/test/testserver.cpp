@@ -77,13 +77,13 @@ int TestServer::getCnt()
     return cnt;
 }
 
-bool TestServer::bindAndAddMethod(const Procedure& proc, AbstractServer::methodPointer_t pointer)
+bool TestServer::bindAndAddMethod(const Procedure& proc, AbstractServer<TestServer>::methodPointer_t pointer)
 {
-    return AbstractServer::bindAndAddMethod(proc, pointer);
+    return AbstractServer<TestServer>::bindAndAddMethod(proc, pointer);
 }
 
-bool TestServer::bindAndAddNotification(const Procedure& proc, AbstractServer::notificationPointer_t pointer)
+bool TestServer::bindAndAddNotification(const Procedure& proc, AbstractServer<TestServer>::notificationPointer_t pointer)
 {
-    return AbstractServer::bindAndAddNotification(proc, pointer);
+    return AbstractServer<TestServer>::bindAndAddNotification(proc, pointer);
 }
 
