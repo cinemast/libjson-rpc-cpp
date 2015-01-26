@@ -36,9 +36,9 @@ class <stubname> : public jsonrpc::AbstractServer<<stubname>>\n\
 "
 
 #define TEMPLATE_SERVER_METHODBINDING "\
-            this->bindAndAddMethod(new jsonrpc::Procedure(\"<procedurename>\", <paramtype>, <returntype>, <parameterlist> NULL), &<stubname>::<procedurename>I);"
+            this->bindAndAddMethod(new jsonrpc::Procedure(\"<rawprocedurename>\", <paramtype>, <returntype>, <parameterlist> NULL), &<stubname>::<procedurename>I);"
 #define TEMPLATE_SERVER_NOTIFICATIONBINDING "\
-            this->bindAndAddNotification(new jsonrpc::Procedure(\"<procedurename>\", <paramtype>, <parameterlist> NULL), &<stubname>::<procedurename>I);"
+            this->bindAndAddNotification(new jsonrpc::Procedure(\"<rawprocedurename>\", <paramtype>, <parameterlist> NULL), &<stubname>::<procedurename>I);"
 
 #define TEMPLATE_SERVER_METHODDEFINITION "\
         inline virtual void <procedurename>I(const Json::Value& request, Json::Value& response) \n\
