@@ -5,7 +5,7 @@
 #  MHD_INCLUDE_DIRS - the MHD include directory
 #  MHD_LIBRARY - Link these to use MHD
 
-FIND_LIBRARY (MHD_LIBRARIES NAMES microhttpd microhttpd-10
+FIND_LIBRARY (MHD_LIBRARIES NAMES microhttpd microhttpd-10 libmicrohttpd
     PATHS
     /usr/lib
     /usr/local/lib

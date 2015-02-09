@@ -28,6 +28,15 @@ IF(WIN32)
         SET(BOOST_ROOT "C:/boost_1_57_0")
 ENDIF()
 
+IF ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+
+# TODO hanlde other msvc versions or it will fail find them
+  SET(Boost_COMPILER -vc120)
+# use static boost libraries *.lib
+  SET(Boost_USE_STATIC_LIBS ON)
+
+ENDIF()
+
 #the core framework
 add_subdirectory(src/jsonrpccpp)
 
