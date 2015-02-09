@@ -8,7 +8,8 @@
  ************************************************************************/
 
 #include "mockclientconnectionhandler.h"
-#include <unistd.h>
+#include <chrono>
+#include <thread>
 
 using namespace std;
 using namespace jsonrpc;
@@ -23,7 +24,7 @@ MockClientConnectionHandler::MockClientConnectionHandler() :
 
 void MockClientConnectionHandler::HandleRequest(const std::string &request, std::string &retValue)
 {
-    usleep(timeout*1000);
+    std::this_thread::sleep_for(std::chrono::microseconds(timeout*1000));
     this->request = request;
     retValue = response;
 }

@@ -31,11 +31,12 @@ IF(WIN32)
 # maybe use cmake external dependencies instead
 	include_directories(${CMAKE_SOURCE_DIR}/win32-deps/include)
 	SET(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/dist)
-        SET(BOOST_ROOT "C:/boost_1_57_0")
+  SET(BOOST_ROOT "C:/boost_1_57_0")
 ENDIF()
 
 IF ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 
+  SET(Boost_USE_MULTITHREADED ON)
 # TODO hanlde other msvc versions or it will fail find them
   SET(Boost_COMPILER -vc120)
 # use static boost libraries *.lib
