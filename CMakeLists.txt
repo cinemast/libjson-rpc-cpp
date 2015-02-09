@@ -29,8 +29,8 @@ include_directories(${CMAKE_PREFIX_PATH}/include)
 IF(WIN32)
 # TODO that's even more ugly
 # maybe use cmake external dependencies instead
-	include_directories(${CMAKE_SOURCE_DIR}/win32-deps/include)
-	SET(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/dist)
+  include_directories(${CMAKE_SOURCE_DIR}/win32-deps/include)
+  SET(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/dist)
   SET(BOOST_ROOT "C:/boost_1_57_0")
 ENDIF()
 

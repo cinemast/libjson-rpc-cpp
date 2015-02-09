@@ -10,7 +10,7 @@ file(COPY ${CMAKE_SOURCE_DIR}/src/examples/server.key ${CMAKE_SOURCE_DIR}/src/ex
 file(COPY ${test_specs} DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY ${test_specs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
-set(testlibs jsonrpccommon jsonrpcclient jsonrpcserver)
+set(testlibs ${Boost_LIBRARIES} jsonrpccommon jsonrpcclient jsonrpcserver)
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src)
 
 #add_definitions(-DBOOST_TEST_DYN_LINK)
@@ -36,8 +36,6 @@ ENDIF()
 
 add_executable(unit_testsuite ${test_source})
 target_link_libraries(unit_testsuite ${testlibs})
-target_link_libraries(unit_testsuite ${Boost_UNIT_TEST_FRAMEWORK_LIBRARIES})
-message("Boost test fm: ${Boost_UNIT_TEST_FRAMEWORK_LIBRARIES}")
 IF(COMPILE_STUBGEN)
     target_link_libraries(unit_testsuite stubgen)
 ENDIF()
