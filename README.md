@@ -20,7 +20,7 @@ It is fully JSON-RPC [2.0 & 1.0 compatible](http://www.jsonrpc.org/specification
 **Other good reasons to use libjson-rpc-cpp**
 - Easy to use [cmake](http://www.cmake.org) cross platform build system.
 - Clean and simple architecture, which makes it easy to extend.
-- Tested under MacOS X (10.9), Linux (Debian 8 64-bit), Windows 7 (MinGW32) and Raspbian Wheezy (armhf).
+- Tested under MacOS X (10.9), GNU/Linux (Debian 8 64-bit), Windows 7 (MinGW32) and Raspbian Wheezy (armhf).
 - Automated testing using `make test`.
 - Useful Examples provided. e.g. XBMC Remote using json-rpc client part and stub generator.
 - The stubgenerator currently supports C++ and JavaScript.
