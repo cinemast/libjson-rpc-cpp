@@ -54,8 +54,6 @@ BOOST_AUTO_TEST_CASE(test_stubgen_cppserver)
     stubgen.generateStub();
     string result = stream.str();
 
-    cout << result << endl;
-
     BOOST_CHECK_NE(result.find("#ifndef JSONRPC_CPP_STUB_NS1_NS2_TESTSTUBSERVER_H_"), string::npos);
     BOOST_CHECK_NE(result.find("#define JSONRPC_CPP_STUB_NS1_NS2_TESTSTUBSERVER_H_"), string::npos);
     BOOST_CHECK_NE(result.find("namespace ns1"), string::npos);
