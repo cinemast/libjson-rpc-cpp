@@ -18,6 +18,7 @@
 #include <stubgenerator/stubgeneratorfactory.h>
 
 #include <sstream>
+#include <iostream>
 
 using namespace jsonrpc;
 using namespace std;
