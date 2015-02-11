@@ -1,22 +1,16 @@
 file(GLOB jsonrpc_source_common common/*.c*)
 file(GLOB jsonrpc_source_client client/*.c*)
 file(GLOB jsonrpc_source_server server/*.c*)
-list(APPEND jsonrpc_source_server server/abstractserver.h)
 
 file(GLOB jsonrpc_header_common common/*.h)
-file(GLOB jsonrpc_header_client
-    client/batchcall.h
-    client/batchresponse.h
-    client/client.h
-    client/iclientconnector.h
-)
-file(GLOB jsonrpc_header_server
-    server/requesthandlerfactory.h
-    server/abstractserver.h
-    server/abstractserverconnector.h
-    server/iprocedureinvokationhandler.h
-    server/iclientconnectionhandler.h
-)
+
+# TODO not sure why rpcprotocolclient.h was not included here
+# if we don't want to include it, remove it using list REMOVE_ITEM
+file(GLOB jsonrpc_header_client client/*.h)
+
+# TODO same here, if we want to remove something use list REMOVE_ITEM
+file(GLOB jsonrpc_header_server server/*.h)
+
 file(GLOB jsonrpc_header *.h)
 
 set(client_connector_source "")
@@ -25,7 +19,6 @@ set(client_connector_libs   "")
 set(server_connector_source "")
 set(server_connector_header "")
 set(server_connector_libs   "")
-
 
 # configure a header file to pass some of the CMake settings
 # to the source code
@@ -36,6 +29,7 @@ configure_file("${PROJECT_SOURCE_DIR}/src/jsonrpccpp/common/jsonparser.h.in" "${
 install(FILES "${PROJECT_BINARY_DIR}/gen/jsonrpccpp/version.h" DESTINATION include/jsonrpccpp)
 install(FILES "${PROJECT_BINARY_DIR}/gen/jsonrpccpp/common/jsonparser.h" DESTINATION include/jsonrpccpp/common)
 
+include_directories(${JSONCPP_INCLUDE_DIRS})
 include_directories("${PROJECT_SOURCE_DIR}/src/")
 include_directories("${PROJECT_BINARY_DIR}/gen/")
 include_directories("${PROJECT_BINARY_DIR}/gen/jsonrpccpp/common")
