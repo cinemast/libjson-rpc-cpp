@@ -1,6 +1,3 @@
-find_package(JSONCPP REQUIRED)
-find_package(Threads REQUIRED)
-
 file(GLOB jsonrpc_source_common common/*.c*)
 file(GLOB jsonrpc_source_client client/*.c*)
 file(GLOB jsonrpc_source_server server/*.c*)

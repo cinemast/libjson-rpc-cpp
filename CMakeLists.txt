@@ -1,48 +1,56 @@
 cmake_minimum_required(VERSION 2.6)
 project(libjson-rpc-cpp)
+
+# list command no longer ignores empty elements 
 cmake_policy(SET CMP0007 NEW)
 
+if (${CMAKE_MAJOR_VERSION} GREATER 2)
+	# old policy do not use MACOSX_RPATH
+	cmake_policy(SET CMP0042 OLD)
+endif()
+
+set(MAJOR_VERSION 0)
+set(MINOR_VERSION 4)
+set(PATCH_VERSION 2)
+set(SO_VERSION    0)
+
+# defaults for modules that can be enabled/disabled
+set(HTTP_SERVER YES CACHE BOOL "Include HTTP server using libmicrohttpd")
+set(HTTP_CLIENT YES CACHE BOOL "Include HTTP client support using curl")
+set(COMPILE_TESTS YES CACHE BOOL "Compile test framework")
+set(COMPILE_STUBGEN YES CACHE BOOL "Compile the stubgenerator")
+set(COMPILE_EXAMPLES YES CACHE BOOL "Compile example programs")
+
+# print actual settings
+message(STATUS "HTTP_SERVER: ${HTTP_SERVER}")
+message(STATUS "HTTP_CLIENT: ${HTTP_CLIENT}")
+message(STATUS "COMPILE_TESTS: ${COMPILE_TESTS}")
+message(STATUS "COMPILE_STUBGEN: ${COMPILE_STUBGEN}")
+message(STATUS "COMPILE_EXAMPLES: ${COMPILE_EXAMPLES}")
+
+# setup directory where we should look for cmake files
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+
+# setup compiler settings && dependencies
+include(CMakeCompilerSettings)
+include(CMakeDependencies)
+
+# setup output directories
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 
-SET(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -Wnon-virtual-dtor -fprofile-arcs -ftest-coverage -fPIC -O0")
-
-SET(MAJOR_VERSION 0)
-SET(MINOR_VERSION 4)
-SET(PATCH_VERSION 2)
-SET(SO_VERSION    0)
-
-#possible modules that can be enabled/disabled
-SET(HTTP_SERVER YES CACHE BOOL "Include HTTP server using libmicrohttpd")
-SET(HTTP_CLIENT YES CACHE BOOL "Include HTTP client support using curl")
-
-SET(COMPILE_TESTS YES CACHE BOOL "Compile test framework")
-SET(COMPILE_STUBGEN YES CACHE BOOL "Compile the stubgenerator")
-SET(COMPILE_EXAMPLES YES CACHE BOOL "Compile example programs")
-
 # TODO that's very ugly
 # include XXX_INCLUDE_DIRS instead!
-include_directories(${CMAKE_PREFIX_PATH}/include)
+#include_directories(${CMAKE_PREFIX_PATH}/include)
 
-IF(WIN32)
+if (WIN32)
 # TODO that's even more ugly
 # maybe use cmake external dependencies instead
-  include_directories(${CMAKE_SOURCE_DIR}/win32-deps/include)
-  SET(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/dist)
-  SET(BOOST_ROOT "C:/boost_1_57_0")
-ENDIF()
-
-IF ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-
-  SET(Boost_USE_MULTITHREADED ON)
-# TODO hanlde other msvc versions or it will fail find them
-  SET(Boost_COMPILER -vc120)
-# use static boost libraries *.lib
-  SET(Boost_USE_STATIC_LIBS ON)
-
-ENDIF()
+  #include_directories(${CMAKE_SOURCE_DIR}/win32-deps/include)
+  set(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/dist)
+  set(BOOST_ROOT "C:/boost_1_57_0")
+endif()
 
 #the core framework
 add_subdirectory(src/jsonrpccpp)
@@ -52,24 +60,23 @@ include_directories("${PROJECT_BINARY_DIR}/gen/")
 include_directories("${PROJECT_BINARY_DIR}/gen/jsonrpccpp/common")
 
 #the stubgenerator
-IF(COMPILE_STUBGEN)
+if (COMPILE_STUBGEN)
     add_subdirectory(src/stubgenerator)
-ENDIF()
+endif ()
 
-#the examples
-IF(COMPILE_EXAMPLES AND HTTP_SERVER AND HTTP_CLIENT)
+# setup examples
+if (COMPILE_EXAMPLES AND HTTP_SERVER AND HTTP_CLIENT)
     add_subdirectory(src/examples)
-ENDIF()
+endif()
 
-#the test suite
-find_package(Boost COMPONENTS unit_test_framework)
-IF(Boost_FOUND AND COMPILE_TESTS)
+# setup test suite
+if (Boost_FOUND AND COMPILE_TESTS)
     ENABLE_TESTING()
     add_subdirectory(src/test)
-ENDIF()
+endif()
 
-find_package(Doxygen)
-if(DOXYGEN_FOUND)
+# create documentation
+if (DOXYGEN_FOUND)
     file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/doc)
     message(STATUS "Found doxygen: ${DOXYGEN_EXECUTABLE}")
     configure_file("${CMAKE_SOURCE_DIR}/doc/doxyfile.in" "${CMAKE_BINARY_DIR}/Doxyfile" @ONLY)
