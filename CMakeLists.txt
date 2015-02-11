@@ -22,10 +22,26 @@ SET(COMPILE_TESTS YES CACHE BOOL "Compile test framework")
 SET(COMPILE_STUBGEN YES CACHE BOOL "Compile the stubgenerator")
 SET(COMPILE_EXAMPLES YES CACHE BOOL "Compile example programs")
 
+# TODO that's very ugly
+# include XXX_INCLUDE_DIRS instead!
+include_directories(${CMAKE_PREFIX_PATH}/include)
+
 IF(WIN32)
-	include_directories(${CMAKE_SOURCE_DIR}/win32-deps/include)
-	SET(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/dist)
-        SET(BOOST_ROOT "C:/boost_1_57_0")
+# TODO that's even more ugly
+# maybe use cmake external dependencies instead
+  include_directories(${CMAKE_SOURCE_DIR}/win32-deps/include)
+  SET(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/dist)
+  SET(BOOST_ROOT "C:/boost_1_57_0")
+ENDIF()
+
+IF ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+
+  SET(Boost_USE_MULTITHREADED ON)
+# TODO hanlde other msvc versions or it will fail find them
+  SET(Boost_COMPILER -vc120)
+# use static boost libraries *.lib
+  SET(Boost_USE_STATIC_LIBS ON)
+
 ENDIF()
 
 #the core framework

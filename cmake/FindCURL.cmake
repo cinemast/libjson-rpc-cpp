@@ -5,7 +5,7 @@
 #  CURL_INCLUDE_DIRS - the CURL include directory
 #  CURL_LIBRARY - Link these to use CURL
 
-FIND_LIBRARY (CURL_LIBRARIES NAMES curl
+FIND_LIBRARY (CURL_LIBRARIES NAMES curl libcurl
     PATHS
     /usr/lib
     /usr/local/lib

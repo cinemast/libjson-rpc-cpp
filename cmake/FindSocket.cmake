@@ -4,7 +4,11 @@
 #  Socket_FOUND
 
 if(${CMAKE_SYSTEM} MATCHES "Windows")
-  SET(Socket_LIBRARIES wsock32 ws2_32)
+  IF ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    SET(Socket_LIBRARIES ws2_32)
+  ELSE()
+    SET(Socket_LIBRARIES wsock32 ws2_32)
+  ENDIF()
   SET(Socket_FOUND 1)
 elseif(${CMAKE_SYSTEM} MATCHES "INtime")
   SET(Socket_LIBRARIES netlib)
