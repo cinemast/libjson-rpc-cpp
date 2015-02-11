@@ -10,7 +10,7 @@ set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${CMAKE_SOURCE_DIR}/win32-deps")
 # find JSONCPP
 # TODO: handle windows debug libraries!
 # TODO: fix FindJSONCPP file!
-find_package(JSONCPP)
+find_package(Jsoncpp)
 message(STATUS "Jsoncpp header: ${JSONCPP_INCLUDE_DIRS}")
 message(STATUS "Jsoncpp lib   : ${JSONCPP_LIBRARIES}")
 
@@ -20,8 +20,19 @@ message(STATUS "Threads header: ${JSONCPP_INCLUDE_DIRS}")
 message(STATUS "Threads lib   : ${JSONCPP_LIBRARIES}")
 
 # find Argtable
+find_package(Argtable)
 message(STATUS "Argtable header: ${ARGTABLE_INCLUDE_DIRS}")
 message(STATUS "Argtable lib   : ${ARGTABLE_LIBRARIES}")
+
+# find CURL
+find_package(CURL)
+message(STATUS "CURL header: ${CURL_INCLUDE_DIRS}")
+message(STATUS "CURL lib   : ${CURL_LIBRARIES}")
+
+# find libmicrohttpd
+find_package(MHD)
+message(STATUS "MHD header: ${MHD_INCLUDE_DIRS}")
+message(STATUS "MHD lib   : ${MHD_LIBRARIES}")
 
 # find doxygen
 find_package(Doxygen)

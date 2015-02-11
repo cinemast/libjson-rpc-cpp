@@ -20,34 +20,32 @@ set(server_connector_source "")
 set(server_connector_header "")
 set(server_connector_libs   "")
 
-# configure a header file to pass some of the CMake settings
-# to the source code
+# setup sources for http connectors
+if (HTTP_CLIENT)
+    list(APPEND client_connector_header "client/connectors/httpclient.h")
+    list(APPEND client_connector_source "client/connectors/httpclient.cpp")
+    list(APPEND client_connector_libs ${CURL_LIBRARIES})
+endif()
+
+if (HTTP_SERVER)
+    message(STATUS "Activated libmicrohttpd HTTP Server")
+    list(APPEND server_connector_header "server/connectors/httpserver.h")
+    list(APPEND server_connector_source "server/connectors/httpserver.cpp")
+    list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT} ${MHD_LIBRARIES})  
+endif()
+
+# configure a header file to pass some of the CMake settings to the source code
+# TODO: move it to custom build step?
 file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/gen/jsonrpccpp/common")
 configure_file("${PROJECT_SOURCE_DIR}/src/jsonrpccpp/version.h.in" "${PROJECT_BINARY_DIR}/gen/jsonrpccpp/version.h")
-configure_file("${PROJECT_SOURCE_DIR}/src/jsonrpccpp/common/jsonparser.h.in" "${PROJECT_BINARY_DIR}/gen/jsonrpccpp/common/jsonparser.h")
 
 install(FILES "${PROJECT_BINARY_DIR}/gen/jsonrpccpp/version.h" DESTINATION include/jsonrpccpp)
-install(FILES "${PROJECT_BINARY_DIR}/gen/jsonrpccpp/common/jsonparser.h" DESTINATION include/jsonrpccpp/common)
 
 include_directories(${JSONCPP_INCLUDE_DIRS})
 include_directories("${PROJECT_SOURCE_DIR}/src/")
 include_directories("${PROJECT_BINARY_DIR}/gen/")
-include_directories("${PROJECT_BINARY_DIR}/gen/jsonrpccpp/common")
 
-IF(HTTP_CLIENT)
-    find_package(CURL REQUIRED)
-    list(APPEND client_connector_header "client/connectors/httpclient.h")
-    list(APPEND client_connector_source "client/connectors/httpclient.cpp")
-    list(APPEND client_connector_libs ${CURL_LIBRARIES})
-ENDIF()
 
-IF(HTTP_SERVER)
-    message(STATUS "Activated libmicrohttpd HTTP Server")
-    find_package(MHD REQUIRED)
-    list(APPEND server_connector_header "server/connectors/httpserver.h")
-    list(APPEND server_connector_source "server/connectors/httpserver.cpp")
-    list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT} ${MHD_LIBRARIES})  
-ENDIF()
 
 add_library(jsonrpccommon SHARED ${jsonrpc_source_common} ${jsonrpc_header} ${jsonrpc_helper_source_common})
 add_library(jsonrpccommonStatic STATIC ${jsonrpc_source_common} ${jsonrpc_header} ${jsonrpc_helper_source_common})
@@ -86,12 +84,12 @@ install(FILES ${jsonrpc_header_server}          DESTINATION include/jsonrpccpp/s
 install(FILES ${client_connector_header}        DESTINATION include/jsonrpccpp/client/connectors)
 install(FILES ${server_connector_header}        DESTINATION include/jsonrpccpp/server/connectors)
 
-IF(WIN32)
+if (WIN32)
     file(GLOB win32_libs ${CMAKE_SOURCE_DIR}/win32-deps/lib/*.dll)
     file(COPY ${win32_libs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
     install(FILES ${win32_libs} DESTINATION bin)
     install(DIRECTORY ${CMAKE_SOURCE_DIR}/win32-deps/include DESTINATION .)
-ENDIF()
+endif()
 
 install(TARGETS jsonrpccommon jsonrpccommonStatic jsonrpcclient jsonrpcclientStatic jsonrpcserver jsonrpcserverStatic
                       LIBRARY DESTINATION lib
