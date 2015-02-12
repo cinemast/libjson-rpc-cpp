@@ -24,8 +24,8 @@ script:
     - valgrind --leak-check=full --error-exitcode=1 ./bin/unit_testsuite
     - make test
     - sudo make install && sudo ldconfig
-    - g++ ../src/examples/simpleclient.cpp -ljsonrpccpp-client -ljsoncpp -ljsonrpccpp-common -lcurl -o sampleclient
-    - g++ ../src/examples/simpleserver.cpp -ljsonrpccpp-server -ljsoncpp -ljsonrpccpp-common -lmicrohttpd -o sampleserver
+    - g++ ../src/examples/simpleclient.cpp -I/usr/include/jsoncpp -ljsonrpccpp-client -ljsoncpp -ljsonrpccpp-common -lcurl -o sampleclient
+    - g++ ../src/examples/simpleserver.cpp -I/usr/include/jsoncpp -ljsonrpccpp-server -ljsoncpp -ljsonrpccpp-common -lmicrohttpd -o sampleserver
     - sudo make uninstall
 after_success:
     - cd ..
