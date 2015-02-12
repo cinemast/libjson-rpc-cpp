@@ -3,37 +3,41 @@
 #
 #  ARGTABLE_FOUND - system has ARGTABLE
 #  ARGTABLE_INCLUDE_DIRS - the ARGTABLE include directory
-#  ARGTABLE_LIBRARY - Link these to use ARGTABLE
+#  ARGTABLE_LIBRARIES - Link these to use ARGTABLE
 
-FIND_LIBRARY (ARGTABLE_LIBRARIES NAMES argtable2
-    PATHS
-    /usr/lib
-    /usr/local/lib
-    ${CMAKE_SOURCE_DIR}/win32-deps/lib
+find_path (
+	ARGTABLE_INCLUDE_DIR
+	NAMES argtable2.h
+	DOC "argtable include dir"
 )
 
-FIND_PATH (ARGTABLE_INCLUDE_DIRS argtable2.h
-    PATHS
-    /usr/include
-    /usr/local/include
-    ${CMAKE_SOURCE_DIR}/win32-deps/include
+find_library (
+	ARGTABLE_LIBRARY
+	NAMES argtable2
+	DOC "argtable library"
 )
 
-IF(ARGTABLE_INCLUDE_DIRS AND ARGTABLE_LIBRARIES)
-    SET(ARGTABLE_FOUND TRUE)
-ENDIF(ARGTABLE_INCLUDE_DIRS AND ARGTABLE_LIBRARIES)
+set(ARGTABLE_INCLUDE_DIRS ${ARGTABLE_INCLUDE_DIR})
+set(ARGTABLE_LIBRARIES ${ARGTABLE_LIBRARY})
 
-IF(ARGTABLE_FOUND)
-    IF(NOT ARGTABLE_FIND_QUIETLY)
-        MESSAGE(STATUS "Found libargtable: ${ARGTABLE_LIBRARIES}")
-    ENDIF(NOT ARGTABLE_FIND_QUIETLY)
-ELSE(ARGTABLE_FOUND)
-    IF(ARGTABLE_FIND_REQUIRED)
-        MESSAGE(FATAL_ERROR "Could not find libargtable")
-    ENDIF(ARGTABLE_FIND_REQUIRED)
-ENDIF(ARGTABLE_FOUND)
+# debug library on windows
+# same naming convention as in qt (appending debug library with d)
+# boost is using the same "hack" as us with "optimized" and "debug"
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+	find_library(
+		ARGTABLE_LIBRARY_DEBUG	
+		NAMES argtable2d
+		DOC "argtable debug library"
+	)
+	
+	set(ARGTABLE_LIBRARIES optimized ${ARGTABLE_LIBRARIES} debug ${ARGTABLE_LIBRARY_DEBUG})
 
-MARK_AS_ADVANCED(
-    ARGTABLE_LIBRARIES
-    ARGTABLE_INCLUDE_DIRS
-)
+endif()
+
+# handle the QUIETLY and REQUIRED arguments and set JSONCPP_FOUND to TRUE
+# if all listed variables are TRUE, hide their existence from configuration view
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(argtable DEFAULT_MSG
+	ARGTABLE_INCLUDE_DIR ARGTABLE_LIBRARY)
+mark_as_advanced (ARGTABLE_INCLUDE_DIR ARGTABLE_LIBRARY)
+
