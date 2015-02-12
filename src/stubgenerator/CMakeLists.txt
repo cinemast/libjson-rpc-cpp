@@ -2,6 +2,10 @@ file(GLOB_RECURSE jsonrpcstub_source *.cpp)
 file(GLOB_RECURSE libstubgen_source *.cpp)
 list(REMOVE_ITEM libstubgen_source "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp")
 
+include_directories(..)
+include_directories(${JSONCPP_INCLUDE_DIRS})
+include_directories(${ARGTABLE_INCLUDE_DIRS})
+
 if (COMPILE_TESTS)
 	add_library(stubgen STATIC ${libstubgen_source})
 	target_link_libraries(stubgen jsonrpccommon ${ARGTABLE_LIBRARIES})
