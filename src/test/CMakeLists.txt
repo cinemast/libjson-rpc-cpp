@@ -9,11 +9,9 @@ file(COPY ${CMAKE_SOURCE_DIR}/src/examples/server.key ${CMAKE_SOURCE_DIR}/src/ex
 file(COPY ${test_specs} DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY ${test_specs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
-set(testlibs ${Boost_LIBRARIES} jsonrpccommon jsonrpcclient jsonrpcserver)
-
 include_directories(..)
 include_directories(${CMAKE_BINARY_DIR})
-include_directories(${Boost_INCLUDE_DIR})
+include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${JSONCPP_INCLUDE_DIRS})
 
 if (HTTP_CLIENT AND HTTP_SERVER)
@@ -34,7 +32,10 @@ if (WIN32)
 endif ()
 
 add_executable(unit_testsuite ${test_source})
-target_link_libraries(unit_testsuite ${testlibs})
+target_link_libraries(unit_testsuite ${Boost_UNIT_TEST_FRAMEWORK_LIBRARIES})
+target_link_libraries(unit_testsuite jsonrpccommon)
+target_link_libraries(unit_testsuite jsonrpcserver)
+target_link_libraries(unit_testsuite jsonrpcclient)
 
 if (COMPILE_STUBGEN)
 	target_link_libraries(unit_testsuite stubgen)
