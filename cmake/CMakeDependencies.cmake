@@ -38,6 +38,12 @@ message(STATUS "MHD lib   : ${MHD_LIBRARIES}")
 find_package(Doxygen)
 
 # boost stuff
+
+# left for backwards compatbility
+if (WIN32)
+	set(BOOST_ROOT "C:/boost_1_57_0")
+endif()
+
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 
 	set(Boost_USE_MULTITHREADED ON)

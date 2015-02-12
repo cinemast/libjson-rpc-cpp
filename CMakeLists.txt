@@ -40,74 +40,66 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 
-# TODO that's very ugly
-# include XXX_INCLUDE_DIRS instead!
-#include_directories(${CMAKE_PREFIX_PATH}/include)
-
 if (WIN32)
-# TODO that's even more ugly
-# maybe use cmake external dependencies instead
-  #include_directories(${CMAKE_SOURCE_DIR}/win32-deps/include)
-  set(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/dist)
-  set(BOOST_ROOT "C:/boost_1_57_0")
+	set(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/dist)
 endif()
 
 # the core framework
 add_subdirectory(src/jsonrpccpp)
 
-#include_directories("${PROJECT_SOURCE_DIR}/src/")
-#include_directories("${PROJECT_BINARY_DIR}/gen/")
-#include_directories("${PROJECT_BINARY_DIR}/gen/jsonrpccpp/common")
-
 #the stubgenerator
 if (COMPILE_STUBGEN)
-    add_subdirectory(src/stubgenerator)
+	add_subdirectory(src/stubgenerator)
 endif ()
 
 # setup examples
 if (COMPILE_EXAMPLES AND HTTP_SERVER AND HTTP_CLIENT)
-    add_subdirectory(src/examples)
+	add_subdirectory(src/examples)
 endif()
 
 # setup test suite
 if (Boost_FOUND AND COMPILE_TESTS)
-    ENABLE_TESTING()
-    add_subdirectory(src/test)
+	enable_testing()
+	add_subdirectory(src/test)
 endif()
 
 # create documentation
 if (DOXYGEN_FOUND)
-    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/doc)
-    message(STATUS "Found doxygen: ${DOXYGEN_EXECUTABLE}")
-    configure_file("${CMAKE_SOURCE_DIR}/doc/doxyfile.in" "${CMAKE_BINARY_DIR}/Doxyfile" @ONLY)
-    add_custom_target(doc ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/doc COMMENT "Generating API documentation")
+	file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/doc)
+	message(STATUS "Found doxygen: ${DOXYGEN_EXECUTABLE}")
+	configure_file("${CMAKE_SOURCE_DIR}/doc/doxyfile.in" "${CMAKE_BINARY_DIR}/Doxyfile" @ONLY)
+	add_custom_target(doc ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/doc COMMENT "Generating API documentation")
 endif(DOXYGEN_FOUND)
 
-
-# uninstall target
+# setup uninstall target
 configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
-    IMMEDIATE @ONLY)
-add_custom_target(uninstall
-COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
+	"${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
+	"${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+	IMMEDIATE @ONLY
+)
 
-#packaging stuff
-INCLUDE(InstallRequiredSystemLibraries)
-SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "libjson-rpc-cpp")
-SET(CPACK_PACKAGE_VENDOR "Peter Spiess-Knafl <psk@autistici.org>")
-SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
-SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.txt")
-SET(CPACK_PACKAGE_VERSION_MAJOR "${MAJOR_VERSION}")
-SET(CPACK_PACKAGE_VERSION_MINOR "${MINOR_VERSION}")
-SET(CPACK_PACKAGE_VERSION_PATCH "${PATCH_VERSION}")
+add_custom_target(
+	uninstall
+	COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
+)
 
-IF(WIN32 AND NOT UNIX)
-  SET(CPACK_GENERATOR "NSIS")
-  SET(CPACK_NSIS_DISPLAY_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY} libjson-rpc-cpp")
-  SET(CPACK_NSIS_HELP_LINK "http://github.com/cinemast/libjson-rpc-cpp")
-  SET(CPACK_NSIS_URL_INFO_ABOUT "http://github.com/cinemast/libjson-rpc-cpp")
-  SET(CPACK_NSIS_CONTACT "psk@autistici.org")
-  SET(CPACK_NSIS_MODIFY_PATH ON)
-ENDIF(WIN32 AND NOT UNIX)
-INCLUDE(CPack)
+# packaging stuff
+include(InstallRequiredSystemLibraries)
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "libjson-rpc-cpp")
+set(CPACK_PACKAGE_VENDOR "Peter Spiess-Knafl <psk@autistici.org>")
+set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.txt")
+set(CPACK_PACKAGE_VERSION_MAJOR "${MAJOR_VERSION}")
+set(CPACK_PACKAGE_VERSION_MINOR "${MINOR_VERSION}")
+set(CPACK_PACKAGE_VERSION_PATCH "${PATCH_VERSION}")
+
+if (WIN32 AND NOT UNIX)
+	set(CPACK_GENERATOR "NSIS")
+	set(CPACK_NSIS_DISPLAY_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY} libjson-rpc-cpp")
+	set(CPACK_NSIS_HELP_LINK "http://github.com/cinemast/libjson-rpc-cpp")
+	set(CPACK_NSIS_URL_INFO_ABOUT "http://github.com/cinemast/libjson-rpc-cpp")
+	set(CPACK_NSIS_CONTACT "psk@autistici.org")
+	set(CPACK_NSIS_MODIFY_PATH ON)
+endif(WIN32 AND NOT UNIX)
+include(CPack)
+
