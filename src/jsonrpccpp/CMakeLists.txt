@@ -1,14 +1,30 @@
+# setup common headers and sources
+file(GLOB jsonrpc_header *.h)
+file(GLOB jsonrpc_header_common common/*.h)
 file(GLOB jsonrpc_source_common common/*.c*)
-file(GLOB jsonrpc_source_client client/*.c*)
+
+# setup server headers and sources
+file(GLOB jsonrpc_install_header_server 
+	server/requesthandlerfactory.h
+	server/abstractserver.h
+	server/abstractserverconnector.h
+	server/iprocedureinvokationhandler.h
+	server/iclientconnectionhandler.h
+)
+file(GLOB jsonrpc_header_server server/*.h)
 file(GLOB jsonrpc_source_server server/*.c*)
 
-# TODO not sure why some .h were not included
-# if we don't want to include it, remove it using list REMOVE_ITEM
-file(GLOB jsonrpc_header_common common/*.h)
+# setup client headers and sources
+file(GLOB jsonrpc_install_header_client
+	client/batchcall.h
+	client/batchresponse.h
+	client/client.h
+	client/iclientconnector.h
+)
 file(GLOB jsonrpc_header_client client/*.h)
-file(GLOB jsonrpc_header_server server/*.h)
-file(GLOB jsonrpc_header *.h)
+file(GLOB jsonrpc_source_client client/*.c*)
 
+# setup connector variables defaults
 set(client_connector_source "")
 set(client_connector_header "")
 set(client_connector_libs   "")
@@ -85,8 +101,8 @@ set_target_properties(
 install(FILES ${jsonrpc_header}                 DESTINATION include/jsonrpccpp)
 install(FILES ${jsonrpc_header_common}          DESTINATION include/jsonrpccpp/common)
 install(FILES ${jsonrpc_helper_header_common}   DESTINATION include/jsonrpccpp/common/helper)
-install(FILES ${jsonrpc_header_client}          DESTINATION include/jsonrpccpp/client)
-install(FILES ${jsonrpc_header_server}          DESTINATION include/jsonrpccpp/server)
+install(FILES ${jsonrpc_install_header_client}  DESTINATION include/jsonrpccpp/client)
+install(FILES ${jsonrpc_install_header_server}  DESTINATION include/jsonrpccpp/server)
 install(FILES ${client_connector_header}        DESTINATION include/jsonrpccpp/client/connectors)
 install(FILES ${server_connector_header}        DESTINATION include/jsonrpccpp/server/connectors)
 
