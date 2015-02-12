@@ -52,12 +52,12 @@ if (WIN32)
   set(BOOST_ROOT "C:/boost_1_57_0")
 endif()
 
-#the core framework
+# the core framework
 add_subdirectory(src/jsonrpccpp)
 
-include_directories("${PROJECT_SOURCE_DIR}/src/")
-include_directories("${PROJECT_BINARY_DIR}/gen/")
-include_directories("${PROJECT_BINARY_DIR}/gen/jsonrpccpp/common")
+#include_directories("${PROJECT_SOURCE_DIR}/src/")
+#include_directories("${PROJECT_BINARY_DIR}/gen/")
+#include_directories("${PROJECT_BINARY_DIR}/gen/jsonrpccpp/common")
 
 #the stubgenerator
 if (COMPILE_STUBGEN)
