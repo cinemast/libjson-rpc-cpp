@@ -47,7 +47,11 @@ find_path(
 	PATH_SUFFIXES jsoncpp/json json
 )
 
-string(REGEX MATCH "jsoncpp/json|json" JSONCPP_INCLUDE_PREFIX ${JSONCPP_INCLUDE_PREFIX})
+if (${JSONCPP_INCLUDE_PREFIX} MATCHES "jsoncpp")
+	set(JSONCPP_INCLUDE_PREFIX "jsoncpp/json")
+else()
+	set(JSONCPP_INCLUDE_PREFIX "json")
+endif()
 
 # handle the QUIETLY and REQUIRED arguments and set JSONCPP_FOUND to TRUE
 # if all listed variables are TRUE, hide their existence from configuration view
