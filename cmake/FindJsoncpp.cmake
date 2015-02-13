@@ -8,12 +8,12 @@
 #  JSONCPP_INCLUDE_DIRS, where to find header, etc.
 #  JSONCPP_LIBRARIES, the libraries needed to use jsoncpp.
 #  JSONCPP_FOUND, If false, do not try to use jsoncpp.
+#  JSONCPP_INCLUDE_PREFIX, include prefix for jsoncpp
 
 # only look in default directories
 find_path(
 	JSONCPP_INCLUDE_DIR 
-	NAMES json/json.h
-	PATH_SUFFIXES jsoncpp
+	NAMES jsoncpp/json/json.h json/json.h
 	DOC "jsoncpp include dir"
 )
 
@@ -39,6 +39,15 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	set(JSONCPP_LIBRARIES optimized ${JSONCPP_LIBRARIES} debug ${JSONCPP_LIBRARY_DEBUG})
 
 endif()
+
+# find JSONCPP_INCLUDE_PREFIX
+find_path(
+	JSONCPP_INCLUDE_PREFIX
+	NAMES json.h
+	PATH_SUFFIXES jsoncpp/json json
+)
+
+string(REGEX MATCH "jsoncpp/json|json" JSONCPP_INCLUDE_PREFIX ${JSONCPP_INCLUDE_PREFIX})
 
 # handle the QUIETLY and REQUIRED arguments and set JSONCPP_FOUND to TRUE
 # if all listed variables are TRUE, hide their existence from configuration view

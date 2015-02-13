@@ -16,8 +16,7 @@ message(STATUS "Jsoncpp lib   : ${JSONCPP_LIBRARIES}")
 
 # find Threads!
 find_package(Threads)
-message(STATUS "Threads header: ${JSONCPP_INCLUDE_DIRS}")
-message(STATUS "Threads lib   : ${JSONCPP_LIBRARIES}")
+message(STATUS "Threads: ${CMAKE_THREADS_LIBS_INIT}")
 
 # find Argtable
 find_package(Argtable)

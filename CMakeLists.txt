@@ -44,6 +44,10 @@ if (WIN32)
 	set(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/dist)
 endif()
 
+# setup global include_directories (for backwards compatibility)
+include_directories("${CMAKE_BINARY_DIR}/gen/")
+include_directories("${CMAKE_BINARY_DIR}/gen/jsonrpccpp/common")
+
 # the core framework
 add_subdirectory(src/jsonrpccpp)
 
