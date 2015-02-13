@@ -1,5 +1,5 @@
 # the name of the target operating system
-SET(CMAKE_SYSTEM_NAME Windows)
+set(CMAKE_SYSTEM_NAME Windows)
 
 # Choose an appropriate compiler prefix
 
@@ -22,7 +22,7 @@ find_program(CMAKE_CXX_COMPILER NAMES ${COMPILER_PREFIX}-g++)
 
 
 # here is the target environment located
-SET(CMAKE_FIND_ROOT_PATH  /usr/${COMPILER_PREFIX})
+set(CMAKE_FIND_ROOT_PATH  /usr/${COMPILER_PREFIX})
 
 # adjust the default behaviour of the FIND_XXX() commands:
 # search headers and libraries in the target environment, search 

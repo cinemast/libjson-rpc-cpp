@@ -5,35 +5,39 @@
 #  MHD_INCLUDE_DIRS - the MHD include directory
 #  MHD_LIBRARY - Link these to use MHD
 
-FIND_LIBRARY (MHD_LIBRARIES NAMES microhttpd microhttpd-10
-    PATHS
-    /usr/lib
-    /usr/local/lib
-    ${CMAKE_SOURCE_DIR}/win32-deps/lib
+find_path(
+	MHD_INCLUDE_DIR 
+	NAMES microhttpd.h
+	DOC "microhttpd include dir"
 )
 
-FIND_PATH (MHD_INCLUDE_DIRS microhttpd.h
-    PATHS
-    /usr/include
-    /usr/local/include
-    ${CMAKE_SOURCE_DIR}/win32-deps/include
+find_library(
+	MHD_LIBRARY
+	NAMES microhttpd microhttpd-10 libmicrohttpd libmicrohttpd-dll
+	DOC "microhttpd library"
 )
 
-IF(MHD_INCLUDE_DIRS AND MHD_LIBRARIES)
-    SET(MHD_FOUND TRUE)
-ENDIF(MHD_INCLUDE_DIRS AND MHD_LIBRARIES)
+set(MHD_INCLUDE_DIRS ${MHD_INCLUDE_DIR})
+set(MHD_LIBRARIES ${MHD_LIBRARY})
 
-IF(MHD_FOUND)
-    IF(NOT MHD_FIND_QUIETLY)
-        MESSAGE(STATUS "Found libmicrohttpd: ${MHD_LIBRARIES}")
-    ENDIF(NOT MHD_FIND_QUIETLY)
-ELSE(MHD_FOUND)
-    IF(MHD_FIND_REQUIRED)
-        MESSAGE(FATAL_ERROR "Could not find libmicrohttpd")
-    ENDIF(MHD_FIND_REQUIRED)
-ENDIF(MHD_FOUND)
+# debug library on windows
+# same naming convention as in qt (appending debug library with d)
+# boost is using the same "hack" as us with "optimized" and "debug"
+# official MHD project actually uses _d suffix
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+	find_library(
+		MHD_LIBRARY_DEBUG
+		NAMES microhttpd_d microhttpd-10_d libmicrohttpd_d libmicrohttpd-dll_d
+		DOC "mhd debug library"
+	)
 
-MARK_AS_ADVANCED(
-    MHD_LIBRARIES
-    MHD_INCLUDE_DIRS
-)
+	set(MHD_LIBRARIES optimized ${MHD_LIBRARIES} debug ${MHD_LIBRARY_DEBUG})
+
+endif()
+
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(mhd DEFAULT_MSG
+	MHD_INCLUDE_DIR MHD_LIBRARY)
+
+mark_as_advanced(MHD_INCLUDE_DIR MHD_LIBRARY)
+

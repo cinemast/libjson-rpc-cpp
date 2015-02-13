@@ -1,5 +1,4 @@
 
-message(STATUS "Found Bosst Unit Suite -> Enabling test cases")
 set(CTEST_OUTPUT_ON_FAILURE TRUE)
 
 file(GLOB_RECURSE test_source *.cpp)
@@ -10,48 +9,53 @@ file(COPY ${CMAKE_SOURCE_DIR}/src/examples/server.key ${CMAKE_SOURCE_DIR}/src/ex
 file(COPY ${test_specs} DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY ${test_specs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
-set(testlibs ${Boost_LIBRARIES} jsonrpccommon jsonrpcclient jsonrpcserver)
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src)
+include_directories(..)
+include_directories(${CMAKE_BINARY_DIR})
+include_directories(${Boost_INCLUDE_DIRS})
+include_directories(${JSONCPP_INCLUDE_DIRS})
 
-#add_definitions(-DBOOST_TEST_DYN_LINK)
+if (HTTP_CLIENT AND HTTP_SERVER)
+	add_definitions(-DHTTP_TESTING)
+endif()
 
-IF(HTTP_CLIENT AND HTTP_SERVER)
-    add_definitions(-DHTTP_TESTING)
-ENDIF()
+if (COMPILE_STUBGEN)
+	add_definitions(-DSTUBGEN_TESTING)
+endif()
 
-IF(COMPILE_STUBGEN)
-    add_definitions(-DSTUBGEN_TESTING)
-ENDIF()
+if (HTTP_CLIENT AND HTTP_SERVER AND COMPILE_STUBGEN)
+	add_definitions(-DINTEGRATION_TESTING)
+endif()
 
-IF(HTTP_CLIENT AND HTTP_SERVER AND COMPILE_STUBGEN)
-    add_definitions(-DINTEGRATION_TESTING)
-    INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR})
-ENDIF()
-
-IF(WIN32)
-    INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
-    LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
-ENDIF()
-
+# TODO: not sure if this is necessary
+if (WIN32)
+	link_directories(${Boost_LIBRARY_DIRS})
+endif ()
 
 add_executable(unit_testsuite ${test_source})
-target_link_libraries(unit_testsuite ${testlibs})
-IF(COMPILE_STUBGEN)
-    target_link_libraries(unit_testsuite stubgen)
-ENDIF()
+target_link_libraries(unit_testsuite ${Boost_UNIT_TEST_FRAMEWORK_LIBRARIES})
+target_link_libraries(unit_testsuite jsonrpccommon)
+target_link_libraries(unit_testsuite jsonrpcserver)
+target_link_libraries(unit_testsuite jsonrpcclient)
 
-ADD_TEST(client ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite --run_test=client)
-ADD_TEST(server ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite --run_test=server)
-ADD_TEST(NAME common WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite --run_test=common)
-IF(HTTP_CLIENT AND HTTP_SERVER)
-    ADD_TEST(NAME connector_http WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite --run_test=connector_http)
-ENDIF()
-IF(COMPILE_STUBGEN)
-    ADD_TEST(NAME stubgen WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite --run_test=stubgenerator)
-ENDIF()
-IF(HTTP_CLIENT AND HTTP_SERVER AND COMPILE_STUBGEN)
-    ADD_TEST(NAME integration WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite --run_test=integration)
+if (COMPILE_STUBGEN)
+	target_link_libraries(unit_testsuite stubgen)
+endif()
 
-ENDIF()
+add_test(client ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite --run_test=client)
+add_test(server ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite --run_test=server)
+add_test(NAME common WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite --run_test=common)
 
-ADD_TEST(NAME all WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite)
+if (HTTP_CLIENT AND HTTP_SERVER)
+	add_test(NAME connector_http WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite --run_test=connector_http)
+endif()
+
+if (COMPILE_STUBGEN)
+	add_test(NAME stubgen WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite --run_test=stubgenerator)
+endif()
+
+if (HTTP_CLIENT AND HTTP_SERVER AND COMPILE_STUBGEN)
+	add_test(NAME integration WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite --run_test=integration)
+endif()
+
+add_test(NAME all WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite)
+

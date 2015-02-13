@@ -25,6 +25,9 @@ Yuriy Syrovetskiy <cblp@cblp.su>
 Veselin Rachev <veselin.raychev@gmail.com>
 + added HTTP OPTIONS request support
 
+Marek Kotewicz <marek.kotewicz@gmail.com>
++ msvc support
+
 Bugfixes (chronological order)
 ==============================
 

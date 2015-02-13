@@ -1,40 +1,49 @@
-# - Try to find CURL
-# Once done this will define
+# Find CURL
 #
-#  CURL_FOUND - system has CURL
-#  CURL_INCLUDE_DIRS - the CURL include directory
-#  CURL_LIBRARY - Link these to use CURL
+# Find the curl includes and library
+# 
+# if you nee to add a custom library search path, do it via via CMAKE_PREFIX_PATH 
+# 
+# This module defines
+#  CURL_INCLUDE_DIRS, where to find header, etc.
+#  CURL_LIBRARIES, the libraries needed to use curl.
+#  CURL_FOUND, If false, do not try to use curl.
 
-FIND_LIBRARY (CURL_LIBRARIES NAMES curl
-    PATHS
-    /usr/lib
-    /usr/local/lib
-    ${CMAKE_SOURCE_DIR}/win32-deps/lib
+# only look in default directories
+find_path(
+	CURL_INCLUDE_DIR 
+	NAMES curl/curl.h
+	DOC "curl include dir"
 )
 
-FIND_PATH (CURL_INCLUDE_DIRS curl.h
-    PATHS
-    /usr/include
-    /usr/local/include
-    ${CMAKE_SOURCE_DIR}/win32-deps/include
-    PATH_SUFFIXES curl
+find_library(
+	CURL_LIBRARY
+	# names from cmake's FindCURL
+	NAMES curl curllib libcurl_imp curllib_static libcurl
+	DOC "curl library"
 )
 
-IF(CURL_INCLUDE_DIRS AND CURL_LIBRARIES)
-    SET(CURL_FOUND TRUE)
-ENDIF(CURL_INCLUDE_DIRS AND CURL_LIBRARIES)
+set(CURL_INCLUDE_DIRS ${CURL_INCLUDE_DIR})
+set(CURL_LIBRARIES ${CURL_LIBRARY})
 
-IF(CURL_FOUND)
-    IF(NOT CURL_FIND_QUIETLY)
-        MESSAGE(STATUS "Found libcurl: ${CURL_LIBRARIES}")
-    ENDIF(NOT CURL_FIND_QUIETLY)
-ELSE(CURL_FOUND)
-    IF(CURL_FIND_REQUIRED)
-        MESSAGE(FATAL_ERROR "Could not find libcurl")
-    ENDIF(CURL_FIND_REQUIRED)
-ENDIF(CURL_FOUND)
+# debug library on windows
+# same naming convention as in qt (appending debug library with d)
+# boost is using the same "hack" as us with "optimized" and "debug"
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+	find_library(
+		CURL_LIBRARY_DEBUG
+		NAMES curld libcurld
+		DOC "curl debug library"
+	)
+	
+	set(CURL_LIBRARIES optimized ${CURL_LIBRARIES} debug ${CURL_LIBRARY_DEBUG})
 
-MARK_AS_ADVANCED(
-    CURL_LIBRARIES
-    CURL_INCLUDE_DIRS
-)
+endif()
+
+# handle the QUIETLY and REQUIRED arguments and set CURL_FOUND to TRUE
+# if all listed variables are TRUE, hide their existence from configuration view
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(CURL DEFAULT_MSG
+	CURL_INCLUDE_DIR CURL_LIBRARY)
+mark_as_advanced (CURL_INCLUDE_DIR CURL_LIBRARY)
+
