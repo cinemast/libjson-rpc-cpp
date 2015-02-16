@@ -112,6 +112,17 @@ BOOST_AUTO_TEST_CASE(test_stubgen_factory_help)
     BOOST_CHECK_EQUAL(procedures.empty(), true);
 }
 
+BOOST_AUTO_TEST_CASE(test_stubgen_factory_version)
+{
+    vector<StubGenerator*> stubgens;
+    vector<Procedure> procedures;
+    const char* argv[2] = {"jsonrpcstub","--version"};
+
+    BOOST_CHECK_EQUAL(StubGeneratorFactory::createStubGenerators(2, (char**)argv, procedures, stubgens), true);
+    BOOST_CHECK_EQUAL(stubgens.empty(), true);
+    BOOST_CHECK_EQUAL(procedures.empty(), true);
+}
+
 BOOST_AUTO_TEST_CASE(test_stubgen_factory_error)
 {
     vector<StubGenerator*> stubgens;
