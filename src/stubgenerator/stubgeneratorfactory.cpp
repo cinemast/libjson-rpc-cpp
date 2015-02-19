@@ -55,7 +55,8 @@ bool StubGeneratorFactory::createStubGenerators(int argc, char **argv, vector<Pr
 
     if (version->count > 0)
     {
-        cout << 'v' << JSONRPC_CPP_MAJOR_VERSION << '.' << JSONRPC_CPP_MINOR_VERSION << '.' << JSONRPC_CPP_PATCH_VERSION << endl;
+        cout << "jsonrpcstub version " << JSONRPC_CPP_MAJOR_VERSION << '.' << JSONRPC_CPP_MINOR_VERSION << '.' << JSONRPC_CPP_PATCH_VERSION << endl;
+        arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));
         return true;
     }
 
