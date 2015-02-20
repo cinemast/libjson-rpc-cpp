@@ -1,4 +1,10 @@
+Changes in v0.4.3 [unreleased]
+-----------------
+- added `--version` option to jsonrpcstub
+- added msvc support
+
 Changes in v0.4.2
+-----------------
 - Fix of spelling mistakes.
 - Use CMAKE versioning in manpage.
 - Improving include scheme of jsoncpp.
