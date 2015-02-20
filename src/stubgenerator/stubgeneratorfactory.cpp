@@ -9,6 +9,7 @@
 
 #include "stubgeneratorfactory.h"
 #include <jsonrpccpp/common/specificationparser.h>
+#include <jsonrpccpp/version.h>
 #include <iostream>
 #include <argtable2.h>
 #include "helper/cpphelper.h"
@@ -23,6 +24,7 @@ bool StubGeneratorFactory::createStubGenerators(int argc, char **argv, vector<Pr
 {
     struct arg_file *inputfile      = arg_file0(NULL, NULL, "<specfile>", "path of input specification file");
     struct arg_lit *help            = arg_lit0("h","help", "print this help and exit");
+    struct arg_lit *version         = arg_lit0(NULL,"version", "print version and exit");
     struct arg_lit *verbose         = arg_lit0("v","verbose", "print more information about what is happening");
     struct arg_str *cppserver       = arg_str0(NULL, "cpp-server", "<namespace::classname>", "name of the C++ server stub class");
     struct arg_str *cppserverfile   = arg_str0(NULL, "cpp-server-file", "<filename.h>", "name of the C++ server stub file");
@@ -33,7 +35,7 @@ bool StubGeneratorFactory::createStubGenerators(int argc, char **argv, vector<Pr
 
 
     struct arg_end *end         = arg_end(20);
-    void* argtable[] = {inputfile, help, verbose, cppserver, cppserverfile, cppclient, cppclientfile, jsclient, jsclientfile,end};
+    void* argtable[] = {inputfile, help, version, verbose, cppserver, cppserverfile, cppclient, cppclientfile, jsclient, jsclientfile,end};
 
     if (arg_parse(argc,argv,argtable) > 0)
     {
@@ -47,6 +49,13 @@ bool StubGeneratorFactory::createStubGenerators(int argc, char **argv, vector<Pr
         cout << "Usage: " << argv[0] << " "; cout.flush();
         arg_print_syntax(stdout,argtable,"\n"); cout << endl;
         arg_print_glossary_gnu(stdout, argtable);
+        arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));
+        return true;
+    }
+
+    if (version->count > 0)
+    {
+        cout << "jsonrpcstub version " << JSONRPC_CPP_MAJOR_VERSION << '.' << JSONRPC_CPP_MINOR_VERSION << '.' << JSONRPC_CPP_PATCH_VERSION << endl;
         arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));
         return true;
     }
