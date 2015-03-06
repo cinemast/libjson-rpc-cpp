@@ -253,7 +253,7 @@ Here are some suggestions:
 We do not want to prevent you from contributing by having too strict guidelines.
 If you have ideas for improvement, just do it your way, rather than doing it not at all.
 
-Anyway here is a list of how we would whish contributions:
+Anyway here is a list of how we would prefer your contributions:
 - Issues:
   - Use the issue tracker on github to report bugs or improvements.
   - Please avoid sending me mails directly, as this is not visible to others.
@@ -264,7 +264,7 @@ Anyway here is a list of how we would whish contributions:
   - If you fix a bug, please refer the issue in the [commit message](https://help.github.com/articles/closing-issues-via-commit-messages/).
   - Please make sure that the travis-ci build passes (you will get notified if you raise a pull-request).
   - Add yourself to the AUTHORS.md.
-  - Use spaces instead of tabs.
+  - Use 4 spaces instead of tabs.
 
 Mailing list
 ------------
