@@ -1,6 +1,6 @@
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/gen)
 
-# TODO optimize these scripts, so we will not have to recompile examples everytime
+# TODO optimize these scripts, so we will not have to recompile examples every time
 add_custom_command(
 	OUTPUT abstractstubserver.h
 	COMMAND jsonrpcstub ARGS ${CMAKE_CURRENT_SOURCE_DIR}/spec.json --cpp-server=AbstractStubServer --cpp-server-file=${CMAKE_BINARY_DIR}/gen/abstractsubserver.h
