@@ -300,7 +300,7 @@ cd build
 make doc
 ```
 
-This generates a Latex and HTML into `build/doc`
+This generates the Latex and HTML documentation into `build/doc`
 
 Run the tests
 -------------
