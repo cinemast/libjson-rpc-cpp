@@ -31,11 +31,13 @@ Install the framework
 =====================
 
 **Debian**
+
 ```sh
 sudo apt-get install libjsonrpccpp-dev libjsonrpccpp-tools
 ```
 
 **Arch Linux**
+
 For Arch Linux there is a [PKGBUILD provided in the AUR](https://aur.archlinux.org/packages/libjson-rpc-cpp/).
 
 ```sh
@@ -43,12 +45,14 @@ sudo aura -A libjson-rpc-cpp
 ```
 
 **Mac OS X**
+
 For OS X a [Brew](http://brew.sh) package is available:
 ```sh
 brew install libjson-rpc-cpp
 ```
 
 **Windows**
+
 There is a ready to use compiled package [here](http://spiessknafl.at/libjson-rpc-cpp).
 Just download execute the installer EXE.
 
@@ -63,10 +67,12 @@ Install the dependencies
 - [cmake](http://www.cmake.org/)
 
 **UNIX**
+
 For Debian and Arch GNU/Linux based systems, all dependencies are available via the package manager.
 For OS X all dependencies are available in [Brew](http://brew.sh)
 
 **Windows**
+
 - Download the precompiled dependencies form [here](https://spiessknafl.at/libjson-rpc-cpp/libjson-rpc-cpp_win32-deps.zip).
 - Extract it into the cloned repository, so that there is a `win32-deps` folder in the root project directory.
 
@@ -243,6 +249,7 @@ Here are some suggestions:
   - Adding new languages to the stubgenerator.
 
 **Guidelines / Conventions**
+
 We do not want to prevent you from contributing by having too strict guidelines.
 If you have ideas for improvement, just do it your way, rather than doing it not at all.
 
@@ -281,6 +288,19 @@ License
 -------
 This framework is licensed under [MIT](http://en.wikipedia.org/wiki/MIT_License). 
 All of this libraries dependencies are licensed under MIT compatible licenses.
+
+Documentation
+-------------
+
+The documentation for this library can be generated using doxygen.
+If it is installed on your system, you can simply type:
+
+```sh
+cd build
+make doc
+```
+
+This generates a Latex and HTML into `build/doc`
 
 Run the tests
 -------------
