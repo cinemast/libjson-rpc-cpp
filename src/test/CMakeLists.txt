@@ -15,7 +15,9 @@ include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${JSONCPP_INCLUDE_DIRS})
 
 if (HTTP_CLIENT AND HTTP_SERVER)
-	add_definitions(-DHTTP_TESTING)
+        add_definitions(-DHTTP_TESTING)
+else()
+        list(REMOVE_ITEM test_source "${CMAKE_CURRENT_SOURCE_DIR}/testhttpserver.cpp")
 endif()
 
 if (COMPILE_STUBGEN)

@@ -20,19 +20,25 @@ find_package(Threads)
 message(STATUS "Threads: ${CMAKE_THREADS_LIBS_INIT}")
 
 # find Argtable
-find_package(Argtable)
-message(STATUS "Argtable header: ${ARGTABLE_INCLUDE_DIRS}")
-message(STATUS "Argtable lib   : ${ARGTABLE_LIBRARIES}")
+if(${COMPILE_STUBGEN})
+	find_package(Argtable REQUIRED)
+	message(STATUS "Argtable header: ${ARGTABLE_INCLUDE_DIRS}")
+	message(STATUS "Argtable lib   : ${ARGTABLE_LIBRARIES}")
+endif()
 
+if(${HTTP_CLIENT})
 # find CURL
-find_package(CURL)
-message(STATUS "CURL header: ${CURL_INCLUDE_DIRS}")
-message(STATUS "CURL lib   : ${CURL_LIBRARIES}")
+	find_package(CURL REQUIRED)
+	message(STATUS "CURL header: ${CURL_INCLUDE_DIRS}")
+	message(STATUS "CURL lib   : ${CURL_LIBRARIES}")
+endif()
 
+if (${HTTP_SERVER})
 # find libmicrohttpd
-find_package(MHD)
-message(STATUS "MHD header: ${MHD_INCLUDE_DIRS}")
-message(STATUS "MHD lib   : ${MHD_LIBRARIES}")
+	find_package(MHD REQUIRED)
+	message(STATUS "MHD header: ${MHD_INCLUDE_DIRS}")
+	message(STATUS "MHD lib   : ${MHD_LIBRARIES}")
+endif()
 
 # find doxygen
 find_package(Doxygen)

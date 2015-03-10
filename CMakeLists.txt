@@ -1,8 +1,9 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 project(libjson-rpc-cpp)
 
 # list command no longer ignores empty elements 
 cmake_policy(SET CMP0007 NEW)
+cmake_policy(SET CMP0012 NEW)
 
 if (${CMAKE_MAJOR_VERSION} GREATER 2)
 	# old policy do not use MACOSX_RPATH
