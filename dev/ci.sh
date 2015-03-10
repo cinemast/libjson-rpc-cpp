@@ -20,7 +20,7 @@ cleanup() {
     rm -f sampleclient
     rm -f sampleserver
     cd ..
-#    rm -rf build
+    rm -rf build
 }
 
 build_configuration "-DCMAKE_BUILD_TYPE=Debug -DHTTP_SERVER=YES -DHTTP_CLIENT=YES -DCOMPILE_STUBGEN=YES -DCOMPILE_EXAMPLES=YES -DCOMPILE_TESTS=YES"
@@ -46,10 +46,10 @@ echo "Generating cppcheck report"
 cppcheck --enable=all --xml ../src 2> reports/cppcheck.xml
 
 cd ..
+mv build/reports reports
 echo "Cleanup that mess"
 cleanup
 
-rm -rf build
 build_configuration "-DCMAKE_BUILD_TYPE=Debug -DHTTP_SERVER=NO -DHTTP_CLIENT=NO -DCOMPILE_STUBGEN=YES -DCOMPILE_EXAMPLES=YES -DCOMPILE_TESTS=YES"
 cleanup
 
