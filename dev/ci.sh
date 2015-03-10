@@ -17,8 +17,8 @@ cleanup() {
     cd build
     make DESTDIR=root uninstall
     make clean
-    rm sampleclient
-    rm sampleserver
+    rm -f sampleclient
+    rm -f sampleserver
     cd ..
 #    rm -rf build
 }
@@ -47,6 +47,10 @@ cppcheck --enable=all --xml ../src 2> reports/cppcheck.xml
 
 cd ..
 echo "Cleanup that mess"
+cleanup
+
+rm -rf build
+build_configuration "-DCMAKE_BUILD_TYPE=Debug -DHTTP_SERVER=NO -DHTTP_CLIENT=NO -DCOMPILE_STUBGEN=YES -DCOMPILE_EXAMPLES=YES -DCOMPILE_TESTS=YES"
 cleanup
 
 echo "Integration successful"
