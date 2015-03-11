@@ -37,7 +37,7 @@ valgrind --leak-check=full --xml=yes --xml-file=../reports/valgrind.xml ./bin/un
 
 
 echo "Generating coverage report"
-gcovr -x -r .. > reports/coverage.xml
+gcovr -x -r .. > ../reports/coverage.xml
 gcovr -r .. --html --html-details -o ../reports/coverage.html
 
 echo "Generating cppcheck report"
