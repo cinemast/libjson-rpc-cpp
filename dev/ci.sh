@@ -41,7 +41,7 @@ gcovr -x -r .. > ../reports/coverage.xml
 gcovr -r .. --html --html-details -o ../reports/coverage.html
 
 echo "Generating cppcheck report"
-cppcheck --enable=all --xml ../src 2> ../reports/cppcheck.xml
+cppcheck --enable=all --xml ../src --xml-version=2 2> ../reports/cppcheck.xml
 
 cd ..
 echo "Cleanup that mess"
