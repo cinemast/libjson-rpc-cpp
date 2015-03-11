@@ -61,7 +61,7 @@ Build from source
 Install the dependencies
 ------------------------
 - [libcurl](http://curl.haxx.se/)
-- [libmitcrohttpd](http://www.gnu.org/software/libmicrohttpd/)
+- [libmicrohttpd](http://www.gnu.org/software/libmicrohttpd/)
 - [libjsoncpp](https://github.com/open-source-parsers/jsoncpp)
 - [libargtable](http://argtable.sourceforge.net/)
 - [cmake](http://www.cmake.org/)
