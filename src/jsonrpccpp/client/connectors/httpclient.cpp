@@ -17,6 +17,16 @@
 
 using namespace jsonrpc;
 
+class curl_initializer {
+    public:
+        curl_initializer() {curl_global_init(CURL_GLOBAL_ALL);}
+        ~curl_initializer() {curl_global_cleanup();}
+};
+
+// workaround to make calls to HttpClient class thread safe.
+// See here: http://curl.haxx.se/libcurl/c/curl_global_init.html
+static curl_initializer _curl_init = curl_initializer();
+
 /**
  * taken from http://stackoverflow.com/questions/2329571/c-libcurl-get-output-into-a-string
  */

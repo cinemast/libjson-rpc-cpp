@@ -1,7 +1,9 @@
 Changes in v0.4.3 [unreleased]
 -----------------
-- added `--version` option to jsonrpcstub
-- added msvc support
+- added `--version` option to jsonrpcstub.
+- added msvc support.
+- added data field support for JsonRpcException.
+- HttpClient is thread safe (static initialization of CURL).
 
 Changes in v0.4.2
 -----------------
