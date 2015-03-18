@@ -69,6 +69,7 @@ namespace jsonrpc {
             static const std::string KEY_ERROR;
             static const std::string KEY_ERROR_CODE;
             static const std::string KEY_ERROR_MESSAGE;
+            static const std::string KEY_ERROR_DATA;
 
         private:
             clientVersion_t version;

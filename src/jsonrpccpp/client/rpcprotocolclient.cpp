@@ -21,13 +21,14 @@ const std::string RpcProtocolClient::KEY_RESULT           = "result";
 const std::string RpcProtocolClient::KEY_ERROR            = "error";
 const std::string RpcProtocolClient::KEY_ERROR_CODE       = "code";
 const std::string RpcProtocolClient::KEY_ERROR_MESSAGE    = "message";
+const std::string RpcProtocolClient::KEY_ERROR_DATA       = "data";
 
 RpcProtocolClient::RpcProtocolClient(clientVersion_t version) :
     version(version)
 {
 }
 
-void        RpcProtocolClient::BuildRequest         (const std::string &method, const Json::Value &parameter, std::string &result, bool isNotification)
+void RpcProtocolClient::BuildRequest(const std::string &method, const Json::Value &parameter, std::string &result, bool isNotification)
 {
     Json::Value request;
     Json::FastWriter writer;
@@ -35,7 +36,7 @@ void        RpcProtocolClient::BuildRequest         (const std::string &method, 
     result = writer.write(request);
 }
 
-void        RpcProtocolClient::HandleResponse       (const std::string &response, Json::Value& result) throw(JsonRpcException)
+void RpcProtocolClient::HandleResponse(const std::string &response, Json::Value& result) throw(JsonRpcException)
 {
     Json::Reader reader;
     Json::Value value;
@@ -69,7 +70,7 @@ int RpcProtocolClient::HandleResponse(const Json::Value &value, Json::Value &res
     return value[KEY_ID].asInt();
 }
 
-void        RpcProtocolClient::BuildRequest         (int id, const std::string &method, const Json::Value &parameter, Json::Value &result, bool isNotification)
+void RpcProtocolClient::BuildRequest(int id, const std::string &method, const Json::Value &parameter, Json::Value &result, bool isNotification)
 {
     if (this->version == JSONRPC_CLIENT_V2)
         result[KEY_PROTOCOL_VERSION] = "2.0";
@@ -85,6 +86,8 @@ void        RpcProtocolClient::BuildRequest         (int id, const std::string &
 void RpcProtocolClient::throwErrorException(const Json::Value &response)
 {
     if (response[KEY_ERROR].isMember(KEY_ERROR_MESSAGE) && response[KEY_ERROR][KEY_ERROR_MESSAGE].isString())
+        if (response[KEY_ERROR].isMember(KEY_ERROR_DATA))
+            throw JsonRpcException(response[KEY_ERROR][KEY_ERROR_CODE].asInt(), response[KEY_ERROR][KEY_ERROR_MESSAGE].asString(), response[KEY_ERROR][KEY_ERROR_DATA]);
         throw JsonRpcException(response[KEY_ERROR][KEY_ERROR_CODE].asInt(), response[KEY_ERROR][KEY_ERROR_MESSAGE].asString());
     throw JsonRpcException(response[KEY_ERROR][KEY_ERROR_CODE].asInt());
 }
