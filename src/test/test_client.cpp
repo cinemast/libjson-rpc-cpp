@@ -203,7 +203,7 @@ BOOST_FIXTURE_TEST_CASE(test_client_v1_errorresponse, F1)
     c.SetResponse("{\"result\": null, \"error\": {\"code\": -32600, \"message\": \"Invalid Request\", \"data\": [1,2]}, \"id\": null}");
     BOOST_CHECK_EXCEPTION(client.CallMethod("abcd", Json::nullValue), JsonRpcException, check_exception3);
 
-    c.SetResponse("{\"result\": null, \"error\": {\"code\": -32600, \"data\": [1,2]}, \"id\": null}");
+    c.SetResponse("{\"result\": null, \"error\": {\"code\": -32600, \"message\": \"Invalid Request\", \"data\": [1,2]}, \"id\": null}");
     BOOST_CHECK_EXCEPTION(client.CallMethod("abcd", Json::nullValue), JsonRpcException, check_exception3);
 }
 
