@@ -26,7 +26,7 @@ bool check_exception2(JsonRpcException const&ex)
 
 bool check_exception3(JsonRpcException const&ex)
 {
-    return ex.GetCode() == Errors::ERROR_RPC_INVALID_REQUEST;
+    return ex.GetCode() == Errors::ERROR_RPC_INVALID_REQUEST && ex.GetData().size() == 2;
 }
 
 BOOST_AUTO_TEST_SUITE(client)
@@ -79,7 +79,7 @@ BOOST_FIXTURE_TEST_CASE(test_client_v2_notification_success, F)
 
 BOOST_FIXTURE_TEST_CASE(test_client_v2_errorresponse, F)
 {
-    c.SetResponse("{\"jsonrpc\":\"2.0\", \"error\": {\"code\": -32600, \"message\": \"Invalid Request\"}, \"id\": null}");
+    c.SetResponse("{\"jsonrpc\":\"2.0\", \"error\": {\"code\": -32600, \"message\": \"Invalid Request\", \"data\": [1,2]}, \"id\": null}");
     BOOST_CHECK_EXCEPTION(client.CallMethod("abcd", Json::nullValue), JsonRpcException, check_exception3);
 }
 
@@ -200,10 +200,10 @@ BOOST_FIXTURE_TEST_CASE(test_client_v1_notification_success, F1)
 
 BOOST_FIXTURE_TEST_CASE(test_client_v1_errorresponse, F1)
 {
-    c.SetResponse("{\"result\": null, \"error\": {\"code\": -32600, \"message\": \"Invalid Request\"}, \"id\": null}");
+    c.SetResponse("{\"result\": null, \"error\": {\"code\": -32600, \"message\": \"Invalid Request\", \"data\": [1,2]}, \"id\": null}");
     BOOST_CHECK_EXCEPTION(client.CallMethod("abcd", Json::nullValue), JsonRpcException, check_exception3);
 
-    c.SetResponse("{\"result\": null, \"error\": {\"code\": -32600}, \"id\": null}");
+    c.SetResponse("{\"result\": null, \"error\": {\"code\": -32600, \"message\": \"Invalid Request\", \"data\": [1,2]}, \"id\": null}");
     BOOST_CHECK_EXCEPTION(client.CallMethod("abcd", Json::nullValue), JsonRpcException, check_exception3);
 }
 

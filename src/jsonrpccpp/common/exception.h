@@ -29,9 +29,7 @@ namespace jsonrpc
             virtual ~JsonRpcException() throw ();
 
             int GetCode() const;
-
             const std::string& GetMessage() const;
-
             const Json::Value& GetData() const;
 
             virtual const char* what() const throw ();

@@ -14,7 +14,7 @@
 #include <vector>
 #include <map>
 
-#include <jsonrpccpp/common/specificationparser.h>
+#include <jsonrpccpp/common/exception.h>
 #include "abstractprotocolhandler.h"
 
 
@@ -32,6 +32,7 @@ namespace jsonrpc
             bool ValidateRequestFields(const Json::Value &val);
             void WrapResult(const Json::Value& request, Json::Value& response, Json::Value& retValue);
             void WrapError(const Json::Value& request, int code, const std::string &message, Json::Value& result);
+            void WrapException(const Json::Value& request, const JsonRpcException &exception, Json::Value& result);
             procedure_t GetRequestType(const Json::Value& request);
 
         private:

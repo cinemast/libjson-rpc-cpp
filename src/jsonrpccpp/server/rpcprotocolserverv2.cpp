@@ -46,7 +46,7 @@ void RpcProtocolServerV2::HandleSingleRequest (const Json::Value &req, Json::Val
         }
         catch (const JsonRpcException & exc)
         {
-            this->WrapError(req, exc.GetCode(), exc.GetMessage(), response);
+            this->WrapException(req, exc, response);
         }
     }
     else
@@ -105,6 +105,12 @@ void RpcProtocolServerV2::WrapError(const Json::Value &request, int code, const 
     {
         result["id"] = Json::nullValue;
     }
+}
+
+void RpcProtocolServerV2::WrapException(const Json::Value &request, const JsonRpcException &exception, Json::Value &result)
+{
+    this->WrapError(request, exception.GetCode(), exception.GetMessage(), result);
+    result["error"]["data"] = exception.GetData();
 }
 
 procedure_t RpcProtocolServerV2::GetRequestType(const Json::Value &request)

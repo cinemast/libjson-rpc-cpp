@@ -10,6 +10,7 @@
 #ifndef JSONRPC_CPP_RPCPROTOCOLSERVERV1_H
 #define JSONRPC_CPP_RPCPROTOCOLSERVERV1_H
 
+#include <jsonrpccpp/common/exception.h>
 #include "abstractprotocolhandler.h"
 
 namespace jsonrpc {
@@ -23,6 +24,7 @@ namespace jsonrpc {
             void HandleJsonRequest(const Json::Value &request, Json::Value &response);
             void WrapResult(const Json::Value& request, Json::Value& response, Json::Value& retValue);
             void WrapError(const Json::Value& request, int code, const std::string &message, Json::Value& result);
+            void WrapException(const Json::Value& request, const JsonRpcException& exception, Json::Value& result);
             procedure_t GetRequestType(const Json::Value& request);
 
     };
