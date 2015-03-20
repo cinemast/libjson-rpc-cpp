@@ -159,6 +159,7 @@ BOOST_FIXTURE_TEST_CASE(test_server_v2_method_error, F)
     c.SetRequest("{\"jsonrpc\":\"2.0\", \"id\": 1, \"method\": \"exceptionMethod\"}");
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["code"], -32099);
     BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["message"], "User exception");
+    BOOST_CHECK_EQUAL(c.GetJsonResponse()["error"]["data"][0], 33);
     BOOST_CHECK_EQUAL(c.GetJsonResponse().isMember("result"),false);
 }
 
