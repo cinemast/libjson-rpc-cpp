@@ -37,20 +37,21 @@ include_directories(${CMAKE_BINARY_DIR})
 include_directories(${JSONCPP_INCLUDE_DIRS})
 include_directories(${MHD_INCLUDE_DIRS})
 
-add_executable(simpleserversample simpleserver.cpp)
-target_link_libraries(simpleserversample jsonrpcserver)
+if (COMPILE_EXAMPLES)
+	add_executable(simpleserversample simpleserver.cpp)
+	target_link_libraries(simpleserversample jsonrpcserver)
 
-add_executable(simpleclientsample simpleclient.cpp)
-target_link_libraries(simpleclientsample jsonrpcclient)
+	add_executable(simpleclientsample simpleclient.cpp)
+	target_link_libraries(simpleclientsample jsonrpcclient)
 
-if (COMPILE_STUBGEN)
-	add_executable(stubclientsample stubclient.cpp stubclient.h)
-	target_link_libraries(stubclientsample jsonrpcclient)
+	if (COMPILE_STUBGEN)
+		add_executable(stubclientsample stubclient.cpp stubclient.h)
+		target_link_libraries(stubclientsample jsonrpcclient)
 
-	add_executable(stubserversample stubserver.cpp abstractstubserver.h)
-	target_link_libraries(stubserversample jsonrpcserver)
+		add_executable(stubserversample stubserver.cpp abstractstubserver.h)
+		target_link_libraries(stubserversample jsonrpcserver)
 
-	add_executable(xbmcremote xbmcremote.cpp xbmcremote.h)
-	target_link_libraries(xbmcremote jsonrpcclient)
+		add_executable(xbmcremote xbmcremote.cpp xbmcremote.h)
+		target_link_libraries(xbmcremote jsonrpcclient)
+	endif()
 endif()
-

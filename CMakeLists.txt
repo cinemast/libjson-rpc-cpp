@@ -60,7 +60,7 @@ if (COMPILE_STUBGEN)
 endif ()
 
 # setup examples
-if (COMPILE_EXAMPLES AND HTTP_SERVER AND HTTP_CLIENT)
+if (HTTP_SERVER AND HTTP_CLIENT)
 	add_subdirectory(src/examples)
 endif()
 
