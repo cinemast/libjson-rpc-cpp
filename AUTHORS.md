@@ -54,4 +54,7 @@ Kasper Laudrup <laudrup@stacktrace.dk>
 
 Erik Lundin
 + bugfix in cpp-server stubgen
-+ bugfix for gcc 4.7 compatibility 
++ bugfix for gcc 4.7 compatibility
+
+Michał Górny <mgorny@gentoo.org>
++ bugfixes in the build system
