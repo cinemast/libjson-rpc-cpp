@@ -2,6 +2,10 @@ Changes in v0.4.3 [unreleased]
 -----------------
 - added `--version` option to jsonrpcstub
 - added msvc support
+- Added `LIB_SUFFIX` to CMake to support multilib.
+- Fixed building tests with examples disabled.
+- Replaced custom library build with standard CMake method respecting `BUILD_SHARED_LIBS`.
+- Fixed unnecessary rebuilds of stubs on each `make` call.
 
 Changes in v0.4.2
 -----------------

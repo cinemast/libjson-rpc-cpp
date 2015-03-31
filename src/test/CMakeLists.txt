@@ -43,6 +43,10 @@ if (COMPILE_STUBGEN)
 	target_link_libraries(unit_testsuite stubgen)
 endif()
 
+if (HTTP_CLIENT AND HTTP_SERVER AND COMPILE_STUBGEN)
+	add_dependencies(unit_testsuite common_stubs)
+endif()
+
 add_test(client ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite --run_test=client)
 add_test(server ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite --run_test=server)
 add_test(NAME common WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite --run_test=common)
