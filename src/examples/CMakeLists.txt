@@ -19,6 +19,10 @@ add_custom_command(
 	VERBATIM
 )
 
+add_custom_target(common_stubs
+	DEPENDS abstractstubserver.h stubclient.h
+)
+
 add_custom_command(
 	OUTPUT xbmcremote.h
 	COMMAND jsonrpcstub ARGS ${CMAKE_CURRENT_SOURCE_DIR}/xbmc_remote.json --cpp-client=XbmcRemoteClient --cpp-client-file=${CMAKE_BINARY_DIR}/gen/xbmcremote.h
