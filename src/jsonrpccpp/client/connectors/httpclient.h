@@ -12,6 +12,7 @@
 
 #include "../iclientconnector.h"
 #include <jsonrpccpp/common/exception.h>
+#include <curl/curl.h>
 #include <map>
 
 namespace jsonrpc
@@ -20,7 +21,7 @@ namespace jsonrpc
     {
         public:
             HttpClient(const std::string& url) throw (JsonRpcException);
-
+            virtual ~HttpClient();
             virtual void SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException);
 
             void SetUrl(const std::string& url);
@@ -37,6 +38,7 @@ namespace jsonrpc
              * @brief timeout for http request in milliseconds
              */
             long timeout;
+            CURL* curl;
     };
 
 } /* namespace jsonrpc */
