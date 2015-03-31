@@ -15,6 +15,8 @@ set(MINOR_VERSION 4)
 set(PATCH_VERSION 2)
 set(SO_VERSION    0)
 
+set(LIB_SUFFIX "" CACHE STRING "Suffix for library directory (32/64)")
+
 # defaults for modules that can be enabled/disabled
 set(HTTP_SERVER YES CACHE BOOL "Include HTTP server using libmicrohttpd")
 set(HTTP_CLIENT YES CACHE BOOL "Include HTTP client support using curl")
