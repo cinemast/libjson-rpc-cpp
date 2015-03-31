@@ -14,7 +14,7 @@
 #include <jsonrpccpp/server/connectors/httpserver.h>
 #include <jsonrpccpp/client/connectors/httpclient.h>
 
-#include "gen/abstractsubserver.h"
+#include "gen/abstractstubserver.h"
 #include "gen/stubclient.h"
 
 using namespace jsonrpc;
