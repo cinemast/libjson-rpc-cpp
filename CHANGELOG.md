@@ -4,6 +4,10 @@ Changes in v0.4.3 [unreleased]
 - added msvc support.
 - added data field support for JsonRpcException.
 - HttpClient is thread safe (static initialization of CURL).
+- Added `LIB_SUFFIX` to CMake to support multilib.
+- Fixed building tests with examples disabled.
+- Made static library build optional (via `BUILD_STATIC_LIBS`).
+- Fixed unnecessary rebuilds of stubs on each `make` call.
 
 Changes in v0.4.2
 -----------------
