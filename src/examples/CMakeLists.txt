@@ -37,15 +37,13 @@ include_directories(${CMAKE_BINARY_DIR})
 include_directories(${JSONCPP_INCLUDE_DIRS})
 include_directories(${MHD_INCLUDE_DIRS})
 
-if (HTTP_SERVER AND HTTP_CLIENT)
-	add_executable(simpleserversample simpleserver.cpp)
-	target_link_libraries(simpleserversample jsonrpcserver)
+add_executable(simpleserversample simpleserver.cpp)
+target_link_libraries(simpleserversample jsonrpcserver)
 
-	add_executable(simpleclientsample simpleclient.cpp)
-	target_link_libraries(simpleclientsample jsonrpcclient)
-endif()
+add_executable(simpleclientsample simpleclient.cpp)
+target_link_libraries(simpleclientsample jsonrpcclient)
 
-if (COMPILE_STUBGEN AND HTTP_SERVER AND HTTP_CLIENT)
+if (COMPILE_STUBGEN)
 	add_executable(stubclientsample stubclient.cpp stubclient.h)
 	target_link_libraries(stubclientsample jsonrpcclient)
 
