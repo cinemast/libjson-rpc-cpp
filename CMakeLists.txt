@@ -15,6 +15,7 @@ set(MINOR_VERSION 4)
 set(PATCH_VERSION 2)
 set(SO_VERSION    0)
 
+set(BUILD_STATIC_LIBS NO CACHE BOOL "Build static libraries in addition to shared")
 set(LIB_SUFFIX "" CACHE STRING "Suffix for library directory (32/64)")
 
 # defaults for modules that can be enabled/disabled

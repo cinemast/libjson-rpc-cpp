@@ -65,36 +65,48 @@ target_link_libraries(jsonrpccommon ${JSONCPP_LIBRARIES})
 set_target_properties(jsonrpccommon PROPERTIES OUTPUT_NAME jsonrpccpp-common)
 
 # setup static common library
-add_library(jsonrpccommonStatic STATIC ${jsonrpc_source_common} ${jsonrpc_header} ${jsonrpc_helper_source_common})
-target_link_libraries(jsonrpccommonStatic ${JSONCPP_LIBRARIES})
-set_target_properties(jsonrpccommonStatic PROPERTIES OUTPUT_NAME jsonrpccpp-common)
+if (BUILD_STATIC_LIBS)
+	add_library(jsonrpccommonStatic STATIC ${jsonrpc_source_common} ${jsonrpc_header} ${jsonrpc_helper_source_common})
+	target_link_libraries(jsonrpccommonStatic ${JSONCPP_LIBRARIES})
+	set_target_properties(jsonrpccommonStatic PROPERTIES OUTPUT_NAME jsonrpccpp-common)
+endif()
 
 # setup shared client library
 add_library(jsonrpcclient SHARED ${jsonrpc_source_client} ${jsonrpc_header} ${jsonrpc_header_client} ${client_connector_source})
-add_dependencies(jsonrpcclient jsonrpccommonStatic)
+add_dependencies(jsonrpcclient jsonrpccommon)
 target_link_libraries(jsonrpcclient jsonrpccommon ${client_connector_libs})
 set_target_properties(jsonrpcclient PROPERTIES OUTPUT_NAME jsonrpccpp-client)
 
 # setup static client library
-add_library(jsonrpcclientStatic STATIC ${jsonrpc_source_client} ${jsonrpc_header} ${jsonrpc_header_client} ${client_connector_source})
-target_link_libraries(jsonrpcclientStatic jsonrpccommonStatic ${client_connector_libs})
-set_target_properties(jsonrpcclientStatic PROPERTIES OUTPUT_NAME jsonrpccpp-client)
+if (BUILD_STATIC_LIBS)
+	add_library(jsonrpcclientStatic STATIC ${jsonrpc_source_client} ${jsonrpc_header} ${jsonrpc_header_client} ${client_connector_source})
+	target_link_libraries(jsonrpcclientStatic jsonrpccommonStatic ${client_connector_libs})
+	set_target_properties(jsonrpcclientStatic PROPERTIES OUTPUT_NAME jsonrpccpp-client)
+endif()
 
 # setup shared server library
 add_library(jsonrpcserver SHARED ${jsonrpc_source_server} ${jsonrpc_header} ${jsonrpc_header_server} ${server_connector_source})
-add_dependencies(jsonrpcserver jsonrpccommonStatic)
+add_dependencies(jsonrpcserver jsonrpccommon)
 target_link_libraries(jsonrpcserver jsonrpccommon ${server_connector_libs})
 set_target_properties(jsonrpcserver PROPERTIES OUTPUT_NAME jsonrpccpp-server)
 
 # setup static server library
-add_library(jsonrpcserverStatic STATIC ${jsonrpc_source_server} ${jsonrpc_header} ${jsonrpc_header_server} ${server_connector_source})
-target_link_libraries(jsonrpcserverStatic jsonrpccommonStatic ${server_connector_libs})
-set_target_properties(jsonrpcserverStatic PROPERTIES OUTPUT_NAME jsonrpccpp-server)
+if (BUILD_STATIC_LIBS)
+	add_library(jsonrpcserverStatic STATIC ${jsonrpc_source_server} ${jsonrpc_header} ${jsonrpc_header_server} ${server_connector_source})
+	target_link_libraries(jsonrpcserverStatic jsonrpccommonStatic ${server_connector_libs})
+	set_target_properties(jsonrpcserverStatic PROPERTIES OUTPUT_NAME jsonrpccpp-server)
+endif()
+
+set(ALL_LIBS jsonrpccommon jsonrpcclient jsonrpcserver)
+
+if (BUILD_STATIC_LIBS)
+	list(APPEND ALL_LIBS jsonrpccommonStatic jsonrpcclientStatic jsonrpcserverStatic)
+endif()
 
 # setup version
 set(VERSION_STRING ${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION})
 set_target_properties(
-	jsonrpccommon jsonrpccommonStatic jsonrpcclient jsonrpcclientStatic jsonrpcserver jsonrpcserverStatic 
+	${ALL_LIBS}
 	PROPERTIES VERSION "${VERSION_STRING}" SOVERSION "${SO_VERSION}"
 )
 
@@ -114,7 +126,7 @@ if (WIN32)
 	install(DIRECTORY ${CMAKE_SOURCE_DIR}/win32-deps/include DESTINATION .)
 endif()
 
-install(TARGETS jsonrpccommon jsonrpccommonStatic jsonrpcclient jsonrpcclientStatic jsonrpcserver jsonrpcserverStatic
+install(TARGETS ${ALL_LIBS}
 	LIBRARY DESTINATION lib${LIB_SUFFIX}
 	ARCHIVE DESTINATION lib${LIB_SUFFIX}
 	RUNTIME DESTINATION bin
