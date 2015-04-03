@@ -15,6 +15,9 @@ set(MINOR_VERSION 4)
 set(PATCH_VERSION 2)
 set(SO_VERSION    0)
 
+set(BUILD_STATIC_LIBS NO CACHE BOOL "Build static libraries in addition to shared")
+set(LIB_SUFFIX "" CACHE STRING "Suffix for library directory (32/64)")
+
 # defaults for modules that can be enabled/disabled
 set(HTTP_SERVER YES CACHE BOOL "Include HTTP server using libmicrohttpd")
 set(HTTP_CLIENT YES CACHE BOOL "Include HTTP client support using curl")
@@ -58,7 +61,7 @@ if (COMPILE_STUBGEN)
 endif ()
 
 # setup examples
-if (COMPILE_EXAMPLES AND HTTP_SERVER AND HTTP_CLIENT)
+if (HTTP_SERVER AND HTTP_CLIENT)
 	add_subdirectory(src/examples)
 endif()
 
