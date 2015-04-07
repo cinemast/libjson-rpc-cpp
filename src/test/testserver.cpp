@@ -53,7 +53,9 @@ void TestServer::exceptionMethod(const Json::Value &request, Json::Value &respon
 {
     (void)request;
     (void)response;
-    throw JsonRpcException(-32099, "User exception");
+    Json::Value data;
+    data.append(33);
+    throw JsonRpcException(-32099, "User exception", data);
 }
 
 void TestServer::initCounter(const Json::Value &request)

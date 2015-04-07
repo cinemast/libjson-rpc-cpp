@@ -22,16 +22,15 @@ namespace jsonrpc
     {
         public:
             JsonRpcException(int code);
-
             JsonRpcException(int code, const std::string& message);
-
+            JsonRpcException(int code, const std::string& message, const Json::Value &data);
             JsonRpcException(const std::string& message);
 
             virtual ~JsonRpcException() throw ();
 
             int GetCode() const;
-
             const std::string& GetMessage() const;
+            const Json::Value& GetData() const;
 
             virtual const char* what() const throw ();
 
@@ -39,7 +38,7 @@ namespace jsonrpc
             int code;
             std::string message;
             std::string whatString;
-
+            Json::Value data;
             void setWhatMessage();
     };
 

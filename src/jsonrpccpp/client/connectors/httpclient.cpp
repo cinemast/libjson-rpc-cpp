@@ -17,6 +17,15 @@
 
 using namespace jsonrpc;
 
+class curl_initializer {
+    public:
+        curl_initializer() {curl_global_init(CURL_GLOBAL_ALL);}
+        ~curl_initializer() {curl_global_cleanup();}
+};
+
+// See here: http://curl.haxx.se/libcurl/c/curl_global_init.html
+static curl_initializer _curl_init = curl_initializer();
+
 /**
  * taken from http://stackoverflow.com/questions/2329571/c-libcurl-get-output-into-a-string
  */
@@ -48,11 +57,16 @@ HttpClient::HttpClient(const std::string& url) throw(JsonRpcException)
     : url(url)
 {
     this->timeout = 10000;
+    curl = curl_easy_init();
+}
+
+HttpClient::~HttpClient()
+{
+    curl_easy_cleanup(curl);
 }
 
 void HttpClient::SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException)
 {
-    CURL* curl = curl_easy_init();
     curl_easy_setopt(curl, CURLOPT_URL, this->url.c_str());
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunc);
 
@@ -89,7 +103,6 @@ void HttpClient::SendRPCMessage(const std::string& message, std::string& result)
             str << " -> Could not connect to " << this->url;
         else if(res == 28)
             str << " -> Operation timed out";
-        curl_easy_cleanup(curl);
         throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, str.str());
     }
 
@@ -98,11 +111,8 @@ void HttpClient::SendRPCMessage(const std::string& message, std::string& result)
 
     if (http_code != 200)
     {
-        curl_easy_cleanup(curl);
         throw JsonRpcException(Errors::ERROR_RPC_INTERNAL_ERROR, result);
     }
-
-    curl_easy_cleanup(curl);
 }
 
 void HttpClient::SetUrl(const std::string& url)
