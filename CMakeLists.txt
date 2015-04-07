@@ -11,8 +11,8 @@ if (${CMAKE_MAJOR_VERSION} GREATER 2)
 endif()
 
 set(MAJOR_VERSION 0)
-set(MINOR_VERSION 4)
-set(PATCH_VERSION 2)
+set(MINOR_VERSION 5)
+set(PATCH_VERSION 0)
 set(SO_VERSION    0)
 
 set(BUILD_STATIC_LIBS NO CACHE BOOL "Build static libraries in addition to shared")

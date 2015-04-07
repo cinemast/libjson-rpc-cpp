@@ -1,6 +1,6 @@
 .\" Manpage for jsonrpcstub.
 .\" Contact psk@autistici.org to correct errors or typos.
-.TH man 1 "22 November 2014" "@MAJOR_VERSION@.@MINOR_VERSION@.@PATCH_VERSION@" "jsonrpcstub man page"
+.TH man 1 "7 April 2015" "@MAJOR_VERSION@.@MINOR_VERSION@.@PATCH_VERSION@" "jsonrpcstub man page"
 .SH NAME
 jsonrpcstub \- genearate stubs for the libjson\-rpc\-cpp framework.
 .SH SYNOPSIS
@@ -8,7 +8,7 @@ jsonrpcstub \- genearate stubs for the libjson\-rpc\-cpp framework.
 jsonrpcstub specfile.json [\-\-cpp\-server=namespace::ClassName]  
  [\-\-cpp\-server\-file=classqname.h]  [\-\-cpp\-client=namespace::ClassName] 
 [\-\-cpp\-client-file=classname.h] [\-\-js\-client=ClassName] 
-[\-\-js-client-file=classname.js]  [\-h] [\-v]
+[\-\-js-client-file=classname.js]  [\-h] [\-v] [\-\-version]
 .PP
 
 .SH DESCRIPTION
@@ -22,12 +22,12 @@ with their corresponding parameters and return values contained in a top\-level 
 .nf
 [
 	{
-		"name": "method_with_positional_params", 
-		"params": [3,4], 
+		"name": "method_with_positional_params",
+		"params": [3,4],
 		"returns": 7
 	},
 	{
-		"name": "methid_with_named_params", 
+		"name": "method_with_named_params",
 		"params": {"param1": 3, "param2": 4},
 		"returns": 7
 	},
@@ -42,25 +42,27 @@ The literal in each \fB"params"\fP and  \fB"returns"\fP section defines the corr
 If the \fb"params"\fP contains an array, the parameters are accepted by position, 
 if it contains an object, they are accepted by name. 
 .SH OPTIONS
-.IP -h
+.IP \-h
 Print usage information.
-.IP -v
+.IP \-v
 Print verbose information during generation.
-.IP --cpp-server=ClassName
+.IP \-\-version
+Print version info and exit.
+.IP \-\-cpp\-server=ClassName
 Creates a Abstract Server class. Namespaces can be provided using the :: notation 
 (e.g. ns1::ns2::Classname).
-.IP --cpp-server-file=filename.h
+.IP \-\-cpp\-server\-file=filename.h
 Defines the filename to use when generating the C++ Abstract Server class.
 If this is not provided, the lowercase classname is used.
-.IP --cpp-client=ClassName
+.IP \-\-cpp\-client=ClassName
 Creates a C++ client class. Namespaces can be provided using the :: notation 
 (e.g. ns1::ns2::Classname).
-.IP --cpp-client-file=filename.h
+.IP \-\-cpp\-client\-file=filename.h
 Defines the filename to use when generating the C++ client class.
 If this is not provided, the lowercase classname is used.
-.IP --js-client=ClassName
+.IP \-\-js\-client=ClassName
 Creates a JavaScript client class. No namespaces are supported in this option. 
-.IP --js-client-file=filename.js
+.IP \-\-js\-client-file=filename.js
 Defines the filename to use when generating the JavaScrip client class.
 .SH EXAMPLES
 .PP
@@ -104,4 +106,4 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR TH
 OR OTHER DEALINGS IN THE SOFTWARE.
 
 .SH AUTHOR
-Peter Spiess\-Knafl (psk@autistici.org)
+Peter Spiess\-Knafl (dev@spiessknafl.at)

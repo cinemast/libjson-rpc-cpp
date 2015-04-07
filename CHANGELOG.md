@@ -1,9 +1,14 @@
+<<<<<<< HEAD
 Changes in v0.5.0 [unreleased]
+=======
+Changes in v0.5.0
+>>>>>>> master
 -----------------
 - added `--version` option to jsonrpcstub.
 - added msvc support.
 - added data field support for JsonRpcException.
-- HttpClient uses KeepAlive.
+- added contributions guide: https://github.com/cinemast/libjson-rpc-cpp#contributions
+- HttpClient uses Http Keep-Alive, which improves performance drastically.
 - Added `LIB_SUFFIX` to CMake to support multilib.
 - Fixed building tests with examples disabled.
 - Made static library build optional (via `BUILD_STATIC_LIBS`).
