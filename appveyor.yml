@@ -1,0 +1,80 @@
+version: 0.5.0.{build}
+
+branches:
+    only:
+        - master
+        - develop
+
+os: Windows Server 2012 R2
+
+clone_folder: c:\projects\libjson-rpc-cpp
+
+#platform: Any CPU
+#configuration: Debug
+
+install:
+    # by default, all script lines are interpreted as batch
+
+# scripts to run before build
+before_build:
+
+    # setup dependency directory
+    - mkdir c:\projects\libjson-rpc-cpp\deps
+    - mkdir c:\projects\libjson-rpc-cpp\deps\install
+    - cd c:\projects\libjson-rpc-cpp\deps
+
+    # get boost
+    - echo "Downloading boost..."
+    - curl -O https://build.ethdev.com/builds/windows-precompiled/boost.tar.gz
+    - echo "Unzipping boost..."
+    - 7z x boost.tar.gz > nul
+    - 7z x boost.tar > nul
+    - echo "boost unzipped!"
+    - cmake -E copy_directory boost install
+
+    # get curl
+    - echo "Downloading curl..."
+    - curl -O https://build.ethdev.com/builds/windows-precompiled/curl.tar.gz
+    - echo "Unzipping curl..."
+    - 7z x curl.tar.gz > nul
+    - 7z x curl.tar > nul
+    - echo "curl unzipped!"
+    - cmake -E copy_directory curl install
+    
+    # get microhttpd
+    - echo "Downloading microhttpd..."
+    - curl -O https://build.ethdev.com/builds/windows-precompiled/microhttpd.tar.gz
+    - echo "Unzipping microhttpd..."
+    - 7z x microhttpd.tar.gz > nul
+    - 7z x microhttpd.tar > nul
+    - echo "microhttpd unzipped!"
+    - cmake -E copy_directory microhttpd install
+
+    # get jsoncpp
+    - echo "Downloading jsoncpp..."
+    - curl -O https://build.ethdev.com/builds/windows-precompiled/jsoncpp.tar.gz
+    - echo "Unzipping jsoncpp..."
+    - 7z x jsoncpp.tar.gz > nul
+    - 7z x jsoncpp.tar > nul
+    - echo "jsoncpp unzipped!"
+    - cmake -E copy_directory jsoncpp install
+
+    # argtable not supported
+   
+    - echo "Running cmake..."
+    - cd c:\projects\libjson-rpc-cpp
+    - cmake -DCMAKE_PREFIX_PATH="c:/projects/libjson-rpc-cpp/deps/install" -DCOMPILE_STUBGEN=NO .
+
+build:
+    project: ALL_BUILD.vcxproj      # path to Visual Studio solution or project
+
+after_build:
+      # copy missing dlls
+    - cd c:\projects\libjson-rpc-cpp\bin\Debug
+    - cmake -E copy c:\projects\libjson-rpc-cpp\deps\install\bin\libmicrohttpd-dll_d.dll .
+
+      # run tests
+    - echo "Running tests..."
+    - unit_testsuite.exe
+    - echo "Finished!"
+
