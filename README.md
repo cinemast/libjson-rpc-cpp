@@ -44,6 +44,12 @@ For Arch Linux there is a [PKGBUILD provided in the AUR](https://aur.archlinux.o
 sudo aura -A libjson-rpc-cpp
 ```
 
+**Gentoo Linux**
+
+```sh
+sudo emerge dev-cpp/libjson-rpc-cpp
+```
+
 **Mac OS X**
 
 For OS X a [Brew](http://brew.sh) package is available:
