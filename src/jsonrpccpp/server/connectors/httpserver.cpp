@@ -3,7 +3,7 @@
  *************************************************************************
  * @file    httpserver.cpp
  * @date    31.12.2012
- * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>
+ * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>, Alexandre Poirot <alexandre.poirot@legrand.fr>
  * @license See attached LICENSE.txt
  ************************************************************************/
 
