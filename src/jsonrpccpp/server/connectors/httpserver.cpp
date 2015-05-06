@@ -161,6 +161,7 @@ bool HttpServer::StopListening()
     if(this->running)
     {
         MHD_stop_daemon(this->daemon);
+        close(this->sockfd);
         this->running = false;
     }
     return true;
