@@ -15,6 +15,7 @@
 #include <sys/types.h>
 #if defined(_WIN32) && !defined(__CYGWIN__)
 #include <ws2tcpip.h>
+#include <Wsk.h>
 #if defined(_MSC_FULL_VER) && !defined (_SSIZE_T_DEFINED)
 #define _SSIZE_T_DEFINED
 typedef intptr_t ssize_t;
