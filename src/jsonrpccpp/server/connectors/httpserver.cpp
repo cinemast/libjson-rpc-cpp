@@ -71,7 +71,6 @@ bool HttpServer::StartListening()
                         cerr << "server: can't bind local address" << endl;
 
                     listen(sockfd, 5);
-                    cout << "Using own socket (" << this->addr.sin_addr.s_addr << ", " << this->addr.sin_port << ")" << endl;
 
                     this->daemon = MHD_start_daemon(MHD_USE_SSL | MHD_USE_SELECT_INTERNALLY,
                                                     this->port,
@@ -132,10 +131,6 @@ bool HttpServer::StartListening()
                                                 NULL,
                                                 HttpServer::callback,
                                                 this,
-                                                MHD_OPTION_HTTPS_MEM_KEY,
-                                                this->sslkey.c_str(),
-                                                MHD_OPTION_HTTPS_MEM_CERT,
-                                                this->sslcert.c_str(),
                                                 MHD_OPTION_THREAD_POOL_SIZE,
                                                 this->threads,
                                                 MHD_OPTION_LISTEN_SOCKET,
@@ -149,10 +144,6 @@ bool HttpServer::StartListening()
                                                 NULL,
                                                 HttpServer::callback,
                                                 this,
-                                                MHD_OPTION_HTTPS_MEM_KEY,
-                                                this->sslkey.c_str(),
-                                                MHD_OPTION_HTTPS_MEM_CERT,
-                                                this->sslcert.c_str(),
                                                 MHD_OPTION_THREAD_POOL_SIZE,
                                                 this->threads,
                                                 MHD_OPTION_END);
