@@ -90,7 +90,10 @@ bool UnixDomainSocketServer::SendResponse(const string& response, void* addInfo)
 	int connection_fd = reinterpret_cast<intptr_t>(addInfo);
 
 	//cout << "(" << pthread_self() << ") " << "Will write response #" << response << "#";
-	write(connection_fd, response.c_str(), response.size());
+	char eot = 0x04;
+	string toSend = response.substr(0, toSend.find_last_of('\n'));
+	toSend += eot;
+	write(connection_fd, toSend.c_str(), toSend.size());
 
 	//cout << "(" << pthread_self() << ") " << "Will close client socket" << endl;
 	close(connection_fd);
