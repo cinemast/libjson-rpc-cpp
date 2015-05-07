@@ -15,6 +15,7 @@
 #include <sys/types.h>
 #if defined(_WIN32) && !defined(__CYGWIN__)
 #include <ws2tcpip.h>
+#include <Wsk.h>
 #if defined(_MSC_FULL_VER) && !defined (_SSIZE_T_DEFINED)
 #define _SSIZE_T_DEFINED
 typedef intptr_t ssize_t;
@@ -23,6 +24,7 @@ typedef intptr_t ssize_t;
 #include <unistd.h>
 #include <sys/time.h>
 #include <sys/socket.h>
+#include <netinet/in.h>
 #endif
 
 #include <map>
@@ -44,10 +46,11 @@ namespace jsonrpc
             /**
              * @brief HttpServer, constructor for the included HttpServer
              * @param port on which the server is listening
+             * @param listenOnlyToLoopback - defines if the server should only listen on loopback interface
              * @param enableSpecification - defines if the specification is returned in case of a GET request
              * @param sslcert - defines the path to a SSL certificate, if this path is != "", then SSL/HTTPS is used with the given certificate.
              */
-            HttpServer(int port, const std::string& sslcert = "", const std::string& sslkey = "", int threads = 50);
+            HttpServer(int port, const bool listenOnlyToLoopback = false, const std::string& sslcert = "", const std::string& sslkey = "", int threads = 50);
 
             virtual bool StartListening();
             virtual bool StopListening();
@@ -59,9 +62,12 @@ namespace jsonrpc
             void SetUrlHandler(const std::string &url, IClientConnectionHandler *handler);
 
         private:
+            int sockfd;
+            struct sockaddr_in addr;
             int port;
             int threads;
             bool running;
+            bool listenOnlyToLoopback;
             std::string path_sslcert;
             std::string path_sslkey;
             std::string sslcert;

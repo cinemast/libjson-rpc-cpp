@@ -26,11 +26,12 @@ struct mhd_coninfo {
         int code;
 };
 
-HttpServer::HttpServer(int port, const std::string &sslcert, const std::string &sslkey, int threads) :
+HttpServer::HttpServer(int port, const bool listenOnlyToLoopback, const std::string &sslcert, const std::string &sslkey, int threads) :
     AbstractServerConnector(),
     port(port),
     threads(threads),
     running(false),
+    listenOnlyToLoopback(listenOnlyToLoopback),
     path_sslcert(sslcert),
     path_sslkey(sslkey),
     daemon(NULL)
@@ -57,7 +58,51 @@ bool HttpServer::StartListening()
                 SpecificationParser::GetFileContent(this->path_sslcert, this->sslcert);
                 SpecificationParser::GetFileContent(this->path_sslkey, this->sslkey);
 
-                this->daemon = MHD_start_daemon(MHD_USE_SSL | MHD_USE_SELECT_INTERNALLY, this->port, NULL, NULL, HttpServer::callback, this, MHD_OPTION_HTTPS_MEM_KEY, this->sslkey.c_str(), MHD_OPTION_HTTPS_MEM_CERT, this->sslcert.c_str(), MHD_OPTION_THREAD_POOL_SIZE, this->threads, MHD_OPTION_END);
+                if(this->listenOnlyToLoopback) {
+                    this->sockfd = socket(AF_INET, SOCK_STREAM, 0);
+                    if(this->sockfd < 0)
+                        cerr << "can't open stream socket" << endl;
+                    
+                    this->addr.sin_family = AF_INET;
+                    this->addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+                    this->addr.sin_port = htons(this->port);
+
+                    if (bind(this->sockfd, (struct sockaddr *) &(this->addr), sizeof(this->addr)) < 0)
+                        cerr << "server: can't bind local address" << endl;
+
+                    listen(sockfd, 5);
+
+                    this->daemon = MHD_start_daemon(MHD_USE_SSL | MHD_USE_SELECT_INTERNALLY,
+                                                    this->port,
+                                                    NULL,
+                                                    NULL,
+                                                    HttpServer::callback,
+                                                    this,
+                                                    MHD_OPTION_HTTPS_MEM_KEY,
+                                                    this->sslkey.c_str(),
+                                                    MHD_OPTION_HTTPS_MEM_CERT,
+                                                    this->sslcert.c_str(),
+                                                    MHD_OPTION_THREAD_POOL_SIZE,
+                                                    this->threads,
+                                                    MHD_OPTION_LISTEN_SOCKET,
+                                                    this->sockfd,
+                                                    MHD_OPTION_END);
+                }
+                else {
+                    this->daemon = MHD_start_daemon(MHD_USE_SSL | MHD_USE_SELECT_INTERNALLY,
+                                                    this->port,
+                                                    NULL,
+                                                    NULL,
+                                                    HttpServer::callback,
+                                                    this,
+                                                    MHD_OPTION_HTTPS_MEM_KEY,
+                                                    this->sslkey.c_str(),
+                                                    MHD_OPTION_HTTPS_MEM_CERT,
+                                                    this->sslcert.c_str(),
+                                                    MHD_OPTION_THREAD_POOL_SIZE,
+                                                    this->threads,
+                                                    MHD_OPTION_END);
+                }
             }
             catch (JsonRpcException& ex)
             {
@@ -66,7 +111,43 @@ bool HttpServer::StartListening()
         }
         else
         {
-            this->daemon = MHD_start_daemon(MHD_USE_SELECT_INTERNALLY, this->port, NULL, NULL, HttpServer::callback, this,   MHD_OPTION_THREAD_POOL_SIZE, this->threads, MHD_OPTION_END);
+            if(this->listenOnlyToLoopback) {
+                this->sockfd = socket(AF_INET, SOCK_STREAM, 0);
+                if(this->sockfd < 0)
+                    cerr << "can't open stream socket" << endl;
+
+                this->addr.sin_family = AF_INET;
+                this->addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+                this->addr.sin_port = htons(this->port);
+
+                if (bind(this->sockfd, (struct sockaddr *) &(this->addr), sizeof(this->addr)) < 0)
+                    cerr << "server: can't bind local address" << endl;
+
+                listen(sockfd, 5);
+                
+                this->daemon = MHD_start_daemon(MHD_USE_SELECT_INTERNALLY,
+                                                this->port,
+                                                NULL,
+                                                NULL,
+                                                HttpServer::callback,
+                                                this,
+                                                MHD_OPTION_THREAD_POOL_SIZE,
+                                                this->threads,
+                                                MHD_OPTION_LISTEN_SOCKET,
+                                                this->sockfd,
+                                                MHD_OPTION_END);
+            }
+            else {
+                this->daemon = MHD_start_daemon(MHD_USE_SELECT_INTERNALLY,
+                                                this->port,
+                                                NULL,
+                                                NULL,
+                                                HttpServer::callback,
+                                                this,
+                                                MHD_OPTION_THREAD_POOL_SIZE,
+                                                this->threads,
+                                                MHD_OPTION_END);
+            }
         }
         if (this->daemon != NULL)
             this->running = true;
@@ -80,6 +161,7 @@ bool HttpServer::StopListening()
     if(this->running)
     {
         MHD_stop_daemon(this->daemon);
+        close(this->sockfd);
         this->running = false;
     }
     return true;
