@@ -20,10 +20,11 @@ using namespace jsonrpc;
 using namespace std;
 
 #define BUFFER_SIZE 64
+#define PATH_MAX 108
 
 UnixDomainSocketServer::UnixDomainSocketServer(const std::string &socket_path) :
     AbstractServerConnector(),
-    socket_path(socket_path),
+    socket_path(socket_path.substr(0, PATH_MAX)),
     running(false)
 {
 }
@@ -47,7 +48,7 @@ bool UnixDomainSocketServer::StartListening()
 		memset(&(this->address), 0, sizeof(struct sockaddr_un));
 
 		this->address.sun_family = AF_UNIX;
-		snprintf(this->address.sun_path, this->socket_path.size(), this->socket_path.c_str());
+		snprintf(this->address.sun_path, PATH_MAX, this->socket_path.c_str());
 
 		if(bind(this->socket_fd, reinterpret_cast<struct sockaddr *>(&(this->address)), sizeof(struct sockaddr_un)) != 0)
 		{
