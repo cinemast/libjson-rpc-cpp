@@ -19,7 +19,10 @@ set(BUILD_STATIC_LIBS NO CACHE BOOL "Build static libraries in addition to share
 set(LIB_SUFFIX "" CACHE STRING "Suffix for library directory (32/64)")
 
 # defaults for modules that can be enabled/disabled
-set(UNIX_DOMAIN_SOCKET_SERVER YES CACHE BOOL "Include Unix Domain Socket server")
+if(UNIX)
+	set(UNIX_DOMAIN_SOCKET_SERVER YES CACHE BOOL "Include Unix Domain Socket server")
+	set(UNIX_DOMAIN_SOCKET_CLIENT YES CACHE BOOL "Include Unix Domain Socket client")
+endif(UNIX)
 set(HTTP_SERVER YES CACHE BOOL "Include HTTP server using libmicrohttpd")
 set(HTTP_CLIENT YES CACHE BOOL "Include HTTP client support using curl")
 set(COMPILE_TESTS YES CACHE BOOL "Compile test framework")
