@@ -35,6 +35,10 @@ set(COMPILE_STUBGEN YES CACHE BOOL "Compile the stubgenerator")
 set(COMPILE_EXAMPLES YES CACHE BOOL "Compile example programs")
 
 # print actual settings
+if(UNIX)
+	message(STATUS "UNIX_DOMAIN_SOCKET_SERVER: ${UNIX_DOMAIN_SOCKET_SERVER}")
+	message(STATUS "UNIX_DOMAIN_SOCKET_CLIENT: ${UNIX_DOMAIN_SOCKET_CLIENT}")
+endif(UNIX)
 message(STATUS "HTTP_SERVER: ${HTTP_SERVER}")
 message(STATUS "HTTP_CLIENT: ${HTTP_CLIENT}")
 message(STATUS "COMPILE_TESTS: ${COMPILE_TESTS}")
@@ -73,6 +77,13 @@ endif ()
 if (HTTP_SERVER AND HTTP_CLIENT)
 	add_subdirectory(src/examples)
 endif()
+
+if(UNIX)
+	if (UNIX_DOMAIN_SOCKET_SERVER AND UNIX_DOMAIN_SOCKET_CLIENT)
+		add_subdirectory(src/examples)
+	endif()
+endif(UNIX)
+
 
 # setup test suite
 if (Boost_FOUND AND COMPILE_TESTS)
