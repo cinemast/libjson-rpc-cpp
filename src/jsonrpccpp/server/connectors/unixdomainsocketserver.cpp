@@ -21,6 +21,9 @@ using namespace std;
 
 #define BUFFER_SIZE 64
 #define PATH_MAX 108
+#ifndef DELIMITER_CHAR
+#define DELIMITER_CHAR char(0x0A)
+#endif //DELIMITER_CHAR
 
 UnixDomainSocketServer::UnixDomainSocketServer(const std::string &socket_path) :
     AbstractServerConnector(),
@@ -90,10 +93,15 @@ bool UnixDomainSocketServer::SendResponse(const string& response, void* addInfo)
 	int connection_fd = reinterpret_cast<intptr_t>(addInfo);
 
 	//cout << "(" << pthread_self() << ") " << "Will write response #" << response << "#";
-	char eot = 0x04;
-	string toSend = response.substr(0, toSend.find_last_of('\n'));
-	toSend += eot;
-	write(connection_fd, toSend.c_str(), toSend.size());
+	if(DELIMITER_CHAR != '\n') {
+		char eot = DELIMITER_CHAR;
+		string toSend = response.substr(0, toSend.find_last_of('\n'));
+		toSend += eot;
+		write(connection_fd, toSend.c_str(), toSend.size());
+ 	}
+	else {
+		write(connection_fd, response.c_str(), response.size());
+	}
 
 	//cout << "(" << pthread_self() << ") " << "Will close client socket" << endl;
 	close(connection_fd);
@@ -150,7 +158,7 @@ void* UnixDomainSocketServer::GenerateResponse(void *p_data) {
 			request = string(buffer);
 		else
 			request.append(buffer,nbytes);
-	} while(request.find(char(0x04)) == string::npos);
+	} while(request.find(DELIMITER_CHAR) == string::npos);
 
 	//cout << "(" << pthread_self() << ") " << "Received request #" << request << "#" << endl;
 
