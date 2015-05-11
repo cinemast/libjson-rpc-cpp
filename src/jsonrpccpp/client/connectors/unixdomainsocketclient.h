@@ -7,7 +7,6 @@
  * @license See attached LICENSE.txt
  ************************************************************************/
 
-#ifndef __WIN32__ //Unix domain sockets have meaning only on unix-like systems
 #ifndef JSONRPC_CPP_UNIXDOMAINSOCKETCLIENT_H_
 #define JSONRPC_CPP_UNIXDOMAINSOCKETCLIENT_H_
 
@@ -29,4 +28,3 @@ namespace jsonrpc
 
 } /* namespace jsonrpc */
 #endif /* JSONRPC_CPP_HTTPCLIENT_H_ */
-#endif /*Not def __WIND32__*/

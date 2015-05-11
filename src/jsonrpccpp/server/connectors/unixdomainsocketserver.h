@@ -6,7 +6,7 @@
  * @author  Alexandre Poirot <alexandre.poirot@legrand.fr>
  * @license See attached LICENSE.txt
  ************************************************************************/
-#ifndef __WIN32__ //Unix domain sockets have meaning only on unix-like systems
+
 #ifndef JSONRPC_CPP_UNIXDOMAINSOCKETSERVERCONNECTOR_H_
 #define JSONRPC_CPP_UNIXDOMAINSOCKETSERVERCONNECTOR_H_
 
@@ -63,4 +63,4 @@ namespace jsonrpc
 
 } /* namespace jsonrpc */
 #endif /* JSONRPC_CPP_HTTPSERVERCONNECTOR_H_ */
-#endif /*Not def __WIN32__*/
+
