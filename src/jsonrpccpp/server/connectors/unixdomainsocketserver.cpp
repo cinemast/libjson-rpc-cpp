@@ -92,17 +92,22 @@ bool UnixDomainSocketServer::SendResponse(const string& response, void* addInfo)
 	//cout << "(" << pthread_self() << ") " << "Entered in send response" << endl;
 	int connection_fd = reinterpret_cast<intptr_t>(addInfo);
 
-	//cout << "(" << pthread_self() << ") " << "Will write response #" << response << "#";
+	string temp = response;
+	if(temp.find(DELIMITER_CHAR) == string::npos) {
+		//cout << "Appending delimited char" << endl;
+		temp.append(1, DELIMITER_CHAR);
+		//cout << "Temp is #" << temp << "#" << endl;
+	}
+	//cout << "Sending #" << temp << "#" << endl;
 	if(DELIMITER_CHAR != '\n') {
 		char eot = DELIMITER_CHAR;
-		string toSend = response.substr(0, toSend.find_last_of('\n'));
+		string toSend = temp.substr(0, toSend.find_last_of('\n'));
 		toSend += eot;
 		write(connection_fd, toSend.c_str(), toSend.size());
- 	}
-	else {
-		write(connection_fd, response.c_str(), response.size());
 	}
-
+	else {
+		write(connection_fd, temp.c_str(), temp.size());
+	}
 	//cout << "(" << pthread_self() << ") " << "Will close client socket" << endl;
 	close(connection_fd);
 	return true;
@@ -150,14 +155,11 @@ void* UnixDomainSocketServer::GenerateResponse(void *p_data) {
 	char buffer[BUFFER_SIZE];
 	//cout << "(" << pthread_self() << ") " << "Will read the request" << endl;
 	string request;
-	do { //The client sends its json formatted request and an \0.
+	do { //The client sends its json formatted request and a delimiter request.
 		//cout << "(" << pthread_self() << ") " << "Current request state: #" << request << "#";
 		nbytes = read(connection_fd, buffer, BUFFER_SIZE);
 		//cout << "(" << pthread_self() << ") " << "Received part of request: #" << buffer << "#";
-		if(request.empty())
-			request = string(buffer);
-		else
-			request.append(buffer,nbytes);
+		request.append(buffer,nbytes);
 	} while(request.find(DELIMITER_CHAR) == string::npos);
 
 	//cout << "(" << pthread_self() << ") " << "Received request #" << request << "#" << endl;
