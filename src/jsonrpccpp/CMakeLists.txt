@@ -45,6 +45,13 @@ if (HTTP_SERVER)
 	list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT} ${MHD_LIBRARIES})  
 endif()
 
+# setup sources for unix domain socket connectors
+if (UNIX_DOMAIN_SOCKET_SERVER)
+	list(APPEND server_connector_header "server/connectors/unixdomainsocketserver.h")
+	list(APPEND server_connector_source "server/connectors/unixdomainsocketserver.cpp")
+	list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT})
+endif()
+
 # configure a header file to pass some of the CMake settings to the source code
 # TODO: move it to custom build step?
 file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/gen/jsonrpccpp/common")

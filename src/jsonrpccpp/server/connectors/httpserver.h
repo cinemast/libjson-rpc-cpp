@@ -3,7 +3,7 @@
  *************************************************************************
  * @file    httpserver.h
  * @date    31.12.2012
- * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>, Alexandre Poirot <alexandre.poirot@legrand.fr>
+ * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>
  * @license See attached LICENSE.txt
  ************************************************************************/
 
@@ -23,7 +23,6 @@ typedef intptr_t ssize_t;
 #include <unistd.h>
 #include <sys/time.h>
 #include <sys/socket.h>
-#include <netinet/in.h>
 #endif
 
 #include <map>
@@ -48,7 +47,7 @@ namespace jsonrpc
              * @param enableSpecification - defines if the specification is returned in case of a GET request
              * @param sslcert - defines the path to a SSL certificate, if this path is != "", then SSL/HTTPS is used with the given certificate.
              */
-            HttpServer(int port, const std::string& sslcert = "", const std::string& sslkey = "", int threads = 50, const bool listenLocalhostOnly = false);
+            HttpServer(int port, const std::string& sslcert = "", const std::string& sslkey = "", int threads = 50);
 
             virtual bool StartListening();
             virtual bool StopListening();
@@ -63,9 +62,6 @@ namespace jsonrpc
             int port;
             int threads;
             bool running;
-            bool listenLocalhostOnly;
-            int sockfd;
-			struct sockaddr_in addr;
             std::string path_sslcert;
             std::string path_sslkey;
             std::string sslcert;
