@@ -74,16 +74,9 @@ if (COMPILE_STUBGEN)
 endif ()
 
 # setup examples
-if (HTTP_SERVER AND HTTP_CLIENT)
+if ((HTTP_SERVER AND HTTP_CLIENT) OR (UNIX AND UNIX_DOMAIN_SOCKET_SERVER AND UNIX_DOMAIN_SOCKET_CLIENT))
 	add_subdirectory(src/examples)
 endif()
-
-if(UNIX)
-	if (UNIX_DOMAIN_SOCKET_SERVER AND UNIX_DOMAIN_SOCKET_CLIENT)
-		add_subdirectory(src/examples)
-	endif()
-endif(UNIX)
-
 
 # setup test suite
 if (Boost_FOUND AND COMPILE_TESTS)
