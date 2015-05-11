@@ -65,14 +65,12 @@ bool UnixDomainSocketServer::StartListening()
 			return false;
 		}
 		//Launch listening loop there
-		//cout << "(" << pthread_self() << ") " << "Will launch the thread for the loop" << endl;
 		int ret = pthread_create(&(this->listenning_thread), NULL, UnixDomainSocketServer::LaunchLoop, this);
 		if(ret != 0) {
 			pthread_detach(this->listenning_thread);
 		}
 		this->running = static_cast<bool>(ret==0);
     }
-    //cout << "(" << pthread_self() << ") " << "Returning " << this->running << endl;
     return this->running;
 }
 
@@ -89,21 +87,21 @@ bool UnixDomainSocketServer::StopListening()
 
 bool UnixDomainSocketServer::SendResponse(const string& response, void* addInfo)
 {
-	//cout << "(" << pthread_self() << ") " << "Entered in send response" << endl;
 	int connection_fd = reinterpret_cast<intptr_t>(addInfo);
 
-	//cout << "(" << pthread_self() << ") " << "Will write response #" << response << "#";
+	string temp = response;
+	if(temp.find(DELIMITER_CHAR) == string::npos) {
+		temp.append(1, DELIMITER_CHAR);
+	}
 	if(DELIMITER_CHAR != '\n') {
 		char eot = DELIMITER_CHAR;
-		string toSend = response.substr(0, toSend.find_last_of('\n'));
+		string toSend = temp.substr(0, toSend.find_last_of('\n'));
 		toSend += eot;
 		write(connection_fd, toSend.c_str(), toSend.size());
- 	}
-	else {
-		write(connection_fd, response.c_str(), response.size());
 	}
-
-	//cout << "(" << pthread_self() << ") " << "Will close client socket" << endl;
+	else {
+		write(connection_fd, temp.c_str(), temp.size());
+	}
 	close(connection_fd);
 	return true;
 }
@@ -116,17 +114,12 @@ void* UnixDomainSocketServer::LaunchLoop(void *p_data) {
 void UnixDomainSocketServer::ListenLoop() {
 	int connection_fd;
 	socklen_t address_length;
-	//cout << "(" << pthread_self() << ") " << "Will launch the loop" << endl;
 	while((connection_fd = accept(this->socket_fd, (struct sockaddr *) &(this->address),  &address_length)) > -1)
 	{
-		//cout << "(" << pthread_self() << ") " << "Client connected" << endl;
 		pthread_t client_thread;
 		struct GenerateResponseParameters *params = new struct GenerateResponseParameters();
 		params->instance = this;
 		params->connection_fd = connection_fd;
-		//cout << "(" << pthread_self() << ") " << "Will launch the thread to handle the request" << endl;
-		//cout << "Sending instance=" << this << endl;
-		//cout << "Sending connection_fd=" << connection_fd << endl;
 		int ret = pthread_create(&client_thread, NULL, UnixDomainSocketServer::GenerateResponse, params);
 		if(ret != 0) {
 			pthread_detach(client_thread);
@@ -137,31 +130,18 @@ void UnixDomainSocketServer::ListenLoop() {
 }
 
 void* UnixDomainSocketServer::GenerateResponse(void *p_data) {
-	//cout << "(" << pthread_self() << ") " << "Entrered in generate response" << endl;
 	struct GenerateResponseParameters* params = reinterpret_cast<struct GenerateResponseParameters*>(p_data);
 	UnixDomainSocketServer *instance = params->instance;
-	//cout << "Got instance=" << instance << endl;
 	int connection_fd = params->connection_fd;
-	//cout << "Got connection_fd=" << connection_fd << endl;
-	//cout << "(" << pthread_self() << ") " << "Obtained params" << endl;
 	delete params;
 	params = NULL;
 	int nbytes;
 	char buffer[BUFFER_SIZE];
-	//cout << "(" << pthread_self() << ") " << "Will read the request" << endl;
 	string request;
-	do { //The client sends its json formatted request and an \0.
-		//cout << "(" << pthread_self() << ") " << "Current request state: #" << request << "#";
+	do { //The client sends its json formatted request and a delimiter request.
 		nbytes = read(connection_fd, buffer, BUFFER_SIZE);
-		//cout << "(" << pthread_self() << ") " << "Received part of request: #" << buffer << "#";
-		if(request.empty())
-			request = string(buffer);
-		else
-			request.append(buffer,nbytes);
+		request.append(buffer,nbytes);
 	} while(request.find(DELIMITER_CHAR) == string::npos);
 
-	//cout << "(" << pthread_self() << ") " << "Received request #" << request << "#" << endl;
-
-	//cout << "(" << pthread_self() << ") " << "Will launch OnRequest" << endl;
 	instance->OnRequest(request, reinterpret_cast<void*>(connection_fd));
 }
