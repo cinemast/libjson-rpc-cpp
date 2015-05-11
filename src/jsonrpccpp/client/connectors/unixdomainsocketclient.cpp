@@ -38,7 +38,6 @@ UnixDomainSocketClient::~UnixDomainSocketClient()
 
 void UnixDomainSocketClient::SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException)
 {
-	//cout << "Will call " << message << endl;
 	sockaddr_un address;
 	int socket_fd, nbytes;
 	char buffer[BUFFER_SIZE];
@@ -57,18 +56,15 @@ void UnixDomainSocketClient::SendRPCMessage(const std::string& message, std::str
 		cerr << "connect failed" << endl;
 		throw JsonRpcException(Errors::ERROR_RPC_INTERNAL_ERROR, result);
 	}
-	//cout << "Will send #" << message << "#" << endl;
 	write(socket_fd, message.c_str(), message.size());
 
 	do {
 		nbytes = read(socket_fd, buffer, BUFFER_SIZE);
 		string tmp;
 		tmp.append(buffer, nbytes);
-		//cout << "Received: #" << tmp << "#("<< nbytes << ")" << endl;
 		result.append(buffer,nbytes);
 
 	} while(result.find(DELIMITER_CHAR) == string::npos);
 
 	close(socket_fd);
-	//cout << "Got " << result << endl;
 }
