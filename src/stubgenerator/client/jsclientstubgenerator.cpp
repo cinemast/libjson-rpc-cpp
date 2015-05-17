@@ -23,7 +23,9 @@ using namespace std;
             request.id = id++;\n\
         request.jsonrpc = \"2.0\";\n\
         request.method = method;\n\
-        request.params = params\n\
+        if (params !== null) {\n\
+            request.params = params;\n\
+        }\n\
         JSON.stringify(request);\n\
         \n\
         $.ajax({\n\
