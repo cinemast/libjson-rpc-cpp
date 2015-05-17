@@ -24,7 +24,7 @@ using namespace std;
         request.jsonrpc = \"2.0\";\n\
         request.method = method;\n\
         if (params !== null) {\n\
-            request.params = params\n\
+            request.params = params;\n\
         }\n\
         JSON.stringify(request);\n\
         \n\
