@@ -113,7 +113,7 @@ void* UnixDomainSocketServer::LaunchLoop(void *p_data) {
 
 void UnixDomainSocketServer::ListenLoop() {
 	int connection_fd;
-	socklen_t address_length;
+	socklen_t address_length = sizeof(this->address);
 	while((connection_fd = accept(this->socket_fd, (struct sockaddr *) &(this->address),  &address_length)) > -1)
 	{
 		pthread_t client_thread;
@@ -142,6 +142,5 @@ void* UnixDomainSocketServer::GenerateResponse(void *p_data) {
 		nbytes = read(connection_fd, buffer, BUFFER_SIZE);
 		request.append(buffer,nbytes);
 	} while(request.find(DELIMITER_CHAR) == string::npos);
-
 	instance->OnRequest(request, reinterpret_cast<void*>(connection_fd));
 }
