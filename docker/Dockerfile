@@ -1,7 +1,7 @@
 # THIS DOCKERFILE TRIES TO COMPILE CURL, LIBMICROHTTPD, JSONCPP, ARGTABLE AND LIBJSON-RPC-CPP FOR ANDROID
 # Based on Victor Laskin Dockerfile (http://vitiy.info/dockerfile-example-to-compile-libcurl-for-android-inside-docker-container/)
 
-FROM debian:jessie
+FROM debian:sid
 
 MAINTAINER Péricles Lopes Machado <pericles.raskolnikoff@gmail.com>
 
@@ -17,7 +17,10 @@ wget \
 p7zip-full \
 bash \
 cmake \
-git
+git \
+libjsonrpccpp-dev \
+libjsonrpccpp \
+libjsonrpccpp-tools
 
 
 # Download SDK / NDK
