@@ -1,6 +1,6 @@
 # THIS DOCKERFILE TRIES TO COMPILE CURL, LIBMICROHTTPD, JSONCPP, ARGTABLE AND LIBJSON-RPC-CPP FOR ANDROID
 # Based on Victor Laskin Dockerfile (http://vitiy.info/dockerfile-example-to-compile-libcurl-for-android-inside-docker-container/)
- 
+
 FROM debian:jessie
 
 MAINTAINER Péricles Lopes Machado <pericles.raskolnikoff@gmail.com>
@@ -11,11 +11,13 @@ ENV ANDROID_NDK_PACKAGE android-ndk-r10e-linux-x86_64.bin
 # Install compilation tools
 
 RUN apt-get update && apt-get install -y \
-    automake \
-    build-essential \
-    wget \
-    p7zip-full \
-    bash 
+automake \
+build-essential \
+wget \
+p7zip-full \
+bash \
+cmake \
+git
 
 
 # Download SDK / NDK
@@ -29,8 +31,8 @@ RUN wget http://dl.google.com/android/ndk/$ANDROID_NDK_PACKAGE
 # Extracting ndk/sdk
 
 RUN tar -xvzf $ANDROID_SDK_PACKAGE && \
-	chmod a+x $ANDROID_NDK_PACKAGE && \
-	7z x $ANDROID_NDK_PACKAGE
+chmod a+x $ANDROID_NDK_PACKAGE && \
+7z x $ANDROID_NDK_PACKAGE
 
 # Set ENV variables
 
@@ -82,58 +84,28 @@ ENV CPPFLAGS $CPPFLAGS $CFLAGS \
 
 ENV LDFLAGS -L${TOOLCHAIN}/include
 
-
-# download, configure and make Zlib
-
-RUN wget http://zlib.net/zlib-1.2.8.tar.gz && \
-	tar -xzf zlib-1.2.8.tar.gz && \
-	mv zlib-1.2.8 zlib
-RUN cd zlib && ./configure && \
-	make && \
-	ls -hs . && \
-	cp libz.a /Android/output
-
-
 RUN wget http://curl.haxx.se/download/curl-7.38.0.tar.gz && \
-	tar -xzf curl-7.38.0.tar.gz
+tar -xzf curl-7.38.0.tar.gz
 RUN cd curl-7.38.0 && ./configure --host=arm-linux-androideabi \
 --enable-shared --disable-static \
 --disable-dependency-tracking \
 --with-zlib=/Android/zlib --without-ca-bundle --without-ca-path \
 --enable-ipv6 --disable-ftp --disable-file --disable-ldap \
 --disable-ldaps --disable-rtsp --disable-proxy --disable-dict\
- --disable-telnet --disable-tftp --disable-pop3 --disable-imap\
- --disable-smtp --disable-gopher --disable-sspi --disable-manual\
- --target=arm-linux-androideabi --build=x86_64-unknown-linux-gnu || cat config.log
+--disable-telnet --disable-tftp --disable-pop3 --disable-imap\
+--disable-smtp --disable-gopher --disable-sspi --disable-manual\
+--target=arm-linux-androideabi --build=x86_64-unknown-linux-gnu || cat config.log
 
 # Make curl 
 
 RUN cd curl-7.38.0 && \
-	make && \
-	ls lib/.libs/ && \
-	cp lib/.libs/libcurl.so /Android/output && \
-	ls -hs /Android/output && \
-	mkdir /output
-
-
-# ziplib 
-
-RUN wget http://www.nih.at/libzip/libzip-0.11.2.tar.gz && \
-	tar -xzf libzip-0.11.2.tar.gz && \
-	mv libzip-0.11.2 libzip && \
-	cd libzip && \
-	./configure --help && \
-	./configure --enable-shared --disable-static --host=arm-linux-androideabi --target=arm-linux-androideabi && \
-	make && \
-	ls -hs lib && \
-	cp lib/.libs/libzip.so /Android/output && \
-	mkdir /Android/output/ziplib && \
-	cp lib/*.c /Android/output/ziplib && \
-	cp lib/*.h /Android/output/ziplib && \
-	cp config.h /Android/output/ziplib
-
-
-RUN apt-get install -y git cmake
+make \
+CC=arm-linux-androideabi-gcc \
+CXX=arm-linux-androideabi-g++ && \
+ls lib/.libs/ && \
+cp lib/.libs/libcurl.so /Android/output && \
+ls -hs /Android/output && \
+mkdir /output
 
 #clone android-cmake-toolchain
 RUN git clone https://github.com/taka-no-me/android-cmake.git
@@ -142,44 +114,52 @@ RUN git clone https://github.com/taka-no-me/android-cmake.git
 RUN git clone https://github.com/gogo40/jsoncpp.git
 
 RUN mkdir jsoncpp-dev && \
-	cd jsoncpp-dev && \
-	cmake -DCMAKE_TOOLCHAIN_FILE=/Android/android-cmake/android.toolchain.cmake \
-     		-DANDROID_NDK=$NDK_ROOT                       \
-      		-DCMAKE_BUILD_TYPE=Release                     \
-      		-DANDROID_ABI="armeabi-v7a"          \
-		-DJSONCPP_WITH_TESTS=NO \
-		 -DBUILD_STATIC_LIBS=OFF -DBUILD_SHARED_LIBS=ON \
-      		/Android/jsoncpp && \
-	make && \
-	ls
+cd jsoncpp-dev && \
+cmake -DCMAKE_TOOLCHAIN_FILE=/Android/android-cmake/android.toolchain.cmake \
+-DANDROID_NDK=$NDK_ROOT                       \
+-DCMAKE_BUILD_TYPE=Release                     \
+-DANDROID_ABI="armeabi-v7a"          \
+-DANDROID_NATIVE_API_LEVEL=14  \
+-DJSONCPP_WITH_TESTS=NO \
+-DBUILD_STATIC_LIBS=OFF -DBUILD_SHARED_LIBS=ON \
+/Android/jsoncpp && \
+make \
+CC=arm-linux-androideabi-gcc \
+CXX=arm-linux-androideabi-g++ && \
+ls
 
 
 #get and build argtable
 RUN wget http://prdownloads.sourceforge.net/argtable/argtable2-13.tar.gz && \
-	tar -xzf argtable2-13.tar.gz  
+tar -xzf argtable2-13.tar.gz  
 
 RUN mkdir argtable-dev && \
-	cd argtable-dev && \
-	cmake -DCMAKE_TOOLCHAIN_FILE=/Android/android-cmake/android.toolchain.cmake \
-                -DANDROID_NDK=$NDK_ROOT                       \
-                -DCMAKE_BUILD_TYPE=Release                     \
-                -DANDROID_ABI="armeabi-v7a"          \
-                /Android/argtable2-13 && \
-	make && \
-	ls
+cd argtable-dev && \
+cmake -DCMAKE_TOOLCHAIN_FILE=/Android/android-cmake/android.toolchain.cmake \
+-DANDROID_NDK=$NDK_ROOT                       \
+-DCMAKE_BUILD_TYPE=Release                     \
+-DANDROID_ABI="armeabi-v7a"          \
+-DANDROID_NATIVE_API_LEVEL=14  \
+/Android/argtable2-13 && \
+make \
+CC=arm-linux-androideabi-gcc \
+CXX=arm-linux-androideabi-g++ && \
+ls
 
 #get and build libmicrohttpd
 RUN wget http://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-0.9.42.tar.gz && \
-	tar -xzf libmicrohttpd-0.9.42.tar.gz
+tar -xzf libmicrohttpd-0.9.42.tar.gz
 
 RUN cd libmicrohttpd-0.9.42 && \
-	./configure --host=arm-linux-androideabi  \
-	--enable-shared --disable-static \
-	--disable-dependency-tracking  \
-	  --target=arm-linux-androideabi \
-	 --build=x86_64-unknown-linux-gnu || cat config.log && \
-	make && \
-	ls
+./configure --host=arm-linux-androideabi  \
+--enable-shared --disable-static \
+--disable-dependency-tracking  \
+--target=arm-linux-androideabi \
+--build=x86_64-unknown-linux-gnu || cat config.log && \
+make \
+CC=arm-linux-androideabi-gcc \
+CXX=arm-linux-androideabi-g++ && \
+ls
 
 
 RUN cp /Android/jsoncpp-dev/src/lib_json/libjsoncpp.so /Android/output
@@ -190,28 +170,29 @@ RUN cp /Android/libmicrohttpd-0.9.42/src/microhttpd/.libs/libmicrohttpd.so /Andr
 RUN git clone https://github.com/cinemast/libjson-rpc-cpp.git
 
 RUN cd /Android/libjson-rpc-cpp && \
-	 cmake -DCMAKE_TOOLCHAIN_FILE=/Android/android-cmake/android.toolchain.cmake \
-               -DANDROID_NDK=$NDK_ROOT                       \
-                -DCMAKE_BUILD_TYPE=Release                     \
-                -DANDROID_ABI="armeabi-v7a"          \
-		-DBUILD_STATIC_LIBS=OFF -DBUILD_SHARED_LIBS=ON \
-		-DCURL_INCLUDE_DIR=/Android/curl-7.38.0/include \
-                -DCURL_LIBRARY=/Android/curl-7.38.0/lib/.libs/libcurl.so \
-                -DARGTABLE_INCLUDE_DIR=/Android/argtable2-13/src \
-                -DARGTABLE_LIBRARY=/Android/argtable-dev/src/libargtable2.a \
-                -DJSONCPP_INCLUDE_DIR=/Android/jsoncpp/include \
-                -DJSONCPP_LIBRARY=/Android/jsoncpp-dev/src/lib_json/libjsoncpp.so \
-                -DMHD_INCLUDE_DIR=/Android/libmicrohttpd-0.9.42/src/include \
-                -DMHD_LIBRARY=/Android/libmicrohttpd-0.9.42/src/microhttpd/.libs/libmicrohttpd.so \
-                /Android/libjson-rpc-cpp  
+cmake -DCMAKE_TOOLCHAIN_FILE=/Android/android-cmake/android.toolchain.cmake \
+-DANDROID_NDK=$NDK_ROOT                       \
+-DCMAKE_BUILD_TYPE=Release                     \
+-DANDROID_ABI="armeabi-v7a"          \
+-DANDROID_NATIVE_API_LEVEL=14  \
+-DBUILD_STATIC_LIBS=ON -DBUILD_SHARED_LIBS=ON \
+-DCURL_INCLUDE_DIR=/Android/curl-7.38.0/include \
+-DCURL_LIBRARY=/Android/curl-7.38.0/lib/.libs/libcurl.so \
+-DARGTABLE_INCLUDE_DIR=/Android/argtable2-13/src \
+-DARGTABLE_LIBRARY=/Android/argtable-dev/src/libargtable2.a \
+-DJSONCPP_INCLUDE_DIR=/Android/jsoncpp/include \
+-DJSONCPP_LIBRARY=/Android/jsoncpp-dev/src/lib_json/libjsoncpp.so \
+-DMHD_INCLUDE_DIR=/Android/libmicrohttpd-0.9.42/src/include \
+-DMHD_LIBRARY=/Android/libmicrohttpd-0.9.42/src/microhttpd/.libs/libmicrohttpd.so \
+/Android/libjson-rpc-cpp  
 
 RUN \
 ls /Android/argtable2-13/src && \
 cp -r /Android/curl-7.38.0/include/curl /Android/libjson-rpc-cpp/src && \
 cd /Android/libjson-rpc-cpp && \
-        make jsonrpccommon && \
-	make jsonrpcserver && \
-	make jsonrpcclient 
+make \
+CC=arm-linux-androideabi-gcc \
+CXX=arm-linux-androideabi-g++
 
 RUN cp /Android/libjson-rpc-cpp/lib/*.so /Android/output
 RUN cp -r /Android/argtable2-13 /Android/output
