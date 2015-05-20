@@ -19,7 +19,6 @@ bash \
 cmake \
 git \
 libjsonrpccpp-dev \
-libjsonrpccpp \
 libjsonrpccpp-tools
 
 
@@ -94,10 +93,10 @@ RUN cd curl-7.38.0 && ./configure --host=arm-linux-androideabi \
 --disable-dependency-tracking \
 --with-zlib=/Android/zlib --without-ca-bundle --without-ca-path \
 --enable-ipv6 --disable-ftp --disable-file --disable-ldap \
---disable-ldaps --disable-rtsp --disable-proxy --disable-dict\
---disable-telnet --disable-tftp --disable-pop3 --disable-imap\
---disable-smtp --disable-gopher --disable-sspi --disable-manual\
---target=arm-linux-androideabi --build=x86_64-unknown-linux-gnu || cat config.log
+--disable-ldaps --disable-rtsp --disable-proxy --disable-dict \
+--disable-telnet --disable-tftp --disable-pop3 --disable-imap \
+--disable-smtp --disable-gopher --disable-sspi --disable-manual \
+--target=arm-linux-androideabi --build=x86_64-unknown-linux-gnu
 
 # Make curl 
 
