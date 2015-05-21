@@ -56,7 +56,18 @@ void UnixDomainSocketClient::SendRPCMessage(const std::string& message, std::str
 		cerr << "connect failed" << endl;
 		throw JsonRpcException(Errors::ERROR_RPC_INTERNAL_ERROR, result);
 	}
-	write(socket_fd, message.c_str(), message.size());
+
+	bool fullyWritten = false;
+	string toSend = message;
+	do {
+		ssize_t byteWritten = write(socket_fd, toSend.c_str(), toSend.size());
+		if(byteWritten < toSend.size()) {
+			int len = toSend.size() - byteWritten;
+			toSend = toSend.substr(byteWritten + sizeof(char), len);
+		}
+		else
+			fullyWritten = true;
+	} while(!fullyWritten);
 
 	do {
 		nbytes = read(socket_fd, buffer, BUFFER_SIZE);
