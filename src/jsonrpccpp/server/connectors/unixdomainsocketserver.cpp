@@ -15,6 +15,7 @@
 #include <jsonrpccpp/common/specificationparser.h>
 #include <cstdio>
 #include <unistd.h>
+#include <string>
 
 using namespace jsonrpc;
 using namespace std;
@@ -25,7 +26,7 @@ using namespace std;
 #define DELIMITER_CHAR char(0x0A)
 #endif //DELIMITER_CHAR
 
-UnixDomainSocketServer::UnixDomainSocketServer(const std::string &socket_path) :
+UnixDomainSocketServer::UnixDomainSocketServer(const string &socket_path) :
     AbstractServerConnector(),
     socket_path(socket_path.substr(0, PATH_MAX)),
     running(false)
@@ -87,6 +88,7 @@ bool UnixDomainSocketServer::StopListening()
 
 bool UnixDomainSocketServer::SendResponse(const string& response, void* addInfo)
 {
+	bool result = false;
 	int connection_fd = reinterpret_cast<intptr_t>(addInfo);
 
 	string temp = response;
@@ -97,13 +99,13 @@ bool UnixDomainSocketServer::SendResponse(const string& response, void* addInfo)
 		char eot = DELIMITER_CHAR;
 		string toSend = temp.substr(0, toSend.find_last_of('\n'));
 		toSend += eot;
-		write(connection_fd, toSend.c_str(), toSend.size());
+		result = this->WriteToSocket(connection_fd, toSend);
 	}
 	else {
-		write(connection_fd, temp.c_str(), temp.size());
+		result = this->WriteToSocket(connection_fd, temp);
 	}
 	close(connection_fd);
-	return true;
+	return result;
 }
 
 void* UnixDomainSocketServer::LaunchLoop(void *p_data) {
@@ -143,4 +145,24 @@ void* UnixDomainSocketServer::GenerateResponse(void *p_data) {
 		request.append(buffer,nbytes);
 	} while(request.find(DELIMITER_CHAR) == string::npos);
 	instance->OnRequest(request, reinterpret_cast<void*>(connection_fd));
+}
+
+
+bool UnixDomainSocketServer::WriteToSocket(int fd, const string& toWrite) {
+	bool fullyWritten = false;
+	bool errorOccured = false;
+	string toSend = toWrite;
+	do {
+		ssize_t byteWritten = write(fd, toSend.c_str(), toSend.size());
+		if(byteWritten < 0)
+					errorOccured = true;
+		else if(byteWritten < toSend.size()) {
+			int len = toSend.size() - byteWritten;
+			toSend = toSend.substr(byteWritten + sizeof(char), len);
+		}
+		else
+			fullyWritten = true;
+	} while(!fullyWritten && !errorOccured);
+
+	return fullyWritten && !errorOccured;
 }
