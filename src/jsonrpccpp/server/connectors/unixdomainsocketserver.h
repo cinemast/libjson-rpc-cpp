@@ -59,6 +59,7 @@ namespace jsonrpc
 				int connection_fd;
 			};
 			static void* GenerateResponse(void *p_data);
+			bool WriteToSocket(int fd, const std::string& toSend);
     };
 
 } /* namespace jsonrpc */
