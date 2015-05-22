@@ -14,20 +14,20 @@ using namespace std;
 
 int main()
 {
-    UnixDomainSocketClient client("/tmp/unixdomainsocketexample");
-    Client c(client);
+	UnixDomainSocketClient client("/tmp/unixdomainsocketexample");
+	Client c(client);
 
-    Json::Value params;
-    params["name"] = "Peter";
+	Json::Value params;
+	params["name"] = "Peter";
 
-    try
-    {
-        cout << c.CallMethod("sayHello", params) << endl;
-    }
-    catch (JsonRpcException& e)
-    {
-        cerr << e.what() << endl;
-    }
+	try
+	{
+		cout << c.CallMethod("sayHello", params) << endl;
+	}
+	catch (JsonRpcException& e)
+	{
+		cerr << e.what() << endl;
+	}
 
 
 }

@@ -27,19 +27,19 @@ using namespace std;
 #endif //DELIMITER_CHAR
 
 UnixDomainSocketServer::UnixDomainSocketServer(const string &socket_path) :
-    AbstractServerConnector(),
-    socket_path(socket_path.substr(0, PATH_MAX)),
-    running(false)
+	AbstractServerConnector(),
+	socket_path(socket_path.substr(0, PATH_MAX)),
+	running(false)
 {
 }
 
 bool UnixDomainSocketServer::StartListening()
 {
-    if(!this->running)
-    {
-        //Create and bind socket here.
-    	//Then launch the listenning loop.
-    	this->socket_fd = socket(AF_UNIX, SOCK_STREAM, 0);
+	if(!this->running)
+	{
+		//Create and bind socket here.
+		//Then launch the listenning loop.
+		this->socket_fd = socket(AF_UNIX, SOCK_STREAM, 0);
 		if(this->socket_fd < 0)
 		{
 			cerr << "socket() failed" << endl;
@@ -71,19 +71,19 @@ bool UnixDomainSocketServer::StartListening()
 			pthread_detach(this->listenning_thread);
 		}
 		this->running = static_cast<bool>(ret==0);
-    }
-    return this->running;
+	}
+	return this->running;
 }
 
 bool UnixDomainSocketServer::StopListening()
 {
-    if(this->running)
-    {
-       	close(this->socket_fd);
-       	unlink(this->socket_path.c_str());
-        this->running = false;
-    }
-    return true;
+	if(this->running)
+	{
+		close(this->socket_fd);
+		unlink(this->socket_path.c_str());
+		this->running = false;
+	}
+	return true;
 }
 
 bool UnixDomainSocketServer::SendResponse(const string& response, void* addInfo)
@@ -155,7 +155,7 @@ bool UnixDomainSocketServer::WriteToSocket(int fd, const string& toWrite) {
 	do {
 		ssize_t byteWritten = write(fd, toSend.c_str(), toSend.size());
 		if(byteWritten < 0)
-					errorOccured = true;
+			errorOccured = true;
 		else if(byteWritten < toSend.size()) {
 			int len = toSend.size() - byteWritten;
 			toSend = toSend.substr(byteWritten + sizeof(char), len);
