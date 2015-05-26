@@ -28,6 +28,10 @@ Veselin Rachev <veselin.raychev@gmail.com>
 Marek Kotewicz <marek.kotewicz@gmail.com>
 + msvc support
 
+Alexandre Poirot <alexandre.poirot@gmail.com>
++ added client and server connectors that use Unix Domain Sockets
++ adapted build file to generate pkg-config file for this lib.
+
 Bugfixes (chronological order)
 ==============================
 
