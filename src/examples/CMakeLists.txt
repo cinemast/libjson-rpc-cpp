@@ -37,20 +37,34 @@ include_directories(${JSONCPP_INCLUDE_DIRS})
 include_directories(${MHD_INCLUDE_DIRS})
 
 if (COMPILE_EXAMPLES)
-	add_executable(simpleserversample simpleserver.cpp)
-	target_link_libraries(simpleserversample jsonrpcserver)
+	if (HTTP_SERVER AND HTTP_CLIENT)
+		add_executable(simpleserversample simpleserver.cpp)
+		target_link_libraries(simpleserversample jsonrpcserver)
+	
+		add_executable(simpleclientsample simpleclient.cpp)
+		target_link_libraries(simpleclientsample jsonrpcclient)
+		
+		if (COMPILE_STUBGEN)
+			add_executable(stubclientsample stubclient.cpp ${CMAKE_BINARY_DIR}/gen/stubclient.h)
+			target_link_libraries(stubclientsample jsonrpcclient)
+	
+			add_executable(stubserversample stubserver.cpp ${CMAKE_BINARY_DIR}/gen/abstractstubserver.h)
+			target_link_libraries(stubserversample jsonrpcserver)
+	
+			add_executable(xbmcremote xbmcremote.cpp ${CMAKE_BINARY_DIR}/gen/xbmcremote.h)
+			target_link_libraries(xbmcremote jsonrpcclient)
+		endif()
+	endif (HTTP_SERVER AND HTTP_CLIENT)
+	
+	if(UNIX)
+		if (UNIX_DOMAIN_SOCKET_SERVER AND UNIX_DOMAIN_SOCKET_CLIENT)
+			add_executable(unixdomainsocketserversample unixdomainsocketserver.cpp)
+			target_link_libraries(unixdomainsocketserversample jsonrpcserver)
+		
+			add_executable(unixdomainsocketclientsample unixdomainsocketclient.cpp)
+			target_link_libraries(unixdomainsocketclientsample jsonrpcclient)
+		endif (UNIX_DOMAIN_SOCKET_SERVER AND UNIX_DOMAIN_SOCKET_CLIENT)
+	endif(UNIX)
 
-	add_executable(simpleclientsample simpleclient.cpp)
-	target_link_libraries(simpleclientsample jsonrpcclient)
-
-	if (COMPILE_STUBGEN)
-		add_executable(stubclientsample stubclient.cpp ${CMAKE_BINARY_DIR}/gen/stubclient.h)
-		target_link_libraries(stubclientsample jsonrpcclient)
-
-		add_executable(stubserversample stubserver.cpp ${CMAKE_BINARY_DIR}/gen/abstractstubserver.h)
-		target_link_libraries(stubserversample jsonrpcserver)
-
-		add_executable(xbmcremote xbmcremote.cpp ${CMAKE_BINARY_DIR}/gen/xbmcremote.h)
-		target_link_libraries(xbmcremote jsonrpcclient)
-	endif()
+	
 endif()
