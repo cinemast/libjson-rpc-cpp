@@ -154,3 +154,19 @@ install(TARGETS ${ALL_LIBS}
 	RUNTIME DESTINATION bin
 )
 
+#set pkg-config
+get_filename_component(FULL_PATH_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} ABSOLUTE)
+set(FULL_PATH_INCLUDEDIR "${FULL_PATH_INSTALL_PREFIX}/include")
+set(FULL_PATH_LIBDIR "${FULL_PATH_INSTALL_PREFIX}/lib/${CMAKE_LIBRARY_PATH}")
+
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/cmake/libjsonrpccpp-client.pc.cmake ${CMAKE_BINARY_DIR}/libjsonrpccpp-client.pc)
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/cmake/libjsonrpccpp-server.pc.cmake ${CMAKE_BINARY_DIR}/libjsonrpccpp-server.pc)
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/cmake/libjsonrpccpp-common.pc.cmake ${CMAKE_BINARY_DIR}/libjsonrpccpp-common.pc)
+
+INSTALL(FILES 
+    "${CMAKE_BINARY_DIR}/libjsonrpccpp-server.pc"
+    "${CMAKE_BINARY_DIR}/libjsonrpccpp-client.pc"
+    "${CMAKE_BINARY_DIR}/libjsonrpccpp-common.pc"
+    DESTINATION "lib/${CMAKE_LIBRARY_PATH}/pkgconfig")
+
+
