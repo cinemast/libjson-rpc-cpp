@@ -70,7 +70,7 @@ bool StubGeneratorFactory::createStubGenerators(int argc, char **argv, vector<Pr
         procedures = SpecificationParser::GetProceduresFromFile(inputfile->filename[0]);
         if (verbose->count > 0)
         {
-            fprintf(stdout, "Found %d procedures in %s\n", procedures.size(), inputfile->filename[0]);
+            fprintf(stdout, "Found %zu procedures in %s\n", procedures.size(), inputfile->filename[0]);
             for (unsigned int i = 0; i < procedures.size(); ++i) {
                 if (procedures.at(i).GetProcedureType() == RPC_METHOD)
                 {

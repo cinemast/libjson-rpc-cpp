@@ -179,12 +179,16 @@ TEST_CASE("test_http_server_endpoints", TEST_MODULE)
     server.StopListening();
 }
 
+
 TEST_CASE_METHOD(F, "test_http_server_longpost", TEST_MODULE)
 {
     int mb = 5;
     unsigned long size = mb * 1024*1024;
     char* str = (char*) malloc(size * sizeof(char));
-    REQUIRE(str != NULL);
+    if (str == NULL)
+    {
+        FAIL("Could not allocate enough memory for test");
+    }
     for (unsigned long i=0; i < size; i++)
     {
         str[i] = (char)('a'+(i%26));
