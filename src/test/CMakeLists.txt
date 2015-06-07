@@ -47,20 +47,20 @@ if (HTTP_CLIENT AND HTTP_SERVER AND COMPILE_STUBGEN)
 	add_dependencies(unit_testsuite common_stubs)
 endif()
 
-add_test(client ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite --run_test=client)
-add_test(server ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite --run_test=server)
-add_test(NAME common WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite --run_test=common)
+add_test(client ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite "[client]")
+add_test(server ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite "[server]")
+add_test(NAME common WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite "[common]")
 
 if (HTTP_CLIENT AND HTTP_SERVER)
-	add_test(NAME connector_http WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite --run_test=connector_http)
+        add_test(NAME connector_http WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite "[connector_http]")
 endif()
 
 if (COMPILE_STUBGEN)
-	add_test(NAME stubgen WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite --run_test=stubgenerator)
+        add_test(NAME stubgen WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite "[stubgenerator]")
 endif()
 
 if (HTTP_CLIENT AND HTTP_SERVER AND COMPILE_STUBGEN)
-	add_test(NAME integration WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite --run_test=integration)
+        add_test(NAME integration WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite "[integration]")
 endif()
 
 add_test(NAME all WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite)
