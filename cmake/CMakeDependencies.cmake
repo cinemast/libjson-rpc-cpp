@@ -43,6 +43,16 @@ endif()
 # find doxygen
 find_package(Doxygen)
 
+
+find_package(Catch)
+
+if(NOT CATCH_FOUND)
+    message("Could not find catch, downloading it now")
+    # Includes Catch in the project:
+    add_subdirectory(${CMAKE_SOURCE_DIR}/src/catch)
+    include_directories(${CATCH_INCLUDE_DIR} ${COMMON_INCLUDES})
+endif()
+
 # boost stuff
 
 # left for backwards compatbility
@@ -59,6 +69,9 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	set(Boost_USE_STATIC_LIBS ON)
 
 endif()
+
+
+
 
 # TODO: add? appriopriate commands if it's found
 find_package(Boost COMPONENTS unit_test_framework)
