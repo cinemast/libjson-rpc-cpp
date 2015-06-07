@@ -9,7 +9,7 @@
 
 
 #ifdef INTEGRATION_TESTING
-#include <boost/test/unit_test.hpp>
+#include <catch.hpp>
 
 #include <jsonrpccpp/server/connectors/httpserver.h>
 #include <jsonrpccpp/client/connectors/httpclient.h>
@@ -22,6 +22,8 @@ using namespace std;
 
 #define TEST_PORT 8383
 #define CLIENT_URL "http://localhost:8383"
+
+#define TEST_MODULE "[integration]"
 
 class StubServer : public AbstractStubServer {
     public:
@@ -64,9 +66,8 @@ class StubServer : public AbstractStubServer {
         }
 };
 
-BOOST_AUTO_TEST_SUITE(integration)
 
-BOOST_AUTO_TEST_CASE(test_integration1)
+TEST_CASE("test_integration1", TEST_MODULE)
 {
     HttpServer sconn(TEST_PORT);
     HttpClient cconn(CLIENT_URL);
@@ -74,20 +75,18 @@ BOOST_AUTO_TEST_CASE(test_integration1)
     server.StartListening();
     StubClient client(cconn);
 
-    BOOST_CHECK_EQUAL(client.addNumbers(3,4), 7);
-    BOOST_CHECK_EQUAL(client.addNumbers2(3.2,4.2), 7.4);
-    BOOST_CHECK_EQUAL(client.sayHello("Test"), "Hello Test");
-    BOOST_CHECK_EQUAL(client.methodWithoutParameters(), "foo");
-    BOOST_CHECK_EQUAL(client.isEqual("str1", "str1"), true);
-    BOOST_CHECK_EQUAL(client.isEqual("str1", "str2"), false);
+    CHECK(client.addNumbers(3,4) == 7);
+    CHECK(client.addNumbers2(3.2,4.2) == 7.4);
+    CHECK(client.sayHello("Test") == "Hello Test");
+    CHECK(client.methodWithoutParameters() == "foo");
+    CHECK(client.isEqual("str1", "str1") == true);
+    CHECK(client.isEqual("str1", "str2") == false);
 
     Json::Value result = client.buildObject("Test", 33);
-    BOOST_CHECK_EQUAL(result["name"].asString(), "Test");
-    BOOST_CHECK_EQUAL(result["age"].asInt(), 33);
+    CHECK(result["name"].asString() == "Test");
+    CHECK(result["age"].asInt() == 33);
 
     server.StopListening();
 }
-
-BOOST_AUTO_TEST_SUITE_END()
 
 #endif

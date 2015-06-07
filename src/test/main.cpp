@@ -7,11 +7,5 @@
  * @license See attached LICENSE.txt
  ************************************************************************/
 
-#define BOOST_TEST_MODULE "libjson-rpc-cpp test suite"
-#if _MSC_VER
-// use static boost libraries with msvc
-#else
-#define BOOST_TEST_DYN_LINK
-#endif
-#define BOOST_TEST_MAIN
-#include <boost/test/unit_test.hpp>
+#define CATCH_CONFIG_MAIN
+#include <catch.hpp>
