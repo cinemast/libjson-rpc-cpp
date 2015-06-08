@@ -36,47 +36,26 @@ bool UnixDomainSocketServer::StartListening()
 {
 	if(!this->running)
 	{
-		//Create and bind socket here.
-		//Then launch the listenning loop.
-		this->socket_fd = socket(AF_UNIX, SOCK_STREAM, 0);
+        if (access(this->socket_path.c_str(), F_OK) != -1)
+            return false;
+
+        this->socket_fd = socket(AF_UNIX, SOCK_STREAM, 0);
 
         fcntl(this->socket_fd, F_SETFL, FNDELAY);
 
-		if(this->socket_fd < 0)
-		{
-			return false;
-		}
-
-        if (access(this->socket_path.c_str(), F_OK) != -1)
-        {
-            return false;
-        }
-
-		/* start with a clean address structure */
 		memset(&(this->address), 0, sizeof(struct sockaddr_un));
 
 		this->address.sun_family = AF_UNIX;
 		snprintf(this->address.sun_path, PATH_MAX, this->socket_path.c_str());
 
-		if(bind(this->socket_fd, reinterpret_cast<struct sockaddr *>(&(this->address)), sizeof(struct sockaddr_un)) != 0)
-		{
-			return false;
-		}
+        bind(this->socket_fd, reinterpret_cast<struct sockaddr *>(&(this->address)), sizeof(struct sockaddr_un));
 
-		if(listen(this->socket_fd, 5) != 0)
-		{
-			return false;
-		}
+        listen(this->socket_fd, 5);
+
 		//Launch listening loop there
         this->running = true;
-		int ret = pthread_create(&(this->listenning_thread), NULL, UnixDomainSocketServer::LaunchLoop, this);
-        if(ret == 0) {
-            return true;
-		}
-        else
-        {
-            this->running = false;
-        }
+        pthread_create(&(this->listenning_thread), NULL, UnixDomainSocketServer::LaunchLoop, this);
+        return true;
 	}
     return false;
 }

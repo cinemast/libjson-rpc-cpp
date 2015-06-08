@@ -39,17 +39,13 @@ namespace testunixdomainsocketserver
             ~F()
             {
                 server.StopListening();
+                unlink(SOCKET_PATH);
             }
     };
 
     bool check_exception1(JsonRpcException const&ex)
     {
         return ex.GetCode() == Errors::ERROR_CLIENT_CONNECTOR;
-    }
-
-    bool check_exception2(JsonRpcException const&ex)
-    {
-        return ex.GetCode() == Errors::ERROR_RPC_INTERNAL_ERROR;
     }
 }
 using namespace testunixdomainsocketserver;
@@ -70,6 +66,7 @@ TEST_CASE("test_unixdomainsocket_server_multiplestart", TEST_MODULE)
 {
     UnixDomainSocketServer server(SOCKET_PATH);
     CHECK(server.StartListening() == true);
+    CHECK(server.StartListening() == false);
 
     UnixDomainSocketServer server2(SOCKET_PATH);
     CHECK(server2.StartListening() == false);
@@ -77,6 +74,14 @@ TEST_CASE("test_unixdomainsocket_server_multiplestart", TEST_MODULE)
 
     CHECK(server.StopListening() == true);
 
+    unlink(SOCKET_PATH);
+}
+
+TEST_CASE("test_unixdomainsocket_client_invalid", TEST_MODULE)
+{
+    UnixDomainSocketClient client("tmp/someinvalidpath");
+    string result;
+    CHECK_EXCEPTION_TYPE(client.SendRPCMessage("foobar", result), JsonRpcException, check_exception1);
 }
 
 #endif

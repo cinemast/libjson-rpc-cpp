@@ -43,9 +43,6 @@ void UnixDomainSocketClient::SendRPCMessage(const std::string& message, std::str
     int nbytes;
     char buffer[BUFFER_SIZE];
     socket_fd = socket(AF_UNIX, SOCK_STREAM, 0);
-    if (socket_fd < 0) {
-        throw JsonRpcException(Errors::ERROR_RPC_INTERNAL_ERROR, result);
-    }
 
     memset(&address, 0, sizeof(sockaddr_un));
 
@@ -53,18 +50,14 @@ void UnixDomainSocketClient::SendRPCMessage(const std::string& message, std::str
     snprintf(address.sun_path, PATH_MAX, this->path.c_str());
 
     if(connect(socket_fd, (struct sockaddr *) &address,  sizeof(sockaddr_un)) != 0) {
-        throw JsonRpcException(Errors::ERROR_RPC_INTERNAL_ERROR, result);
+        throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Could not connect to: " + this->path);
     }
 
     bool fullyWritten = false;
     string toSend = message + DELIMITER_CHAR;
     do {
         ssize_t byteWritten = write(socket_fd, toSend.c_str(), toSend.size());
-        if (byteWritten == -1)
-        {
-            throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "timeout");
-        }
-        else if(byteWritten < (ssize_t)toSend.size())
+        if(byteWritten < (ssize_t)toSend.size())
         {
             int len = toSend.size() - byteWritten;
             toSend = toSend.substr(byteWritten + sizeof(char), len);

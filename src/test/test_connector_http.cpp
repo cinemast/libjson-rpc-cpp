@@ -67,6 +67,13 @@ TEST_CASE_METHOD(F, "test_http_success", TEST_MODULE)
     CHECK(result == "exampleresponse");
 }
 
+TEST_CASE("test_http_client_error", TEST_MODULE)
+{
+    HttpClient client("http://someinvalidurl/asdf");
+    string result;
+    CHECK_EXCEPTION_TYPE(client.SendRPCMessage("asdfasfwer", result), JsonRpcException, check_exception1);
+}
+
 #ifndef WIN32
 TEST_CASE("test_http_server_multiplestart", TEST_MODULE)
 {
