@@ -22,8 +22,10 @@ namespace jsonrpc
             virtual ~UnixDomainSocketClient();
             virtual void SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException);
 
+
         private:
             std::string path;
+            int socket_fd;
     };
 
 } /* namespace jsonrpc */

@@ -44,9 +44,12 @@ bool UnixDomainSocketServer::StartListening()
 			return false;
 		}
 
+        if (access(this->socket_path.c_str(), F_OK) != -1)
+        {
+            return false;
+        }
         //TODO: Do not simply unlink. Check for existing
         //Socket and return false if exists.
-		unlink(this->socket_path.c_str());
 
 		/* start with a clean address structure */
 		memset(&(this->address), 0, sizeof(struct sockaddr_un));
@@ -67,6 +70,7 @@ bool UnixDomainSocketServer::StartListening()
         this->running = true;
 		int ret = pthread_create(&(this->listenning_thread), NULL, UnixDomainSocketServer::LaunchLoop, this);
         if(ret == 0) {
+            pthread_detach(this->listenning_thread);
             return true;
 		}
         else
@@ -82,7 +86,7 @@ bool UnixDomainSocketServer::StopListening()
 	if(this->running)
 	{
         this->running = false;
-        pthread_join(this->listenning_thread, NULL);
+       // pthread_join(this->listenning_thread, NULL);
 		close(this->socket_fd);
 		unlink(this->socket_path.c_str());
         return true;
@@ -149,7 +153,8 @@ void* UnixDomainSocketServer::GenerateResponse(void *p_data) {
 		nbytes = read(connection_fd, buffer, BUFFER_SIZE);
 		request.append(buffer,nbytes);
 	} while(request.find(DELIMITER_CHAR) == string::npos);
-	instance->OnRequest(request, reinterpret_cast<void*>(connection_fd));
+
+    instance->OnRequest(request.substr(0, request.size()-1), reinterpret_cast<void*>(connection_fd));
     return NULL;
 }
 
