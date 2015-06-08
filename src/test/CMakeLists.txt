@@ -20,6 +20,10 @@ else()
         list(REMOVE_ITEM test_source "${CMAKE_CURRENT_SOURCE_DIR}/testhttpserver.cpp")
 endif()
 
+if (UNIX_DOMAIN_SOCKET_SERVER AND UNIX_DOMAIN_SOCKET_CLIENT)
+    add_definitions(-DUNIXDOMAINSOCKET_TESTING)
+endif()
+
 if (COMPILE_STUBGEN)
 	add_definitions(-DSTUBGEN_TESTING)
 endif()

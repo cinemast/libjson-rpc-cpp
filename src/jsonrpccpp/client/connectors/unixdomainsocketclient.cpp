@@ -60,7 +60,7 @@ void UnixDomainSocketClient::SendRPCMessage(const std::string& message, std::str
 	bool fullyWritten = false;
 	string toSend = message;
 	do {
-		ssize_t byteWritten = write(socket_fd, toSend.c_str(), toSend.size());
+        size_t byteWritten = write(socket_fd, toSend.c_str(), toSend.size());
 		if(byteWritten < toSend.size()) {
 			int len = toSend.size() - byteWritten;
 			toSend = toSend.substr(byteWritten + sizeof(char), len);
