@@ -134,12 +134,7 @@ void UnixDomainSocketServer::ListenLoop() {
             struct ClientConnection *params = new struct ClientConnection();
             params->instance = this;
             params->connection_fd = connection_fd;
-            int ret = pthread_create(&client_thread, NULL, UnixDomainSocketServer::GenerateResponse, params);
-            if(ret != 0) {
-                pthread_detach(client_thread);
-                delete params;
-                params = NULL;
-            }
+            pthread_create(&client_thread, NULL, UnixDomainSocketServer::GenerateResponse, params);
         }
         else
         {
@@ -150,6 +145,7 @@ void UnixDomainSocketServer::ListenLoop() {
 }
 
 void* UnixDomainSocketServer::GenerateResponse(void *p_data) {
+    pthread_detach(pthread_self());
     struct ClientConnection* params = reinterpret_cast<struct ClientConnection*>(p_data);
 	UnixDomainSocketServer *instance = params->instance;
 	int connection_fd = params->connection_fd;
