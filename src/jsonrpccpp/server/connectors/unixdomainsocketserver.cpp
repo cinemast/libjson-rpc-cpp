@@ -10,21 +10,21 @@
 #include "unixdomainsocketserver.h"
 #include <cstdlib>
 #include <sstream>
-#include <iostream>
 #include <sys/types.h>
 #include <jsonrpccpp/common/specificationparser.h>
 #include <cstdio>
+#include <fcntl.h>
 #include <unistd.h>
 #include <string>
 
 using namespace jsonrpc;
 using namespace std;
 
-#define BUFFER_SIZE 64
+#define BUFFER_SIZE 1024
 #define PATH_MAX 108
 #ifndef DELIMITER_CHAR
-#define DELIMITER_CHAR char(0x0A)
-#endif //DELIMITER_CHAR
+    #define DELIMITER_CHAR char(0x0A)
+#endif
 
 UnixDomainSocketServer::UnixDomainSocketServer(const string &socket_path) :
     running(false),
@@ -39,6 +39,9 @@ bool UnixDomainSocketServer::StartListening()
 		//Create and bind socket here.
 		//Then launch the listenning loop.
 		this->socket_fd = socket(AF_UNIX, SOCK_STREAM, 0);
+
+        fcntl(this->socket_fd, F_SETFL, FNDELAY);
+
 		if(this->socket_fd < 0)
 		{
 			return false;
@@ -48,8 +51,6 @@ bool UnixDomainSocketServer::StartListening()
         {
             return false;
         }
-        //TODO: Do not simply unlink. Check for existing
-        //Socket and return false if exists.
 
 		/* start with a clean address structure */
 		memset(&(this->address), 0, sizeof(struct sockaddr_un));
@@ -70,7 +71,6 @@ bool UnixDomainSocketServer::StartListening()
         this->running = true;
 		int ret = pthread_create(&(this->listenning_thread), NULL, UnixDomainSocketServer::LaunchLoop, this);
         if(ret == 0) {
-            pthread_detach(this->listenning_thread);
             return true;
 		}
         else
@@ -86,7 +86,7 @@ bool UnixDomainSocketServer::StopListening()
 	if(this->running)
 	{
         this->running = false;
-       // pthread_join(this->listenning_thread, NULL);
+        pthread_join(this->listenning_thread, NULL);
 		close(this->socket_fd);
 		unlink(this->socket_path.c_str());
         return true;
@@ -125,18 +125,27 @@ void* UnixDomainSocketServer::LaunchLoop(void *p_data) {
 void UnixDomainSocketServer::ListenLoop() {
 	int connection_fd;
 	socklen_t address_length = sizeof(this->address);
-	while((connection_fd = accept(this->socket_fd, (struct sockaddr *) &(this->address),  &address_length)) > -1)
+    while(this->running)
 	{
-		pthread_t client_thread;
-        struct ClientConnection *params = new struct ClientConnection();
-		params->instance = this;
-		params->connection_fd = connection_fd;
-		int ret = pthread_create(&client_thread, NULL, UnixDomainSocketServer::GenerateResponse, params);
-		if(ret != 0) {
-			pthread_detach(client_thread);
-			delete params;
-			params = NULL;
-		}
+        connection_fd = accept(this->socket_fd, (struct sockaddr *) &(this->address),  &address_length);
+        if (connection_fd > 0)
+        {
+            pthread_t client_thread;
+            struct ClientConnection *params = new struct ClientConnection();
+            params->instance = this;
+            params->connection_fd = connection_fd;
+            int ret = pthread_create(&client_thread, NULL, UnixDomainSocketServer::GenerateResponse, params);
+            if(ret != 0) {
+                pthread_detach(client_thread);
+                delete params;
+                params = NULL;
+            }
+        }
+        else
+        {
+            usleep(25000);
+        }
+
 	}
 }
 
@@ -155,6 +164,7 @@ void* UnixDomainSocketServer::GenerateResponse(void *p_data) {
 	} while(request.find(DELIMITER_CHAR) == string::npos);
 
     instance->OnRequest(request.substr(0, request.size()-1), reinterpret_cast<void*>(connection_fd));
+    pthread_exit(NULL);
     return NULL;
 }
 
