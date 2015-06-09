@@ -11,7 +11,6 @@ file(COPY ${test_specs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 include_directories(..)
 include_directories(${CMAKE_BINARY_DIR})
-include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${JSONCPP_INCLUDE_DIRS})
 
 if(HTTP_CLIENT AND HTTP_SERVER)
