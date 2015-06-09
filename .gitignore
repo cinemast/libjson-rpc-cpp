@@ -16,7 +16,7 @@ xcuserdata
 # svn & cvs
 .svn
 CVS
-
+reports/*
 doc/html
 CMakeLists.txt.user*
 src/examples/gen/*
