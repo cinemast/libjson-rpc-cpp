@@ -8,7 +8,7 @@
  ************************************************************************/
 
 
-#ifdef INTEGRATION_TESTING
+#ifdef STUBGEN_TESTING
 #include <catch.hpp>
 
 #include <jsonrpccpp/server/connectors/httpserver.h>

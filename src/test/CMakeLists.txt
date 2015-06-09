@@ -27,21 +27,16 @@ if(COMPILE_STUBGEN)
 	add_definitions(-DSTUBGEN_TESTING)
 endif()
 
-if(COMPILE_STUBGEN)
-	add_definitions(-DINTEGRATION_TESTING)
-endif()
-
 add_executable(unit_testsuite ${test_source})
 target_link_libraries(unit_testsuite jsonrpccommon)
 target_link_libraries(unit_testsuite jsonrpcserver)
 target_link_libraries(unit_testsuite jsonrpcclient)
 
 if(COMPILE_STUBGEN)
+        list(APPEND test_source "${CMAKE_BINARY_DIR}/gen/abstractstubserver.h")
+        list(APPEND test_source "${CMAKE_BINARY_DIR}/gen/stubclient.h")
 	target_link_libraries(unit_testsuite stubgen)
-endif()
-
-if(HTTP_CLIENT AND HTTP_SERVER AND COMPILE_STUBGEN)
-	add_dependencies(unit_testsuite common_stubs)
+        add_dependencies(unit_testsuite common_stubs)
 endif()
 
 add_test(client ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite "[client]")
