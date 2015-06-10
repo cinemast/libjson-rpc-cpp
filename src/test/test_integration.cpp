@@ -8,7 +8,7 @@
  ************************************************************************/
 
 
-#ifdef INTEGRATION_TESTING
+#ifdef STUBGEN_TESTING
 #include <catch.hpp>
 
 #include <jsonrpccpp/server/connectors/httpserver.h>
@@ -22,6 +22,7 @@ using namespace std;
 
 #define TEST_PORT 8383
 #define CLIENT_URL "http://localhost:8383"
+#define TEST_PATH "/tmp/jsonrpccppintegrationtest"
 
 #define TEST_MODULE "[integration]"
 
@@ -66,8 +67,9 @@ class StubServer : public AbstractStubServer {
         }
 };
 
+#ifdef HTTP_TESTING
 
-TEST_CASE("test_integration1", TEST_MODULE)
+TEST_CASE("test_integration_http", TEST_MODULE)
 {
     HttpServer sconn(TEST_PORT);
     HttpClient cconn(CLIENT_URL);
@@ -88,5 +90,35 @@ TEST_CASE("test_integration1", TEST_MODULE)
 
     server.StopListening();
 }
+
+#endif
+#ifdef UNIXDOMAINSOCKET_TESTING
+
+#include <jsonrpccpp/server/connectors/unixdomainsocketserver.h>
+#include <jsonrpccpp/client/connectors/unixdomainsocketclient.h>
+
+TEST_CASE("test_integration_unixdomain", TEST_MODULE)
+{
+    UnixDomainSocketServer sconn(TEST_PATH);
+    UnixDomainSocketClient cconn(TEST_PATH);
+
+    StubServer server(sconn);
+    server.StartListening();
+    StubClient client(cconn);
+
+    CHECK(client.addNumbers(3,4) == 7);
+    CHECK(client.addNumbers2(3.2,4.2) == 7.4);
+    CHECK(client.sayHello("Test") == "Hello Test");
+    CHECK(client.methodWithoutParameters() == "foo");
+    CHECK(client.isEqual("str1", "str1") == true);
+    CHECK(client.isEqual("str1", "str2") == false);
+
+    Json::Value result = client.buildObject("Test", 33);
+    CHECK(result["name"].asString() == "Test");
+    CHECK(result["age"].asInt() == 33);
+
+    server.StopListening();
+}
+#endif
 
 #endif

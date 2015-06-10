@@ -24,7 +24,7 @@ cleanup() {
 }
 rm -rf reports
 mkdir -p reports
-build_configuration "-DCMAKE_BUILD_TYPE=Debug -DHTTP_SERVER=YES -DHTTP_CLIENT=YES -DCOMPILE_STUBGEN=YES -DCOMPILE_EXAMPLES=YES -DCOMPILE_TESTS=YES"
+build_configuration "-DCMAKE_BUILD_TYPE=Debug -DHTTP_SERVER=YES -DHTTP_CLIENT=YES -DCOMPILE_STUBGEN=YES -DCOMPILE_EXAMPLES=YES -DCOMPILE_TESTS=YES -DUNIX_DOMAIN_SOCKET_SERVER=YES -DUNIX_DOMAIN_SOCKET_CLIENT=YES"
 echo "Compiling examples"
 cd build
 g++ ../src/examples/simpleclient.cpp -Iroot/usr/local/include -Lroot/usr/local/lib -ljsonrpccpp-client -ljsoncpp -ljsonrpccpp-common -lcurl -o sampleclient 
@@ -33,7 +33,7 @@ test -f sampleclient
 test -f sampleserver
 
 echo "Generating valgrind report"
-valgrind --leak-check=full --xml=yes --xml-file=../reports/valgrind.xml ./bin/unit_testsuite --log_format=XML --log_sink=../reports/tests.xml --log_level=all --report_level=no 
+valgrind --leak-check=full --xml=yes --xml-file=../reports/valgrind.xml ./bin/unit_testsuite --reporter=junit --out=../reports/tests.xml
 
 
 echo "Generating coverage report"
@@ -47,7 +47,7 @@ cd ..
 echo "Cleanup that mess"
 cleanup
 
-build_configuration "-DCMAKE_BUILD_TYPE=Debug -DHTTP_SERVER=NO -DHTTP_CLIENT=NO -DCOMPILE_STUBGEN=YES -DCOMPILE_EXAMPLES=YES -DCOMPILE_TESTS=YES"
+build_configuration "-DCMAKE_BUILD_TYPE=Debug -DHTTP_SERVER=NO -DHTTP_CLIENT=NO -DCOMPILE_STUBGEN=YES -DCOMPILE_EXAMPLES=YES -DCOMPILE_TESTS=YES -DUNIX_DOMAIN_SOCKET_SERVER=NO -DUNIX_DOMAIN_SOCKET_CLIENT=NO"
 cleanup
 
 echo "Integration successful"
