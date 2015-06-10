@@ -54,8 +54,7 @@ bool UnixDomainSocketServer::StartListening()
 
 		//Launch listening loop there
         this->running = true;
-        pthread_create(&(this->listenning_thread), NULL, UnixDomainSocketServer::LaunchLoop, this);
-        return true;
+        return (pthread_create(&(this->listenning_thread), NULL, UnixDomainSocketServer::LaunchLoop, this) == 0);
 	}
     return false;
 }
