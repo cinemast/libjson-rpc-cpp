@@ -109,6 +109,7 @@ bool UnixDomainSocketServer::SendResponse(const string& response, void* addInfo)
 }
 
 void* UnixDomainSocketServer::LaunchLoop(void *p_data) {
+	pthread_detach(pthread_self());
 	UnixDomainSocketServer *instance = reinterpret_cast<UnixDomainSocketServer*>(p_data);;
 	instance->ListenLoop();
 }
@@ -132,6 +133,7 @@ void UnixDomainSocketServer::ListenLoop() {
 }
 
 void* UnixDomainSocketServer::GenerateResponse(void *p_data) {
+	pthread_detach(pthread_self());
 	struct GenerateResponseParameters* params = reinterpret_cast<struct GenerateResponseParameters*>(p_data);
 	UnixDomainSocketServer *instance = params->instance;
 	int connection_fd = params->connection_fd;
