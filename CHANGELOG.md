@@ -1,8 +1,10 @@
-Changes in v0.6.0 [unreleased]
-------------------------------
+Changes in v0.6.0
+-----------------
 - NEW: pkg-config files
 - NEW: UNIX Socket client + server connector
-- Change: unit testing framework to catch (TODO)
+- NEW: multiarch support
+- Change: unit testing framework to catch
+- Change: allow disabling shared library build
 
 Changes in v0.5.0
 -----------------
