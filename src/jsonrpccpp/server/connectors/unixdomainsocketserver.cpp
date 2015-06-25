@@ -16,6 +16,7 @@
 #include <cstdio>
 #include <unistd.h>
 #include <string>
+#include <fcntl.h>
 
 using namespace jsonrpc;
 using namespace std;
@@ -48,6 +49,8 @@ bool UnixDomainSocketServer::StartListening()
 
 		unlink(this->socket_path.c_str());
 
+		fcntl(this->socket_fd, F_SETFL, FNDELAY);
+
 		/* start with a clean address structure */
 		memset(&(this->address), 0, sizeof(struct sockaddr_un));
 
@@ -66,6 +69,7 @@ bool UnixDomainSocketServer::StartListening()
 			return false;
 		}
 		//Launch listening loop there
+		this->running = true;
 		int ret = pthread_create(&(this->listenning_thread), NULL, UnixDomainSocketServer::LaunchLoop, this);
 		if(ret != 0) {
 			pthread_detach(this->listenning_thread);
@@ -79,11 +83,12 @@ bool UnixDomainSocketServer::StopListening()
 {
 	if(this->running)
 	{
+		this->running = false;
+		pthread_join(this->listenning_thread, NULL);
 		close(this->socket_fd);
 		unlink(this->socket_path.c_str());
-		this->running = false;
 	}
-	return true;
+	return !(this->running);
 }
 
 bool UnixDomainSocketServer::SendResponse(const string& response, void* addInfo)
@@ -112,22 +117,28 @@ void* UnixDomainSocketServer::LaunchLoop(void *p_data) {
 	pthread_detach(pthread_self());
 	UnixDomainSocketServer *instance = reinterpret_cast<UnixDomainSocketServer*>(p_data);;
 	instance->ListenLoop();
+	return NULL;
 }
 
 void UnixDomainSocketServer::ListenLoop() {
 	int connection_fd;
 	socklen_t address_length = sizeof(this->address);
-	while((connection_fd = accept(this->socket_fd, (struct sockaddr *) &(this->address),  &address_length)) > -1)
-	{
-		pthread_t client_thread;
-		struct GenerateResponseParameters *params = new struct GenerateResponseParameters();
-		params->instance = this;
-		params->connection_fd = connection_fd;
-		int ret = pthread_create(&client_thread, NULL, UnixDomainSocketServer::GenerateResponse, params);
-		if(ret != 0) {
-			pthread_detach(client_thread);
-			delete params;
-			params = NULL;
+	while(this->running) {
+		if((connection_fd = accept(this->socket_fd, reinterpret_cast<struct sockaddr *>(&(this->address)),  &address_length)) > 0)
+		{
+			pthread_t client_thread;
+			struct GenerateResponseParameters *params = new struct GenerateResponseParameters();
+			params->instance = this;
+			params->connection_fd = connection_fd;
+			int ret = pthread_create(&client_thread, NULL, UnixDomainSocketServer::GenerateResponse, params);
+			if(ret != 0) {
+				pthread_detach(client_thread);
+				delete params;
+				params = NULL;
+			}
+		}
+		else {
+			usleep(2500);
 		}
 	}
 }
@@ -147,6 +158,7 @@ void* UnixDomainSocketServer::GenerateResponse(void *p_data) {
 		request.append(buffer,nbytes);
 	} while(request.find(DELIMITER_CHAR) == string::npos);
 	instance->OnRequest(request, reinterpret_cast<void*>(connection_fd));
+	return NULL;
 }
 
 
