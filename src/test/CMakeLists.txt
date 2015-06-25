@@ -35,7 +35,7 @@ target_link_libraries(unit_testsuite jsonrpcclient)
 if(COMPILE_STUBGEN)
         list(APPEND test_source "${CMAKE_BINARY_DIR}/gen/abstractstubserver.h")
         list(APPEND test_source "${CMAKE_BINARY_DIR}/gen/stubclient.h")
-	target_link_libraries(unit_testsuite stubgen)
+        target_link_libraries(unit_testsuite libjsonrpcstub)
         add_dependencies(unit_testsuite common_stubs)
 endif()
 
