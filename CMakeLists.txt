@@ -11,14 +11,23 @@ if (${CMAKE_MAJOR_VERSION} GREATER 2)
 endif()
 
 set(MAJOR_VERSION 0)
-set(MINOR_VERSION 5)
+set(MINOR_VERSION 6)
 set(PATCH_VERSION 0)
 set(SO_VERSION    0)
 
-set(BUILD_STATIC_LIBS NO CACHE BOOL "Build static libraries in addition to shared")
+set(BUILD_SHARED_LIBS YES CACHE BOOL "Build shared libraries")
+set(BUILD_STATIC_LIBS NO CACHE BOOL "Build static libraries")
 set(LIB_SUFFIX "" CACHE STRING "Suffix for library directory (32/64)")
 
+if (NOT BUILD_SHARED_LIBS AND NOT BUILD_STATIC_LIBS)
+	message(FATAL_ERROR "Both BUILD_SHARED_LIBS and BUILD_STATIC_LIBS are disabled")
+endif()
+
 # defaults for modules that can be enabled/disabled
+if(UNIX)
+        set(UNIX_DOMAIN_SOCKET_SERVER YES CACHE BOOL "Include Unix Domain Socket server")
+        set(UNIX_DOMAIN_SOCKET_CLIENT YES CACHE BOOL "Include Unix Domain Socket client")
+endif(UNIX)
 set(HTTP_SERVER YES CACHE BOOL "Include HTTP server using libmicrohttpd")
 set(HTTP_CLIENT YES CACHE BOOL "Include HTTP client support using curl")
 set(COMPILE_TESTS YES CACHE BOOL "Compile test framework")
@@ -28,6 +37,10 @@ set(COMPILE_EXAMPLES YES CACHE BOOL "Compile example programs")
 # print actual settings
 message(STATUS "HTTP_SERVER: ${HTTP_SERVER}")
 message(STATUS "HTTP_CLIENT: ${HTTP_CLIENT}")
+if(UNIX)
+    message(STATUS "UNIXDOMAINSOCKET_SERVER: ${UNIX_DOMAIN_SOCKET_SERVER}")
+    message(STATUS "UNIXDOMAINSOCKET_CLIENT: ${UNIX_DOMAIN_SOCKET_CLIENT}")
+endif(UNIX)
 message(STATUS "COMPILE_TESTS: ${COMPILE_TESTS}")
 message(STATUS "COMPILE_STUBGEN: ${COMPILE_STUBGEN}")
 message(STATUS "COMPILE_EXAMPLES: ${COMPILE_EXAMPLES}")
@@ -61,13 +74,13 @@ if (COMPILE_STUBGEN)
 endif ()
 
 # setup examples
-if (HTTP_SERVER AND HTTP_CLIENT)
+if (COMPILE_EXAMPLES)
 	add_subdirectory(src/examples)
 endif()
 
 # setup test suite
-if (Boost_FOUND AND COMPILE_TESTS)
-	enable_testing()
+if (COMPILE_TESTS)
+        enable_testing(true)
 	add_subdirectory(src/test)
 endif()
 
@@ -92,22 +105,4 @@ add_custom_target(
 )
 
 # packaging stuff
-include(InstallRequiredSystemLibraries)
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "libjson-rpc-cpp")
-set(CPACK_PACKAGE_VENDOR "Peter Spiess-Knafl <psk@autistici.org>")
-set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
-set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.txt")
-set(CPACK_PACKAGE_VERSION_MAJOR "${MAJOR_VERSION}")
-set(CPACK_PACKAGE_VERSION_MINOR "${MINOR_VERSION}")
-set(CPACK_PACKAGE_VERSION_PATCH "${PATCH_VERSION}")
-
-if (WIN32 AND NOT UNIX)
-	set(CPACK_GENERATOR "NSIS")
-	set(CPACK_NSIS_DISPLAY_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY} libjson-rpc-cpp")
-	set(CPACK_NSIS_HELP_LINK "http://github.com/cinemast/libjson-rpc-cpp")
-	set(CPACK_NSIS_URL_INFO_ABOUT "http://github.com/cinemast/libjson-rpc-cpp")
-	set(CPACK_NSIS_CONTACT "psk@autistici.org")
-	set(CPACK_NSIS_MODIFY_PATH ON)
-endif(WIN32 AND NOT UNIX)
-include(CPack)
-
+include(CMakePackaging)
