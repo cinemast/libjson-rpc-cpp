@@ -1,10 +1,11 @@
 Changes in v0.6.0
 -----------------
-- NEW: pkg-config files
+- NEW: pkg-config files for all shared libraries
 - NEW: UNIX Socket client + server connector
 - NEW: multiarch support
 - Change: unit testing framework to catch
 - Change: allow disabling shared library build
+- Change: split out shared/static library for stubgenerator
 
 Changes in v0.5.0
 -----------------
