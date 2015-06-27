@@ -79,7 +79,7 @@ if (BUILD_SHARED_LIBS)
 endif()
 
 # setup static common library
-if (BUILD_STATIC_LIBS)
+if (BUILD_STATIC_LIBS OR MSVC)
 	add_library(jsonrpccommonStatic STATIC ${jsonrpc_source_common} ${jsonrpc_header} ${jsonrpc_helper_source_common})
 	target_link_libraries(jsonrpccommonStatic ${JSONCPP_LIBRARIES})
 	set_target_properties(jsonrpccommonStatic PROPERTIES OUTPUT_NAME jsonrpccpp-common)
@@ -98,7 +98,7 @@ if (BUILD_SHARED_LIBS)
 endif()
 
 # setup static client library
-if (BUILD_STATIC_LIBS)
+if (BUILD_STATIC_LIBS OR MSVC)
 	add_library(jsonrpcclientStatic STATIC ${jsonrpc_source_client} ${jsonrpc_header} ${jsonrpc_header_client} ${client_connector_source})
 	target_link_libraries(jsonrpcclientStatic jsonrpccommonStatic ${client_connector_libs})
 	set_target_properties(jsonrpcclientStatic PROPERTIES OUTPUT_NAME jsonrpccpp-client)
@@ -117,7 +117,7 @@ if (BUILD_SHARED_LIBS)
 endif()
 
 # setup static server library
-if (BUILD_STATIC_LIBS)
+if (BUILD_STATIC_LIBS OR MSVC)
 	add_library(jsonrpcserverStatic STATIC ${jsonrpc_source_server} ${jsonrpc_header} ${jsonrpc_header_server} ${server_connector_source})
 	target_link_libraries(jsonrpcserverStatic jsonrpccommonStatic ${server_connector_libs})
 	set_target_properties(jsonrpcserverStatic PROPERTIES OUTPUT_NAME jsonrpccpp-server)
@@ -133,7 +133,7 @@ if (BUILD_SHARED_LIBS OR NOT BUILD_STATIC_LIBS)
 	list(APPEND ALL_LIBS jsonrpccommon jsonrpcclient jsonrpcserver)
 endif()
 
-if (BUILD_STATIC_LIBS)
+if (BUILD_STATIC_LIBS OR MSVC)
 	list(APPEND ALL_LIBS jsonrpccommonStatic jsonrpcclientStatic jsonrpcserverStatic)
 endif()
 
