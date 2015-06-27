@@ -54,6 +54,12 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/cmake/libjsonrpccpp-stub.pc.cmake ${CMAKE_BINARY_DIR}/libjsonrpccpp-stub.pc)
+
+INSTALL(FILES
+    "${CMAKE_BINARY_DIR}/libjsonrpccpp-stub.pc"
+    DESTINATION "lib/${CMAKE_LIBRARY_PATH}/pkgconfig")
+
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/stubgenerator/
         DESTINATION include/jsonrpccpp/stubgen
         FILES_MATCHING PATTERN "*.h")
