@@ -25,7 +25,6 @@ namespace jsonrpc
 
             virtual void generateStub();
 
-        private:
             void generateMethod(Procedure& proc);
             void generateAssignments(Procedure& proc);
             void generateProcCall(Procedure &proc);
