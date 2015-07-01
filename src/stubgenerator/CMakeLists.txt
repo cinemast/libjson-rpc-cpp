@@ -64,8 +64,9 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/stubgenerator/
         DESTINATION include/jsonrpccpp/stubgen
         FILES_MATCHING PATTERN "*.h")
 
-install(TARGETS jsonrpcstub ${ALL_LIBS} LIBRARY DESTINATION lib${LIB_SUFFIX}
-	ARCHIVE DESTINATION lib${LIB_SUFFIX}
-	RUNTIME DESTINATION bin
+install(TARGETS ${ALL_LIBS} jsonrpcstub
+        LIBRARY DESTINATION lib/${CMAKE_LIBRARY_PATH}
+        ARCHIVE DESTINATION lib/${CMAKE_LIBRARY_PATH}
+        RUNTIME DESTINATION bin
 )
 
