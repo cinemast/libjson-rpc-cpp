@@ -45,6 +45,16 @@ if (HTTP_SERVER)
 	list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT} ${MHD_LIBRARIES})  
 endif()
 
+if (ZMQ_SERVER)
+    list(APPEND server_connector_header "server/connectors/zmqserver.h")
+    list(APPEND server_connector_source "server/connectors/zmqserver.cpp")
+    list(APPEND server_connector_libs ${ZMQ_LIBRARIES})
+endif()
+
+if (ZMQ_CLIENT)
+
+endif()
+
 # setup sources for unix domain socket connectors
 if (UNIX_DOMAIN_SOCKET_SERVER)
         list(APPEND server_connector_header "server/connectors/unixdomainsocketserver.h")
