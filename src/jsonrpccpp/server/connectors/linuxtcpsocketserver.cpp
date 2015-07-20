@@ -125,7 +125,6 @@ void* LinuxTcpSocketServer::LaunchLoop(void *p_data) {
 }
 
 void LinuxTcpSocketServer::ListenLoop() {
-
 	int connection_fd;
 	socklen_t address_length = sizeof(this->address);
 	while(this->running) {
