@@ -12,14 +12,13 @@
 
 #include <stdarg.h>
 #include <stdint.h>
-#include <pthread.h>
 #include <winsock2.h>
 
 #include "tcpsocketserverprivate.h"
 
 namespace jsonrpc
 {
-	/**
+    	/**
 	 * This class provides an embedded Unix Domain Socket Server,to handle incoming Requests.
 	 */
 	class WindowsTcpSocketServer: public TcpSocketServerPrivate
@@ -46,15 +45,14 @@ namespace jsonrpc
 
 			DWORD listenning_thread;
 
-			DWORD WINAPI LaunchLoop(LPVOID lp_data);
+			static DWORD WINAPI LaunchLoop(LPVOID lp_data);
 			void ListenLoop();
 			struct GenerateResponseParameters {
 				WindowsTcpSocketServer *instance;
 				SOCKET connection_fd;
 			};
-			DWORD WINAPI GenerateResponse(LPVOID lp_data);
-			bool WriteToSocket(SOCK fd, const std::string& toSend);
-                        //static unsigned int nbInstances = 0;
+			static DWORD WINAPI GenerateResponse(LPVOID lp_data);
+			bool WriteToSocket(SOCKET fd, const std::string& toSend);
 	};
 
 } /* namespace jsonrpc */

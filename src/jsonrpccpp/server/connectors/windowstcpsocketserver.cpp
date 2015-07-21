@@ -20,8 +20,6 @@
 
 #include <jsonrpccpp/common/specificationparser.h>
 
-#include <errno.h>
-
 using namespace jsonrpc;
 using namespace std;
 
@@ -36,18 +34,9 @@ WindowsTcpSocketServer::WindowsTcpSocketServer(const std::string& ipToBind, cons
 	port(port),
 	running(false)
 {
-    //if(nbInstances == 0) {
-        WSADATA WSAData;
-        WSAStartup(MAKEWORD(2,0), &WSAData);
-    /*}
-    nbInstances++;//*/
 }
 
 WindowsTcpSocketServer::~WindowsTcpSocketServer() {
-    /*nbInstances--;
-    if(nbInstances == 0) {
-        WSACleanup();
-    }//*/
 }
 
 bool WindowsTcpSocketServer::StartListening()
@@ -62,17 +51,17 @@ bool WindowsTcpSocketServer::StartListening()
 			cerr << "socket() failed" << endl;
 			return false;
 		}
-
-		ioctlsocket(this->socket_fd, FIONBIO, 1); //Set non blocking
+                unsigned long nonBlocking = 1;
+		ioctlsocket(this->socket_fd, FIONBIO, &nonBlocking); //Set non blocking
 
 		/* start with a clean address structure */
-		memset(&(this->address), 0, sizeof(struct SOCKADDR_IN));
+		memset(&(this->address), 0, sizeof(SOCKADDR_IN));
 
 		this->address.sin_family = AF_INET;
 		this->address.sin_addr.s_addr = inet_addr(this->ipToBind.c_str());
 		this->address.sin_port = htons(this->port);
 
-		if(bind(this->socket_fd, reinterpret_cast<SOCKADDR*>(&(this->address)), sizeof(struct SOCKADDR_IN)) != 0)
+		if(bind(this->socket_fd, reinterpret_cast<SOCKADDR*>(&(this->address)), sizeof(SOCKADDR_IN)) != 0)
 		{
 			cerr << "bind() failed" << endl;
 			return false;
@@ -85,10 +74,13 @@ bool WindowsTcpSocketServer::StartListening()
 		}
 		//Launch listening loop there
 		this->running = true;
-		HANDLE ret = CreateThread(NULL, 0, static_cast<LPTHREAD_START_ROUTINE>(WindowsTcpSocketServer::LaunchLoop), this, 0, &(this->listenning_thread));
+		HANDLE ret = CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(&(WindowsTcpSocketServer::LaunchLoop)), reinterpret_cast<LPVOID>(this), 0, &(this->listenning_thread));
 		if(ret == NULL) {
-			CloseHandle(this->listenning_thread);
+                        ExitProcess(3);
 		}
+                else {
+                    CloseHandle(ret);
+                }
 		this->running = static_cast<bool>(ret!=NULL);
 	}
 	return this->running;
@@ -99,7 +91,7 @@ bool WindowsTcpSocketServer::StopListening()
 	if(this->running)
 	{
 		this->running = false;
-		WaitForSingleObject(this->listenning_thread, INFINITE);
+		WaitForSingleObject(OpenThread(THREAD_ALL_ACCESS, FALSE,this->listenning_thread), INFINITE);
 		closesocket(this->socket_fd);
 	}
 	return !(this->running);
@@ -127,56 +119,61 @@ bool WindowsTcpSocketServer::SendResponse(const string& response, void* addInfo)
 	return result;
 }
 
-void* WindowsTcpSocketServer::LaunchLoop(void *p_data) {
-	CloseHandle(GetCurrentThreadId());
-	WindowsTcpSocketServer *instance = reinterpret_cast<WindowsTcpSocketServer*>(p_data);;
+DWORD WINAPI WindowsTcpSocketServer::LaunchLoop(LPVOID lp_data) {
+	WindowsTcpSocketServer *instance = reinterpret_cast<WindowsTcpSocketServer*>(lp_data);;
 	instance->ListenLoop();
-	return NULL;
+        CloseHandle(GetCurrentThread());
+	return 0; //DO NOT USE ExitThread function here! ExitThread does not call destructors for allocated objects and therefore it would lead to a memory leak.
 }
 
 void WindowsTcpSocketServer::ListenLoop() {
-	int connection_fd;
-	unsigned int address_length = sizeof(this->address);
 	while(this->running) {
-		if((connection_fd = accept(this->socket_fd, reinterpret_cast<SOCKADDR*>(&(this->address)),  &address_length)) > 0)
+                SOCKET connection_fd = INVALID_SOCKET;
+                SOCKADDR_IN connection_address;
+                memset(&connection_address, 0, sizeof(SOCKADDR_IN));
+                int address_length = sizeof(connection_address);
+		if((connection_fd = accept(this->socket_fd, reinterpret_cast<SOCKADDR*>(&connection_address),  &address_length)) != INVALID_SOCKET)
 		{
-			DWORD client_thread;
+                        DWORD client_thread;
 			struct GenerateResponseParameters *params = new struct GenerateResponseParameters();
 			params->instance = this;
 			params->connection_fd = connection_fd;
-                        HANDLE ret = CreateThread(NULL, 0, static_cast<LPTHREAD_START_ROUTINE>(WindowsTcpSocketServer::GenerateResponse), params, 0, &client_thread);
+                        HANDLE ret = CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(&(WindowsTcpSocketServer::GenerateResponse)), reinterpret_cast<LPVOID>(params), 0, &client_thread);
                         if(ret == NULL) {
-                                CloseHandle(client_thread);
                                 delete params;
 				params = NULL;
+                                ExitProcess(3);
+                        }
+                        else {
+                            CloseHandle(ret);
                         }
 		}
 		else {
-			Sleep(2.5);
+                    Sleep(2.5);
 		}
 	}
 }
 
-void* WindowsTcpSocketServer::GenerateResponse(void *p_data) {
-	CloseHandle(GetCurrentThreadId());
-	struct GenerateResponseParameters* params = reinterpret_cast<struct GenerateResponseParameters*>(p_data);
-	WindowsTcpSocketServer *instance = params->instance;
+DWORD WINAPI WindowsTcpSocketServer::GenerateResponse(LPVOID lp_data) {
+	struct GenerateResponseParameters* params = reinterpret_cast<struct GenerateResponseParameters*>(lp_data);
+        WindowsTcpSocketServer *instance = params->instance;
 	int connection_fd = params->connection_fd;
 	delete params;
 	params = NULL;
-	int nbytes;
+	int nbytes = 0;
 	char buffer[BUFFER_SIZE];
-	string request;
+        memset(&buffer, 0, BUFFER_SIZE);
+	string request = "";
 	do { //The client sends its json formatted request and a delimiter request.
 		nbytes = recv(connection_fd, buffer, BUFFER_SIZE, 0);
 		request.append(buffer,nbytes);
 	} while(request.find(DELIMITER_CHAR) == string::npos);
 	instance->OnRequest(request, reinterpret_cast<void*>(connection_fd));
-	return NULL;
+        CloseHandle(GetCurrentThread());
+	return 0; //DO NOT USE ExitThread function here! ExitThread does not call destructors for allocated objects and therefore it would lead to a memory leak.
 }
 
-
-bool WindowsTcpSocketServer::WriteToSocket(int fd, const string& toWrite) {
+bool WindowsTcpSocketServer::WriteToSocket(SOCKET fd, const string& toWrite) {
 	bool fullyWritten = false;
 	bool errorOccured = false;
 	string toSend = toWrite;
@@ -194,3 +191,24 @@ bool WindowsTcpSocketServer::WriteToSocket(int fd, const string& toWrite) {
 
 	return fullyWritten && !errorOccured;
 }
+
+//This is inspired from SFML to manage Winsock initialization. Thanks to them! ( http://www.sfml-dev.org/ ).
+struct ServerSocketInitializer
+{
+    ServerSocketInitializer()
+    {
+            WSADATA init;
+            if(WSAStartup(MAKEWORD(2, 2), &init) != 0) {
+                cerr << "An issue occured while WSAStartup executed." << endl;
+            }
+    }
+
+    ~ServerSocketInitializer()
+    {
+        if(WSACleanup() != 0) {
+            cerr << "An issue occured while WSAClean executed." << endl;
+        }
+    }
+};
+
+struct ServerSocketInitializer serverGlobalInitializer;
