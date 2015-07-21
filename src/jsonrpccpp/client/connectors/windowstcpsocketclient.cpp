@@ -12,6 +12,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <windows.h>
+#include <winsock2.h>
 
 #define BUFFER_SIZE 64
 #ifndef DELIMITER_CHAR
@@ -25,8 +26,6 @@ WindowsTcpSocketClient::WindowsTcpSocketClient(const std::string& ipToConnect, c
 	ipToConnect(ipToConnect),
 	port(port)
 {
-    WSADATA WSAData;
-    WSAStartup(MAKEWORD(2,0), &WSAData);
 }
 
 WindowsTcpSocketClient::~WindowsTcpSocketClient()
@@ -47,10 +46,10 @@ void WindowsTcpSocketClient::SendRPCMessage(const std::string& message, std::str
 	memset(&address, 0, sizeof(SOCKADDR_IN));
 
 	address.sin_family = AF_INET;
-	inet_aton(this->ipToConnect.c_str(), &(address.sin_addr));
+	address.sin_addr.s_addr = inet_addr(this->ipToConnect.c_str());
 	address.sin_port = htons(this->port);
 
-	if(connect(socket_fd, (struct SOCKADDR *) &address,  sizeof(SOCKADDR_IN)) != 0) {
+	if(connect(socket_fd, reinterpret_cast<SOCKADDR*>(&address),  sizeof(SOCKADDR_IN)) != 0) {
 		cerr << "connect failed" << endl;
 		throw JsonRpcException(Errors::ERROR_RPC_INTERNAL_ERROR, result);
 	}
@@ -77,3 +76,24 @@ void WindowsTcpSocketClient::SendRPCMessage(const std::string& message, std::str
 
 	closesocket(socket_fd);
 }
+
+//This is inspired from SFML to manage Winsock initialization. Thanks to them! ( http://www.sfml-dev.org/ ).
+struct ClientSocketInitializer
+{
+    ClientSocketInitializer()
+    {
+            WSADATA init;
+            if(WSAStartup(MAKEWORD(2, 2), &init) != 0) {
+                cerr << "An issue occured while WSAStartup executed." << endl;
+            }
+    }
+
+    ~ClientSocketInitializer()
+    {
+            if(WSACleanup() != 0) {
+                cerr << "An issue occured while WSAClean executed." << endl;
+            }
+    }
+};
+
+struct ClientSocketInitializer clientGlobalInitializer;
