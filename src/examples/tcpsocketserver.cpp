@@ -10,6 +10,7 @@
 #include <iostream>
 #include <jsonrpccpp/server.h>
 #include <jsonrpccpp/server/connectors/tcpsocketserver.h>
+#include <cstdlib>
 
 
 using namespace jsonrpc;
@@ -39,11 +40,26 @@ class SampleServer : public AbstractServer<SampleServer>
 		}
 };
 
-int main()
+int main(int argc, char** argv)
 {
 	try
-	{
-		TcpSocketServer server("127.0.0.1", 6543);
+	{   
+                string ip;
+                unsigned int port;
+                
+                if(argc == 3) {
+                    ip = string(argv[1]);
+                    port = atoi(argv[2]);
+                    cout << "Params are :" << endl;
+                    cout << "\t ip: " << ip << endl;
+                    cout << "\t port: " << port << endl;
+                }
+                else {
+                    ip = "127.0.0.1";
+                    port = 6543;
+                }
+                
+		TcpSocketServer server(ip, port);
 		SampleServer serv(server);
 		if (serv.StartListening())
 		{

@@ -8,13 +8,29 @@
 #include <jsonrpccpp/client.h>
 #include <jsonrpccpp/client/connectors/tcpsocketclient.h>
 #include <iostream>
+#include <cstdlib>
 
 using namespace jsonrpc;
 using namespace std;
 
-int main()
+int main(int argc, char** argv)
 {
-	TcpSocketClient client("127.0.0.1", 6543);
+        string ip;
+        unsigned int port;
+
+        if(argc == 3) {
+            ip = string(argv[1]);
+            port = atoi(argv[2]);
+            cout << "Params are :" << endl;
+            cout << "\t ip: " << ip << endl;
+            cout << "\t port: " << port << endl;
+        }
+        else {
+            ip = "127.0.0.1";
+            port = 6543;
+        }
+        
+	TcpSocketClient client(ip, port);
 	Client c(client);
 
 	Json::Value params;
