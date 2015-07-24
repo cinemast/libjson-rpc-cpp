@@ -214,12 +214,12 @@ bool WindowsTcpSocketServer::WaitClientClose(SOCKET fd, const int &timeout) {
 	return ret;
 }
 
-int WindowsTcpSocketServer::CloseByReset(int fd) {
+int WindowsTcpSocketServer::CloseByReset(SOCKET fd) {
 	struct linger so_linger;
 	so_linger.l_onoff = 1;
 	so_linger.l_linger = 0;
 
-	int ret = setsockopt(fd, SOL_SOCKET, SO_LINGER, &so_linger, sizeof(so_linger));
+	int ret = setsockopt(fd, SOL_SOCKET, SO_LINGER, reinterpret_cast<char*>(&so_linger), sizeof(so_linger));
 	if(ret != 0)
 		return ret;
 
