@@ -58,6 +58,8 @@ namespace jsonrpc
 			};
 			static void* GenerateResponse(void *p_data);
 			bool WriteToSocket(int fd, const std::string& toSend);
+			bool WaitClientClose(int fd, const int &timeout = 100000);
+			int CloseByReset(int fd);
 	};
 
 } /* namespace jsonrpc */

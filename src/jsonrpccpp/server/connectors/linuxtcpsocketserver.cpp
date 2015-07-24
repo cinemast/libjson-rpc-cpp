@@ -78,6 +78,8 @@ bool LinuxTcpSocketServer::StartListening()
 		int ret = pthread_create(&(this->listenning_thread), NULL, LinuxTcpSocketServer::LaunchLoop, this);
 		if(ret != 0) {
 			pthread_detach(this->listenning_thread);
+			shutdown(this->socket_fd, 2);
+			close(this->socket_fd);
 		}
 		this->running = static_cast<bool>(ret==0);
 	}
@@ -90,6 +92,7 @@ bool LinuxTcpSocketServer::StopListening()
 	{
 		this->running = false;
 		pthread_join(this->listenning_thread, NULL);
+		shutdown(this->socket_fd, 2);
 		close(this->socket_fd);
 	}
 	return !(this->running);
@@ -113,7 +116,8 @@ bool LinuxTcpSocketServer::SendResponse(const string& response, void* addInfo)
 	else {
 		result = this->WriteToSocket(connection_fd, temp);
 	}
-	close(connection_fd);
+	WaitClientClose(connection_fd);
+	CloseByReset(connection_fd);
 	return result;
 }
 
@@ -125,11 +129,14 @@ void* LinuxTcpSocketServer::LaunchLoop(void *p_data) {
 }
 
 void LinuxTcpSocketServer::ListenLoop() {
-	int connection_fd;
-	socklen_t address_length = sizeof(this->address);
+	int connection_fd = 0;
+	struct sockaddr_in connection_address;
+	memset(&connection_address, 0, sizeof(struct sockaddr_in));
+	socklen_t address_length = sizeof(connection_address);
 	while(this->running) {
-		if((connection_fd = accept(this->socket_fd, reinterpret_cast<struct sockaddr *>(&(this->address)),  &address_length)) > 0)
+		if((connection_fd = accept(this->socket_fd, reinterpret_cast<struct sockaddr *>(&(connection_address)),  &address_length)) > 0)
 		{
+			cout << "Got a new client " << inet_ntoa(connection_address.sin_addr) << ":" << htons(connection_address.sin_port) << endl;
 			pthread_t client_thread;
 			struct GenerateResponseParameters *params = new struct GenerateResponseParameters();
 			params->instance = this;
@@ -139,6 +146,8 @@ void LinuxTcpSocketServer::ListenLoop() {
 				pthread_detach(client_thread);
 				delete params;
 				params = NULL;
+				WaitClientClose(connection_fd);
+				CloseByReset(connection_fd);
 			}
 		}
 		else {
@@ -158,7 +167,7 @@ void* LinuxTcpSocketServer::GenerateResponse(void *p_data) {
 	char buffer[BUFFER_SIZE];
 	string request;
 	do { //The client sends its json formatted request and a delimiter request.
-		nbytes = read(connection_fd, buffer, BUFFER_SIZE);
+		nbytes = recv(connection_fd, buffer, BUFFER_SIZE, 0);
 		request.append(buffer,nbytes);
 	} while(request.find(DELIMITER_CHAR) == string::npos);
 	instance->OnRequest(request, reinterpret_cast<void*>(connection_fd));
@@ -171,7 +180,7 @@ bool LinuxTcpSocketServer::WriteToSocket(int fd, const string& toWrite) {
 	bool errorOccured = false;
 	string toSend = toWrite;
 	do {
-		ssize_t byteWritten = write(fd, toSend.c_str(), toSend.size());
+		ssize_t byteWritten = send(fd, toSend.c_str(), toSend.size(), 0);
 		if(byteWritten < 0)
 			errorOccured = true;
 		else if(byteWritten < toSend.size()) {
@@ -183,4 +192,26 @@ bool LinuxTcpSocketServer::WriteToSocket(int fd, const string& toWrite) {
 	} while(!fullyWritten && !errorOccured);
 
 	return fullyWritten && !errorOccured;
+}
+
+bool LinuxTcpSocketServer::WaitClientClose(int fd, const int &timeout) {
+	int i = 0;
+	while((recv(fd, NULL, NULL, 0) != 0) && i < timeout) {
+		usleep(1);
+		++i;
+	}
+
+	return (i == timeout);
+}
+
+int LinuxTcpSocketServer::CloseByReset(int fd) {
+	struct linger so_linger;
+	so_linger.l_onoff = 1;
+	so_linger.l_linger = 0;
+
+	int ret = setsockopt(fd, SOL_SOCKET, SO_LINGER, &so_linger, sizeof(so_linger));
+	if(ret != 0)
+		return ret;
+
+	return close(fd);
 }
