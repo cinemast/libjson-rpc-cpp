@@ -116,8 +116,12 @@ bool LinuxTcpSocketServer::SendResponse(const string& response, void* addInfo)
 	else {
 		result = this->WriteToSocket(connection_fd, temp);
 	}
-	WaitClientClose(connection_fd);
-	CloseByReset(connection_fd);
+	if(WaitClientClose(connection_fd)) {
+            close(connection_fd);
+        }
+        else {
+            CloseByReset(connection_fd);
+        }
 	return result;
 }
 
@@ -146,8 +150,12 @@ void LinuxTcpSocketServer::ListenLoop() {
 				pthread_detach(client_thread);
 				delete params;
 				params = NULL;
-				WaitClientClose(connection_fd);
-				CloseByReset(connection_fd);
+				if(WaitClientClose(connection_fd)) {
+                                    close(connection_fd);
+                                }
+                                else {
+                                    CloseByReset(connection_fd);
+                                }
 			}
 		}
 		else {
@@ -195,13 +203,15 @@ bool LinuxTcpSocketServer::WriteToSocket(int fd, const string& toWrite) {
 }
 
 bool LinuxTcpSocketServer::WaitClientClose(int fd, const int &timeout) {
+        bool ret = false;
 	int i = 0;
 	while((recv(fd, NULL, NULL, 0) != 0) && i < timeout) {
 		usleep(1);
 		++i;
+                ret = true;
 	}
 
-	return (i == timeout);
+	return ret;
 }
 
 int LinuxTcpSocketServer::CloseByReset(int fd) {
