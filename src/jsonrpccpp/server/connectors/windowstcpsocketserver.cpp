@@ -51,7 +51,7 @@ bool WindowsTcpSocketServer::StartListening()
 			cerr << "socket() failed" << endl;
 			return false;
 		}
-                unsigned long nonBlocking = 1;
+		unsigned long nonBlocking = 1;
 		ioctlsocket(this->socket_fd, FIONBIO, &nonBlocking); //Set non blocking
 
 		/* start with a clean address structure */
@@ -76,11 +76,11 @@ bool WindowsTcpSocketServer::StartListening()
 		this->running = true;
 		HANDLE ret = CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(&(WindowsTcpSocketServer::LaunchLoop)), reinterpret_cast<LPVOID>(this), 0, &(this->listenning_thread));
 		if(ret == NULL) {
-                        ExitProcess(3);
+			ExitProcess(3);
 		}
-                else {
-                    CloseHandle(ret);
-                }
+		else {
+			CloseHandle(ret);
+		}
 		this->running = static_cast<bool>(ret!=NULL);
 	}
 	return this->running;
@@ -115,61 +115,71 @@ bool WindowsTcpSocketServer::SendResponse(const string& response, void* addInfo)
 	else {
 		result = this->WriteToSocket(connection_fd, temp);
 	}
-	closesocket(connection_fd);
+	if(WaitClientClose(connection_fd)) {
+		closesocket(connection_fd);
+	}
+	else {
+		CloseByReset(connection_fd);
+	}
 	return result;
 }
 
 DWORD WINAPI WindowsTcpSocketServer::LaunchLoop(LPVOID lp_data) {
 	WindowsTcpSocketServer *instance = reinterpret_cast<WindowsTcpSocketServer*>(lp_data);;
 	instance->ListenLoop();
-        CloseHandle(GetCurrentThread());
+	CloseHandle(GetCurrentThread());
 	return 0; //DO NOT USE ExitThread function here! ExitThread does not call destructors for allocated objects and therefore it would lead to a memory leak.
 }
 
 void WindowsTcpSocketServer::ListenLoop() {
 	while(this->running) {
-                SOCKET connection_fd = INVALID_SOCKET;
-                SOCKADDR_IN connection_address;
-                memset(&connection_address, 0, sizeof(SOCKADDR_IN));
-                int address_length = sizeof(connection_address);
+		SOCKET connection_fd = INVALID_SOCKET;
+		SOCKADDR_IN connection_address;
+		memset(&connection_address, 0, sizeof(SOCKADDR_IN));
+		int address_length = sizeof(connection_address);
 		if((connection_fd = accept(this->socket_fd, reinterpret_cast<SOCKADDR*>(&connection_address),  &address_length)) != INVALID_SOCKET)
 		{
-                        DWORD client_thread;
+			DWORD client_thread;
 			struct GenerateResponseParameters *params = new struct GenerateResponseParameters();
 			params->instance = this;
 			params->connection_fd = connection_fd;
-                        HANDLE ret = CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(&(WindowsTcpSocketServer::GenerateResponse)), reinterpret_cast<LPVOID>(params), 0, &client_thread);
-                        if(ret == NULL) {
-                                delete params;
+			HANDLE ret = CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(&(WindowsTcpSocketServer::GenerateResponse)), reinterpret_cast<LPVOID>(params), 0, &client_thread);
+			if(ret == NULL) {
+				delete params;
 				params = NULL;
-                                ExitProcess(3);
-                        }
-                        else {
-                            CloseHandle(ret);
-                        }
+				if(WaitClientClose(connection_fd)) {
+					closesocket(connection_fd);
+				}
+				else {
+					CloseByReset(connection_fd);
+				}
+			}
+			else {
+				CloseHandle(ret);
+			}
 		}
 		else {
-                    Sleep(2.5);
+			Sleep(2.5);
 		}
 	}
 }
 
 DWORD WINAPI WindowsTcpSocketServer::GenerateResponse(LPVOID lp_data) {
 	struct GenerateResponseParameters* params = reinterpret_cast<struct GenerateResponseParameters*>(lp_data);
-        WindowsTcpSocketServer *instance = params->instance;
+	WindowsTcpSocketServer *instance = params->instance;
 	int connection_fd = params->connection_fd;
 	delete params;
 	params = NULL;
 	int nbytes = 0;
 	char buffer[BUFFER_SIZE];
-        memset(&buffer, 0, BUFFER_SIZE);
+	memset(&buffer, 0, BUFFER_SIZE);
 	string request = "";
 	do { //The client sends its json formatted request and a delimiter request.
 		nbytes = recv(connection_fd, buffer, BUFFER_SIZE, 0);
 		request.append(buffer,nbytes);
 	} while(request.find(DELIMITER_CHAR) == string::npos);
 	instance->OnRequest(request, reinterpret_cast<void*>(connection_fd));
-        CloseHandle(GetCurrentThread());
+	CloseHandle(GetCurrentThread());
 	return 0; //DO NOT USE ExitThread function here! ExitThread does not call destructors for allocated objects and therefore it would lead to a memory leak.
 }
 
@@ -192,23 +202,47 @@ bool WindowsTcpSocketServer::WriteToSocket(SOCKET fd, const string& toWrite) {
 	return fullyWritten && !errorOccured;
 }
 
+bool WindowsTcpSocketServer::WaitClientClose(SOCKET fd, const int &timeout) {
+	bool ret = false;
+	int i = 0;
+	while((recv(fd, NULL, NULL, 0) != 0) && i < timeout) {
+		Sleep(1);
+		++i;
+		ret = true;
+	}
+
+	return ret;
+}
+
+int WindowsTcpSocketServer::CloseByReset(int fd) {
+	struct linger so_linger;
+	so_linger.l_onoff = 1;
+	so_linger.l_linger = 0;
+
+	int ret = setsockopt(fd, SOL_SOCKET, SO_LINGER, &so_linger, sizeof(so_linger));
+	if(ret != 0)
+		return ret;
+
+	return closesocket(fd);
+}
+
 //This is inspired from SFML to manage Winsock initialization. Thanks to them! ( http://www.sfml-dev.org/ ).
 struct ServerSocketInitializer
 {
-    ServerSocketInitializer()
-    {
-            WSADATA init;
-            if(WSAStartup(MAKEWORD(2, 2), &init) != 0) {
-                cerr << "An issue occured while WSAStartup executed." << endl;
-            }
-    }
+	ServerSocketInitializer()
+	{
+		WSADATA init;
+		if(WSAStartup(MAKEWORD(2, 2), &init) != 0) {
+			cerr << "An issue occured while WSAStartup executed." << endl;
+		}
+	}
 
-    ~ServerSocketInitializer()
-    {
-        if(WSACleanup() != 0) {
-            cerr << "An issue occured while WSAClean executed." << endl;
-        }
-    }
+	~ServerSocketInitializer()
+	{
+		if(WSACleanup() != 0) {
+			cerr << "An issue occured while WSAClean executed." << endl;
+		}
+	}
 };
 
 struct ServerSocketInitializer serverGlobalInitializer;

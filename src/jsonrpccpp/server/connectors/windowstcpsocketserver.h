@@ -18,7 +18,7 @@
 
 namespace jsonrpc
 {
-    	/**
+	/**
 	 * This class provides an embedded Unix Domain Socket Server,to handle incoming Requests.
 	 */
 	class WindowsTcpSocketServer: public TcpSocketServerPrivate
@@ -29,7 +29,7 @@ namespace jsonrpc
 			 * @param socket_path, a string containing the path to the unix socket
 			 */
 			WindowsTcpSocketServer(const std::string& ipToBind, const unsigned int &port);
-                        ~WindowsTcpSocketServer();
+			~WindowsTcpSocketServer();
 
 			bool StartListening();
 			bool StopListening();
@@ -53,6 +53,8 @@ namespace jsonrpc
 			};
 			static DWORD WINAPI GenerateResponse(LPVOID lp_data);
 			bool WriteToSocket(SOCKET fd, const std::string& toSend);
+			bool WaitClientClose(SOCKET fd, const int &timeout = 100);
+			int CloseByReset(SOCKET fd);
 	};
 
 } /* namespace jsonrpc */
