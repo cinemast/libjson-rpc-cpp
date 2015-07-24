@@ -49,11 +49,11 @@ void Client::CallProcedures(const BatchCall &calls, BatchResponse &result) throw
         if (tmpresult[i].isObject()) {
             Json::Value singleResult;
             try {
-                int id = this->protocol->HandleResponse(tmpresult[i], singleResult);
+                Json::Value id = this->protocol->HandleResponse(tmpresult[i], singleResult);
                 result.addResponse(id, singleResult, false);
             }
             catch (JsonRpcException& ex) {
-                int id = -1;
+                Json::Value id = -1;
                 if(tmpresult[i].isMember("id") && tmpresult[i]["id"].isInt())
                     id = tmpresult[i]["id"].asInt();
                 result.addResponse(id, tmpresult[i]["error"], true);

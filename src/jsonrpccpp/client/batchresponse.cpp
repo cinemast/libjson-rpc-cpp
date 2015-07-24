@@ -18,7 +18,7 @@ BatchResponse::BatchResponse()
 {
 }
 
-void BatchResponse::addResponse(int id, Json::Value response, bool isError)
+void BatchResponse::addResponse(Json::Value &id, Json::Value response, bool isError)
 {
     if (isError) {
         errorResponses.push_back(id);
@@ -26,14 +26,22 @@ void BatchResponse::addResponse(int id, Json::Value response, bool isError)
     responses[id] = response;
 }
 
-Json::Value BatchResponse::getResult(int id)
+Json::Value BatchResponse::getResult(Json::Value& id)
 {
     Json::Value result;
     getResult(id, result);
     return result;
 }
 
-void BatchResponse::getResult(int id, Json::Value &result)
+Json::Value BatchResponse::getResult(int id)
+{
+    Json::Value result;
+    Json::Value i = id;
+    getResult(i, result);
+    return result;
+}
+
+void BatchResponse::getResult(Json::Value& id, Json::Value &result)
 {
     if (getErrorCode(id) == 0)
         result = responses[id];
@@ -41,7 +49,7 @@ void BatchResponse::getResult(int id, Json::Value &result)
         result = Json::nullValue;
 }
 
-int BatchResponse::getErrorCode(int id)
+int BatchResponse::getErrorCode(Json::Value& id)
 {
     if(std::find(errorResponses.begin(), errorResponses.end(), id) != errorResponses.end())
     {
@@ -50,13 +58,19 @@ int BatchResponse::getErrorCode(int id)
     return 0;
 }
 
-string BatchResponse::getErrorMessage(int id)
+string BatchResponse::getErrorMessage(Json::Value& id)
 {
     if(std::find(errorResponses.begin(), errorResponses.end(), id) != errorResponses.end())
     {
         return responses[id]["message"].asString();
     }
     return "";
+}
+
+string BatchResponse::getErrorMessage(int id)
+{
+    Json::Value i = id;
+    return getErrorMessage(i);
 }
 
 bool BatchResponse::hasErrors()

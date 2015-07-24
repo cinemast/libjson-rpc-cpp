@@ -17,6 +17,25 @@ using namespace std;
 
 int main()
 {
+    Json::Value a = 3;
+    Json::Value b = "3";
+
+    std::map<Json::Value, Json::Value> responses;
+
+    responses[a] = b;
+    responses[b] = "asölfj";
+
+    cout << responses[b] << endl;
+
+    if (a == b)
+    {
+        cout << a.toStyledString() << " == " << b.toStyledString() << endl;
+    }
+    else
+    {
+        cout << a.toStyledString() << " != " << b.toStyledString() << endl;
+    }
+
     HttpClient httpclient("http://localhost:8383");
     //StubClient c(httpclient, JSONRPC_CLIENT_V1); //json-rpc 1.0
     StubClient c(httpclient, JSONRPC_CLIENT_V2);   //json-rpc 2.0
