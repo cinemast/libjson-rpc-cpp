@@ -50,7 +50,9 @@ if (ZMQ_SERVER)
     list(APPEND server_connector_source "server/connectors/zmqserver.cpp")
     list(APPEND server_connector_libs ${ZMQ_LIBRARIES})
 endif()
-
+    list(APPEND client_connector_header "client/connectors/zmqclient.h")
+    list(APPEND client_connector_source "client/connectors/zmqclient.cpp")
+    list(APPEND client_connector_libs ${ZMQ_LIBRARIES})
 if (ZMQ_CLIENT)
 
 endif()

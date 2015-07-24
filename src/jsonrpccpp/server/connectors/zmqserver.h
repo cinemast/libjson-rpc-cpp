@@ -15,10 +15,12 @@
 
 namespace jsonrpc
 {
+    struct zmqserverImp;
+
     class ZMQServer : public AbstractServerConnector
     {
         public:
-            ZMQServer(int port);
+            ZMQServer(const std::string &address = "tcp://*:8080");
 
             virtual bool StartListening();
             virtual bool StopListening();
@@ -26,9 +28,10 @@ namespace jsonrpc
             bool virtual SendResponse(const std::string& response, void* addInfo = NULL);
 
         private:
+            struct zmqserverImp* imp;
             zmq::context_t m_context;
             zmq::socket_t m_socket;
-            int m_port;
+            std::string m_address;
     };
 }
 #endif // ZMQSERVER_H

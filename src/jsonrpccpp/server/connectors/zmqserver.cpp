@@ -13,10 +13,10 @@
 using namespace jsonrpc;
 using namespace std;
 
-ZMQServer::ZMQServer(int port) :
+ZMQServer::ZMQServer(const string &address) :
     m_context (1),
     m_socket (m_context, ZMQ_REP),
-    m_port(port)
+    m_address(address)
 {
 }
 
@@ -24,9 +24,7 @@ ZMQServer::ZMQServer(int port) :
 bool ZMQServer::StartListening()
 {
     try {
-        stringstream str;
-        str << "tcp://*:" << m_port;
-        m_socket.bind(str.str().c_str());
+        m_socket.bind(m_address.c_str());
         return true;
     }
     catch (zmq::error_t& error)
@@ -38,9 +36,8 @@ bool ZMQServer::StartListening()
 
 bool ZMQServer::StopListening()
 {
-    stringstream str;
-    str << "tcp://*:" << m_port;
-    m_socket.unbind(str.str().c_str());
+    m_socket.unbind(m_address.c_str());
+    return true;
 }
 
 bool ZMQServer::SendResponse(const std::string &response, void *addInfo)
