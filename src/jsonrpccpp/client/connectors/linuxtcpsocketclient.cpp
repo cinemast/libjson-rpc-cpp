@@ -45,27 +45,16 @@ void LinuxTcpSocketClient::SendRPCMessage(const std::string& message, std::strin
 	socket_fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (socket_fd < 0) {
 		string message = "socket() failed";
-                switch(errno) {
+                int err = errno;
+                switch(err) {
                     case EACCES:
-                        message = strerror(EACCES);
-                        break;
                     case EAFNOSUPPORT:
-                        message = strerror(EAFNOSUPPORT);
-                        break;
                     case EINVAL:
-                        message = strerror(EINVAL);
-                        break;
                     case EMFILE:
-                        message = strerror(EMFILE);
-                        break;
                     case ENOBUFS:
-                        message = strerror(ENOBUFS);
-                        break;
                     case ENOMEM:
-                        message = strerror(ENOMEM);
-                        break;
                     case EPROTONOSUPPORT:
-                        message = strerror(EPROTONOSUPPORT);
+                        message = strerror(err);
                         break;
                 }
                 cerr << message << endl;
@@ -80,51 +69,24 @@ void LinuxTcpSocketClient::SendRPCMessage(const std::string& message, std::strin
 
 	if(connect(socket_fd, (struct sockaddr *) &address,  sizeof(sockaddr_in)) != 0) {
 		string message = "connect() failed";
-		switch(errno) {
+                int err = errno;
+		switch(err) {
                     case EACCES:
-                        message = strerror(EACCES);
-                        break;
                     case EPERM:
-                        message = strerror(EPERM);
-                        break;
                     case EADDRINUSE:
-                        message = strerror(EADDRINUSE);
-                        break;
                     case EAFNOSUPPORT:
-                        message = strerror(EAFNOSUPPORT);
-                        break;
                     case EAGAIN:
-                        message = strerror(EAGAIN);
-                        break;
                     case EALREADY:
-                        message = strerror(EALREADY);
-                        break;
                     case EBADF:
-                        message = strerror(EBADF);
-                        break;
                     case ECONNREFUSED:
-                        message = strerror(ECONNREFUSED);
-                        break;
                     case EFAULT:
-                        message = strerror(EFAULT);
-                        break;
                     case EINPROGRESS:
-                        message = strerror(EINPROGRESS);
-                        break;
                     case EINTR:
-                        message = strerror(EINTR);
-                        break;
                     case EISCONN:
-                        message = strerror(EISCONN);
-                        break;
                     case ENETUNREACH:
-                        message = strerror(ENETUNREACH);
-                        break;
                     case ENOTSOCK:
-                        message = strerror(ENOTSOCK);
-                        break;
                     case ETIMEDOUT:
-                        message = strerror(ETIMEDOUT);
+                        message = strerror(err);
                         break;
                 }
                 cerr << message << endl;
@@ -137,54 +99,25 @@ void LinuxTcpSocketClient::SendRPCMessage(const std::string& message, std::strin
 		ssize_t byteWritten = send(socket_fd, toSend.c_str(), toSend.size(), 0);
 		if(byteWritten == -1) {
                     string message = "send() failed";
-                    switch(errno) {
+                    int err = errno;
+                    switch(err) {
                         case EACCES:
-                            message = strerror(EACCES);
-                            break;
                         case EWOULDBLOCK:
-                            message = strerror(EWOULDBLOCK);
-                            break;
                         case EBADF:
-                            message = strerror(EBADF);
-                            break;
                         case ECONNRESET:
-                            message = strerror(ECONNRESET);
-                            break;
                         case EDESTADDRREQ:
-                            message = strerror(EDESTADDRREQ);
-                            break;
                         case EFAULT:
-                            message = strerror(EFAULT);
-                            break;
                         case EINTR:
-                            message = strerror(EINTR);
-                            break;
                         case EINVAL:
-                            message = strerror(EINVAL);
-                            break;
                         case EISCONN:
-                            message = strerror(EISCONN);
-                            break;
                         case EMSGSIZE:
-                            message = strerror(EMSGSIZE);
-                            break;
                         case ENOBUFS:
-                            message = strerror(ENOBUFS);
-                            break;
                         case ENOMEM:
-                            message = strerror(ENOMEM);
-                            break;
                         case ENOTCONN:
-                            message = strerror(ENOTCONN);
-                            break;
                         case ENOTSOCK:
-                            message = strerror(ENOTSOCK);
-                            break;
                         case EOPNOTSUPP:
-                            message = strerror(EOPNOTSUPP);
-                            break;
                         case EPIPE:
-                            message = strerror(EPIPE);
+                            message = strerror(err);
                             break;
                     }
                     close(socket_fd);
@@ -203,33 +136,18 @@ void LinuxTcpSocketClient::SendRPCMessage(const std::string& message, std::strin
 		nbytes = recv(socket_fd, buffer, BUFFER_SIZE, 0);
                 if(nbytes == -1) {
                     string message = "recv() failed";
-                    switch(errno) {
+                    int err = errno;
+                    switch(err) {
                         case EWOULDBLOCK:
-                            message = strerror(EWOULDBLOCK);
-                            break;
                         case EBADF:
-                            message = strerror(EBADF);
-                            break;
                         case ECONNRESET:
-                            message = strerror(ECONNRESET);
-                            break;
                         case EFAULT:
-                            message = strerror(EFAULT);
-                            break;
                         case EINTR:
-                            message = strerror(EINTR);
-                            break;
                         case EINVAL:
-                            message = strerror(EINVAL);
-                            break;
                         case ENOMEM:
-                            message = strerror(ENOMEM);
-                            break;
                         case ENOTCONN:
-                            message = strerror(ENOTCONN);
-                            break;
                         case ENOTSOCK:
-                            message = strerror(ENOTSOCK);
+                            message = strerror(err);
                             break;
                     }
                     close(socket_fd);
