@@ -115,12 +115,7 @@ bool WindowsTcpSocketServer::SendResponse(const string& response, void* addInfo)
 	else {
 		result = this->WriteToSocket(connection_fd, temp);
 	}
-	if(WaitClientClose(connection_fd)) {
-		closesocket(connection_fd);
-	}
-	else {
-		CloseByReset(connection_fd);
-	}
+	CleanClose(connection_fd);
 	return result;
 }
 
@@ -147,12 +142,7 @@ void WindowsTcpSocketServer::ListenLoop() {
 			if(ret == NULL) {
 				delete params;
 				params = NULL;
-				if(WaitClientClose(connection_fd)) {
-					closesocket(connection_fd);
-				}
-				else {
-					CloseByReset(connection_fd);
-				}
+				CleanClose(connection_fd);
 			}
 			else {
 				CloseHandle(ret);
@@ -224,6 +214,15 @@ int WindowsTcpSocketServer::CloseByReset(SOCKET fd) {
 		return ret;
 
 	return closesocket(fd);
+}
+
+int WindowsTcpSocketServer::CleanClose(SOCKET fd) {
+	if(WaitClientClose(fd)) {
+		return closesocket(fd);
+	}
+	else {
+		return CloseByReset(fd);
+	}
 }
 
 //This is inspired from SFML to manage Winsock initialization. Thanks to them! ( http://www.sfml-dev.org/ ).
