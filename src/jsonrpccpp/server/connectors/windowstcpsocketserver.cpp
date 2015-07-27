@@ -134,6 +134,8 @@ void WindowsTcpSocketServer::ListenLoop() {
 		int address_length = sizeof(connection_address);
 		if((connection_fd = accept(this->socket_fd, reinterpret_cast<SOCKADDR*>(&connection_address),  &address_length)) != INVALID_SOCKET)
 		{
+                        unsigned long nonBlocking = 0;
+                        ioctlsocket(connection_fd, FIONBIO, &nonBlocking); //Set blocking
 			DWORD client_thread;
 			struct GenerateResponseParameters *params = new struct GenerateResponseParameters();
 			params->instance = this;
