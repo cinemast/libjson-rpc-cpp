@@ -140,7 +140,6 @@ void LinuxTcpSocketServer::ListenLoop() {
 	while(this->running) {
 		if((connection_fd = accept(this->socket_fd, reinterpret_cast<struct sockaddr *>(&(connection_address)),  &address_length)) > 0)
 		{
-			cout << "Got a new client " << inet_ntoa(connection_address.sin_addr) << ":" << htons(connection_address.sin_port) << endl;
 			pthread_t client_thread;
 			struct GenerateResponseParameters *params = new struct GenerateResponseParameters();
 			params->instance = this;
