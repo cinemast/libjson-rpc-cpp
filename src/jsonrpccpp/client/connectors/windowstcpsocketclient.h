@@ -26,6 +26,7 @@ namespace jsonrpc
 		private:
 			std::string ipToConnect;
 			unsigned int port;
+                        static std::string GetErrorMessage(const int &e);
 	};
 
 } /* namespace jsonrpc */
