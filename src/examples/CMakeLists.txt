@@ -66,5 +66,11 @@ if (COMPILE_EXAMPLES)
 		endif (UNIX_DOMAIN_SOCKET_SERVER AND UNIX_DOMAIN_SOCKET_CLIENT)
 	endif(UNIX)
 
-	
+	if (TCP_SOCKET_SERVER AND TCP_SOCKET_CLIENT)
+		add_executable(tcpsocketclient tcpsocketclient.cpp)
+		target_link_libraries(tcpsocketclient jsonrpcclient)
+		
+		add_executable(tcpsocketserver tcpsocketserver.cpp)
+		target_link_libraries(tcpsocketserver jsonrpcserver)
+	endif (TCP_SOCKET_SERVER AND TCP_SOCKET_CLIENT)
 endif()
