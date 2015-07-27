@@ -60,6 +60,7 @@ namespace jsonrpc
 			bool WriteToSocket(int fd, const std::string& toSend);
 			bool WaitClientClose(int fd, const int &timeout = 100000);
 			int CloseByReset(int fd);
+			int CleanClose(int fd);
 	};
 
 } /* namespace jsonrpc */

@@ -116,12 +116,7 @@ bool LinuxTcpSocketServer::SendResponse(const string& response, void* addInfo)
 	else {
 		result = this->WriteToSocket(connection_fd, temp);
 	}
-	if(WaitClientClose(connection_fd)) {
-            close(connection_fd);
-        }
-        else {
-            CloseByReset(connection_fd);
-        }
+	CleanClose(connection_fd);
 	return result;
 }
 
@@ -149,12 +144,7 @@ void LinuxTcpSocketServer::ListenLoop() {
 				pthread_detach(client_thread);
 				delete params;
 				params = NULL;
-				if(WaitClientClose(connection_fd)) {
-                                    close(connection_fd);
-                                }
-                                else {
-                                    CloseByReset(connection_fd);
-                                }
+				CleanClose(connection_fd);
 			}
 		}
 		else {
@@ -175,7 +165,13 @@ void* LinuxTcpSocketServer::GenerateResponse(void *p_data) {
 	string request;
 	do { //The client sends its json formatted request and a delimiter request.
 		nbytes = recv(connection_fd, buffer, BUFFER_SIZE, 0);
-		request.append(buffer,nbytes);
+		if(nbytes == -1) {
+			instance->CleanClose(connection_fd);
+			return NULL;
+		}
+		else {
+			request.append(buffer,nbytes);
+		}
 	} while(request.find(DELIMITER_CHAR) == string::npos);
 	instance->OnRequest(request, reinterpret_cast<void*>(connection_fd));
 	return NULL;
@@ -188,8 +184,10 @@ bool LinuxTcpSocketServer::WriteToSocket(int fd, const string& toWrite) {
 	string toSend = toWrite;
 	do {
 		ssize_t byteWritten = send(fd, toSend.c_str(), toSend.size(), 0);
-		if(byteWritten < 0)
+		if(byteWritten < 0) {
 			errorOccured = true;
+			CleanClose(fd);
+		}
 		else if(byteWritten < toSend.size()) {
 			int len = toSend.size() - byteWritten;
 			toSend = toSend.substr(byteWritten + sizeof(char), len);
@@ -202,12 +200,12 @@ bool LinuxTcpSocketServer::WriteToSocket(int fd, const string& toWrite) {
 }
 
 bool LinuxTcpSocketServer::WaitClientClose(int fd, const int &timeout) {
-        bool ret = false;
+	bool ret = false;
 	int i = 0;
 	while((recv(fd, NULL, NULL, 0) != 0) && i < timeout) {
 		usleep(1);
 		++i;
-                ret = true;
+		ret = true;
 	}
 
 	return ret;
@@ -223,4 +221,13 @@ int LinuxTcpSocketServer::CloseByReset(int fd) {
 		return ret;
 
 	return close(fd);
+}
+
+int LinuxTcpSocketServer::CleanClose(int fd) {
+	if(WaitClientClose(fd)) {
+		return close(fd);
+	}
+	else {
+		return CloseByReset(fd);
+	}
 }
