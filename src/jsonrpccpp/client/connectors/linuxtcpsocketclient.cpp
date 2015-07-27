@@ -60,7 +60,7 @@ void LinuxTcpSocketClient::SendRPCMessage(const std::string& message, std::strin
 	bool fullyWritten = false;
 	string toSend = message;
 	do {
-		ssize_t byteWritten = write(socket_fd, toSend.c_str(), toSend.size());
+		ssize_t byteWritten = send(socket_fd, toSend.c_str(), toSend.size(), 0);
 		if(byteWritten < toSend.size()) {
 			int len = toSend.size() - byteWritten;
 			toSend = toSend.substr(byteWritten + sizeof(char), len);
@@ -70,7 +70,7 @@ void LinuxTcpSocketClient::SendRPCMessage(const std::string& message, std::strin
 	} while(!fullyWritten);
 
 	do {
-		nbytes = read(socket_fd, buffer, BUFFER_SIZE);
+		nbytes = recv(socket_fd, buffer, BUFFER_SIZE, 0);
 		string tmp;
 		tmp.append(buffer, nbytes);
 		result.append(buffer,nbytes);
