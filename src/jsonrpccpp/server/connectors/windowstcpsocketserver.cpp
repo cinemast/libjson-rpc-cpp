@@ -168,7 +168,12 @@ DWORD WINAPI WindowsTcpSocketServer::GenerateResponse(LPVOID lp_data) {
 	string request = "";
 	do { //The client sends its json formatted request and a delimiter request.
 		nbytes = recv(connection_fd, buffer, BUFFER_SIZE, 0);
-		request.append(buffer,nbytes);
+                if(nbytes == -1) {
+                    instance->CleanClose(connection_fd);
+                }
+                else {
+                    request.append(buffer,nbytes);
+                }
 	} while(request.find(DELIMITER_CHAR) == string::npos);
 	instance->OnRequest(request, reinterpret_cast<void*>(connection_fd));
 	CloseHandle(GetCurrentThread());
@@ -181,8 +186,10 @@ bool WindowsTcpSocketServer::WriteToSocket(SOCKET fd, const string& toWrite) {
 	string toSend = toWrite;
 	do {
 		ssize_t byteWritten = send(fd, toSend.c_str(), toSend.size(), 0);
-		if(byteWritten < 0)
+		if(byteWritten < 0) {
 			errorOccured = true;
+                        CleanClose(fd);
+                }
 		else if(byteWritten < toSend.size()) {
 			int len = toSend.size() - byteWritten;
 			toSend = toSend.substr(byteWritten + sizeof(char), len);
