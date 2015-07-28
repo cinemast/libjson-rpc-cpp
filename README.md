@@ -104,11 +104,13 @@ sudo make uninstall
 
 Default configuration should be fine for most systems, but here are available compilation flags:
 
-- `-DCOMPILE_TESTS=NO` disables unit test suite even if boost libraries are found.
+- `-DCOMPILE_TESTS=NO` disables unit test suite.
 - `-DCOMPILE_STUBGEN=NO` disables building the stubgenerator.
 - `-DCOMPILE_EXAMPLES=NO` disables examples.
-- `-DHTTP_SERVER=NO` disable the embedded mongoose webserver.
+- `-DHTTP_SERVER=NO` disable the libmicrohttpd webserver.
 - `-DHTTP_CLIENT=NO` disable the curl client.
+- `-DUNIX_DOMAIN_SOCKET_SERVER=NO` disable the unix domain socket server connector.
+- `-DUNIX_DOMAIN_SOCKET_CLIENT=NO` disable the unix domain socket client connector.
 
 Using the framework
 ===================
@@ -310,21 +312,10 @@ This generates the Latex and HTML documentation into `build/doc`
 
 Run the tests
 -------------
-For running the tests, the boost-test framework is required:
+Simply run: 
 
-**Debian based systems**
 ```sh
-cd build
-sudo apt-get install libboost-test-dev
-cmake .. && make test
+make test
 ```
 
-**Mac OS X**
-You need [Brew](http://brew.sh) installed and type the following commands
-```sh
-cd build
-brew install boost
-cmake .. && make test
-```
-
-Testcoverage can be retrieved by invoking the [dev/testcoverage.sh script](https://github.com/cinemast/libjson-rpc-cpp/blob/master/dev/testcoverage.sh).
+Testcoverage can be retrieved by invoking the [dev/testcoverage.sh script](https://github.com/cinemast/libjson-rpc-cpp/blob/master/dev/testcoverage.sh) inside the `dev` folder.

@@ -35,10 +35,10 @@ namespace jsonrpc
 			 */
 			UnixDomainSocketServer(const std::string& socket_path);
 
-			bool StartListening();
-			bool StopListening();
+			virtual bool StartListening();
+			virtual bool StopListening();
 
-			bool SendResponse(const std::string& response, void* addInfo = NULL);
+			bool virtual SendResponse(const std::string& response, void* addInfo = NULL);
 
 		private:
 			bool running;
@@ -50,7 +50,7 @@ namespace jsonrpc
 
 			static void* LaunchLoop(void *p_data);
 			void ListenLoop();
-			struct GenerateResponseParameters {
+			struct ClientConnection {
 				UnixDomainSocketServer *instance;
 				int connection_fd;
 			};

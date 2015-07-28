@@ -20,7 +20,7 @@
 using namespace jsonrpc;
 using namespace std;
 
-bool StubGeneratorFactory::createStubGenerators(int argc, char **argv, vector<Procedure> &procedures, vector<StubGenerator*> &stubgenerators)
+bool StubGeneratorFactory::createStubGenerators(int argc, char **argv, vector<Procedure> &procedures, vector<StubGenerator*> &stubgenerators, FILE *stdout, FILE *stderr)
 {
     struct arg_file *inputfile      = arg_file0(NULL, NULL, "<specfile>", "path of input specification file");
     struct arg_lit *help            = arg_lit0("h","help", "print this help and exit");
@@ -46,7 +46,7 @@ bool StubGeneratorFactory::createStubGenerators(int argc, char **argv, vector<Pr
 
     if (help->count > 0)
     {
-        cout << "Usage: " << argv[0] << " "; cout.flush();
+        fprintf(stdout, "Usage: %s ", argv[0]);
         arg_print_syntax(stdout,argtable,"\n"); cout << endl;
         arg_print_glossary_gnu(stdout, argtable);
         arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));
@@ -55,13 +55,13 @@ bool StubGeneratorFactory::createStubGenerators(int argc, char **argv, vector<Pr
 
     if (version->count > 0)
     {
-        cout << "jsonrpcstub version " << JSONRPC_CPP_MAJOR_VERSION << '.' << JSONRPC_CPP_MINOR_VERSION << '.' << JSONRPC_CPP_PATCH_VERSION << endl;
+        fprintf(stdout, "jsonrpcstub version %d.%d.%d\n", JSONRPC_CPP_MAJOR_VERSION, JSONRPC_CPP_MINOR_VERSION, JSONRPC_CPP_PATCH_VERSION);
         arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));
         return true;
     }
 
     if (inputfile->count == 0) {
-        cerr << "Invalid arguments: specfile must be provided." << endl;
+        fprintf(stderr, "Invalid arguments: specfile must be provided.\n");
         arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));
         return false;
     }
@@ -70,15 +70,19 @@ bool StubGeneratorFactory::createStubGenerators(int argc, char **argv, vector<Pr
         procedures = SpecificationParser::GetProceduresFromFile(inputfile->filename[0]);
         if (verbose->count > 0)
         {
-            cout << "Found " << procedures.size() << " procedures in " << inputfile->filename[0] << endl;
+            fprintf(stdout, "Found %zu procedures in %s\n", procedures.size(), inputfile->filename[0]);
             for (unsigned int i = 0; i < procedures.size(); ++i) {
                 if (procedures.at(i).GetProcedureType() == RPC_METHOD)
-                    cout << "\t[Method]         ";
+                {
+                    fprintf(stdout, "\t[Method]         ");
+                }
                 else
-                    cout << "\t[Notification]   ";
-                cout << procedures.at(i).GetProcedureName() << endl;
+                {
+                    fprintf(stdout, "\t[Notification]   ");
+                }
+                fprintf(stdout, "%s\n", procedures.at(i).GetProcedureName().c_str());
             }
-            cout << endl;
+            fprintf(stdout, "\n");
         }
 
         if (cppserver->count > 0)
@@ -89,7 +93,7 @@ bool StubGeneratorFactory::createStubGenerators(int argc, char **argv, vector<Pr
             else
                 filename = CPPHelper::class2Filename(cppserver->sval[0]);
             if (verbose->count > 0)
-                cout << "Generating C++ Serverstub to: " << filename << endl;
+                fprintf(stdout, "Generating C++ Serverstub to: %s\n", filename.c_str());
             stubgenerators.push_back(new CPPServerStubGenerator(cppserver->sval[0], procedures, filename));
         }
 
@@ -101,7 +105,7 @@ bool StubGeneratorFactory::createStubGenerators(int argc, char **argv, vector<Pr
             else
                 filename = CPPHelper::class2Filename(cppclient->sval[0]);
             if (verbose->count > 0)
-                cout << "Generating C++ Clientstub to: " << filename << endl;
+                fprintf(stdout, "Generating C++ Clientstub to: %s\n", filename.c_str());
             stubgenerators.push_back(new CPPClientStubGenerator(cppclient->sval[0], procedures, filename));
         }
 
@@ -114,13 +118,13 @@ bool StubGeneratorFactory::createStubGenerators(int argc, char **argv, vector<Pr
                 filename = JSClientStubGenerator::class2Filename(jsclient->sval[0]);
 
             if (verbose->count > 0)
-                cout << "Generating JavaScript Clientstub to: " << filename << endl;
+                fprintf(stdout, "Generating JavaScript Clientstub to: %s\n", filename.c_str());
             stubgenerators.push_back(new JSClientStubGenerator(jsclient->sval[0], procedures, filename));
         }
     }
     catch (const JsonRpcException &ex)
     {
-        cerr << ex.what() << endl;
+        fprintf(stderr, "%s\n", ex.what());
         arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));
         return false;
     }

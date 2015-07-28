@@ -1,15 +1,20 @@
-<<<<<<< HEAD
-Changes in v0.5.0 [unreleased]
-=======
-Changes in v0.5.0
->>>>>>> master
+Changes in v0.6.0
 -----------------
-- added `--version` option to jsonrpcstub.
-- added msvc support.
-- added data field support for JsonRpcException.
-- added contributions guide: https://github.com/cinemast/libjson-rpc-cpp#contributions
+- NEW: pkg-config files for all shared libraries
+- NEW: UNIX Socket client + server connector
+- NEW: multiarch support
+- Change: unit testing framework to catch
+- Change: allow disabling shared library build
+- Change: split out shared/static library for stubgenerator
+
+Changes in v0.5.0
+-----------------
+- Added `--version` option to jsonrpcstub.
+- Added msvc support.
+- Added data field support for JsonRpcException.
+- Added contributions guide: https://github.com/cinemast/libjson-rpc-cpp#contributions
 - HttpClient uses Http Keep-Alive, which improves performance drastically.
-- Added `LIB_SUFFIX` to CMake to support multilib.
+- Added multiarch support.
 - Fixed building tests with examples disabled.
 - Made static library build optional (via `BUILD_STATIC_LIBS`).
 - Fixed unnecessary rebuilds of stubs on each `make` call.

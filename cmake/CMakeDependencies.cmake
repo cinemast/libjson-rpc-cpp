@@ -43,24 +43,14 @@ endif()
 # find doxygen
 find_package(Doxygen)
 
-# boost stuff
 
-# left for backwards compatbility
-if (WIN32)
-	set(BOOST_ROOT "C:/boost_1_57_0")
+find_package(Catch)
+
+if(NOT CATCH_FOUND)
+    message("Could not find catch, downloading it now")
+    # Includes Catch in the project:
+    add_subdirectory(${CMAKE_SOURCE_DIR}/src/catch)
+    include_directories(${CATCH_INCLUDE_DIR} ${COMMON_INCLUDES})
+else()
+    INCLUDE_DIRECTORIES(${CATCH_INCLUDE_DIRS})
 endif()
-
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-
-	set(Boost_USE_MULTITHREADED ON)
-# TODO hanlde other msvc versions or it will fail find them
-	set(Boost_COMPILER -vc120)
-# use static boost libraries *.lib
-	set(Boost_USE_STATIC_LIBS ON)
-
-endif()
-
-# TODO: add? appriopriate commands if it's found
-find_package(Boost COMPONENTS unit_test_framework)
-
-

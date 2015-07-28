@@ -44,7 +44,7 @@ void UnixDomainSocketClient::SendRPCMessage(const std::string& message, std::str
 	socket_fd = socket(AF_UNIX, SOCK_STREAM, 0);
 	if (socket_fd < 0) {
 		cerr << "Socket failed" << endl;
-		throw JsonRpcException(Errors::ERROR_RPC_INTERNAL_ERROR, result);
+		throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Could not created unix domain socket");
 	}
 
 	memset(&address, 0, sizeof(sockaddr_un));
@@ -54,7 +54,7 @@ void UnixDomainSocketClient::SendRPCMessage(const std::string& message, std::str
 
 	if(connect(socket_fd, (struct sockaddr *) &address,  sizeof(sockaddr_un)) != 0) {
 		cerr << "connect failed" << endl;
-		throw JsonRpcException(Errors::ERROR_RPC_INTERNAL_ERROR, result);
+		throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Could not connect to: " + this->path);
 	}
 
 	bool fullyWritten = false;

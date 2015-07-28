@@ -10,27 +10,25 @@
 #include "unixdomainsocketserver.h"
 #include <cstdlib>
 #include <sstream>
-#include <iostream>
 #include <sys/types.h>
 #include <jsonrpccpp/common/specificationparser.h>
 #include <cstdio>
+#include <fcntl.h>
 #include <unistd.h>
 #include <string>
-#include <fcntl.h>
 
 using namespace jsonrpc;
 using namespace std;
 
-#define BUFFER_SIZE 64
+#define BUFFER_SIZE 1024
 #define PATH_MAX 108
 #ifndef DELIMITER_CHAR
-#define DELIMITER_CHAR char(0x0A)
-#endif //DELIMITER_CHAR
+    #define DELIMITER_CHAR char(0x0A)
+#endif
 
 UnixDomainSocketServer::UnixDomainSocketServer(const string &socket_path) :
-	AbstractServerConnector(),
-	socket_path(socket_path.substr(0, PATH_MAX)),
-	running(false)
+    running(false),
+    socket_path(socket_path.substr(0, PATH_MAX))
 {
 }
 
@@ -40,7 +38,11 @@ bool UnixDomainSocketServer::StartListening()
 	{
 		//Create and bind socket here.
 		//Then launch the listenning loop.
+		if (access(this->socket_path.c_str(), F_OK) != -1)
+		    return false;
+
 		this->socket_fd = socket(AF_UNIX, SOCK_STREAM, 0);
+
 		if(this->socket_fd < 0)
 		{
 			cerr << "socket() failed" << endl;
@@ -48,9 +50,9 @@ bool UnixDomainSocketServer::StartListening()
 		}
 
 		unlink(this->socket_path.c_str());
-
+		
 		fcntl(this->socket_fd, F_SETFL, FNDELAY);
-
+		
 		/* start with a clean address structure */
 		memset(&(this->address), 0, sizeof(struct sockaddr_un));
 
@@ -127,7 +129,7 @@ void UnixDomainSocketServer::ListenLoop() {
 		if((connection_fd = accept(this->socket_fd, reinterpret_cast<struct sockaddr *>(&(this->address)),  &address_length)) > 0)
 		{
 			pthread_t client_thread;
-			struct GenerateResponseParameters *params = new struct GenerateResponseParameters();
+			struct ClientConnection *params = new struct ClientConnection();
 			params->instance = this;
 			params->connection_fd = connection_fd;
 			int ret = pthread_create(&client_thread, NULL, UnixDomainSocketServer::GenerateResponse, params);
@@ -138,14 +140,14 @@ void UnixDomainSocketServer::ListenLoop() {
 			}
 		}
 		else {
-			usleep(2500);
+			usleep(25000);
 		}
 	}
 }
 
 void* UnixDomainSocketServer::GenerateResponse(void *p_data) {
-	pthread_detach(pthread_self());
-	struct GenerateResponseParameters* params = reinterpret_cast<struct GenerateResponseParameters*>(p_data);
+    pthread_detach(pthread_self());
+    struct ClientConnection* params = reinterpret_cast<struct ClientConnection*>(p_data);
 	UnixDomainSocketServer *instance = params->instance;
 	int connection_fd = params->connection_fd;
 	delete params;
@@ -170,7 +172,7 @@ bool UnixDomainSocketServer::WriteToSocket(int fd, const string& toWrite) {
 		ssize_t byteWritten = write(fd, toSend.c_str(), toSend.size());
 		if(byteWritten < 0)
 			errorOccured = true;
-		else if(byteWritten < toSend.size()) {
+		else if(byteWritten < static_cast<ssize_t>(toSend.size())) {
 			int len = toSend.size() - byteWritten;
 			toSend = toSend.substr(byteWritten + sizeof(char), len);
 		}
