@@ -82,8 +82,12 @@ bool WindowsTcpSocketServer::StartListening()
 			CloseHandle(ret);
 		}
 		this->running = static_cast<bool>(ret!=NULL);
+                return this->running;
 	}
-	return this->running;
+        else {
+            return false;
+        }
+	
 }
 
 bool WindowsTcpSocketServer::StopListening()
@@ -93,8 +97,11 @@ bool WindowsTcpSocketServer::StopListening()
 		this->running = false;
 		WaitForSingleObject(OpenThread(THREAD_ALL_ACCESS, FALSE,this->listenning_thread), INFINITE);
 		closesocket(this->socket_fd);
+                return !(this->running);
 	}
-	return !(this->running);
+        else {
+            return false;
+        }
 }
 
 bool WindowsTcpSocketServer::SendResponse(const string& response, void* addInfo)
