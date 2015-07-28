@@ -65,12 +65,13 @@ bool UnixDomainSocketServer::StartListening()
 			cerr << "bind() failed" << endl;
 			return false;
 		}
-
+		
 		if(listen(this->socket_fd, 5) != 0)
 		{
 			cerr << "listen() failed" << endl;
 			return false;
 		}
+		
 		//Launch listening loop there
 		this->running = true;
 		int ret = pthread_create(&(this->listenning_thread), NULL, UnixDomainSocketServer::LaunchLoop, this);
@@ -78,8 +79,12 @@ bool UnixDomainSocketServer::StartListening()
 			pthread_detach(this->listenning_thread);
 		}
 		this->running = static_cast<bool>(ret==0);
+
+                return this->running;
 	}
-	return this->running;
+        else {
+            return false;
+        }
 }
 
 bool UnixDomainSocketServer::StopListening()
@@ -90,8 +95,11 @@ bool UnixDomainSocketServer::StopListening()
 		pthread_join(this->listenning_thread, NULL);
 		close(this->socket_fd);
 		unlink(this->socket_path.c_str());
+                return !(this->running);
 	}
-	return !(this->running);
+        else {
+            return false;
+        }
 }
 
 bool UnixDomainSocketServer::SendResponse(const string& response, void* addInfo)
@@ -160,6 +168,7 @@ void* UnixDomainSocketServer::GenerateResponse(void *p_data) {
 		nbytes = read(connection_fd, buffer, BUFFER_SIZE);
 		request.append(buffer,nbytes);
 	} while(request.find(DELIMITER_CHAR) == string::npos);
+	
 	instance->OnRequest(request, reinterpret_cast<void*>(connection_fd));
 	return NULL;
 }
