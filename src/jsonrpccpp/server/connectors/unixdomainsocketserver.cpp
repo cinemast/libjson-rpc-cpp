@@ -10,6 +10,7 @@
 #include "unixdomainsocketserver.h"
 #include <cstdlib>
 #include <sstream>
+#include <iostream>
 #include <sys/types.h>
 #include <jsonrpccpp/common/specificationparser.h>
 #include <cstdio>
