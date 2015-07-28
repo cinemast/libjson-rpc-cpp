@@ -82,8 +82,11 @@ bool LinuxTcpSocketServer::StartListening()
 			close(this->socket_fd);
 		}
 		this->running = static_cast<bool>(ret==0);
+                return this->running;
 	}
-	return this->running;
+        else {
+            return false;
+        }
 }
 
 bool LinuxTcpSocketServer::StopListening()
@@ -94,8 +97,11 @@ bool LinuxTcpSocketServer::StopListening()
 		pthread_join(this->listenning_thread, NULL);
 		shutdown(this->socket_fd, 2);
 		close(this->socket_fd);
+                return !(this->running);
 	}
-	return !(this->running);
+        else {
+            return false;
+        }
 }
 
 bool LinuxTcpSocketServer::SendResponse(const string& response, void* addInfo)
