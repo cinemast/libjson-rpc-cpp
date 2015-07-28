@@ -18,6 +18,10 @@
 using namespace jsonrpc;
 using namespace std;
 
+#ifndef DELIMITER_CHAR
+    #define DELIMITER_CHAR char(0x0A)
+#endif
+
 #define TEST_MODULE "[connector_unixdomainsocket]"
 
 #define SOCKET_PATH "/tmp/jsonrpccpp-socket"
@@ -50,15 +54,20 @@ namespace testunixdomainsocketserver
 }
 using namespace testunixdomainsocketserver;
 
-
 TEST_CASE_METHOD(F, "test_unixdomainsocket_success", TEST_MODULE)
 {
     handler.response = "exampleresponse";
+    handler.timeout = 100;
     string result;
-    client.SendRPCMessage("examplerequest", result);
+    string request = "examplerequest";
+    request.push_back(DELIMITER_CHAR);
+    string expectedResult = "exampleresponse";
+    expectedResult.push_back(DELIMITER_CHAR);
 
-    CHECK(handler.request == "examplerequest");
-    CHECK(result == "exampleresponse");
+    client.SendRPCMessage(request, result);
+
+    CHECK(handler.request == request);
+    CHECK(result == expectedResult);
 }
 
 
