@@ -70,7 +70,6 @@ TEST_CASE_METHOD(F, "test_tcpsocket_success", TEST_MODULE)
     CHECK(result == expectedResult);
 }
 
-
 TEST_CASE("test_tcpsocket_server_multiplestart", TEST_MODULE)
 {
     TcpSocketServer server(IP, PORT);
@@ -84,9 +83,10 @@ TEST_CASE("test_tcpsocket_server_multiplestart", TEST_MODULE)
     CHECK(server.StopListening() == true);
 }
 
+
 TEST_CASE("test_tcpsocket_client_invalid", TEST_MODULE)
 {
-    TcpSocketClient client("127.10.10.10", 55555);
+    TcpSocketClient client("127.0.0.1", 40000); //If this test fails, check that port 40000 is really unused. If it is used, change this port value to an unused port, recompile tests and run tests again.
     string result;
     CHECK_EXCEPTION_TYPE(client.SendRPCMessage("foobar", result), JsonRpcException, check_exception1);
 }
