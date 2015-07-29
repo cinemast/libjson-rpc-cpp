@@ -32,7 +32,8 @@ TcpSocketServer::TcpSocketServer(const std::string& ipToBind, const unsigned int
 
 TcpSocketServer::~TcpSocketServer()
 {
-	if(this->realSocket != NULL)  {
+	if(this->realSocket != NULL) 
+	{
 		delete this->realSocket;
 		this->realSocket = NULL;
 	}
@@ -40,7 +41,8 @@ TcpSocketServer::~TcpSocketServer()
 
 bool TcpSocketServer::StartListening()
 {
-	if(this->realSocket != NULL) {
+	if(this->realSocket != NULL)
+	{
 		this->realSocket->SetHandler(this->GetHandler());
 		return this->realSocket->StartListening();
 	}

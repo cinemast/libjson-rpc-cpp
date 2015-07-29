@@ -50,7 +50,8 @@ namespace jsonrpc
 
 			static void* LaunchLoop(void *p_data);
 			void ListenLoop();
-			struct ClientConnection {
+			struct ClientConnection
+			{
 				UnixDomainSocketServer *instance;
 				int connection_fd;
 			};

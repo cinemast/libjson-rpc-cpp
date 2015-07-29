@@ -47,7 +47,8 @@ namespace jsonrpc
 
 			static DWORD WINAPI LaunchLoop(LPVOID lp_data);
 			void ListenLoop();
-			struct GenerateResponseParameters {
+			struct GenerateResponseParameters
+			{
 				WindowsTcpSocketServer *instance;
 				SOCKET connection_fd;
 			};
@@ -55,7 +56,7 @@ namespace jsonrpc
 			bool WriteToSocket(SOCKET fd, const std::string& toSend);
 			bool WaitClientClose(SOCKET fd, const int &timeout = 100);
 			int CloseByReset(SOCKET fd);
-                        int CleanClose(SOCKET fd);
+			int CleanClose(SOCKET fd);
 	};
 
 } /* namespace jsonrpc */

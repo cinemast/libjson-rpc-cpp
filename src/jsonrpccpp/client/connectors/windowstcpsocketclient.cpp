@@ -38,28 +38,30 @@ void WindowsTcpSocketClient::SendRPCMessage(const std::string& message, std::str
 	int socket_fd, nbytes;
 	char buffer[BUFFER_SIZE];
 	socket_fd = socket(AF_INET, SOCK_STREAM, 0);
-	if (socket_fd < 0) {
+	if (socket_fd < 0)
+	{
 		string message = "socket() failed";
-                int err = WSAGetLastError();
-		switch(err) {
-                    case WSANOTINITIALISED:
-                    case WSAENETDOWN:
-                    case WSAEAFNOSUPPORT:
-                    case WSAEINPROGRESS:
-                    case WSAEMFILE:
-                    case WSAEINVAL:
-                    case WSAEINVALIDPROVIDER:
-                    case WSAEINVALIDPROCTABLE:
-                    case WSAENOBUFS:
-                    case WSAEPROTONOSUPPORT:
-                    case WSAEPROTOTYPE:
-                    case WSAEPROVIDERFAILEDINIT:
-                    case WSAESOCKTNOSUPPORT:
-                        message = GetErrorMessage(err);
-                        break;
-                }
-                cerr << message << endl;
-                throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, message);
+		int err = WSAGetLastError();
+		switch(err)
+		{
+			case WSANOTINITIALISED:
+			case WSAENETDOWN:
+			case WSAEAFNOSUPPORT:
+			case WSAEINPROGRESS:
+			case WSAEMFILE:
+			case WSAEINVAL:
+			case WSAEINVALIDPROVIDER:
+			case WSAEINVALIDPROCTABLE:
+			case WSAENOBUFS:
+			case WSAEPROTONOSUPPORT:
+			case WSAEPROTOTYPE:
+			case WSAEPROVIDERFAILEDINIT:
+			case WSAESOCKTNOSUPPORT:
+				message = GetErrorMessage(err);
+				break;
+		}
+		cerr << message << endl;
+		throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, message);
 	}
 
 	memset(&address, 0, sizeof(SOCKADDR_IN));
@@ -68,71 +70,77 @@ void WindowsTcpSocketClient::SendRPCMessage(const std::string& message, std::str
 	address.sin_addr.s_addr = inet_addr(this->ipToConnect.c_str());
 	address.sin_port = htons(this->port);
 
-	if(connect(socket_fd, reinterpret_cast<SOCKADDR*>(&address),  sizeof(SOCKADDR_IN)) != 0) {
+	if(connect(socket_fd, reinterpret_cast<SOCKADDR*>(&address),  sizeof(SOCKADDR_IN)) != 0)
+	{
 		string message = "connect() failed";
-                int err = WSAGetLastError();
-		switch(err) {
-                    case WSANOTINITIALISED:
-                    case WSAENETDOWN:
-                    case WSAEADDRINUSE:
-                    case WSAEINTR:
-                    case WSAEINPROGRESS:
-                    case WSAEALREADY:
-                    case WSAEADDRNOTAVAIL:
-                    case WSAEAFNOSUPPORT:
-                    case WSAECONNREFUSED:
-                    case WSAEFAULT:
-                    case WSAEINVAL:
-                    case WSAEISCONN:
-                    case WSAENETUNREACH:
-                    case WSAEHOSTUNREACH:
-                    case WSAENOBUFS:
-                    case WSAENOTSOCK:
-                    case WSAETIMEDOUT:
-                    case WSAEWOULDBLOCK:
-                    case WSAEACCES:
-                        message = GetErrorMessage(err);
-                        break;
-                }
-                cerr << message << endl;
-                throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, message);
+		int err = WSAGetLastError();
+		switch(err)
+		{
+			case WSANOTINITIALISED:
+			case WSAENETDOWN:
+			case WSAEADDRINUSE:
+			case WSAEINTR:
+			case WSAEINPROGRESS:
+			case WSAEALREADY:
+			case WSAEADDRNOTAVAIL:
+			case WSAEAFNOSUPPORT:
+			case WSAECONNREFUSED:
+			case WSAEFAULT:
+			case WSAEINVAL:
+			case WSAEISCONN:
+			case WSAENETUNREACH:
+			case WSAEHOSTUNREACH:
+			case WSAENOBUFS:
+			case WSAENOTSOCK:
+			case WSAETIMEDOUT:
+			case WSAEWOULDBLOCK:
+			case WSAEACCES:
+				message = GetErrorMessage(err);
+				break;
+		}
+		cerr << message << endl;
+		throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, message);
 	}
 
 	bool fullyWritten = false;
 	string toSend = message;
-	do {
+	do
+	{
 		ssize_t byteWritten = send(socket_fd, toSend.c_str(), toSend.size(), 0);
-		if(byteWritten == -1) {
-                    string message = "send() failed";
-                    int err = WSAGetLastError();
-                    switch(err) {
-                        case WSANOTINITIALISED:
-                        case WSAENETDOWN:
-                        case WSAEACCES:
-                        case WSAEINTR:
-                        case WSAEINPROGRESS:
-                        case WSAEFAULT:
-                        case WSAENETRESET:
-                        case WSAENOBUFS:
-                        case WSAENOTCONN:
-                        case WSAENOTSOCK:
-                        case WSAEOPNOTSUPP:
-                        case WSAESHUTDOWN:
-                        case WSAEWOULDBLOCK:
-                        case WSAEMSGSIZE:
-                        case WSAEHOSTUNREACH:
-                        case WSAEINVAL:
-                        case WSAECONNABORTED:
-                        case WSAECONNRESET:
-                        case WSAETIMEDOUT:
-                            message = GetErrorMessage(err);
-                            break;
-                    }
-                    closesocket(socket_fd);
-                    cerr << message << endl;
-                    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, message);
-                }
-                else if(byteWritten < toSend.size()) {
+		if(byteWritten == -1)
+		{
+			string message = "send() failed";
+			int err = WSAGetLastError();
+			switch(err)
+			{
+				case WSANOTINITIALISED:
+				case WSAENETDOWN:
+				case WSAEACCES:
+				case WSAEINTR:
+				case WSAEINPROGRESS:
+				case WSAEFAULT:
+				case WSAENETRESET:
+				case WSAENOBUFS:
+				case WSAENOTCONN:
+				case WSAENOTSOCK:
+				case WSAEOPNOTSUPP:
+				case WSAESHUTDOWN:
+				case WSAEWOULDBLOCK:
+				case WSAEMSGSIZE:
+				case WSAEHOSTUNREACH:
+				case WSAEINVAL:
+				case WSAECONNABORTED:
+				case WSAECONNRESET:
+				case WSAETIMEDOUT:
+					message = GetErrorMessage(err);
+					break;
+			}
+			closesocket(socket_fd);
+			cerr << message << endl;
+			throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, message);
+		}
+		else if(byteWritten < toSend.size())
+		{
 			int len = toSend.size() - byteWritten;
 			toSend = toSend.substr(byteWritten + sizeof(char), len);
 		}
@@ -140,78 +148,87 @@ void WindowsTcpSocketClient::SendRPCMessage(const std::string& message, std::str
 			fullyWritten = true;
 	} while(!fullyWritten);
 
-	do {
+	do
+	{
 		nbytes = recv(socket_fd, buffer, BUFFER_SIZE, 0);
-                if(nbytes == -1) {
-                    string message = "recv() failed";
-                    int err = WSAGetLastError();
-                    switch(err) {
-                        case WSANOTINITIALISED:
-                        case WSAENETDOWN:
-                        case WSAEFAULT:
-                        case WSAENOTCONN:
-                        case WSAEINTR:
-                        case WSAEINPROGRESS:
-                        case WSAENETRESET:
-                        case WSAENOTSOCK:
-                        case WSAEOPNOTSUPP:
-                        case WSAESHUTDOWN:
-                        case WSAEWOULDBLOCK:
-                        case WSAEMSGSIZE:
-                        case WSAEINVAL:
-                        case WSAECONNABORTED:
-                        case WSAETIMEDOUT:
-                        case WSAECONNRESET:
-                            message = GetErrorMessage(err);
-                            break;
-                    }
-                    closesocket(socket_fd);
-                    cerr << message << endl;
-                    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, message);
-                }
-                else {
-                    string tmp;
-                    tmp.append(buffer, nbytes);
-                    result.append(buffer,nbytes);
-                }
+		if(nbytes == -1)
+		{
+			string message = "recv() failed";
+			int err = WSAGetLastError();
+			switch(err)
+			{
+				case WSANOTINITIALISED:
+				case WSAENETDOWN:
+				case WSAEFAULT:
+				case WSAENOTCONN:
+				case WSAEINTR:
+				case WSAEINPROGRESS:
+				case WSAENETRESET:
+				case WSAENOTSOCK:
+				case WSAEOPNOTSUPP:
+				case WSAESHUTDOWN:
+				case WSAEWOULDBLOCK:
+				case WSAEMSGSIZE:
+				case WSAEINVAL:
+				case WSAECONNABORTED:
+				case WSAETIMEDOUT:
+				case WSAECONNRESET:
+					message = GetErrorMessage(err);
+					break;
+			}
+			closesocket(socket_fd);
+			cerr << message << endl;
+			throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, message);
+		}
+		else
+		{
+			string tmp;
+			tmp.append(buffer, nbytes);
+			result.append(buffer,nbytes);
+		}
 
 	} while(result.find(DELIMITER_CHAR) == string::npos);
 
 	closesocket(socket_fd);
 }
 
-string WindowsTcpSocketClient::GetErrorMessage(const int& e) {
-    LPVOID lpMsgBuf;
-    lpMsgBuf = (LPVOID)"Unknown error";
-    FormatMessage(
-                    FORMAT_MESSAGE_ALLOCATE_BUFFER |
-                    FORMAT_MESSAGE_FROM_SYSTEM |
-                    FORMAT_MESSAGE_IGNORE_INSERTS,
-                    NULL, e,
-                    MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                    (LPTSTR)&lpMsgBuf, 0, NULL);
-    string message(static_cast<char*>(lpMsgBuf));
-    LocalFree(lpMsgBuf);
-    return message;
+string WindowsTcpSocketClient::GetErrorMessage(const int& e)
+{
+	LPVOID lpMsgBuf;
+	lpMsgBuf = (LPVOID)"Unknown error";
+	FormatMessage(
+			FORMAT_MESSAGE_ALLOCATE_BUFFER |
+			FORMAT_MESSAGE_FROM_SYSTEM |
+			FORMAT_MESSAGE_IGNORE_INSERTS,
+			NULL, e,
+			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+			(LPTSTR)&lpMsgBuf, 0, NULL);
+	string message(static_cast<char*>(lpMsgBuf));
+	LocalFree(lpMsgBuf);
+	return message;
 }
 
 //This is inspired from SFML to manage Winsock initialization. Thanks to them! ( http://www.sfml-dev.org/ ).
 struct ClientSocketInitializer
 {
-    ClientSocketInitializer()
-    {
-            WSADATA init;
-            if(WSAStartup(MAKEWORD(2, 2), &init) != 0) {
-                cerr << "An issue occured while WSAStartup executed." << endl;
-            }
-    }
+	ClientSocketInitializer()
 
-    ~ClientSocketInitializer()
-    {
-            if(WSACleanup() != 0) {
-                cerr << "An issue occured while WSAClean executed." << endl;
-            }
-    }
+	{
+		WSADATA init;
+		if(WSAStartup(MAKEWORD(2, 2), &init) != 0)
+		{
+			cerr << "An issue occured while WSAStartup executed." << endl;
+		}
+	}
+
+	~ClientSocketInitializer()
+
+	{
+		if(WSACleanup() != 0)
+		{
+			cerr << "An issue occured while WSAClean executed." << endl;
+		}
+	}
 };
 
 struct ClientSocketInitializer clientGlobalInitializer;

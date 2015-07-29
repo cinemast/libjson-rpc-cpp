@@ -28,7 +28,7 @@ using namespace jsonrpc;
 using namespace std;
 
 UnixDomainSocketClient::UnixDomainSocketClient(const std::string& path)
-    : path(path)
+: path(path)
 {
 }
 
@@ -42,7 +42,8 @@ void UnixDomainSocketClient::SendRPCMessage(const std::string& message, std::str
 	int socket_fd, nbytes;
 	char buffer[BUFFER_SIZE];
 	socket_fd = socket(AF_UNIX, SOCK_STREAM, 0);
-	if (socket_fd < 0) {
+	if (socket_fd < 0)
+	{
 		cerr << "Socket failed" << endl;
 		throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Could not created unix domain socket");
 	}
@@ -52,16 +53,19 @@ void UnixDomainSocketClient::SendRPCMessage(const std::string& message, std::str
 	address.sun_family = AF_UNIX;
 	snprintf(address.sun_path, PATH_MAX, this->path.c_str());
 
-	if(connect(socket_fd, (struct sockaddr *) &address,  sizeof(sockaddr_un)) != 0) {
+	if(connect(socket_fd, (struct sockaddr *) &address,  sizeof(sockaddr_un)) != 0)
+	{
 		cerr << "connect failed" << endl;
 		throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Could not connect to: " + this->path);
 	}
 
 	bool fullyWritten = false;
 	string toSend = message;
-	do {
+	do
+	{
 		ssize_t byteWritten = write(socket_fd, toSend.c_str(), toSend.size());
-		if(byteWritten < toSend.size()) {
+		if(byteWritten < toSend.size())
+		{
 			int len = toSend.size() - byteWritten;
 			toSend = toSend.substr(byteWritten + sizeof(char), len);
 		}
@@ -69,7 +73,8 @@ void UnixDomainSocketClient::SendRPCMessage(const std::string& message, std::str
 			fullyWritten = true;
 	} while(!fullyWritten);
 
-	do {
+	do
+	{
 		nbytes = read(socket_fd, buffer, BUFFER_SIZE);
 		string tmp;
 		tmp.append(buffer, nbytes);

@@ -52,7 +52,8 @@ namespace jsonrpc
 
 			static void* LaunchLoop(void *p_data);
 			void ListenLoop();
-			struct GenerateResponseParameters {
+			struct GenerateResponseParameters
+			{
 				LinuxTcpSocketServer *instance;
 				int connection_fd;
 			};
