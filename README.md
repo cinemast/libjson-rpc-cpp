@@ -29,6 +29,7 @@ Overview
 ![libjson-rpc-cpp logo](https://github.com/cinemast/libjson-rpc-cpp/blob/develop/dev/artwork/overview.png?raw=true)
 
 **TCP Connectors**
+
 The provided TCP Connectors have os-dependent implementation but it is transparent on use. Just use TCPSocketClient and TCPSocketServer classes without bothering about whether you're running on Linux or Windows!
 The TCP Server Connector can bind to a specific address and port. It processes each client requests in a new thread.
 The TCP Client Connector can connect directly to an address on a specific port but it also works with host names : it automatically performs the name resolving.
