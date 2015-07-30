@@ -17,8 +17,8 @@
 namespace jsonrpc
 {
 	/**
-	 * This interface allows to abstract the real TcpSocketServer, either it be Windows, Linux or else.
-	 */
+         * This class is an interface to the real implementation of TcpSocketServer. Kind of a strategy design pattern.
+         */
 	class TcpSocketServerPrivate : public AbstractServerConnector
 	{
 	};

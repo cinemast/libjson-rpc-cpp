@@ -15,6 +15,9 @@
 
 namespace jsonrpc
 {
+        /**
+         * This class is an interface to the real implementation of TcpSocketClient. Kind of a strategy design pattern.
+         */
 	class TcpSocketClientPrivate : public IClientConnector
 	{
 	};
