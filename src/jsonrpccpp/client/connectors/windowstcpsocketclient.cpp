@@ -35,7 +35,7 @@ WindowsTcpSocketClient::~WindowsTcpSocketClient()
 
 void WindowsTcpSocketClient::SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException)
 {
-        SOCKET socket_fd = this->Connect();
+	SOCKET socket_fd = this->Connect();
 	char buffer[BUFFER_SIZE];
 	bool fullyWritten = false;
 	string toSend = message;
@@ -85,7 +85,7 @@ void WindowsTcpSocketClient::SendRPCMessage(const std::string& message, std::str
 
 	do
 	{
-                int nbytes = recv(socket_fd, buffer, BUFFER_SIZE, 0);
+		int nbytes = recv(socket_fd, buffer, BUFFER_SIZE, 0);
 		if(nbytes == -1)
 		{
 			string message = "recv() failed";
@@ -145,57 +145,60 @@ string WindowsTcpSocketClient::GetErrorMessage(const int& e)
 
 SOCKET WindowsTcpSocketClient::Connect() throw (JsonRpcException)
 {
-        if(this->IsIpv4Address(this->hostToConnect))
-        {
-            return this->Connect(this->hostToConnect, this->port);
-        }
-        else //We were given a hostname
-        {
-            struct addrinfo *result = NULL;
-            struct addrinfo hints;
-            memset(&hints, 0, sizeof(struct addrinfo));
-            hints.ai_family = AF_INET;
-            hints.ai_socktype = SOCK_STREAM;
-            hints.ai_protocol = IPPROTO_TCP;
-            char *port = new char[6];
-            port = itoa(this->port, port, 10);
-            DWORD retval = getaddrinfo(this->hostToConnect.c_str(), port, &hints, &result);
-            delete port;
-            if(retval != 0)
-                throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Could not resolve hostname.");
-            
-            bool foundValidIp = false;
-            SOCKET socket_fd = INVALID_SOCKET;
-            for(struct addrinfo *temp = result; (temp != NULL) && !foundValidIp; temp = temp->ai_next)
-            {
-                if(temp->ai_family == AF_INET)
-                {
-                    try {
-                        SOCKADDR_IN* sock = reinterpret_cast<SOCKADDR_IN*>(temp->ai_addr);
-                        socket_fd = this->Connect(inet_ntoa(sock->sin_addr), ntohs(sock->sin_port));
-                        foundValidIp = true;
-                    }
-                    catch(const JsonRpcException& e) {
-                        foundValidIp = false;
-                        socket_fd = INVALID_SOCKET;
-                    }
-                    catch(void* p) {
-                        foundValidIp = false;
-                        socket_fd = INVALID_SOCKET;
-                    }
-                }
-            }
-            
-            if(!foundValidIp)
-                throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Hostname resolved but connection was refused on the given port.");
-            
-            return socket_fd;
-        }
+	if(this->IsIpv4Address(this->hostToConnect))
+	{
+		return this->Connect(this->hostToConnect, this->port);
+	}
+	else //We were given a hostname
+	{
+		struct addrinfo *result = NULL;
+		struct addrinfo hints;
+		memset(&hints, 0, sizeof(struct addrinfo));
+		hints.ai_family = AF_INET;
+		hints.ai_socktype = SOCK_STREAM;
+		hints.ai_protocol = IPPROTO_TCP;
+		char *port = new char[6];
+		port = itoa(this->port, port, 10);
+		DWORD retval = getaddrinfo(this->hostToConnect.c_str(), port, &hints, &result);
+		delete port;
+		if(retval != 0)
+			throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Could not resolve hostname.");
+
+		bool foundValidIp = false;
+		SOCKET socket_fd = INVALID_SOCKET;
+		for(struct addrinfo *temp = result; (temp != NULL) && !foundValidIp; temp = temp->ai_next)
+		{
+			if(temp->ai_family == AF_INET)
+			{
+				try
+				{
+					SOCKADDR_IN* sock = reinterpret_cast<SOCKADDR_IN*>(temp->ai_addr);
+					socket_fd = this->Connect(inet_ntoa(sock->sin_addr), ntohs(sock->sin_port));
+					foundValidIp = true;
+				}
+				catch(const JsonRpcException& e)
+				{
+					foundValidIp = false;
+					socket_fd = INVALID_SOCKET;
+				}
+				catch(void* p)
+				{
+					foundValidIp = false;
+					socket_fd = INVALID_SOCKET;
+				}
+			}
+		}
+
+		if(!foundValidIp)
+			throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Hostname resolved but connection was refused on the given port.");
+
+		return socket_fd;
+	}
 }
 
 SOCKET WindowsTcpSocketClient::Connect(const string& ip, const int& port) throw (JsonRpcException)
 {
-        SOCKADDR_IN address;
+	SOCKADDR_IN address;
 	SOCKET socket_fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (socket_fd == INVALID_SOCKET)
 	{
@@ -258,12 +261,12 @@ SOCKET WindowsTcpSocketClient::Connect(const string& ip, const int& port) throw 
 		cerr << message << endl;
 		throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, message);
 	}
-        return socket_fd;
+	return socket_fd;
 }
 
 bool WindowsTcpSocketClient::IsIpv4Address(const std::string& ip)
 {
-    return (inet_addr(ip.c_str()) != INADDR_NONE);
+	return (inet_addr(ip.c_str()) != INADDR_NONE);
 }
 
 //This is inspired from SFML to manage Winsock initialization. Thanks to them! ( http://www.sfml-dev.org/ ).

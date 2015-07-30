@@ -41,8 +41,8 @@ LinuxTcpSocketClient::~LinuxTcpSocketClient()
 
 void LinuxTcpSocketClient::SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException)
 {
-        int socket_fd = this->Connect();
-        char buffer[BUFFER_SIZE];
+	int socket_fd = this->Connect();
+	char buffer[BUFFER_SIZE];
 
 	bool fullyWritten = false;
 	string toSend = message;
@@ -125,56 +125,59 @@ void LinuxTcpSocketClient::SendRPCMessage(const std::string& message, std::strin
 
 int LinuxTcpSocketClient::Connect() throw (JsonRpcException)
 {
-        if(this->IsIpv4Address(this->hostToConnect))
-        {
-            return this->Connect(this->hostToConnect, this->port);
-        }
-        else //We were given a hostname
-        {
-            struct addrinfo *result = NULL;
-            struct addrinfo hints;
-            memset(&hints, 0, sizeof(struct addrinfo));
-            hints.ai_family = AF_INET;
-            hints.ai_socktype = SOCK_STREAM;
-            hints.ai_protocol = IPPROTO_TCP;
-            char *port = new char[6];
-            snprintf(port, 6, "%d", this->port);
-            int retval = getaddrinfo(this->hostToConnect.c_str(), port, &hints, &result);
-            delete port;
-            if(retval != 0)
-                throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Could not resolve hostname.");
-            bool foundValidIp = false;
-            int socket_fd;
-            for(struct addrinfo *temp = result; (temp != NULL) && !foundValidIp; temp = temp->ai_next)
-            {
-                if(temp->ai_family == AF_INET)
-                {
-                    try {
-                        sockaddr_in* sock = reinterpret_cast<sockaddr_in*>(temp->ai_addr);
-                        socket_fd = this->Connect(inet_ntoa(sock->sin_addr), ntohs(sock->sin_port));
-                        foundValidIp = true;
-                    }
-                    catch(const JsonRpcException& e) {
-                        foundValidIp = false;
-                        socket_fd = -1;
-                    }
-                    catch(void* p) {
-                        foundValidIp = false;
-                        socket_fd = -1;
-                    }
-                }
-            }
-            
-            if(!foundValidIp)
-                throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Hostname resolved but connection was refused on the given port.");
-            
-            return socket_fd;
-        }
+	if(this->IsIpv4Address(this->hostToConnect))
+	{
+		return this->Connect(this->hostToConnect, this->port);
+	}
+	else //We were given a hostname
+	{
+		struct addrinfo *result = NULL;
+		struct addrinfo hints;
+		memset(&hints, 0, sizeof(struct addrinfo));
+		hints.ai_family = AF_INET;
+		hints.ai_socktype = SOCK_STREAM;
+		hints.ai_protocol = IPPROTO_TCP;
+		char *port = new char[6];
+		snprintf(port, 6, "%d", this->port);
+		int retval = getaddrinfo(this->hostToConnect.c_str(), port, &hints, &result);
+		delete port;
+		if(retval != 0)
+			throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Could not resolve hostname.");
+		bool foundValidIp = false;
+		int socket_fd;
+		for(struct addrinfo *temp = result; (temp != NULL) && !foundValidIp; temp = temp->ai_next)
+		{
+			if(temp->ai_family == AF_INET)
+			{
+				try
+				{
+					sockaddr_in* sock = reinterpret_cast<sockaddr_in*>(temp->ai_addr);
+					socket_fd = this->Connect(inet_ntoa(sock->sin_addr), ntohs(sock->sin_port));
+					foundValidIp = true;
+				}
+				catch(const JsonRpcException& e)
+				{
+					foundValidIp = false;
+					socket_fd = -1;
+				}
+				catch(void* p)
+				{
+					foundValidIp = false;
+					socket_fd = -1;
+				}
+			}
+		}
+
+		if(!foundValidIp)
+			throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Hostname resolved but connection was refused on the given port.");
+
+		return socket_fd;
+	}
 }
 
 int LinuxTcpSocketClient::Connect(const string& ip, const int& port) throw (JsonRpcException)
 {
-        sockaddr_in address;
+	sockaddr_in address;
 	int socket_fd;
 	socket_fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (socket_fd < 0)
@@ -229,11 +232,11 @@ int LinuxTcpSocketClient::Connect(const string& ip, const int& port) throw (Json
 		cerr << message << endl;
 		throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, message);
 	}
-        return socket_fd;
+	return socket_fd;
 }
 
 bool LinuxTcpSocketClient::IsIpv4Address(const std::string& ip)
 {
-    struct in_addr addr;
-    return (inet_aton(ip.c_str(), &addr) != 0);
+	struct in_addr addr;
+	return (inet_aton(ip.c_str(), &addr) != 0);
 }

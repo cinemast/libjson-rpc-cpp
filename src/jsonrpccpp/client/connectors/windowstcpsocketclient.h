@@ -17,43 +17,43 @@
 
 namespace jsonrpc
 {
-        /**
-         * This class is the windows implementation of TCPSocketClient.
-         * It uses the Winsock2 API to performs its job.
-         */
+	/**
+	 * This class is the windows implementation of TCPSocketClient.
+	 * It uses the Winsock2 API to performs its job.
+	 */
 	class WindowsTcpSocketClient : public TcpSocketClientPrivate
 	{
 		public:
-                        /**
-                         * @brief WindowsTcpSocketClient, constructor of the Windows implementation of class TcpSocketClient
-                         * @param hostToConnect The hostname or the ipv4 address on which the client should try to connect
-                         * @param port The port on which the client should try to connect
-                         */
+			/**
+			 * @brief WindowsTcpSocketClient, constructor of the Windows implementation of class TcpSocketClient
+			 * @param hostToConnect The hostname or the ipv4 address on which the client should try to connect
+			 * @param port The port on which the client should try to connect
+			 */
 			WindowsTcpSocketClient(const std::string& hostToConnect, const unsigned int &port);
-                        /**
-                         * @brief ~WindowsTcpSocketClient, the destructor of WindowsTcpSocketClient
-                         */
+			/**
+			 * @brief ~WindowsTcpSocketClient, the destructor of WindowsTcpSocketClient
+			 */
 			virtual ~WindowsTcpSocketClient();
-                        /**
-                         * @brief The real implementation of TcpSocketClient::SendRPCMessage method.
-                         * @param message The message to send
-                         * @param result The result of the call returned by the server
-                         * @throw JsonRpcException Thrown when an issue is encounter with socket manipulation (see message of exception for more information about what happened).
-                         */
+			/**
+			 * @brief The real implementation of TcpSocketClient::SendRPCMessage method.
+			 * @param message The message to send
+			 * @param result The result of the call returned by the server
+			 * @throw JsonRpcException Thrown when an issue is encounter with socket manipulation (see message of exception for more information about what happened).
+			 */
 			virtual void SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException);
 
 		private:
 			std::string hostToConnect;    /*!< The hostname or the ipv4 address on which the client should try to connect*/
 			unsigned int port;          /*!< The port on which the client should try to connect*/
-                        /**
-                         * @brief A method to produce human readable messages from Winsock2 error values.
-                         * @param e A Winsock2 error value
-                         * @return The message matching the error value
-                         */
+			/**
+			 * @brief A method to produce human readable messages from Winsock2 error values.
+			 * @param e A Winsock2 error value
+			 * @return The message matching the error value
+			 */
 			static std::string GetErrorMessage(const int &e);
-                        SOCKET Connect() throw (JsonRpcException);
-                        SOCKET Connect(const std::string& ip, const int& port) throw (JsonRpcException);
-                        bool IsIpv4Address(const std::string& ip);
+			SOCKET Connect() throw (JsonRpcException);
+			SOCKET Connect(const std::string& ip, const int& port) throw (JsonRpcException);
+			bool IsIpv4Address(const std::string& ip);
 	};
 
 } /* namespace jsonrpc */
