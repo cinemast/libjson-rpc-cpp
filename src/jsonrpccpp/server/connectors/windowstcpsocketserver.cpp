@@ -54,6 +54,8 @@ bool WindowsTcpSocketServer::StartListening()
 		}
 		unsigned long nonBlocking = 1;
 		ioctlsocket(this->socket_fd, FIONBIO, &nonBlocking); //Set non blocking
+                int reuseaddr = 1;
+                setsockopt(this->socket_fd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, sizeof(reuseaddr));
 
 		/* start with a clean address structure */
 		memset(&(this->address), 0, sizeof(SOCKADDR_IN));
