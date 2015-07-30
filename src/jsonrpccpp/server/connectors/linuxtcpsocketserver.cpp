@@ -230,7 +230,7 @@ bool LinuxTcpSocketServer::WaitClientClose(const int& fd, const int &timeout)
 {
 	bool ret = false;
 	int i = 0;
-	while((recv(fd, NULL, NULL, 0) != 0) && i < timeout)
+	while((recv(fd, NULL, 0, 0) != 0) && i < timeout)
 	{
 		usleep(1);
 		++i;
