@@ -54,6 +54,8 @@ bool LinuxTcpSocketServer::StartListening()
 		}
 
 		fcntl(this->socket_fd, F_SETFL, FNDELAY);
+		int reuseaddr = 1;
+		setsockopt(this->socket_fd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, sizeof(reuseaddr));
 
 		/* start with a clean address structure */
 		memset(&(this->address), 0, sizeof(struct sockaddr_in));
