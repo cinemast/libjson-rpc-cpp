@@ -37,15 +37,41 @@ namespace jsonrpc
 			 * @brief The real implementation of TcpSocketClient::SendRPCMessage method.
 			 * @param message The message to send
 			 * @param result The result of the call returned by the server
-			 * @throw JsonRpcException Thrown when an issue is encounter with socket manipulation (see message of exception for more information about what happened).
+			 * @throw JsonRpcException Thrown when an issue is encountered with socket manipulation (see message of exception for more information about what happened).
 			 */
 			virtual void SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException);
 
 		private:
 			std::string hostToConnect;    /*!< The hostname or the ipv4 address on which the client should try to connect*/
 			unsigned int port;          /*!< The port on which the client should try to connect*/
+			/**
+			 * @brief Connects to the host and port provided by constructor parameters.
+			 * 
+			 * This method detects if the hostToConnect attribute is either an IPv4 or a hostname.
+			 * On first case it tries to connect to the ip.
+			 * On second case it tries to resolve hostname to an ip and tries to connect to it if resolve was successful.
+			 * 
+			 * @returns A file descriptor to the successfully connected socket
+			 * @throw JsonRpcException Thrown when an issue is encountered while trying to connect (see message of exception for more information about what happened).
+			 */
 			int Connect() throw (JsonRpcException);
+			/**
+			 * @brief Connects to provided ip and port.
+			 * 
+			 * This method tries to connect to the provided ip and port.
+			 * 
+			 * @param ip The ipv4 address to connect to
+			 * @param port The port to connect to
+			 * @returns A file descriptor to the successfully connected socket
+			 * @throw JsonRpcException Thrown when an issue is encountered while trying to connect (see message of exception for more information about what happened).
+			 */
 			int Connect(const std::string& ip, const int& port) throw (JsonRpcException);
+			/**
+			 * @brief Check if provided ip is an ipv4 address.
+			 * 
+			 * @param ip The ipv4 address to check
+			 * @returns A boolean indicating if the provided ip is or is not an ipv4 address
+			 */
 			bool IsIpv4Address(const std::string& ip);
 	};
 
