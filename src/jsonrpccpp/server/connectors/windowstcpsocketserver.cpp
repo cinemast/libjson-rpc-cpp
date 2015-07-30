@@ -207,7 +207,7 @@ DWORD WINAPI WindowsTcpSocketServer::GenerateResponse(LPVOID lp_data)
 	return 0; //DO NOT USE ExitThread function here! ExitThread does not call destructors for allocated objects and therefore it would lead to a memory leak.
 }
 
-bool WindowsTcpSocketServer::WriteToSocket(SOCKET fd, const string& toWrite)
+bool WindowsTcpSocketServer::WriteToSocket(const SOCKET& fd, const string& toWrite)
 {
 	bool fullyWritten = false;
 	bool errorOccured = false;
@@ -232,7 +232,7 @@ bool WindowsTcpSocketServer::WriteToSocket(SOCKET fd, const string& toWrite)
 	return fullyWritten && !errorOccured;
 }
 
-bool WindowsTcpSocketServer::WaitClientClose(SOCKET fd, const int &timeout)
+bool WindowsTcpSocketServer::WaitClientClose(const SOCKET& fd, const int &timeout)
 {
 	bool ret = false;
 	int i = 0;
@@ -246,7 +246,7 @@ bool WindowsTcpSocketServer::WaitClientClose(SOCKET fd, const int &timeout)
 	return ret;
 }
 
-int WindowsTcpSocketServer::CloseByReset(SOCKET fd)
+int WindowsTcpSocketServer::CloseByReset(const SOCKET& fd)
 {
 	struct linger so_linger;
 	so_linger.l_onoff = 1;
@@ -259,7 +259,7 @@ int WindowsTcpSocketServer::CloseByReset(SOCKET fd)
 	return closesocket(fd);
 }
 
-int WindowsTcpSocketServer::CleanClose(SOCKET fd)
+int WindowsTcpSocketServer::CleanClose(const SOCKET& fd)
 {
 	if(WaitClientClose(fd))
 	{

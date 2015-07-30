@@ -106,7 +106,7 @@ namespace jsonrpc
                          * @param toSend The message to send over socket
                          * @returns A boolean indicating the success or the failure of the operation
                          */
-			bool WriteToSocket(SOCKET fd, const std::string& toSend);
+			bool WriteToSocket(const SOCKET& fd, const std::string& toSend);
                         /**
                          * @brief A method that wait for the client to close the tcp session
                          * 
@@ -117,7 +117,7 @@ namespace jsonrpc
                          * @param timeout The maximum time the server will wait for the client to close the tcp session in milliseconds.
                          * @returns A boolean indicating the success or the failure of the operation
                          */
-			bool WaitClientClose(SOCKET fd, const int &timeout = 100);
+			bool WaitClientClose(const SOCKET& fd, const int &timeout = 100);
                         /**
                          * @brief A method that close a socket by reseting it
                          * 
@@ -125,7 +125,7 @@ namespace jsonrpc
                          * @param fd The file descriptor of the socket that should be reset
                          * @returns The return value of POSIX close() method
                          */
-			int CloseByReset(SOCKET fd);
+			int CloseByReset(const SOCKET& fd);
                         /**
                          * @brief A method that cleanly close a socket by avoid TIME_WAIT state
                          * 
@@ -134,7 +134,7 @@ namespace jsonrpc
                          * @param fd The file descriptor of the socket that should be cleanly closed
                          * @returns The return value of POSIX close() method
                          */
-			int CleanClose(SOCKET fd);
+			int CleanClose(const SOCKET& fd);
 	};
 
 } /* namespace jsonrpc */
