@@ -201,7 +201,7 @@ void* LinuxTcpSocketServer::GenerateResponse(void *p_data)
 }
 
 
-bool LinuxTcpSocketServer::WriteToSocket(int fd, const string& toWrite)
+bool LinuxTcpSocketServer::WriteToSocket(const int& fd, const string& toWrite)
 {
 	bool fullyWritten = false;
 	bool errorOccured = false;
@@ -226,7 +226,7 @@ bool LinuxTcpSocketServer::WriteToSocket(int fd, const string& toWrite)
 	return fullyWritten && !errorOccured;
 }
 
-bool LinuxTcpSocketServer::WaitClientClose(int fd, const int &timeout)
+bool LinuxTcpSocketServer::WaitClientClose(const int& fd, const int &timeout)
 {
 	bool ret = false;
 	int i = 0;
@@ -240,7 +240,7 @@ bool LinuxTcpSocketServer::WaitClientClose(int fd, const int &timeout)
 	return ret;
 }
 
-int LinuxTcpSocketServer::CloseByReset(int fd)
+int LinuxTcpSocketServer::CloseByReset(const int& fd)
 {
 	struct linger so_linger;
 	so_linger.l_onoff = 1;
@@ -253,7 +253,7 @@ int LinuxTcpSocketServer::CloseByReset(int fd)
 	return close(fd);
 }
 
-int LinuxTcpSocketServer::CleanClose(int fd)
+int LinuxTcpSocketServer::CleanClose(const int& fd)
 {
 	if(WaitClientClose(fd))
 	{
