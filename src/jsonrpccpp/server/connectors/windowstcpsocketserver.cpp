@@ -55,7 +55,7 @@ bool WindowsTcpSocketServer::StartListening()
 		unsigned long nonBlocking = 1;
 		ioctlsocket(this->socket_fd, FIONBIO, &nonBlocking); //Set non blocking
                 int reuseaddr = 1;
-                setsockopt(this->socket_fd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, sizeof(reuseaddr));
+                setsockopt(this->socket_fd, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<char*>(&reuseaddr), sizeof(reuseaddr));
 
 		/* start with a clean address structure */
 		memset(&(this->address), 0, sizeof(SOCKADDR_IN));
@@ -236,7 +236,7 @@ bool WindowsTcpSocketServer::WaitClientClose(const SOCKET& fd, const int &timeou
 {
 	bool ret = false;
 	int i = 0;
-	while((recv(fd, NULL, NULL, 0) != 0) && i < timeout)
+	while((recv(fd, NULL, 0, 0) != 0) && i < timeout)
 	{
 		Sleep(1);
 		++i;
