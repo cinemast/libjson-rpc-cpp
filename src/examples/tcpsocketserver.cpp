@@ -47,17 +47,20 @@ int main(int argc, char** argv)
                 string ip;
                 unsigned int port;
                 
-                if(argc == 3) {
+                if(argc == 3)
+                {
                     ip = string(argv[1]);
                     port = atoi(argv[2]);
-                    cout << "Params are :" << endl;
-                    cout << "\t ip: " << ip << endl;
-                    cout << "\t port: " << port << endl;
                 }
-                else {
+                else
+                {
                     ip = "127.0.0.1";
                     port = 6543;
                 }
+                
+                cout << "Params are :" << endl;
+                cout << "\t ip: " << ip << endl;
+                cout << "\t port: " << port << endl;
                 
 		TcpSocketServer server(ip, port);
 		SampleServer serv(server);

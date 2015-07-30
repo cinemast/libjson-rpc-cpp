@@ -15,22 +15,24 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-        string ip;
+        string host;
         unsigned int port;
 
         if(argc == 3) {
-            ip = string(argv[1]);
-            port = atoi(argv[2]);
-            cout << "Params are :" << endl;
-            cout << "\t ip: " << ip << endl;
-            cout << "\t port: " << port << endl;
+                host = string(argv[1]);
+                port = atoi(argv[2]);
         }
         else {
-            ip = "127.0.0.1";
-            port = 6543;
+                host = "127.0.0.1";
+                port = 6543;
         }
         
-	TcpSocketClient client(ip, port);
+        
+        cout << "Params are :" << endl;
+        cout << "\t host: " << host << endl;
+        cout << "\t port: " << port << endl;
+        
+	TcpSocketClient client(host, port);
 	Client c(client);
 
 	Json::Value params;
