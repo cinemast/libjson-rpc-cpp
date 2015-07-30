@@ -13,6 +13,7 @@
 #include <jsonrpccpp/common/exception.h>
 #include <string>
 #include "tcpsocketclientprivate.h"
+#include <winsock2.h>
 
 namespace jsonrpc
 {
@@ -25,10 +26,10 @@ namespace jsonrpc
 		public:
                         /**
                          * @brief WindowsTcpSocketClient, constructor of the Windows implementation of class TcpSocketClient
-                         * @param ipToConnect The ipv4 address on which the client should try to connect
+                         * @param hostToConnect The hostname or the ipv4 address on which the client should try to connect
                          * @param port The port on which the client should try to connect
                          */
-			WindowsTcpSocketClient(const std::string& ipToConnect, const unsigned int &port);
+			WindowsTcpSocketClient(const std::string& hostToConnect, const unsigned int &port);
                         /**
                          * @brief ~WindowsTcpSocketClient, the destructor of WindowsTcpSocketClient
                          */
@@ -42,7 +43,7 @@ namespace jsonrpc
 			virtual void SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException);
 
 		private:
-			std::string ipToConnect;    /*!< The ipv4 address on which the client should try to connect*/
+			std::string hostToConnect;    /*!< The hostname or the ipv4 address on which the client should try to connect*/
 			unsigned int port;          /*!< The port on which the client should try to connect*/
                         /**
                          * @brief A method to produce human readable messages from Winsock2 error values.
@@ -50,6 +51,9 @@ namespace jsonrpc
                          * @return The message matching the error value
                          */
 			static std::string GetErrorMessage(const int &e);
+                        SOCKET Connect() throw (JsonRpcException);
+                        SOCKET Connect(const std::string& ip, const int& port) throw (JsonRpcException);
+                        bool IsIpv4Address(const std::string& ip);
 	};
 
 } /* namespace jsonrpc */
