@@ -25,10 +25,10 @@ namespace jsonrpc
 		public:
                         /**
                          * @brief LinuxTcpSocketClient, constructor of the Linux/UNIX implementation of class TcpSocketClient
-                         * @param ipToConnect The ipv4 address on which the client should try to connect
+                         * @param hostToConnect The hostname or the ipv4 address on which the client should try to connect
                          * @param port The port on which the client should try to connect
                          */
-			LinuxTcpSocketClient(const std::string& ipToConnect, const unsigned int &port);
+			LinuxTcpSocketClient(const std::string& hostToConnect, const unsigned int &port);
                         /**
                          * @brief ~LinuxTcpSocketClient, the destructor of LinuxTcpSocketClient
                          */
@@ -42,8 +42,11 @@ namespace jsonrpc
 			virtual void SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException);
 
 		private:
-			std::string ipToConnect;    /*!< The ipv4 address on which the client should try to connect*/
+			std::string hostToConnect;    /*!< The hostname or the ipv4 address on which the client should try to connect*/
 			unsigned int port;          /*!< The port on which the client should try to connect*/
+                        int Connect() throw (JsonRpcException);
+                        int Connect(const std::string& ip, const int& port) throw (JsonRpcException);
+                        bool IsIpv4Address(const std::string& ip);
 	};
 
 } /* namespace jsonrpc */
