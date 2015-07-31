@@ -78,7 +78,7 @@ void LinuxTcpSocketClient::SendRPCMessage(const std::string& message, std::strin
 			cerr << message << endl;
 			throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, message);
 		}
-		else if(byteWritten < toSend.size())
+		else if(static_cast<size_t>(byteWritten) < toSend.size())
 		{
 			int len = toSend.size() - byteWritten;
 			toSend = toSend.substr(byteWritten + sizeof(char), len);
