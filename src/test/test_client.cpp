@@ -55,7 +55,17 @@ namespace testclient {
 }
 using namespace testclient;
 
+TEST_CASE_METHOD(F, "test_client_id", TEST_MODULE)
+{
+    params.append(33);
+    c.SetResponse("{\"jsonrpc\":\"2.0\", \"id\": \"1\", \"result\": 23}");
+    Json::Value response = client.CallMethod("abcd", params);
+    CHECK(response.asInt() == 23);
 
+    c.SetResponse("{\"jsonrpc\":\"2.0\", \"id\": 1, \"result\": 24}");
+    response = client.CallMethod("abcd", params);
+    CHECK(response.asInt() == 24);
+}
 
 TEST_CASE_METHOD(F, "test_client_v2_method_success", TEST_MODULE)
 {

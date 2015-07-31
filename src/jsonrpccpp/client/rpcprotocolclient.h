@@ -58,7 +58,7 @@ namespace jsonrpc {
              * @param result
              * @return response id
              */
-            int HandleResponse(const Json::Value &response, Json::Value &result) throw (JsonRpcException);
+            Json::Value HandleResponse(const Json::Value &response, Json::Value &result) throw (JsonRpcException);
 
             static const std::string KEY_PROTOCOL_VERSION;
             static const std::string KEY_PROCEDURE_NAME;

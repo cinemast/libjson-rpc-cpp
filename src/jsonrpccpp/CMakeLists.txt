@@ -37,6 +37,7 @@ if (HTTP_CLIENT)
 	list(APPEND client_connector_header "client/connectors/httpclient.h")
 	list(APPEND client_connector_source "client/connectors/httpclient.cpp")
 	list(APPEND client_connector_libs ${CURL_LIBRARIES})
+    include_directories(${CURL_INCLUDE_DIRS})
 endif()
 
 if (HTTP_SERVER)
