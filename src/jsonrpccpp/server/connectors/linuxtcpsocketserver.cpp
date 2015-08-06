@@ -34,9 +34,9 @@ using namespace std;
 
 LinuxTcpSocketServer::LinuxTcpSocketServer(const std::string& ipToBind, const unsigned int &port) :
 	TcpSocketServerPrivate(),
+    running(false),
 	ipToBind(ipToBind),
-	port(port),
-	running(false)
+    port(port)
 {
 }
 
