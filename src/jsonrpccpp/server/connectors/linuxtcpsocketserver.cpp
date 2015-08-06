@@ -33,7 +33,7 @@ using namespace std;
 #endif //DELIMITER_CHAR
 
 LinuxTcpSocketServer::LinuxTcpSocketServer(const std::string& ipToBind, const unsigned int &port) :
-	TcpSocketServerPrivate(),
+    AbstractServerConnector(),
     running(false),
 	ipToBind(ipToBind),
     port(port)

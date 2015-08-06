@@ -20,7 +20,7 @@
 #include <arpa/inet.h>
 #include <pthread.h>
 
-#include "tcpsocketserverprivate.h"
+#include "../abstractserverconnector.h"
 
 namespace jsonrpc
 {
@@ -29,7 +29,7 @@ namespace jsonrpc
          * It uses the POSIX socket API and POSIX thread API to performs its job.
          * Each client request is handled in a new thread.
          */
-	class LinuxTcpSocketServer: public TcpSocketServerPrivate
+    class LinuxTcpSocketServer: public AbstractServerConnector
 	{
 		public:
 			/**

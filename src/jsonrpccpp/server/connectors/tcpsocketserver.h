@@ -10,8 +10,6 @@
 #ifndef JSONRPC_CPP_TCPSOCKETSERVERCONNECTOR_H_
 #define JSONRPC_CPP_TCPSOCKETSERVERCONNECTOR_H_
 
-#include "tcpsocketserverprivate.h"
-
 #include "../abstractserverconnector.h"
 
 namespace jsonrpc
@@ -74,7 +72,7 @@ namespace jsonrpc
 			bool SendResponse(const std::string& response, void* addInfo = NULL);
 
 		private:
-			TcpSocketServerPrivate *realSocket; /*!< A pointer to the real implementation of this class depending of running OS*/
+            AbstractServerConnector *realSocket; /*!< A pointer to the real implementation of this class depending of running OS*/
 	};
 
 } /* namespace jsonrpc */
