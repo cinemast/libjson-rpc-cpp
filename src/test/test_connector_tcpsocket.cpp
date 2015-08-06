@@ -1,16 +1,16 @@
 /*************************************************************************
  * libjson-rpc-cpp
  *************************************************************************
- * @file    test_connector_unixdomainsocket.cpp
- * @date    6/8/2015
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
+ * @file    test_connector_tcpsocket.cpp
+ * @date    27/07/2015
+ * @author  Alexandre Poirot <alexandre.poirot@legrand.fr>
  * @license See attached LICENSE.txt
  ************************************************************************/
 
-#ifdef UNIXDOMAINSOCKET_TESTING
+#ifdef TCPSOCKET_TESTING
 #include <catch.hpp>
-#include <jsonrpccpp/server/connectors/unixdomainsocketserver.h>
-#include <jsonrpccpp/client/connectors/unixdomainsocketclient.h>
+#include <jsonrpccpp/server/connectors/tcpsocketserver.h>
+#include <jsonrpccpp/client/connectors/tcpsocketclient.h>
 #include "mockclientconnectionhandler.h"
 
 #include "checkexception.h"
@@ -22,20 +22,21 @@ using namespace std;
     #define DELIMITER_CHAR char(0x0A)
 #endif
 
-#define TEST_MODULE "[connector_unixdomainsocket]"
+#define TEST_MODULE "[connector_tcpsocket]"
 
-#define SOCKET_PATH "/tmp/jsonrpccpp-socket"
+#define IP "127.0.0.1"
+#define PORT 50000
 
-namespace testunixdomainsocketserver
+namespace testtcpsocketserver
 {
     struct F {
-            UnixDomainSocketServer server;
-            UnixDomainSocketClient client;
+            TcpSocketServer server;
+            TcpSocketClient client;
             MockClientConnectionHandler handler;
 
             F() :
-                server(SOCKET_PATH),
-                client(SOCKET_PATH)
+                server(IP, PORT),
+                client(IP, PORT)
             {
                 server.SetHandler(&handler);
                 REQUIRE(server.StartListening());
@@ -43,7 +44,6 @@ namespace testunixdomainsocketserver
             ~F()
             {
                 server.StopListening();
-                unlink(SOCKET_PATH);
             }
     };
 
@@ -52,9 +52,9 @@ namespace testunixdomainsocketserver
         return ex.GetCode() == Errors::ERROR_CLIENT_CONNECTOR;
     }
 }
-using namespace testunixdomainsocketserver;
+using namespace testtcpsocketserver;
 
-TEST_CASE_METHOD(F, "test_unixdomainsocket_success", TEST_MODULE)
+TEST_CASE_METHOD(F, "test_tcpsocket_success", TEST_MODULE)
 {
     handler.response = "exampleresponse";
     handler.timeout = 100;
@@ -70,25 +70,23 @@ TEST_CASE_METHOD(F, "test_unixdomainsocket_success", TEST_MODULE)
     CHECK(result == expectedResult);
 }
 
-
-TEST_CASE("test_unixdomainsocket_server_multiplestart", TEST_MODULE)
+TEST_CASE("test_tcpsocket_server_multiplestart", TEST_MODULE)
 {
-    UnixDomainSocketServer server(SOCKET_PATH);
+    TcpSocketServer server(IP, PORT);
     CHECK(server.StartListening() == true);
     CHECK(server.StartListening() == false);
 
-    UnixDomainSocketServer server2(SOCKET_PATH);
+    TcpSocketServer server2(IP, PORT);
     CHECK(server2.StartListening() == false);
     CHECK(server2.StopListening() == false);
 
     CHECK(server.StopListening() == true);
-
-    unlink(SOCKET_PATH);
 }
 
-TEST_CASE("test_unixdomainsocket_client_invalid", TEST_MODULE)
+
+TEST_CASE("test_tcpsocket_client_invalid", TEST_MODULE)
 {
-    UnixDomainSocketClient client("tmp/someinvalidpath");
+    TcpSocketClient client("127.0.0.1", 40000); //If this test fails, check that port 40000 is really unused. If it is used, change this port value to an unused port, recompile tests and run tests again.
     string result;
     CHECK_EXCEPTION_TYPE(client.SendRPCMessage("foobar", result), JsonRpcException, check_exception1);
 }

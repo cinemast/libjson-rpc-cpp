@@ -23,6 +23,10 @@ if(UNIX_DOMAIN_SOCKET_SERVER AND UNIX_DOMAIN_SOCKET_CLIENT)
     add_definitions(-DUNIXDOMAINSOCKET_TESTING)
 endif()
 
+if(TCP_SOCKET_SERVER AND TCP_SOCKET_CLIENT)
+    add_definitions(-DTCPSOCKET_TESTING)
+endif()
+
 if(COMPILE_STUBGEN)
 	add_definitions(-DSTUBGEN_TESTING)
 endif()
@@ -49,6 +53,10 @@ endif()
 
 if (UNIX_DOMAIN_SOCKET_CLIENT AND UNIX_DOMAIN_SOCKET_SERVER)
         add_test(NAME connector_unixdomainsocket WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite "[connector_unixdomainsocket]")
+endif()
+
+if (TCP_SOCKET_CLIENT AND TCP_SOCKET_SERVER)
+        add_test(NAME connector_tcpsocket WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite "[connector_tcpsocket]")
 endif()
 
 if(COMPILE_STUBGEN)

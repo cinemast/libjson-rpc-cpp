@@ -25,9 +25,11 @@ endif()
 
 # defaults for modules that can be enabled/disabled
 if(UNIX)
-        set(UNIX_DOMAIN_SOCKET_SERVER YES CACHE BOOL "Include Unix Domain Socket server")
-        set(UNIX_DOMAIN_SOCKET_CLIENT YES CACHE BOOL "Include Unix Domain Socket client")
+	set(UNIX_DOMAIN_SOCKET_SERVER YES CACHE BOOL "Include Unix Domain Socket server")
+	set(UNIX_DOMAIN_SOCKET_CLIENT YES CACHE BOOL "Include Unix Domain Socket client")
 endif(UNIX)
+set(TCP_SOCKET_SERVER YES CACHE BOOL "Include Tcp Socket server")
+set(TCP_SOCKET_CLIENT YES CACHE BOOL "Include Tcp Socket client")
 set(HTTP_SERVER YES CACHE BOOL "Include HTTP server using libmicrohttpd")
 set(HTTP_CLIENT YES CACHE BOOL "Include HTTP client support using curl")
 set(COMPILE_TESTS YES CACHE BOOL "Compile test framework")
@@ -35,6 +37,12 @@ set(COMPILE_STUBGEN YES CACHE BOOL "Compile the stubgenerator")
 set(COMPILE_EXAMPLES YES CACHE BOOL "Compile example programs")
 
 # print actual settings
+if(UNIX)
+	message(STATUS "UNIX_DOMAIN_SOCKET_SERVER: ${UNIX_DOMAIN_SOCKET_SERVER}")
+	message(STATUS "UNIX_DOMAIN_SOCKET_CLIENT: ${UNIX_DOMAIN_SOCKET_CLIENT}")
+endif(UNIX)
+message(STATUS "TCP_SOCKET_SERVER: ${TCP_SOCKET_SERVER}")
+message(STATUS "TCP_SOCKET_CLIENT: ${TCP_SOCKET_CLIENT}")
 message(STATUS "HTTP_SERVER: ${HTTP_SERVER}")
 message(STATUS "HTTP_CLIENT: ${HTTP_CLIENT}")
 if(UNIX)
@@ -65,6 +73,22 @@ endif()
 include_directories("${CMAKE_BINARY_DIR}/gen/")
 include_directories("${CMAKE_BINARY_DIR}/gen/jsonrpccpp/common")
 
+#set pkg-config
+find_package(PkgConfig)
+get_filename_component(FULL_PATH_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} ABSOLUTE)
+set(PROJECT_VERSION "${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}")
+set(PKG_CONFIG_REQUIRES jsoncpp)
+set(FULL_PATH_EXEC_PREFIX "${FULL_PATH_INSTALL_PREFIX}")
+set(FULL_PATH_INCLUDEDIR "${FULL_PATH_INSTALL_PREFIX}/include")
+set(FULL_PATH_LIBDIR "${FULL_PATH_INSTALL_PREFIX}/lib")
+
+CONFIGURE_FILE(
+  "${CMAKE_CURRENT_SOURCE_DIR}/libjson-rpc-cpp.pc.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/libjson-rpc-cpp.pc"
+)
+
+INSTALL(FILES "${CMAKE_BINARY_DIR}/libjson-rpc-cpp.pc"
+        DESTINATION lib/pkgconfig)
 # the core framework
 add_subdirectory(src/jsonrpccpp)
 
