@@ -73,22 +73,6 @@ endif()
 include_directories("${CMAKE_BINARY_DIR}/gen/")
 include_directories("${CMAKE_BINARY_DIR}/gen/jsonrpccpp/common")
 
-#set pkg-config
-find_package(PkgConfig)
-get_filename_component(FULL_PATH_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} ABSOLUTE)
-set(PROJECT_VERSION "${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}")
-set(PKG_CONFIG_REQUIRES jsoncpp)
-set(FULL_PATH_EXEC_PREFIX "${FULL_PATH_INSTALL_PREFIX}")
-set(FULL_PATH_INCLUDEDIR "${FULL_PATH_INSTALL_PREFIX}/include")
-set(FULL_PATH_LIBDIR "${FULL_PATH_INSTALL_PREFIX}/lib")
-
-CONFIGURE_FILE(
-  "${CMAKE_CURRENT_SOURCE_DIR}/libjson-rpc-cpp.pc.cmake"
-  "${CMAKE_CURRENT_BINARY_DIR}/libjson-rpc-cpp.pc"
-)
-
-INSTALL(FILES "${CMAKE_BINARY_DIR}/libjson-rpc-cpp.pc"
-        DESTINATION lib/pkgconfig)
 # the core framework
 add_subdirectory(src/jsonrpccpp)
 
