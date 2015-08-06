@@ -75,7 +75,6 @@ void LinuxTcpSocketClient::SendRPCMessage(const std::string& message, std::strin
 					break;
 			}
 			close(socket_fd);
-			cerr << message << endl;
 			throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, message);
 		}
 		else if(static_cast<size_t>(byteWritten) < toSend.size())
@@ -109,7 +108,6 @@ void LinuxTcpSocketClient::SendRPCMessage(const std::string& message, std::strin
 					break;
 			}
 			close(socket_fd);
-			cerr << message << endl;
 			throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, message);
 		}
 		else
@@ -196,7 +194,6 @@ int LinuxTcpSocketClient::Connect(const string& ip, const int& port) throw (Json
 				message = strerror(err);
 				break;
 		}
-		cerr << message << endl;
 		throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, message);
 	}
 	memset(&address, 0, sizeof(sockaddr_in));
@@ -229,7 +226,6 @@ int LinuxTcpSocketClient::Connect(const string& ip, const int& port) throw (Json
 				message = strerror(err);
 				break;
 		}
-		cerr << message << endl;
 		throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, message);
 	}
 	return socket_fd;

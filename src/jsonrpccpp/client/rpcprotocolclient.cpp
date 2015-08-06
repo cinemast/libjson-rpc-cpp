@@ -86,10 +86,20 @@ void RpcProtocolClient::BuildRequest(int id, const std::string &method, const Js
 void RpcProtocolClient::throwErrorException(const Json::Value &response)
 {
     if (response[KEY_ERROR].isMember(KEY_ERROR_MESSAGE) && response[KEY_ERROR][KEY_ERROR_MESSAGE].isString())
+    {
         if (response[KEY_ERROR].isMember(KEY_ERROR_DATA))
+        {
             throw JsonRpcException(response[KEY_ERROR][KEY_ERROR_CODE].asInt(), response[KEY_ERROR][KEY_ERROR_MESSAGE].asString(), response[KEY_ERROR][KEY_ERROR_DATA]);
-        throw JsonRpcException(response[KEY_ERROR][KEY_ERROR_CODE].asInt(), response[KEY_ERROR][KEY_ERROR_MESSAGE].asString());
-    throw JsonRpcException(response[KEY_ERROR][KEY_ERROR_CODE].asInt());
+        }
+        else
+        {
+            throw JsonRpcException(response[KEY_ERROR][KEY_ERROR_CODE].asInt(), response[KEY_ERROR][KEY_ERROR_MESSAGE].asString());
+        }
+    }
+    else
+    {
+        throw JsonRpcException(response[KEY_ERROR][KEY_ERROR_CODE].asInt());
+    }
 }
 
 bool RpcProtocolClient::ValidateResponse(const Json::Value& response)

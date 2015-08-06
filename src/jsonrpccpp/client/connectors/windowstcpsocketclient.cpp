@@ -71,7 +71,6 @@ void WindowsTcpSocketClient::SendRPCMessage(const std::string& message, std::str
 					break;
 			}
 			closesocket(socket_fd);
-			cerr << message << endl;
 			throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, message);
 		}
 		else if(static_cast<unsigned int>(byteWritten) < toSend.size())
@@ -112,7 +111,6 @@ void WindowsTcpSocketClient::SendRPCMessage(const std::string& message, std::str
 					break;
 			}
 			closesocket(socket_fd);
-			cerr << message << endl;
 			throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, message);
 		}
 		else
@@ -222,7 +220,6 @@ SOCKET WindowsTcpSocketClient::Connect(const string& ip, const int& port) throw 
 				message = GetErrorMessage(err);
 				break;
 		}
-		cerr << message << endl;
 		throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, message);
 	}
 	memset(&address, 0, sizeof(SOCKADDR_IN));
@@ -258,7 +255,6 @@ SOCKET WindowsTcpSocketClient::Connect(const string& ip, const int& port) throw 
 				message = GetErrorMessage(err);
 				break;
 		}
-		cerr << message << endl;
 		throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, message);
 	}
 	return socket_fd;
@@ -278,7 +274,7 @@ struct ClientSocketInitializer
 		WSADATA init;
 		if(WSAStartup(MAKEWORD(2, 2), &init) != 0)
 		{
-			cerr << "An issue occured while WSAStartup executed." << endl;
+                        throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "An issue occured while WSAStartup executed.");
 		}
 	}
 
@@ -287,7 +283,7 @@ struct ClientSocketInitializer
 	{
 		if(WSACleanup() != 0)
 		{
-			cerr << "An issue occured while WSAClean executed." << endl;
+                    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "An issue occured while WSAClean executed.");
 		}
 	}
 };

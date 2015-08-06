@@ -46,7 +46,6 @@ bool UnixDomainSocketServer::StartListening()
 
 		if(this->socket_fd < 0)
 		{
-			cerr << "socket() failed" << endl;
 			return false;
 		}
 
@@ -62,14 +61,12 @@ bool UnixDomainSocketServer::StartListening()
 
 		if(bind(this->socket_fd, reinterpret_cast<struct sockaddr *>(&(this->address)), sizeof(struct sockaddr_un)) != 0)
 		{
-			cerr << "bind() failed" << endl;
 			return false;
 		}
 
 		if(listen(this->socket_fd, 5) != 0)
-		{
-			cerr << "listen() failed" << endl;
-			return false;
+        {
+            return false;
 		}
 
 		//Launch listening loop there

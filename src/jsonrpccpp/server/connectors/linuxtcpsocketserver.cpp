@@ -49,7 +49,6 @@ bool LinuxTcpSocketServer::StartListening()
 		this->socket_fd = socket(AF_INET, SOCK_STREAM, 0);
 		if(this->socket_fd < 0)
 		{
-			cerr << "socket() failed" << endl;
 			return false;
 		}
 
@@ -66,13 +65,11 @@ bool LinuxTcpSocketServer::StartListening()
 
 		if(bind(this->socket_fd, reinterpret_cast<struct sockaddr *>(&(this->address)), sizeof(struct sockaddr_in)) != 0)
 		{
-			cerr << "bind() failed" << endl;
 			return false;
 		}
 
 		if(listen(this->socket_fd, 5) != 0)
 		{
-			cerr << "listen() failed" << endl;
 			return false;
 		}
 		//Launch listening loop there

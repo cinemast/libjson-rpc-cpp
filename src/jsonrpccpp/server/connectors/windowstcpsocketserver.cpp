@@ -49,7 +49,6 @@ bool WindowsTcpSocketServer::StartListening()
 		this->socket_fd = socket(AF_INET, SOCK_STREAM, 0);
 		if(this->socket_fd < 0)
 		{
-			cerr << "socket() failed" << endl;
 			return false;
 		}
 		unsigned long nonBlocking = 1;
@@ -66,13 +65,11 @@ bool WindowsTcpSocketServer::StartListening()
 
 		if(bind(this->socket_fd, reinterpret_cast<SOCKADDR*>(&(this->address)), sizeof(SOCKADDR_IN)) != 0)
 		{
-			cerr << "bind() failed" << endl;
 			return false;
 		}
 
 		if(listen(this->socket_fd, 5) != 0)
 		{
-			cerr << "listen() failed" << endl;
 			return false;
 		}
 		//Launch listening loop there
@@ -279,7 +276,7 @@ struct ServerSocketInitializer
 		WSADATA init;
 		if(WSAStartup(MAKEWORD(2, 2), &init) != 0)
 		{
-			cerr << "An issue occured while WSAStartup executed." << endl;
+                    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "An issue occured while WSAStartup executed.");
 		}
 	}
 
@@ -287,7 +284,7 @@ struct ServerSocketInitializer
 	{
 		if(WSACleanup() != 0)
 		{
-			cerr << "An issue occured while WSAClean executed." << endl;
+                         throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "An issue occured while WSAClean executed.");
 		}
 	}
 };
