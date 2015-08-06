@@ -1,3 +1,9 @@
+Changes in v1.0.0
+-----------------
+- Change: Requiring C++11 support (gcc >= 4.8)
+- NEW: TCP Server + Client connectors
+- TODO: use PIMPL to keep the ABI/API more stable
+
 Changes in v0.6.0
 -----------------
 - NEW: pkg-config files for all shared libraries
