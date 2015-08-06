@@ -14,7 +14,7 @@
 #include <stdint.h>
 #include <winsock2.h>
 
-#include "tcpsocketserverprivate.h"
+#include "../abstractserverconnector.h"
 
 namespace jsonrpc
 {
@@ -23,7 +23,7 @@ namespace jsonrpc
          * It uses the Winsock2 socket API and Windows thread API to performs its job.
          * Each client request is handled in a new thread.
          */
-	class WindowsTcpSocketServer: public TcpSocketServerPrivate
+        class WindowsTcpSocketServer: public AbstractServerConnector
 	{
 		public:
 			/**

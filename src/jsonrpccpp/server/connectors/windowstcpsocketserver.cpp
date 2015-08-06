@@ -29,7 +29,7 @@ using namespace std;
 #endif //DELIMITER_CHAR
 
 WindowsTcpSocketServer::WindowsTcpSocketServer(const std::string& ipToBind, const unsigned int &port) :
-	TcpSocketServerPrivate(),
+        AbstractServerConnector(),
 	ipToBind(ipToBind),
 	port(port),
 	running(false)
