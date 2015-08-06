@@ -8,11 +8,10 @@ It is fully JSON-RPC [2.0 & 1.0 compatible](http://www.jsonrpc.org/specification
 
 ![libjson-rpc-cpp logo](https://github.com/cinemast/libjson-rpc-cpp/blob/master/dev/artwork/logo.png?raw=true)
 
-**6 good reasons for using libjson-rpc-cpp in your next RPC project**
+**5 good reasons for using libjson-rpc-cpp in your next RPC project**
 - Full JSON-RPC 2.0 & 1.0 Client and Server Support.
 - jsonrpcstub - a tool that generates stub-classes for your JSON-RPC client AND server applications.
-- Ready to use HTTP server and client to provide simple interfaces for your JSON-RPC application.
-- Ready to use TCP server and client to provide simple interfaces for your JSON-RPC application. See TCP Connectors below for more information.
+- Ready to use HTTP + TCP server and client to provide simple interfaces for your JSON-RPC application.
 - Cross platform build support and [precompiled binaries for WIN32](http://spiessknafl.at/libjson-rpc-cpp).
 - Super liberal [MIT-License](http://en.wikipedia.org/wiki/MIT_License). 
 
@@ -27,12 +26,6 @@ It is fully JSON-RPC [2.0 & 1.0 compatible](http://www.jsonrpc.org/specification
 Overview
 =========
 ![libjson-rpc-cpp logo](https://github.com/cinemast/libjson-rpc-cpp/blob/develop/dev/artwork/overview.png?raw=true)
-
-**TCP Connectors**
-
-The provided TCP Connectors have os-dependent implementation but it is transparent on use. Just use TCPSocketClient and TCPSocketServer classes without bothering about whether you're running on Linux or Windows!
-The TCP Server Connector can bind to a specific address and port. It processes each client requests in a new thread.
-The TCP Client Connector can connect directly to an address on a specific port but it also works with host names : it automatically performs the name resolving.
 
 Install the framework
 =====================
