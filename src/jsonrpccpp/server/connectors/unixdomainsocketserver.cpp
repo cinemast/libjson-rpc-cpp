@@ -131,7 +131,6 @@ void* UnixDomainSocketServer::LaunchLoop(void *p_data)
 {
 	pthread_detach(pthread_self());
 	UnixDomainSocketServer *instance = reinterpret_cast<UnixDomainSocketServer*>(p_data);;
-    instance->running = true;
 	instance->ListenLoop();
 	return NULL;
 }
