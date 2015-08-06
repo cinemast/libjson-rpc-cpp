@@ -282,7 +282,7 @@ struct ClientSocketInitializer
 	{
 		if(WSACleanup() != 0)
 		{
-                    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "An issue occured while WSAClean executed.");
+                    cerr << "An issue occured while WSAClean executed." << endl;
 		}
 	}
 };
