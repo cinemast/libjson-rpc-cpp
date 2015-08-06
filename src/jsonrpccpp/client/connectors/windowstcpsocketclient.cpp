@@ -155,10 +155,9 @@ SOCKET WindowsTcpSocketClient::Connect() throw (JsonRpcException)
 		hints.ai_family = AF_INET;
 		hints.ai_socktype = SOCK_STREAM;
 		hints.ai_protocol = IPPROTO_TCP;
-		char *port = new char[6];
+                char port[6];
 		port = itoa(this->port, port, 10);
 		DWORD retval = getaddrinfo(this->hostToConnect.c_str(), port, &hints, &result);
-		delete port;
 		if(retval != 0)
 			throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Could not resolve hostname.");
 
