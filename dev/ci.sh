@@ -7,7 +7,6 @@ build_configuration() {
     cd build
     cmake $1 ..
     make
-    make test
     mkdir -p root
     make DESTDIR=root install
     cd ..
