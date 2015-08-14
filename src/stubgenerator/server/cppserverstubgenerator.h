@@ -23,7 +23,6 @@ namespace jsonrpc
 
             virtual void generateStub();
 
-        private:
             void generateBindings();
             void generateProcedureDefinitions();
             void generateAbstractDefinitions();
