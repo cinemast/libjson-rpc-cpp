@@ -32,6 +32,11 @@ target_link_libraries(unit_testsuite jsonrpccommon)
 target_link_libraries(unit_testsuite jsonrpcserver)
 target_link_libraries(unit_testsuite jsonrpcclient)
 
+if (NOT CATCH_FOUND)
+	# let's wait for catch files to be downloaded
+	add_dependencies(unit_testsuite catch)
+endif()
+
 if(COMPILE_STUBGEN)
         list(APPEND test_source "${CMAKE_BINARY_DIR}/gen/abstractstubserver.h")
         list(APPEND test_source "${CMAKE_BINARY_DIR}/gen/stubclient.h")
