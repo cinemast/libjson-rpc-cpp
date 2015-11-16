@@ -60,9 +60,9 @@ endif()
 # setup sources for zeromq connectors
 if (ZEROMQ_SERVER)
         list(APPEND server_connector_header "server/connectors/zeromqserver.h")
-        list(APPEND server_connector_source "server/connectors/zeromqclient.cpp")
+        list(APPEND server_connector_source "server/connectors/zeromqserver.cpp")
         list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT}
-            ${ZMQ_LIBRARIES)
+            ${ZMQ_LIBRARIES})
 endif()
 
 if (ZEROMQ_CLIENT)

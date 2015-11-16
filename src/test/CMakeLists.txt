@@ -64,5 +64,11 @@ if(HTTP_CLIENT AND HTTP_SERVER AND COMPILE_STUBGEN)
         add_test(NAME integration WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite "[integration]")
 endif()
 
+if(ZEROMQ_CLIENT AND ZEROMQ_SERVER)
+        add_test(NAME connector_http WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+            COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite
+            "[connector_zeromq]")
+endif()
+
 add_test(NAME all WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite)
 
