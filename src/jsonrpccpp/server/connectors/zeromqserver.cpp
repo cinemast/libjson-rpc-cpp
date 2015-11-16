@@ -1,7 +1,7 @@
 /*************************************************************************
  * libjson-rpc-cpp
  *************************************************************************
- * @file    zeromqserver.h
+ * @file    zeromqserver.cpp
  * @date    15.11.2015
  * @author  Badaev Vladimir <dead.skif@gmail.com>
  * @license See attached LICENSE.txt
