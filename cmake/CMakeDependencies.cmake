@@ -40,6 +40,14 @@ if (${HTTP_SERVER})
 	message(STATUS "MHD lib   : ${MHD_LIBRARIES}")
 endif()
 
+if (${ZMQ_CLIENT} OR ${ZMQ_SERVER})
+# find zeromq
+    find_package(ZMQ REQUIRED)
+    message(STATUS "ZMQ header: ${ZMQ_INCLUDE_DIRS}")
+    message(STATUS "ZMQ lib   : ${ZMQ_LIBRARIES}")
+endif()
+
+
 # find doxygen
 find_package(Doxygen)
 
