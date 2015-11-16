@@ -65,7 +65,7 @@ if(HTTP_CLIENT AND HTTP_SERVER AND COMPILE_STUBGEN)
 endif()
 
 if(ZEROMQ_CLIENT AND ZEROMQ_SERVER)
-        add_test(NAME connector_http WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        add_test(NAME connector_zeromq WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
             COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite
             "[connector_zeromq]")
 endif()

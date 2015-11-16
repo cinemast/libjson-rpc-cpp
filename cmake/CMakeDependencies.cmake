@@ -40,7 +40,7 @@ if (${HTTP_SERVER})
 	message(STATUS "MHD lib   : ${MHD_LIBRARIES}")
 endif()
 
-if (${ZMQ_CLIENT} OR ${ZMQ_SERVER})
+if (${ZEROMQ_CLIENT} OR ${ZEROMQ_SERVER})
 # find zeromq
     find_package(ZMQ REQUIRED)
     message(STATUS "ZMQ header: ${ZMQ_INCLUDE_DIRS}")
