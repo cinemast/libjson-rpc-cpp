@@ -19,25 +19,26 @@
 
 namespace jsonrpc
 {
+    template<typename Listener>
+    class ZeroMQServer;
     class ZeroMQListener {
-        typedef std::vector<const std::string> EndPoints;
         public:
-            ZeroMQListener(ZeroMQServer *s, const EndPoints& eps)
+            typedef std::vector<std::string> EndPoints;
+            ZeroMQListener(AbstractServerConnector *s, const EndPoints& eps)
                 : server(s), ctx(), endpoints(eps)
             {}
             virtual ~ZeroMQListener() {}
 
-        private:
-            ZeroMQServer *server;
+        protected:
+            AbstractServerConnector *server;
             zmq::context_t ctx;
             const EndPoints& endpoints;
 
     };
     class MultiThreadListener : public ZeroMQListener {
         public:
-            MultiThreadListener(ZeroMQServer *s, const EndPoints& eps, unsigned int worker_threads=1)
-                : ZeroMQListener(s, eps)
-            {}
+            MultiThreadListener(AbstractServerConnector *s, const EndPoints& eps, unsigned int worker_threads=1);
+            virtual ~MultiThreadListener();
         private:
             void ProxyThread(const std::string& fe, const std::string be);
             void WorkerThread(const std::string be);
@@ -60,7 +61,6 @@ namespace jsonrpc
 
             virtual ~ZeroMQServer();
 
-            template<typename Listener>
 			virtual bool StartListening();
 			virtual bool StopListening();
 
@@ -68,7 +68,7 @@ namespace jsonrpc
 
 
 		protected:
-            std::vector<const std::string> endpoints;
+            std::vector<std::string> endpoints;
             unsigned int threads;
 
             std::unique_ptr<ZeroMQListener> listener;

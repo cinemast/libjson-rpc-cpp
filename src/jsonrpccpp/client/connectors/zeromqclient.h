@@ -9,6 +9,8 @@
 #ifndef JSONRPC_CPP_ZEROMQCLIENT_H_
 
 #define JSONRPC_CPP_ZEROMQCLIENT_H_
+#include <string>
+#include <zmq.hpp>
 
 #include "../iclientconnector.h"
 #include <jsonrpccpp/common/exception.h>

@@ -18,10 +18,10 @@ ZeroMQClient::ZeroMQClient(const std::string& endpoint)
     : ctx(), sock(ctx, ZMQ_REQ)
 {
     try {
-        sock.connect(endpoint);
+        sock.connect(endpoint.c_str());
         int linger = 0;
         sock.setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
-    } catch (const error_t& e) {
+    } catch (const zmq::error_t& e) {
         throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Could not connect to " + endpoint + ":" + e.what());
     }
 }
@@ -41,9 +41,9 @@ void ZeroMQClient::SendRPCMessage(const std::string& message, std::string& resul
             string s(static_cast<const char *>(msg.data()), msg.size());
             result = s;
         } else {
-            throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Timeout")
+            throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Timeout");
         }
-    } catch (const error_t& e) {
+    } catch (const zmq::error_t& e) {
         throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, e.what());
     }
 }
