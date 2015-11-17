@@ -13,6 +13,21 @@ using namespace jsonrpc;
 using namespace std;
 using namespace zmq;
 
+class jsonrpc::ZMQListener {
+    public:
+        typedef std::vector<string> EndPoints;
+        ZMQListener(AbstractServerConnector *s, const EndPoints& eps)
+            : server(s), ctx(), endpoints(eps)
+        {}
+        virtual ~ZMQListener() {}
+
+        virtual void doRequest(socket_t& sock);
+    protected:
+        AbstractServerConnector *server;
+        zmq::context_t ctx;
+        const EndPoints& endpoints;
+
+};
 namespace {
     template<typename W>
         struct wrapper {
@@ -22,22 +37,7 @@ namespace {
     typedef wrapper<socket_t> socket_wrapper;
 
 
-    class ZeroMQListener {
-        public:
-            typedef std::vector<string> EndPoints;
-            ZeroMQListener(AbstractServerConnector *s, const EndPoints& eps)
-                : server(s), ctx(), endpoints(eps)
-            {}
-            virtual ~ZeroMQListener() {}
-
-            virtual void doRequest(socket_t& sock);
-        protected:
-            AbstractServerConnector *server;
-            zmq::context_t ctx;
-            const EndPoints& endpoints;
-
-    };
-    class MultiThreadListener : public ZeroMQListener {
+    class MultiThreadListener : public ZMQListener {
         public:
             MultiThreadListener(AbstractServerConnector *s, const EndPoints& eps, unsigned int worker_threads=1);
             virtual ~MultiThreadListener();
@@ -46,7 +46,7 @@ namespace {
             void WorkerThread(const string be);
             vector<thread> worker_threads;
     };
-    class OneThreadListener : public ZeroMQListener {
+    class OneThreadListener : public ZMQListener {
         public:
             OneThreadListener(AbstractServerConnector *s, const EndPoints& eps);
             virtual ~OneThreadListener(); 
@@ -57,30 +57,34 @@ namespace {
 }
 
 
-ZeroMQServer::ZeroMQServer(const string& ep, unsigned int th_count)
-    : ZeroMQServer(vector<const string>(1, 
+ZMQServer::ZMQServer(const string& ep, unsigned int th_count)
+    : ZMQServer(vector<string>(1, 
                 (ep.find("://") == std::string::npos) /* If ep is just IP or '*' */
                 ? "tcp://" + ep + ":8080" /* Convert it to ZeroMQ endpoint form */
                 : ep), th_count)
 {
 }
-ZeroMQServer::ZeroMQServer(vector<string> eps, unsigned int th_count) 
+ZMQServer::ZMQServer(vector<string> eps, unsigned int th_count) 
     : endpoints(eps), listener(nullptr), threads_count(th_count)
 {
 }
 
-bool ZeroMQServer::StartListening()
+ZMQServer::~ZMQServer()
+{
+}
+
+bool ZMQServer::StartListening()
 {
     if (listener == nullptr) {
         if (threads_count)
-            listener = new MultiThreadListener(this, endpoints, threads_count);
+            listener.reset(new MultiThreadListener(this, endpoints, threads_count));
         else
-            listener = new OneThreadListener(this, endpoints);
+            listener.reset(new OneThreadListener(this, endpoints));
         return true;
     } 
     return false;
 }
-bool ZeroMQServer::StopListening()
+bool ZMQServer::StopListening()
 {
     if (listener != nullptr) {
         listener.reset(nullptr);
@@ -88,7 +92,7 @@ bool ZeroMQServer::StopListening()
     }
     return false;
 }
-bool ZeroMQServer::SendResponse(const string& response, void* addInfo)
+bool ZMQServer::SendResponse(const string& response, void* addInfo)
 {
     socket_wrapper *sw = reinterpret_cast<socket_wrapper *>(addInfo);
     socket_t& sock = sw->wrapped;
@@ -99,7 +103,7 @@ bool ZeroMQServer::SendResponse(const string& response, void* addInfo)
     return true;
 }
 
-void ZeroMQListener::doRequest(socket_t& sock)
+void ZMQListener::doRequest(socket_t& sock)
 {
     message_t msg;
     sock.recv(&msg);
@@ -108,7 +112,7 @@ void ZeroMQListener::doRequest(socket_t& sock)
 }
 
 MultiThreadListener::MultiThreadListener(AbstractServerConnector *s, const EndPoints& eps, unsigned int threads_count)
-    : ZeroMQListener(s, eps)
+    : ZMQListener(s, eps)
 {
     /* Starting FRONTEND(ROUTER) <-> BACKEND(DEALER) proxies */
     for (size_t i = 0; i < eps.size(); i++) {
@@ -155,11 +159,11 @@ void MultiThreadListener::WorkerThread(const std::string be) {
 }
 
 OneThreadListener::OneThreadListener(AbstractServerConnector *s, const EndPoints& eps)
-    : ZeroMQListener(s, eps)
+    : ZMQListener(s, eps)
 {
-    listening_thread([=] { WorkerThread() });
+    listening_thread = thread([=] { WorkerThread(); });
 }
-OneThreadListener::~OneThreadListener(); {
+OneThreadListener::~OneThreadListener() {
     ctx.close();
     listening_thread.join();
 }
@@ -173,13 +177,13 @@ void OneThreadListener::WorkerThread()
         socks[i].setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
         items[i].socket = socks[i];
         items[i].events = ZMQ_POLLIN;
-        socks[i].bind(eps[i].c_str());
+        socks[i].bind(endpoints[i].c_str());
     }
     try {
         while(1) {
             poll(&items[0], items.size());
             for(size_t i = 0; i < items.size(); i++) {
-                if (items[i].revent & ZMQ_POLLIN) {
+                if (items[i].revents & ZMQ_POLLIN) {
                     doRequest(socks[i]);
                 };
             };

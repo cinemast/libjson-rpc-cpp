@@ -1,16 +1,6 @@
 /*************************************************************************
  * libjson-rpc-cpp
  *************************************************************************
-<<<<<<< HEAD
- * @file
- * @date    7/10/2015
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
-#ifndef ZMQSERVER_H
-#define ZMQSERVER_H
-=======
  * @file    zmqserver.h
  * @date    15.11.2015
  * @author  Badaev Vladimir <dead.skif@gmail.com>
@@ -29,11 +19,11 @@
 
 namespace jsonrpc
 {
-    class ZeroMQListener;
+    class ZMQListener;
 	/**
 	 * This class provides ZeroMQ REP/REQ Socket Server,to handle incoming Requests.
 	 */
-	class ZeroMQServer: public AbstractServerConnector
+	class ZMQServer: public AbstractServerConnector
 	{
 		public:
 
@@ -42,10 +32,10 @@ namespace jsonrpc
 			 * @param endpoint, a string containing the ZeroMQ endpoint or IP address.
              * @param threads_count, 0 for 1-thread variant, else will run threads_count threads for each endpoint.
 			 */
-			ZeroMQServer(const std::string& endpoint="*", unsigned int threads_coun=0);
-            ZeroMQServer(std::vector<std::string> endpoints, unsigned int threads_count=0);
+			ZMQServer(const std::string& endpoint="*", unsigned int threads_coun=0);
+            ZMQServer(std::vector<std::string> endpoints, unsigned int threads_count=0);
 
-            virtual ~ZeroMQServer();
+            virtual ~ZMQServer();
 
 			virtual bool StartListening();
 			virtual bool StopListening();
@@ -55,7 +45,7 @@ namespace jsonrpc
 
 		protected:
             std::vector<std::string> endpoints;
-            std::unique_ptr<ZeroMQListener> listener;
+            std::unique_ptr<ZMQListener> listener;
             unsigned int threads_count;
 
     };
