@@ -11,6 +11,6 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 # no msvc flags for now
 endif()
 
-if (ZEROMQ_SERVER OR ZEROMQ_CLIENT)
+if (ZMQ_SERVER OR ZMQ_CLIENT)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif()

@@ -1,14 +1,14 @@
 /*************************************************************************
  * libjson-rpc-cpp
  *************************************************************************
- * @file    zeromqclient.h
+ * @file    zmqclient.h
  * @date    17.11.2015
  * @author  Badaev Vladimir <dead.skif@gmail.com>
  * @license See attached LICENSE.txt
  ************************************************************************/
-#ifndef JSONRPC_CPP_ZEROMQCLIENT_H_
+#ifndef JSONRPC_CPP_ZMQCLIENT_H_
 
-#define JSONRPC_CPP_ZEROMQCLIENT_H_
+#define JSONRPC_CPP_ZMQCLIENT_H_
 #include <string>
 #include <zmq.hpp>
 
@@ -32,4 +32,4 @@ namespace jsonrpc {
 } /* jsonrpc */
 
 
-#endif /* end of include guard: JSONRPC_CPP_ZEROMQCLIENT_H_ */
+#endif /* end of include guard: JSONRPC_CPP_ZMQCLIENT_H_ */

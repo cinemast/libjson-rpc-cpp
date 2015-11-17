@@ -1,13 +1,13 @@
 /*************************************************************************
  * libjson-rpc-cpp
  *************************************************************************
- * @file    zeromqserver.cpp
+ * @file    zmqserver.cpp
  * @date    15.11.2015
  * @author  Badaev Vladimir <dead.skif@gmail.com>
  * @license See attached LICENSE.txt
  ************************************************************************/
 
-#include "zeromqserver.h"
+#include "zmqserver.h"
 
 using namespace jsonrpc;
 using namespace std;

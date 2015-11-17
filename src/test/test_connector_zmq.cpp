@@ -1,16 +1,16 @@
 /*************************************************************************
  * libjson-rpc-cpp
  *************************************************************************
- * @file    test_connector_zeromq.cpp
+ * @file    test_connector_zmq.cpp
  * @date    17/11/2015
  * @author  Vladimir Badaev <dead.skif@gmail.com>
  * @license See attached LICENSE.txt
  ************************************************************************/
 
-#ifdef ZEROMQ_TESTING
+#ifdef ZMQ_TESTING
 #include <catch.hpp>
-#include <jsonrpccpp/server/connectors/zeromqclient.h>
-#include <jsonrpccpp/client/connectors/zeromqserver.h>
+#include <jsonrpccpp/server/connectors/zmqclient.h>
+#include <jsonrpccpp/client/connectors/zmqserver.h>
 #include "mockclientconnectionhandler.h"
 
 #include "checkexception.h"
@@ -18,13 +18,13 @@
 using namespace jsonrpc;
 using namespace std;
 
-#define TEST_MODULE "[connector_zeromq]"
+#define TEST_MODULE "[connector_zmq]"
 
 #define IPC_SOCKET_PATH "/tmp/jsonrpccpp-socket"
 #define IPC_ENDPOINT "ipc://" IPC_SOCKET_PATH
 #define TCP_ENDPOINT "tcp://127.0.0.1:9999"
 
-namespace testzeromqserver
+namespace testzmqserver
 {
     struct F {
             ZeroMQServer server;
@@ -52,10 +52,10 @@ namespace testzeromqserver
         return ex.GetCode() == Errors::ERROR_CLIENT_CONNECTOR;
     }
 }
-using namespace testzeromqserver;
+using namespace testzmqserver;
 
 
-TEST_CASE_METHOD(F, "test_zeromq_ipc_success", TEST_MODULE)
+TEST_CASE_METHOD(F, "test_zmq_ipc_success", TEST_MODULE)
 {
     handler.response = "exampleresponse";
     string result;
@@ -65,7 +65,7 @@ TEST_CASE_METHOD(F, "test_zeromq_ipc_success", TEST_MODULE)
     CHECK(result == "exampleresponse");
 }
 
-TEST_CASE_METHOD(F, "test_zeromq_tcp_success", TEST_MODULE)
+TEST_CASE_METHOD(F, "test_zmq_tcp_success", TEST_MODULE)
 {
     handler.response = "exampleresponse";
     string result;
@@ -77,7 +77,7 @@ TEST_CASE_METHOD(F, "test_zeromq_tcp_success", TEST_MODULE)
 
 
 #if 0
-TEST_CASE("test_zeromq_server_multiplestart", TEST_MODULE)
+TEST_CASE("test_zmq_server_multiplestart", TEST_MODULE)
 {
     UnixDomainSocketServer server(SOCKET_PATH);
     CHECK(server.StartListening() == true);
