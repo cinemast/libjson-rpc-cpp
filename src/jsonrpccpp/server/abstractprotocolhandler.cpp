@@ -63,7 +63,7 @@ void AbstractProtocolHandler::ProcessRequest(const Json::Value &request, Json::V
     else
     {
         handler.HandleNotificationCall(method, request[KEY_REQUEST_PARAMETERS]);
-        response = Json::Value::null;
+        response = Json::nullValue;
     }
 }
 

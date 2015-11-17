@@ -20,7 +20,7 @@ else (ZMQ_LIBRARIES AND ZMQ_INCLUDE_DIRS)
 
   find_path(ZMQ_INCLUDE_DIR
     NAMES
-      zmq.h
+      zmq.h zmq.hpp
     PATHS
       /usr/include
       /usr/local/include

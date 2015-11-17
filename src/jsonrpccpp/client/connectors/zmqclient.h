@@ -1,28 +1,35 @@
 /*************************************************************************
  * libjson-rpc-cpp
  *************************************************************************
- * @file
- * @date    7/10/2015
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
+ * @file    zmqclient.h
+ * @date    17.11.2015
+ * @author  Badaev Vladimir <dead.skif@gmail.com>
  * @license See attached LICENSE.txt
  ************************************************************************/
+#ifndef JSONRPC_CPP_ZMQCLIENT_H_
 
-#ifndef JSONRPC_ZMQCLIENT_H
-#define JSONRPC_ZMQCLIENT_H
+#define JSONRPC_CPP_ZMQCLIENT_H_
+#include <string>
+#include <zmq.hpp>
 
 #include "../iclientconnector.h"
+#include <jsonrpccpp/common/exception.h>
 
 namespace jsonrpc {
-
-    class ZMQClient : public IClientConnector
+    class ZeroMQClient : public IClientConnector
     {
         public:
-            ZMQClient(const std::string& url);
+    		ZeroMQClient(const std::string& endpoint);
+            virtual ~ZeroMQClient();
+            virtual void SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException);
 
-            virtual void SendRPCMessage(const std::string& message, std::string& result) throw(JsonRpcException);
 
+        private:
+            zmq::context_t ctx;
+            zmq::socket_t sock;
     };
+    
+} /* jsonrpc */
 
-} // namespace jsonrpc
 
-#endif // JSONRPC_ZMQCLIENT_H
+#endif /* end of include guard: JSONRPC_CPP_ZMQCLIENT_H_ */

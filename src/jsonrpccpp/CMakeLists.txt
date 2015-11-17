@@ -69,6 +69,20 @@ if (UNIX_DOMAIN_SOCKET_CLIENT)
         list(APPEND client_connector_source "client/connectors/unixdomainsocketclient.cpp")
 endif()
 
+# setup sources for zmq connectors
+if (ZMQ_SERVER)
+        list(APPEND server_connector_header "server/connectors/zmqserver.h")
+        list(APPEND server_connector_source "server/connectors/zmqserver.cpp")
+        list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT}
+            ${ZMQ_LIBRARIES})
+endif()
+
+if (ZMQ_CLIENT)
+        list(APPEND client_connector_header "client/connectors/zmqclient.h")
+        list(APPEND client_connector_source "client/connectors/zmqclient.cpp")
+        list(APPEND client_connector_libs ${ZMQ_LIBRARIES})
+endif()
+
 # configure a header file to pass some of the CMake settings to the source code
 # TODO: move it to custom build step?
 file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/gen/jsonrpccpp/common")
