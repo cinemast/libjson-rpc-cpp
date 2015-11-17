@@ -6,6 +6,9 @@
  * @author  Badaev Vladimir <dead.skif@gmail.com>
  * @license See attached LICENSE.txt
  ************************************************************************/
+#include <sstream>
+
+//#include <iostream>
 
 #include "zmqserver.h"
 
@@ -32,7 +35,7 @@ namespace {
     template<typename W>
         struct wrapper {
             W& wrapped;
-            wrapper(W& w) : wrapper(w) {};
+            wrapper(W& w) : wrapped(w) {};
         };
     typedef wrapper<socket_t> socket_wrapper;
 
@@ -45,6 +48,7 @@ namespace {
             void ProxyThread(const string& fe, const string be);
             void WorkerThread(const string be);
             vector<thread> worker_threads;
+            vector<thread> proxy_threads;
     };
     class OneThreadListener : public ZMQListener {
         public:
@@ -116,9 +120,16 @@ MultiThreadListener::MultiThreadListener(AbstractServerConnector *s, const EndPo
 {
     /* Starting FRONTEND(ROUTER) <-> BACKEND(DEALER) proxies */
     for (size_t i = 0; i < eps.size(); i++) {
-        string be = "ipc://jsonrpc_worker" + i;
-        thread( [=] { ProxyThread(eps[i], be); }).detach();
-        for (size_t w = 0; i < threads_count; i++) {
+        ostringstream bes;
+        bes << "inproc://jsonrpc_worker" << i;
+        string be = bes.str();
+
+        proxy_threads.emplace_back( [=] {
+                ProxyThread(eps[i], be);
+        });
+        //cerr << "MultiThreadListener::MultiThreadListener() "
+        //    << eps[i] << "<->" << be << endl;
+        for (size_t w = 0; w < threads_count; w++) {
             worker_threads.emplace_back([=] { WorkerThread(be); });
         }
     }
@@ -127,20 +138,27 @@ MultiThreadListener::MultiThreadListener(AbstractServerConnector *s, const EndPo
 MultiThreadListener::~MultiThreadListener()
 {
     ctx.close();
+    for (auto& p : proxy_threads) {
+        p.join();
+    }
     for (auto& w : worker_threads) {
         w.join();
     }
 }
 void MultiThreadListener::ProxyThread(const std::string& fe, const std::string be) {
     
-    socket_t frontend(ctx, ZMQ_ROUTER);
-    socket_t backend(ctx, ZMQ_DEALER);
     
-    frontend.bind(fe.c_str());
-    backend.bind(be.c_str());
+    try {
+        socket_t frontend(ctx, ZMQ_ROUTER);
+        socket_t backend(ctx, ZMQ_DEALER);
+        frontend.bind(fe.c_str());
+        backend.bind(be.c_str());
 
-    /* Works while ctx is active */
-    proxy(frontend, backend, NULL);
+        /* Works while ctx is active */
+        proxy(frontend, backend, NULL);
+    } catch (const zmq::error_t& e) {
+        //cerr << "MultiThreadListener::ProxyThread(" << fe << "," << be << ") throw " << e.what() << endl;
+    }
 }
 void MultiThreadListener::WorkerThread(const std::string be) {
     socket_t sock(ctx, ZMQ_REP);

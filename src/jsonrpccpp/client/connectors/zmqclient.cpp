@@ -14,7 +14,7 @@ using namespace zmq;
 
 #define REQUEST_TIMEOUT     2500    //  msecs, (> 1000!)
 
-ZeroMQClient::ZeroMQClient(const std::string& endpoint)
+ZMQClient::ZMQClient(const std::string& endpoint)
     : ctx(), sock(ctx, ZMQ_REQ)
 {
     try {
@@ -25,9 +25,9 @@ ZeroMQClient::ZeroMQClient(const std::string& endpoint)
         throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Could not connect to " + endpoint + ":" + e.what());
     }
 }
-ZeroMQClient::~ZeroMQClient()
+ZMQClient::~ZMQClient()
 {}
-void ZeroMQClient::SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException)
+void ZMQClient::SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException)
 {
     try {
         sock.send(message.c_str(), message.size());

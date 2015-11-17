@@ -7,51 +7,60 @@
  * @license See attached LICENSE.txt
  ************************************************************************/
 
-#ifdef ZMQ_TESTING
+#ifdef ZMQCONNECTORS_TESTING
+#include <unistd.h>
+
 #include <catch.hpp>
-#include <jsonrpccpp/server/connectors/zmqclient.h>
-#include <jsonrpccpp/client/connectors/zmqserver.h>
+#include <jsonrpccpp/server/connectors/zmqserver.h>
+#include <jsonrpccpp/client/connectors/zmqclient.h>
 #include "mockclientconnectionhandler.h"
 
 #include "checkexception.h"
+
 
 using namespace jsonrpc;
 using namespace std;
 
 #define TEST_MODULE "[connector_zmq]"
 
-#define IPC_SOCKET_PATH "/tmp/jsonrpccpp-socket"
+#define IPC_SOCKET_PATH "/tmp/jsonrpccpp-zmq-socket"
 #define IPC_ENDPOINT "ipc://" IPC_SOCKET_PATH
 #define TCP_ENDPOINT "tcp://127.0.0.1:9999"
 
 namespace testzmqserver
 {
     struct F {
-            ZeroMQServer server;
-            ZeroMQClient ipc_client;
-            ZeroMQClient tcp_client;
+            ZMQServer server;
+            ZMQClient ipc_client;
+            ZMQClient tcp_client;
             MockClientConnectionHandler handler;
 
-            F() :
-                server(vector<string>({ IPC_ENDPOINT, TCP_ENDPOINT }),
+            F(unsigned int th=0) :
+                server(vector<string>({ IPC_ENDPOINT, TCP_ENDPOINT }), th),
                 ipc_client(IPC_ENDPOINT),
                 tcp_client(TCP_ENDPOINT)
             {
                 server.SetHandler(&handler);
                 REQUIRE(server.StartListening());
             }
-            ~F()
+            virtual ~F()
             {
                 server.StopListening();
                 unlink(IPC_SOCKET_PATH);
             }
     };
 
+    struct FTH : public F {
+        FTH() : F(2) {};
+        virtual ~FTH() {};
+    };
+
+
     bool check_exception1(JsonRpcException const&ex)
     {
         return ex.GetCode() == Errors::ERROR_CLIENT_CONNECTOR;
     }
-}
+};
 using namespace testzmqserver;
 
 
@@ -75,6 +84,25 @@ TEST_CASE_METHOD(F, "test_zmq_tcp_success", TEST_MODULE)
     CHECK(result == "exampleresponse");
 }
 
+TEST_CASE_METHOD(FTH, "test_zmq_threaded_ipc_success", TEST_MODULE)
+{
+    handler.response = "exampleresponse";
+    string result;
+    ipc_client.SendRPCMessage("examplerequest", result);
+
+    CHECK(handler.request == "examplerequest");
+    CHECK(result == "exampleresponse");
+}
+
+TEST_CASE_METHOD(FTH, "test_zmq_threaded_tcp_success", TEST_MODULE)
+{
+    handler.response = "exampleresponse";
+    string result;
+    tcp_client.SendRPCMessage("examplerequest", result);
+
+    CHECK(handler.request == "examplerequest");
+    CHECK(result == "exampleresponse");
+}
 
 #if 0
 TEST_CASE("test_zmq_server_multiplestart", TEST_MODULE)

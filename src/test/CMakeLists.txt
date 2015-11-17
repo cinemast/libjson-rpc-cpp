@@ -27,6 +27,10 @@ if(COMPILE_STUBGEN)
 	add_definitions(-DSTUBGEN_TESTING)
 endif()
 
+if(ZMQ_CLIENT AND ZMQ_SERVER)
+    add_definitions(-DZMQCONNECTORS_TESTING)
+endif()
+
 add_executable(unit_testsuite ${test_source})
 target_link_libraries(unit_testsuite jsonrpccommon)
 target_link_libraries(unit_testsuite jsonrpcserver)

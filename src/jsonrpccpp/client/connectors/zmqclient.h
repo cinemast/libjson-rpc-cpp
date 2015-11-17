@@ -16,11 +16,11 @@
 #include <jsonrpccpp/common/exception.h>
 
 namespace jsonrpc {
-    class ZeroMQClient : public IClientConnector
+    class ZMQClient : public IClientConnector
     {
         public:
-    		ZeroMQClient(const std::string& endpoint);
-            virtual ~ZeroMQClient();
+    		ZMQClient(const std::string& endpoint);
+            virtual ~ZMQClient();
             virtual void SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException);
 
 
