@@ -60,48 +60,58 @@ namespace testzmqserver
     {
         return ex.GetCode() == Errors::ERROR_CLIENT_CONNECTOR;
     }
+
+    bool check_exception2(JsonRpcException const&ex)
+    {
+        return ex.GetCode() == Errors::ERROR_RPC_INTERNAL_ERROR;
+    }
 };
 using namespace testzmqserver;
 
 
 TEST_CASE_METHOD(F, "test_zmq_ipc_success", TEST_MODULE)
 {
-    handler.response = "exampleresponse";
+    handler.response = "exampleresponse_ipc";
     string result;
-    ipc_client.SendRPCMessage("examplerequest", result);
+    ipc_client.SendRPCMessage("examplerequest_ipc", result);
 
-    CHECK(handler.request == "examplerequest");
-    CHECK(result == "exampleresponse");
+    CHECK(handler.request == "examplerequest_ipc");
+    CHECK(result == "exampleresponse_ipc");
 }
 
 TEST_CASE_METHOD(F, "test_zmq_tcp_success", TEST_MODULE)
 {
-    handler.response = "exampleresponse";
+    handler.response = "exampleresponse_tcp";
     string result;
-    tcp_client.SendRPCMessage("examplerequest", result);
+    tcp_client.SendRPCMessage("examplerequest_tcp", result);
 
-    CHECK(handler.request == "examplerequest");
-    CHECK(result == "exampleresponse");
+    CHECK(handler.request == "examplerequest_tcp");
+    CHECK(result == "exampleresponse_tcp");
 }
 
 TEST_CASE_METHOD(FTH, "test_zmq_threaded_ipc_success", TEST_MODULE)
 {
-    handler.response = "exampleresponse";
+    handler.response = "exampleresponse_ipc_th";
     string result;
-    ipc_client.SendRPCMessage("examplerequest", result);
+    ipc_client.SendRPCMessage("examplerequest_ipc_th", result);
 
-    CHECK(handler.request == "examplerequest");
-    CHECK(result == "exampleresponse");
+    CHECK(handler.request == "examplerequest_ipc_th");
+    CHECK(result == "exampleresponse_ipc_th");
 }
 
 TEST_CASE_METHOD(FTH, "test_zmq_threaded_tcp_success", TEST_MODULE)
 {
-    handler.response = "exampleresponse";
+    handler.response = "exampleresponse_tcp_th";
     string result;
-    tcp_client.SendRPCMessage("examplerequest", result);
+    tcp_client.SendRPCMessage("examplerequest_tcp_th", result);
 
-    CHECK(handler.request == "examplerequest");
-    CHECK(result == "exampleresponse");
+    CHECK(handler.request == "examplerequest_tcp_th");
+    CHECK(result == "exampleresponse_tcp_th");
+}
+
+TEST_CASE("test_zmq_client", TEST_MODULE)
+{
+    CHECK_EXCEPTION_TYPE(ZMQClient client("ddd://"), JsonRpcException, check_exception1);
 }
 
 #if 0
