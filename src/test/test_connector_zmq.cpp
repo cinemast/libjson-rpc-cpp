@@ -111,7 +111,9 @@ TEST_CASE_METHOD(FTH, "test_zmq_threaded_tcp_success", TEST_MODULE)
 
 TEST_CASE("test_zmq_client", TEST_MODULE)
 {
-    CHECK_EXCEPTION_TYPE(ZMQClient client("ddd://"), JsonRpcException, check_exception1);
+    CHECK_EXCEPTION_TYPE(ZMQClient client("ddd://bad"), JsonRpcException, check_exception1);
+    ZMQServer server("ddd://bad");
+    CHECK(server.StartListening() == false);
 }
 
 #if 0
