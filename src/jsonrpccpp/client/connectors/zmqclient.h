@@ -19,7 +19,7 @@ namespace jsonrpc {
     class ZMQClient : public IClientConnector
     {
         public:
-    		ZMQClient(const std::string& endpoint);
+            ZMQClient(const std::string& endpoint);
             virtual ~ZMQClient();
             virtual void SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException);
 
