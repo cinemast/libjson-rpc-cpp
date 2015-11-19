@@ -33,11 +33,19 @@ namespace jsonrpc
              * @param threads_count, 0 for 1-thread variant, else will run threads_count threads for each endpoint.
 			 */
 			ZMQServer(const std::string& endpoint="*", unsigned int threads_coun=0);
+            /**
+             * @brief ZeroMQSocketServer, constructor for the included ZeroMQSocketServer
+             * @param endpoints, a vector of strings containing the ZeroMQ endpoints.
+             * @param threads_count, 0 for 1-thread variant, else will run threads_count threads for each endpoint.
+             */
             ZMQServer(std::vector<std::string> endpoints, unsigned int threads_count=0);
 
             virtual ~ZMQServer();
 
 			virtual bool StartListening();
+            /**
+             * @brief StopListening, due to no simple way to stop c11 std::thread, multithreaded ZMQServer stops for a LONG time.
+             */
 			virtual bool StopListening();
 
 			bool virtual SendResponse(const std::string& response, void* addInfo = NULL);
@@ -49,29 +57,5 @@ namespace jsonrpc
             unsigned int threads_count;
 
     };
-#if 0
-    template<>
-    class ZeroMQSocketServer<1>: public AbstractServerConnector
-    {
-        public:
-
-			/**
-			 * @brief ZeroMQSocketServer, constructor for the included ZeroMQSocketServer
-			 * @param endpoint, a string containing the ZeroMQ endpoint
-			 */
-			ZeroSocketServer(const char *endpoint);
-            ZeroSocketServer(const char *endpoints[], size_t endpoints_count);
-
-			virtual bool StartListening();
-			virtual bool StopListening();
-
-			bool virtual SendResponse(const std::string& response, void* addInfo = NULL);
-
-
-		private:
-            zmq::context_t ctx;
-            zmq::socket_t sock;
-    };
-#endif
 } /* namespace jsonrpc */
 #endif /* JSONRPC_CPP_ZMQSERVER_H_ */
