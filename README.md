@@ -89,7 +89,7 @@ Build
 git clone git://github.com/cinemast/libjson-rpc-cpp.git
 mkdir -p libjson-rpc-cpp/build
 cd libjson-rpc-cpp/build
-cmake -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_STATIC_LIBS=TRUE CMakeLists.txt && make
+cmake .. && make
 sudo make install
 sudo ldconfig          #only required for linux
 ```
