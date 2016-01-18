@@ -43,14 +43,15 @@ endif()
 # find doxygen
 find_package(Doxygen)
 
+if (${COMPILE_TESTS})
 
 find_package(Catch)
-
-if(NOT CATCH_FOUND)
-    message("Could not find catch, downloading it now")
-    # Includes Catch in the project:
-    add_subdirectory(${CMAKE_SOURCE_DIR}/src/catch)
-    include_directories(${CATCH_INCLUDE_DIR} ${COMMON_INCLUDES})
-else()
-    INCLUDE_DIRECTORIES(${CATCH_INCLUDE_DIRS})
+	if(NOT CATCH_FOUND)
+	    message("Could not find catch, downloading it now")
+	    # Includes Catch in the project:
+	    add_subdirectory(${CMAKE_SOURCE_DIR}/src/catch)
+	    include_directories(${CATCH_INCLUDE_DIR} ${COMMON_INCLUDES})
+	else()
+    	INCLUDE_DIRECTORIES(${CATCH_INCLUDE_DIRS})
+	endif()
 endif()
