@@ -1,25 +1,29 @@
 # setup common headers and sources
 file(GLOB jsonrpc_header *.h)
 file(GLOB jsonrpc_header_common common/*.h)
-file(GLOB jsonrpc_source_common common/*.c*)
+file(GLOB jsonrpc_source_common common/*.c* ${JSONCPP_SOURCE})
+file(GLOB jsoncpp_header ${CMAKE_SOURCE_DIR}/LibJsonCpp/dist/json/*.h)
+file(GLOB mhd_header ${MHD_INCLUDE_DIR}/microhttpd.h)
 
 # setup server headers and sources
-file(GLOB jsonrpc_install_header_server 
+file(GLOB jsonrpc_install_header_server
 	server/requesthandlerfactory.h
 	server/abstractserver.h
 	server/abstractserverconnector.h
 	server/iprocedureinvokationhandler.h
 	server/iclientconnectionhandler.h
+	server/server.h
+	server/iserverconnector.h
 )
 file(GLOB jsonrpc_header_server server/*.h)
 file(GLOB jsonrpc_source_server server/*.c*)
 
 # setup client headers and sources
 file(GLOB jsonrpc_install_header_client
-	client/batchcall.h
-	client/batchresponse.h
-	client/client.h
-	client/iclientconnector.h
+	common/batchcall.h
+	common/batchresponse.h
+	common/client.h
+	common/iclientconnector.h
 )
 file(GLOB jsonrpc_header_client client/*.h)
 file(GLOB jsonrpc_source_client client/*.c*)
@@ -42,7 +46,25 @@ endif()
 if (HTTP_SERVER)
 	list(APPEND server_connector_header "server/connectors/httpserver.h")
 	list(APPEND server_connector_source "server/connectors/httpserver.cpp")
-	list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT} ${MHD_LIBRARIES})  
+	list(APPEND server_connector_libs "${MHD_LIBRARY_STATIC}")
+endif()
+
+# setup sources for http connectors
+if (TCP_CLIENT)
+	list(APPEND client_connector_header "client/connectors/tcpclient.h")
+	list(APPEND client_connector_source "client/connectors/tcpclient.cpp")
+	list(APPEND client_connector_source "server/abstractserverconnector.cpp")
+	list(APPEND server_connector_header "server/connectors/tcpconnection.h")
+	list(APPEND client_connector_source "server/connectors/tcpconnection.cpp")
+	list(APPEND client_connector_libs pthread)
+endif()
+
+if (TCP_SERVER)
+	list(APPEND server_connector_header "server/connectors/tcpserver.h")
+	list(APPEND server_connector_source "server/connectors/tcpserver.cpp")
+	list(APPEND server_connector_header "server/connectors/tcpconnection.h")
+	list(APPEND server_connector_source "server/connectors/tcpconnection.cpp")
+	list(APPEND server_connector_libs pthread)
 endif()
 
 # setup sources for unix domain socket connectors
@@ -68,20 +90,20 @@ install(FILES "${PROJECT_BINARY_DIR}/gen/jsonrpccpp/common/jsonparser.h" DESTINA
 
 # include required directories
 include_directories(..)
+include_directories(${MHD_INCLUDE_DIR})
 include_directories(${JSONCPP_INCLUDE_DIRS})
-include_directories(${MHD_INCLUDE_DIRS})
 
 # setup shared common library
 if (BUILD_SHARED_LIBS)
-	add_library(jsonrpccommon SHARED ${jsonrpc_source_common} ${jsonrpc_header} ${jsonrpc_helper_source_common})
-	target_link_libraries(jsonrpccommon ${JSONCPP_LIBRARIES})
+	add_library(jsonrpccommon SHARED ${jsonrpc_source_common} ${jsoncpp_header} ${jsonrpc_header} ${jsonrpc_helper_source_common})
+#	target_link_libraries(jsonrpccommon jsoncpp)
 	set_target_properties(jsonrpccommon PROPERTIES OUTPUT_NAME jsonrpccpp-common)
 endif()
 
 # setup static common library
 if (BUILD_STATIC_LIBS OR MSVC)
-	add_library(jsonrpccommonStatic STATIC ${jsonrpc_source_common} ${jsonrpc_header} ${jsonrpc_helper_source_common})
-	target_link_libraries(jsonrpccommonStatic ${JSONCPP_LIBRARIES})
+	add_library(jsonrpccommonStatic STATIC ${jsonrpc_source_common} ${jsoncpp_header} ${jsonrpc_header} ${jsonrpc_helper_source_common})
+#	target_link_libraries(jsonrpccommonStatic jsoncpp)
 	set_target_properties(jsonrpccommonStatic PROPERTIES OUTPUT_NAME jsonrpccpp-common)
 
 	if (NOT BUILD_SHARED_LIBS)
@@ -147,6 +169,8 @@ set_target_properties(
 # install libraries
 install(FILES ${jsonrpc_header}                 DESTINATION include/jsonrpccpp)
 install(FILES ${jsonrpc_header_common}          DESTINATION include/jsonrpccpp/common)
+install(FILES ${jsoncpp_header}                 DESTINATION include/jsonrpccpp/common)
+install(FILES ${mhd_header}                     DESTINATION include/jsonrpccpp/server/connectors)
 install(FILES ${jsonrpc_helper_header_common}   DESTINATION include/jsonrpccpp/common/helper)
 install(FILES ${jsonrpc_install_header_client}  DESTINATION include/jsonrpccpp/client)
 install(FILES ${jsonrpc_install_header_server}  DESTINATION include/jsonrpccpp/server)
@@ -175,7 +199,7 @@ CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/cmake/libjsonrpccpp-client.pc.cmake ${CMAKE_B
 CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/cmake/libjsonrpccpp-server.pc.cmake ${CMAKE_BINARY_DIR}/libjsonrpccpp-server.pc)
 CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/cmake/libjsonrpccpp-common.pc.cmake ${CMAKE_BINARY_DIR}/libjsonrpccpp-common.pc)
 
-INSTALL(FILES 
+INSTALL(FILES
     "${CMAKE_BINARY_DIR}/libjsonrpccpp-server.pc"
     "${CMAKE_BINARY_DIR}/libjsonrpccpp-client.pc"
     "${CMAKE_BINARY_DIR}/libjsonrpccpp-common.pc"

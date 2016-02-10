@@ -8,6 +8,7 @@
  ************************************************************************/
 
 #include "exception.h"
+#include <cstdio>
 
 using namespace jsonrpc;
 

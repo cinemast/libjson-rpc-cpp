@@ -11,6 +11,7 @@
 #define JSONRPCCPP_SERVER_H_
 
 #include <jsonrpccpp/server/abstractserver.h>
+#include <jsonrpccpp/server/server.h>
 #include <jsonrpccpp/common/exception.h>
 
 

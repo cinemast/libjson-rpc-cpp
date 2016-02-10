@@ -1,0 +1,77 @@
+About
+=====
+
+GNU libmicrohttpd is a GNU package offering a C library that provides
+a compact API and implementation of an HTTP 1.1 web server (HTTP 1.0
+is also supported).  GNU libmicrohttpd only implements the HTTP 1.1
+protocol.  The main application must still provide the application
+logic to generate the content.
+
+
+Installation
+============
+
+If you are using Subversion, run "autoreconf -fi" to create configure.
+
+In order to run the testcases, you need a recent version of libcurl.
+libcurl is not required if you just want to install the library.
+
+Especially for development, do use the MHD_USE_DEBUG option to get
+error messages.
+
+
+Configure options
+=================
+
+
+If you are concerned about space, you should set "CFLAGS" to "-Os
+-fomit-frame-pointer" to have gcc generate tight code.
+
+You can use the following options to disable certain MHD features:
+
+--disable-https: no HTTPS / TLS / SSL support (significant reduction)
+--disable-messages: no error messages (they take space!)
+--disable-postprocessor: no MHD_PostProcessor API
+--disable-dauth: no digest authentication API
+--disable-epoll: no support for epoll, even on Linux
+
+The resulting binary should be about 30-40k depending on the platform.
+
+
+Portability
+===========
+
+The latest version of libmicrohttpd will try to avoid SIGPIPE on its
+sockets.  This should work on OS X, Linux and recent BSD systems (at
+least).  On other systems that may trigger a SIGPIPE on send/recv, the
+main application should install a signal handler to handle SIGPIPE.
+
+libmicrohttpd should work well on GNU/Linux, BSD, OS X, W32 and z/OS.
+Note that HTTPS is not supported on z/OS (yet).  We also have reports
+of users using it on vxWorks and Symbian.  Note that on platforms
+where the compiler does not support the "constructor" attribute, you
+must call "MHD_init" before using any MHD functions and "MHD_fini"
+after you are done using MHD.
+
+
+Development Status
+==================
+
+This is a beta release for libmicrohttpd.  Before declaring the
+library stable, we should implement support for HTTP "Upgrade" 
+requests and have testcases for the following features:
+
+- HTTP/1.1 pipelining (need to figure out how to ensure curl pipelines 
+  -- and it seems libcurl has issues with pipelining, 
+  see http://curl.haxx.se/mail/lib-2007-12/0248.html)
+- resource limit enforcement
+- client queuing early response, suppressing 100 CONTINUE
+- chunked encoding to validate handling of footers
+- more testing for SSL support
+- MHD basic and digest authentication
+
+In particular, the following functions are not covered by 'make check':
+- mhd_panic_std (daemon.c); special case (abort)
+- parse_options (daemon.c)
+- MHD_set_panic_func (daemon.c)
+- MHD_get_version (daemon.c)
