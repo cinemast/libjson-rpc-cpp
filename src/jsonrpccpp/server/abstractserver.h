@@ -18,6 +18,7 @@
 #include "iprocedureinvokationhandler.h"
 #include "iclientconnectionhandler.h"
 #include "requesthandlerfactory.h"
+#include <cstdio>
 
 namespace jsonrpc
 {

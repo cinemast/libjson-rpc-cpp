@@ -9,6 +9,7 @@
 
 #include "rpcprotocolserver12.h"
 #include <jsonrpccpp/common/jsonparser.h>
+#include <cstdio>
 
 using namespace jsonrpc;
 

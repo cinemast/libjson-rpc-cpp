@@ -10,7 +10,7 @@
 #ifndef JSONRPC_CPP_HTTPCLIENT_H_
 #define JSONRPC_CPP_HTTPCLIENT_H_
 
-#include "../iclientconnector.h"
+#include <jsonrpccpp/common/iclientconnector.h>
 #include <jsonrpccpp/common/exception.h>
 #include <curl/curl.h>
 #include <map>

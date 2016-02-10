@@ -11,15 +11,19 @@
 #define JSONRPC_CPP_ICLIENTCONNECTIONHANDLER_H
 
 #include <string>
+#include <cstdio>
 
 namespace jsonrpc
 {
     class Procedure;
     class IClientConnectionHandler {
         public:
-            virtual ~IClientConnectionHandler() {}
+            virtual ~IClientConnectionHandler()
+            {
+			}
 
             virtual void HandleRequest(const std::string& request, std::string& retValue) = 0;
+
     };
 
     class IProtocolHandler : public IClientConnectionHandler

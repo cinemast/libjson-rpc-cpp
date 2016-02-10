@@ -12,6 +12,7 @@
 #include <string>
 #include <string.h>
 #include <cstdlib>
+#include <cstdio>
 
 #include <iostream>
 
@@ -19,8 +20,14 @@ using namespace jsonrpc;
 
 class curl_initializer {
     public:
-        curl_initializer() {curl_global_init(CURL_GLOBAL_ALL);}
-        ~curl_initializer() {curl_global_cleanup();}
+        curl_initializer()
+    {
+        curl_global_init(CURL_GLOBAL_ALL);
+    }
+        ~curl_initializer()
+        {
+        	curl_global_cleanup();
+        }
 };
 
 // See here: http://curl.haxx.se/libcurl/c/curl_global_init.html

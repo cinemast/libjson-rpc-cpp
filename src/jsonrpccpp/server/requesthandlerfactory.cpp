@@ -11,6 +11,7 @@
 #include "rpcprotocolserverv1.h"
 #include "rpcprotocolserverv2.h"
 #include "rpcprotocolserver12.h"
+#include <cstdio>
 
 using namespace jsonrpc;
 

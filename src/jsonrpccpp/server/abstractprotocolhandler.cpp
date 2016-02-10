@@ -10,6 +10,7 @@
 #include "abstractprotocolhandler.h"
 #include <jsonrpccpp/common/errors.h>
 #include <jsonrpccpp/common/jsonparser.h>
+#include <cstdio>
 
 #include <map>
 
