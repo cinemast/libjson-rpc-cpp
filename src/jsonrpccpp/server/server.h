@@ -11,9 +11,9 @@
 #define JSONRPC_CPP_SERVER_H_
 
 #include "iserverconnector.h"
-#include <jsonrpccpp/common/client.h>
-#include <jsonrpccpp/common/batchcall.h>
-#include <jsonrpccpp/common/batchresponse.h>
+#include <jsonrpccpp/client/client.h>
+#include <jsonrpccpp/client/batchcall.h>
+#include <jsonrpccpp/client/batchresponse.h>
 #include <jsonrpccpp/common/jsonparser.h>
 
 #include <vector>

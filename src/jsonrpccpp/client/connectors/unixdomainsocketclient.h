@@ -10,7 +10,7 @@
 #ifndef JSONRPC_CPP_UNIXDOMAINSOCKETCLIENT_H_
 #define JSONRPC_CPP_UNIXDOMAINSOCKETCLIENT_H_
 
-#include <jsonrpccpp/common/iclientconnector.h>
+#include "../iclientconnector.h"
 #include <jsonrpccpp/common/exception.h>
 
 namespace jsonrpc

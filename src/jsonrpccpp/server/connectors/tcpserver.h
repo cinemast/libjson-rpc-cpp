@@ -12,7 +12,7 @@
 
 #include "../abstractserverconnector.h"
 #include "../iserverconnector.h"
-#include <jsonrpccpp/common/iclientconnector.h>
+#include <jsonrpccpp/client/iclientconnector.h>
 #include "tcpconnection.h"
 
 #include <string>

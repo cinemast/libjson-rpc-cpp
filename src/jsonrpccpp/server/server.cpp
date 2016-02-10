@@ -8,7 +8,7 @@
  ************************************************************************/
 
 #include "server.h"
-#include <jsonrpccpp/common/rpcprotocolclient.h>
+#include <jsonrpccpp/client/rpcprotocolclient.h>
 #include <cstdio>
 
 using namespace jsonrpc;

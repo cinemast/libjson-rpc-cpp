@@ -2,8 +2,6 @@
 file(GLOB jsonrpc_header *.h)
 file(GLOB jsonrpc_header_common common/*.h)
 file(GLOB jsonrpc_source_common common/*.c* ${JSONCPP_SOURCE})
-file(GLOB jsoncpp_header ${CMAKE_SOURCE_DIR}/LibJsonCpp/dist/json/*.h)
-file(GLOB mhd_header ${MHD_INCLUDE_DIR}/microhttpd.h)
 
 # setup server headers and sources
 file(GLOB jsonrpc_install_header_server
@@ -15,16 +13,18 @@ file(GLOB jsonrpc_install_header_server
 	server/server.h
 	server/iserverconnector.h
 )
+
 file(GLOB jsonrpc_header_server server/*.h)
 file(GLOB jsonrpc_source_server server/*.c*)
 
 # setup client headers and sources
 file(GLOB jsonrpc_install_header_client
-	common/batchcall.h
-	common/batchresponse.h
-	common/client.h
-	common/iclientconnector.h
+	client/batchcall.h
+	client/batchresponse.h
+	client/client.h
+	client/iclientconnector.h
 )
+
 file(GLOB jsonrpc_header_client client/*.h)
 file(GLOB jsonrpc_source_client client/*.c*)
 
@@ -40,7 +40,7 @@ set(server_connector_libs   "")
 if (HTTP_CLIENT)
 	list(APPEND client_connector_header "client/connectors/httpclient.h")
 	list(APPEND client_connector_source "client/connectors/httpclient.cpp")
-	list(APPEND client_connector_libs ${CURL_LIBRARIES})
+	list(APPEND client_connector_libs ${CURL_LIBRARIES} ${MHD_LIBRARIES})
 endif()
 
 if (HTTP_SERVER)
@@ -90,20 +90,20 @@ install(FILES "${PROJECT_BINARY_DIR}/gen/jsonrpccpp/common/jsonparser.h" DESTINA
 
 # include required directories
 include_directories(..)
-include_directories(${MHD_INCLUDE_DIR})
 include_directories(${JSONCPP_INCLUDE_DIRS})
+include_directories(${MHD_INCLUDE_DIRS})
 
 # setup shared common library
 if (BUILD_SHARED_LIBS)
-	add_library(jsonrpccommon SHARED ${jsonrpc_source_common} ${jsoncpp_header} ${jsonrpc_header} ${jsonrpc_helper_source_common})
-#	target_link_libraries(jsonrpccommon jsoncpp)
+	add_library(jsonrpccommon SHARED ${jsonrpc_source_common} ${jsonrpc_header} ${jsonrpc_helper_source_common})
+	target_link_libraries(jsonrpccommon ${JSONCPP_LIBRARIES})
 	set_target_properties(jsonrpccommon PROPERTIES OUTPUT_NAME jsonrpccpp-common)
 endif()
 
 # setup static common library
 if (BUILD_STATIC_LIBS OR MSVC)
 	add_library(jsonrpccommonStatic STATIC ${jsonrpc_source_common} ${jsoncpp_header} ${jsonrpc_header} ${jsonrpc_helper_source_common})
-#	target_link_libraries(jsonrpccommonStatic jsoncpp)
+	target_link_libraries(jsonrpccommonStatic ${JSONCPP_LIBRARIES})
 	set_target_properties(jsonrpccommonStatic PROPERTIES OUTPUT_NAME jsonrpccpp-common)
 
 	if (NOT BUILD_SHARED_LIBS)
@@ -169,8 +169,6 @@ set_target_properties(
 # install libraries
 install(FILES ${jsonrpc_header}                 DESTINATION include/jsonrpccpp)
 install(FILES ${jsonrpc_header_common}          DESTINATION include/jsonrpccpp/common)
-install(FILES ${jsoncpp_header}                 DESTINATION include/jsonrpccpp/common)
-install(FILES ${mhd_header}                     DESTINATION include/jsonrpccpp/server/connectors)
 install(FILES ${jsonrpc_helper_header_common}   DESTINATION include/jsonrpccpp/common/helper)
 install(FILES ${jsonrpc_install_header_client}  DESTINATION include/jsonrpccpp/client)
 install(FILES ${jsonrpc_install_header_server}  DESTINATION include/jsonrpccpp/server)

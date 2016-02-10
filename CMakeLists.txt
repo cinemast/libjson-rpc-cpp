@@ -10,20 +10,6 @@ if (${CMAKE_MAJOR_VERSION} GREATER 2)
 	cmake_policy(SET CMP0042 OLD)
 endif()
 
-#-----------------------------------------------
-#---------------ANNAX---------------------------
-
-message("${CMAKE_SOURCE_DIR}/LibMicroHttpd/src/microhttpd/.libs/libmicrohttpd.a")
-
-set(MHD_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/LibMicroHttpd/src/include")
-set(MHD_LIBRARY_STATIC "${CMAKE_SOURCE_DIR}/LibMicroHttpd/src/microhttpd/.libs/libmicrohttpd.a")
-
-set(JSONCPP_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/LibJsonCpp/dist/json")
-set(JSONCPP_SOURCE "${CMAKE_SOURCE_DIR}/LibJsonCpp/dist/jsoncpp.cpp")
-
-
-#--------------------------------------------------
-
 set(MAJOR_VERSION 0)
 set(MINOR_VERSION 6)
 set(PATCH_VERSION 0)
@@ -39,16 +25,16 @@ endif()
 
 # defaults for modules that can be enabled/disabled
 if(UNIX)
-        set(UNIX_DOMAIN_SOCKET_SERVER NO CACHE BOOL "Include Unix Domain Socket server")
-        set(UNIX_DOMAIN_SOCKET_CLIENT NO CACHE BOOL "Include Unix Domain Socket client")
+        set(UNIX_DOMAIN_SOCKET_SERVER YES CACHE BOOL "Include Unix Domain Socket server")
+        set(UNIX_DOMAIN_SOCKET_CLIENT YES CACHE BOOL "Include Unix Domain Socket client")
         set(TCP_SERVER YES CACHE BOOL "Include TCP server using sockets")
         set(TCP_CLIENT YES CACHE BOOL "Include TCP client support using sockets")
 endif(UNIX)
 set(HTTP_SERVER YES CACHE BOOL "Include HTTP server using libmicrohttpd")
 set(HTTP_CLIENT YES CACHE BOOL "Include HTTP client support using curl")
-set(COMPILE_TESTS NO CACHE BOOL "Compile test framework")
-set(COMPILE_STUBGEN NO CACHE BOOL "Compile the stubgenerator")
-set(COMPILE_EXAMPLES NO CACHE BOOL "Compile example programs")
+set(COMPILE_TESTS YES CACHE BOOL "Compile test framework")
+set(COMPILE_STUBGEN YES CACHE BOOL "Compile the stubgenerator")
+set(COMPILE_EXAMPLES YES CACHE BOOL "Compile example programs")
 
 # print actual settings
 message(STATUS "HTTP_SERVER: ${HTTP_SERVER}")

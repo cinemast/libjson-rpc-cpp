@@ -10,7 +10,7 @@
 #ifndef JSONRPC_CPP_TCPCLIENT_H_
 #define JSONRPC_CPP_TCPCLIENT_H_
 
-#include <jsonrpccpp/common/iclientconnector.h>
+#include "../iclientconnector.h"
 #include "../../server/abstractserverconnector.h"
 #include "../../server/connectors/tcpconnection.h"
 
