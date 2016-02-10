@@ -1,7 +1,7 @@
 # setup common headers and sources
 file(GLOB jsonrpc_header *.h)
 file(GLOB jsonrpc_header_common common/*.h)
-file(GLOB jsonrpc_source_common common/*.c* ${JSONCPP_SOURCE})
+file(GLOB jsonrpc_source_common common/*.c*)
 
 # setup server headers and sources
 file(GLOB jsonrpc_install_header_server
@@ -13,7 +13,6 @@ file(GLOB jsonrpc_install_header_server
 	server/server.h
 	server/iserverconnector.h
 )
-
 file(GLOB jsonrpc_header_server server/*.h)
 file(GLOB jsonrpc_source_server server/*.c*)
 
@@ -24,7 +23,6 @@ file(GLOB jsonrpc_install_header_client
 	client/client.h
 	client/iclientconnector.h
 )
-
 file(GLOB jsonrpc_header_client client/*.h)
 file(GLOB jsonrpc_source_client client/*.c*)
 
@@ -102,7 +100,7 @@ endif()
 
 # setup static common library
 if (BUILD_STATIC_LIBS OR MSVC)
-	add_library(jsonrpccommonStatic STATIC ${jsonrpc_source_common} ${jsoncpp_header} ${jsonrpc_header} ${jsonrpc_helper_source_common})
+	add_library(jsonrpccommonStatic STATIC ${jsonrpc_source_common} ${jsonrpc_header} ${jsonrpc_helper_source_common})
 	target_link_libraries(jsonrpccommonStatic ${JSONCPP_LIBRARIES})
 	set_target_properties(jsonrpccommonStatic PROPERTIES OUTPUT_NAME jsonrpccpp-common)
 

@@ -10,7 +10,6 @@
 #include "abstractserverconnector.h"
 #include <jsonrpccpp/common/specificationwriter.h>
 #include <cstdlib>
-#include <cstdio>
 
 using namespace std;
 using namespace jsonrpc;

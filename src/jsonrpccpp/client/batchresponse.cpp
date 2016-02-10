@@ -9,7 +9,6 @@
 
 #include "batchresponse.h"
 #include <algorithm>
-#include <cstdio>
 
 using namespace jsonrpc;
 using namespace std;

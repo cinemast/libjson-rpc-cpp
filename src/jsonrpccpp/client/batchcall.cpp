@@ -9,7 +9,6 @@
 
 #include "batchcall.h"
 #include "rpcprotocolclient.h"
-#include <cstdio>
 
 using namespace jsonrpc;
 using namespace std;
