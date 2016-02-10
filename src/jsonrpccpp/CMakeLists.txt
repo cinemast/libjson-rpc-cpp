@@ -34,19 +34,19 @@ set(client_connector_header "")
 set(client_connector_libs   "")
 set(server_connector_source "")
 set(server_connector_header "")
-set(server_connector_libs   "")
+set(server_connector_libs   jsonrpcclient)
 
 # setup sources for http connectors
 if (HTTP_CLIENT)
 	list(APPEND client_connector_header "client/connectors/httpclient.h")
 	list(APPEND client_connector_source "client/connectors/httpclient.cpp")
-	list(APPEND client_connector_libs ${CURL_LIBRARIES} ${MHD_LIBRARIES})
+	list(APPEND client_connector_libs ${CURL_LIBRARIES})
 endif()
 
 if (HTTP_SERVER)
 	list(APPEND server_connector_header "server/connectors/httpserver.h")
 	list(APPEND server_connector_source "server/connectors/httpserver.cpp")
-	list(APPEND server_connector_libs "${MHD_LIBRARY_STATIC}")
+	list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT} ${MHD_LIBRARIES})
 endif()
 
 # setup sources for http connectors
