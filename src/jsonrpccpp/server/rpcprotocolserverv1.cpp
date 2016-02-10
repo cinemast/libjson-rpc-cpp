@@ -10,7 +10,6 @@
 #include "rpcprotocolserverv1.h"
 #include <jsonrpccpp/common/exception.h>
 #include <jsonrpccpp/common/errors.h>
-#include <cstdio>
 
 using namespace jsonrpc;
 

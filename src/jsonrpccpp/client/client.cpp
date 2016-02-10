@@ -9,7 +9,6 @@
 
 #include "client.h"
 #include "rpcprotocolclient.h"
-#include <cstdio>
 
 using namespace jsonrpc;
 
@@ -81,8 +80,7 @@ Json::Value Client::CallMethod(const std::string& name, const Json::Value& param
 
 void Client::CallNotification(const std::string& name, const Json::Value& parameter) throw(JsonRpcException)
 {
-    std::string request;
-    std::string response = "notification";
+    std::string request, response;
     protocol->BuildRequest(name, parameter, request, true);
     connector.SendRPCMessage(request, response);
 }

@@ -12,7 +12,6 @@
 #include <sstream>
 #include <iostream>
 #include <jsonrpccpp/common/specificationparser.h>
-#include <cstdio>
 
 using namespace jsonrpc;
 using namespace std;

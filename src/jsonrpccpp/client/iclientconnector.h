@@ -12,7 +12,6 @@
 
 #include <string>
 #include <jsonrpccpp/common/exception.h>
-#include <cstdio>
 
 namespace jsonrpc
 {

@@ -9,7 +9,6 @@
 
 #include "rpcprotocolclient.h"
 #include <jsonrpccpp/common/jsonparser.h>
-#include <cstdio>
 
 using namespace jsonrpc;
 

@@ -43,9 +43,9 @@ namespace jsonrpc {
         protected:
             IProcedureInvokationHandler &handler;
             std::map<std::string, Procedure> procedures;
-            int ValidateRequest(const Json::Value &val);
 
             void ProcessRequest(const Json::Value &request, Json::Value &retValue);
+            int ValidateRequest(const Json::Value &val);
 
     };
 

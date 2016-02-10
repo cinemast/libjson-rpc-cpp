@@ -94,15 +94,13 @@ bool UnixDomainSocketServer::SendResponse(const string& response, void* addInfo)
 	return result;
 }
 
-void* UnixDomainSocketServer::LaunchLoop(void *p_data)
-{
-	UnixDomainSocketServer *instance = reinterpret_cast<UnixDomainSocketServer*>(p_data);
+void* UnixDomainSocketServer::LaunchLoop(void *p_data) {
+	UnixDomainSocketServer *instance = reinterpret_cast<UnixDomainSocketServer*>(p_data);;
 	instance->ListenLoop();
     return NULL;
 }
 
-void UnixDomainSocketServer::ListenLoop()
-{
+void UnixDomainSocketServer::ListenLoop() {
 	int connection_fd;
 	socklen_t address_length = sizeof(this->address);
     while(this->running)
@@ -124,9 +122,8 @@ void UnixDomainSocketServer::ListenLoop()
 	}
 }
 
-void* UnixDomainSocketServer::GenerateResponse(void *p_data)
-{
-	pthread_detach(pthread_self());
+void* UnixDomainSocketServer::GenerateResponse(void *p_data) {
+    pthread_detach(pthread_self());
     struct ClientConnection* params = reinterpret_cast<struct ClientConnection*>(p_data);
 	UnixDomainSocketServer *instance = params->instance;
 	int connection_fd = params->connection_fd;
@@ -146,8 +143,7 @@ void* UnixDomainSocketServer::GenerateResponse(void *p_data)
 }
 
 
-bool UnixDomainSocketServer::WriteToSocket(int fd, const string& toWrite)
-{
+bool UnixDomainSocketServer::WriteToSocket(int fd, const string& toWrite) {
 	bool fullyWritten = false;
 	bool errorOccured = false;
 	string toSend = toWrite;

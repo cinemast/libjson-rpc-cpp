@@ -10,7 +10,6 @@
 #include "specificationparser.h"
 #include <jsonrpccpp/common/jsonparser.h>
 #include <fstream>
-#include <cstdio>
 
 using namespace std;
 using namespace jsonrpc;
@@ -24,6 +23,7 @@ vector<Procedure>   SpecificationParser::GetProceduresFromFile  (const string &f
 }
 vector<Procedure>   SpecificationParser::GetProceduresFromString(const string &content) throw(JsonRpcException)
 {
+
     Json::Reader reader;
     Json::Value val;
     if(!reader.parse(content,val))

@@ -9,7 +9,6 @@
 
 #include "errors.h"
 #include "exception.h"
-#include <cstdio>
 
 using namespace jsonrpc;
 
@@ -32,9 +31,7 @@ const int Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX =       -32007;
 const int Errors::ERROR_CLIENT_CONNECTOR =   -32003;
 const int Errors::ERROR_CLIENT_INVALID_RESPONSE =     -32001;
 
-Errors::_init::_init()
-{
-
+Errors::_init::_init() {
     //Official Errors
     possibleErrors[ERROR_RPC_INVALID_REQUEST] =
             "INVALID_JSON_REQUEST: The JSON sent is not a valid JSON-RPC Request object";
