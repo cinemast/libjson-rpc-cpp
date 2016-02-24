@@ -5,7 +5,7 @@ before_install:
  - sudo apt-get install -qq libcurl4-openssl-dev libjsoncpp-dev libargtable2-dev libgnutls-dev libgcrypt11-dev valgrind wget
  - wget http://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-0.9.44.tar.gz
  - tar -xvf libmicrohttpd-0.9.44.tar.gz
- - cd libmicrohttpd-0.9.38
+ - cd libmicrohttpd-0.9.44
  - ./configure && make
  - sudo make install && sudo ldconfig
  - cd .. && sudo rm -rf libmicrohttpd-0.9.44
