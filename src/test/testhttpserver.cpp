@@ -63,7 +63,7 @@ int TestHttpServer::callback(void *cls, MHD_Connection *connection, const char *
     else
     {
         MHD_get_connection_values(connection, MHD_HEADER_KIND, header_iterator, cls);
-        struct MHD_Response *result = MHD_create_response_from_data(_this->response.size(),(void *) _this->response.c_str(), 0, 1);
+        struct MHD_Response *result = MHD_create_response_from_buffer(_this->response.size(),(void *) _this->response.c_str(), MHD_RESPMEM_MUST_COPY);
         MHD_add_response_header(result, "Content-Type", "application/json");
         MHD_add_response_header(result, "Access-Control-Allow-Origin", "*");
         MHD_queue_response(connection, MHD_HTTP_OK, result);
