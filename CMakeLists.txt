@@ -46,7 +46,7 @@ message(STATUS "COMPILE_STUBGEN: ${COMPILE_STUBGEN}")
 message(STATUS "COMPILE_EXAMPLES: ${COMPILE_EXAMPLES}")
 
 # setup directory where we should look for cmake files
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
 
 # setup compiler settings && dependencies
 include(CMakeCompilerSettings)
@@ -88,7 +88,7 @@ endif()
 if (DOXYGEN_FOUND)
 	file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/doc)
 	message(STATUS "Found doxygen: ${DOXYGEN_EXECUTABLE}")
-	configure_file("${CMAKE_SOURCE_DIR}/doc/doxyfile.in" "${CMAKE_BINARY_DIR}/Doxyfile" @ONLY)
+	configure_file("${PROJECT_SOURCE_DIR}/doc/doxyfile.in" "${CMAKE_BINARY_DIR}/Doxyfile" @ONLY)
 	add_custom_target(doc ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/doc COMMENT "Generating API documentation")
 endif(DOXYGEN_FOUND)
 
