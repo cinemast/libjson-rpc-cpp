@@ -1,5 +1,14 @@
 language: cpp
 
+addons:
+  apt:
+    - ubuntu-toolchain-r-test
+  packages:
+    - gcc-4.9
+    - g++-4.9
+    - clang
+    - valgrind
+
 before_install:
  - sudo apt-get update -qq
  - sudo apt-get install -qq libcurl4-openssl-dev libjsoncpp-dev libargtable2-dev libgnutls-dev libgcrypt11-dev valgrind wget
@@ -10,6 +19,9 @@ before_install:
  - sudo make install && sudo ldconfig
  - cd .. && sudo rm -rf libmicrohttpd-0.9.44
  - sudo pip install cpp-coveralls
+
+install:
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
 
 env:
  - HTTP_SERVER=YES HTTP_CLIENT=YES COMPILE_STUBGEN=YES
