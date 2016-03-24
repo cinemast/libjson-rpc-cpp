@@ -47,7 +47,7 @@ void UnixDomainSocketClient::SendRPCMessage(const std::string& message, std::str
     memset(&address, 0, sizeof(sockaddr_un));
 
     address.sun_family = AF_UNIX;
-    snprintf(address.sun_path, PATH_MAX, this->path.c_str());
+    snprintf(address.sun_path, PATH_MAX, "%s", this->path.c_str());
 
     if(connect(socket_fd, (struct sockaddr *) &address,  sizeof(sockaddr_un)) != 0) {
         throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Could not connect to: " + this->path);
