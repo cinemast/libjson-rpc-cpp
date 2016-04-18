@@ -46,7 +46,7 @@ bool UnixDomainSocketServer::StartListening()
 		memset(&(this->address), 0, sizeof(struct sockaddr_un));
 
 		this->address.sun_family = AF_UNIX;
-		snprintf(this->address.sun_path, PATH_MAX, this->socket_path.c_str());
+		snprintf(this->address.sun_path, PATH_MAX, "%s", this->socket_path.c_str());
 
         bind(this->socket_fd, reinterpret_cast<struct sockaddr *>(&(this->address)), sizeof(struct sockaddr_un));
 
