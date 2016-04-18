@@ -97,7 +97,7 @@ void RpcProtocolServerV2::WrapError(const Json::Value &request, int code, const 
     result["error"]["code"] = code;
     result["error"]["message"] = message;
 
-    if(request.isObject() && request.isMember("id") && (request["id"].isNull() || request["id"].isInt() || request["id"].isUInt() || request["id"].isString()))
+    if(request.isObject() && request.isMember("id") && (request["id"].isNull() || request["id"].isIntegral() || request["id"].isString()))
     {
         result["id"] = request["id"];
     }
