@@ -166,7 +166,7 @@ bool    Procedure::ValidateSingleParameter      (jsontype_t expectedType, const 
                 ok = false;
             break;
         case JSON_INTEGER:
-            if (!value.isInt())
+            if (!value.isIntegral())
                 ok = false;
             break;
         case JSON_REAL:

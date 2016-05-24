@@ -219,7 +219,7 @@ string  CPPHelper::isCppConversion                  (jsontype_t type)
             result = ".isBool()";
             break;
         case JSON_INTEGER:
-            result = ".isInt()";
+            result = ".isIntegral()";
             break;
         case JSON_REAL:
             result = ".isDouble()";

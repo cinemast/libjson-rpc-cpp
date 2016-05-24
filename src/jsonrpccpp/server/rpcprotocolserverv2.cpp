@@ -77,7 +77,7 @@ bool RpcProtocolServerV2::ValidateRequestFields(const Json::Value &request)
         return false;
     if (!(request.isMember(KEY_REQUEST_VERSION) && request[KEY_REQUEST_VERSION].isString() && request[KEY_REQUEST_VERSION].asString() == JSON_RPC_VERSION2))
         return false;
-    if (request.isMember(KEY_REQUEST_ID) && !(request[KEY_REQUEST_ID].isInt() || request[KEY_REQUEST_ID].isString() || request[KEY_REQUEST_ID].isNull()))
+    if (request.isMember(KEY_REQUEST_ID) && !(request[KEY_REQUEST_ID].isIntegral() || request[KEY_REQUEST_ID].isString() || request[KEY_REQUEST_ID].isNull()))
         return false;
     if (request.isMember(KEY_REQUEST_PARAMETERS) && !(request[KEY_REQUEST_PARAMETERS].isObject() || request[KEY_REQUEST_PARAMETERS].isArray() || request[KEY_REQUEST_ID].isNull()))
         return false;
@@ -97,7 +97,7 @@ void RpcProtocolServerV2::WrapError(const Json::Value &request, int code, const 
     result["error"]["code"] = code;
     result["error"]["message"] = message;
 
-    if(request.isObject() && request.isMember("id") && (request["id"].isNull() || request["id"].isInt() || request["id"].isUInt() || request["id"].isString()))
+    if(request.isObject() && request.isMember("id") && (request["id"].isNull() || request["id"].isIntegral() || request["id"].isString()))
     {
         result["id"] = request["id"];
     }

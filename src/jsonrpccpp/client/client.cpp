@@ -53,8 +53,8 @@ void Client::CallProcedures(const BatchCall &calls, BatchResponse &result) throw
                 result.addResponse(id, singleResult, false);
             }
             catch (JsonRpcException& ex) {
-                Json::Value id = -1;
-                if(tmpresult[i].isMember("id") && tmpresult[i]["id"].isInt())
+                int id = -1;
+                if(tmpresult[i].isMember("id") && tmpresult[i]["id"].isIntegral())
                     id = tmpresult[i]["id"].asInt();
                 result.addResponse(id, tmpresult[i]["error"], true);
             }

@@ -174,7 +174,7 @@ TEST_CASE("test_specificationwriter", TEST_MODULE)
     CHECK(result[4]["name"].asString() == "testnotification3");
 
     REQUIRE(result[0]["params"].isObject() == true);
-    CHECK(result[0]["params"]["param1"].isInt() == true);
+    CHECK(result[0]["params"]["param1"].isIntegral() == true);
     CHECK(result[0]["params"]["param2"].isDouble() == true);
 
     REQUIRE(result[1]["params"].isArray() == true);
@@ -186,13 +186,13 @@ TEST_CASE("test_specificationwriter", TEST_MODULE)
     CHECK(result[2]["params"]["param2"].isString() == true);
 
     REQUIRE(result[3]["params"].isArray() == true);
-    CHECK(result[3]["params"][0].isInt() == true);
+    CHECK(result[3]["params"][0].isIntegral() == true);
     CHECK(result[3]["params"][1].isString() == true);
 
     CHECK(result[4].isMember("params") == false);
 
-    CHECK(result[0]["returns"].isInt() == true);
-    CHECK(result[1]["returns"].isInt() == true);
+    CHECK(result[0]["returns"].isIntegral() == true);
+    CHECK(result[1]["returns"].isIntegral() == true);
 
     CHECK(SpecificationWriter::toFile("testspec.json", procedures) == true);
     CHECK(SpecificationWriter::toFile("/a/b/c/testspec.json", procedures) == false);
