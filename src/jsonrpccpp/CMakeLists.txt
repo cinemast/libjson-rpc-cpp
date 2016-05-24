@@ -193,8 +193,8 @@ if (WIN32)
 endif()
 
 install(TARGETS ${ALL_LIBS}
-        LIBRARY DESTINATION lib/${CMAKE_LIBRARY_PATH}
-        ARCHIVE DESTINATION lib/${CMAKE_LIBRARY_PATH}
+	LIBRARY DESTINATION lib${LIB_SUFFIX}/${CMAKE_LIBRARY_PATH}
+	ARCHIVE DESTINATION lib${LIB_SUFFIX}/${CMAKE_LIBRARY_PATH}
 	RUNTIME DESTINATION bin
 )
 
@@ -211,6 +211,6 @@ INSTALL(FILES
     "${CMAKE_BINARY_DIR}/libjsonrpccpp-server.pc"
     "${CMAKE_BINARY_DIR}/libjsonrpccpp-client.pc"
     "${CMAKE_BINARY_DIR}/libjsonrpccpp-common.pc"
-    DESTINATION "lib/${CMAKE_LIBRARY_PATH}/pkgconfig")
+    DESTINATION "lib${LIB_SUFFIX}/${CMAKE_LIBRARY_PATH}/pkgconfig")
 
 
