@@ -30,7 +30,7 @@ Overview
 Install the framework
 =====================
 
-**Debian**
+**Debian (stretch) and Ubuntu (15.10 or later)**
 
 ```sh
 sudo apt-get install libjsonrpccpp-dev libjsonrpccpp-tools
