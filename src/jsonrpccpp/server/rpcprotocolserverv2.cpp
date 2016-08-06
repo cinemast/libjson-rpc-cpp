@@ -79,7 +79,7 @@ bool RpcProtocolServerV2::ValidateRequestFields(const Json::Value &request)
         return false;
     if (request.isMember(KEY_REQUEST_ID) && !(request[KEY_REQUEST_ID].isIntegral() || request[KEY_REQUEST_ID].isString() || request[KEY_REQUEST_ID].isNull()))
         return false;
-    if (request.isMember(KEY_REQUEST_PARAMETERS) && !(request[KEY_REQUEST_PARAMETERS].isObject() || request[KEY_REQUEST_PARAMETERS].isArray() || request[KEY_REQUEST_ID].isNull()))
+    if (request.isMember(KEY_REQUEST_PARAMETERS) && !(request[KEY_REQUEST_PARAMETERS].isObject() || request[KEY_REQUEST_PARAMETERS].isArray() || request[KEY_REQUEST_PARAMETERS].isNull()))
         return false;
     return true;
 }
