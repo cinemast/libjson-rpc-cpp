@@ -4,12 +4,14 @@ file(GLOB jsonrpc_header_common common/*.h)
 file(GLOB jsonrpc_source_common common/*.c*)
 
 # setup server headers and sources
-file(GLOB jsonrpc_install_header_server 
+file(GLOB jsonrpc_install_header_server
 	server/requesthandlerfactory.h
 	server/abstractserver.h
 	server/abstractserverconnector.h
 	server/iprocedureinvokationhandler.h
 	server/iclientconnectionhandler.h
+	server/server.h
+	server/iserverconnector.h
 )
 file(GLOB jsonrpc_header_server server/*.h)
 file(GLOB jsonrpc_source_server server/*.c*)
@@ -30,7 +32,7 @@ set(client_connector_header "")
 set(client_connector_libs   "")
 set(server_connector_source "")
 set(server_connector_header "")
-set(server_connector_libs   "")
+set(server_connector_libs   jsonrpcclient)
 
 # setup sources for http connectors
 if (HTTP_CLIENT)
@@ -42,7 +44,25 @@ endif()
 if (HTTP_SERVER)
 	list(APPEND server_connector_header "server/connectors/httpserver.h")
 	list(APPEND server_connector_source "server/connectors/httpserver.cpp")
-	list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT} ${MHD_LIBRARIES})  
+	list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT} ${MHD_LIBRARIES})
+endif()
+
+# setup sources for http connectors
+if (TCP_CLIENT)
+	list(APPEND client_connector_header "client/connectors/tcpclient.h")
+	list(APPEND client_connector_source "client/connectors/tcpclient.cpp")
+	list(APPEND client_connector_source "server/abstractserverconnector.cpp")
+	list(APPEND server_connector_header "server/connectors/tcpconnection.h")
+	list(APPEND client_connector_source "server/connectors/tcpconnection.cpp")
+	list(APPEND client_connector_libs pthread)
+endif()
+
+if (TCP_SERVER)
+	list(APPEND server_connector_header "server/connectors/tcpserver.h")
+	list(APPEND server_connector_source "server/connectors/tcpserver.cpp")
+	list(APPEND server_connector_header "server/connectors/tcpconnection.h")
+	list(APPEND server_connector_source "server/connectors/tcpconnection.cpp")
+	list(APPEND server_connector_libs pthread)
 endif()
 
 # setup sources for unix domain socket connectors
@@ -175,7 +195,7 @@ CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/cmake/libjsonrpccpp-client.pc.cmake ${CMAKE
 CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/cmake/libjsonrpccpp-server.pc.cmake ${CMAKE_BINARY_DIR}/libjsonrpccpp-server.pc)
 CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/cmake/libjsonrpccpp-common.pc.cmake ${CMAKE_BINARY_DIR}/libjsonrpccpp-common.pc)
 
-INSTALL(FILES 
+INSTALL(FILES
     "${CMAKE_BINARY_DIR}/libjsonrpccpp-server.pc"
     "${CMAKE_BINARY_DIR}/libjsonrpccpp-client.pc"
     "${CMAKE_BINARY_DIR}/libjsonrpccpp-common.pc"

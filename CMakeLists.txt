@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(libjson-rpc-cpp)
 
-# list command no longer ignores empty elements 
+# list command no longer ignores empty elements
 cmake_policy(SET CMP0007 NEW)
 cmake_policy(SET CMP0012 NEW)
 
@@ -27,6 +27,8 @@ endif()
 if(UNIX)
         set(UNIX_DOMAIN_SOCKET_SERVER YES CACHE BOOL "Include Unix Domain Socket server")
         set(UNIX_DOMAIN_SOCKET_CLIENT YES CACHE BOOL "Include Unix Domain Socket client")
+        set(TCP_SERVER YES CACHE BOOL "Include TCP server using sockets")
+        set(TCP_CLIENT YES CACHE BOOL "Include TCP client support using sockets")
 endif(UNIX)
 set(HTTP_SERVER YES CACHE BOOL "Include HTTP server using libmicrohttpd")
 set(HTTP_CLIENT YES CACHE BOOL "Include HTTP client support using curl")
@@ -40,6 +42,8 @@ message(STATUS "HTTP_CLIENT: ${HTTP_CLIENT}")
 if(UNIX)
     message(STATUS "UNIXDOMAINSOCKET_SERVER: ${UNIX_DOMAIN_SOCKET_SERVER}")
     message(STATUS "UNIXDOMAINSOCKET_CLIENT: ${UNIX_DOMAIN_SOCKET_CLIENT}")
+    message(STATUS "TCP_SERVER: ${TCP_SERVER}")
+    message(STATUS "TCP_CLIENT: ${TCP_CLIENT}")
 endif(UNIX)
 message(STATUS "COMPILE_TESTS: ${COMPILE_TESTS}")
 message(STATUS "COMPILE_STUBGEN: ${COMPILE_STUBGEN}")

@@ -1,7 +1,7 @@
 /*************************************************************************
  * libjson-rpc-cpp
  *************************************************************************
- * @file    abstractclientconnector.h
+ * @file    iclientconnector.h
  * @date    02.01.2013
  * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>
  * @license See attached LICENSE.txt
