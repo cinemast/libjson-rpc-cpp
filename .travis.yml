@@ -29,7 +29,6 @@ script:
     - mkdir -p build && cd build
     - cmake -DCMAKE_BUILD_TYPE=Debug -DHTTP_CLIENT=${HTTP_CLIENT} -DHTTP_SERVER=${HTTP_SERVER} -DCOMPILE_STUBGEN=${COMPILE_STUBGEN} .. 
     - make
-    - valgrind --leak-check=full --error-exitcode=1 ./bin/unit_testsuite
     - make test
     - sudo make install && sudo ldconfig
     - g++ ../src/examples/simpleclient.cpp -ljsonrpccpp-client -ljsoncpp -ljsonrpccpp-common -lcurl -o sampleclient
