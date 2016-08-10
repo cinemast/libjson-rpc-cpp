@@ -11,7 +11,7 @@ It is fully JSON-RPC [2.0 & 1.0 compatible](http://www.jsonrpc.org/specification
 **5 good reasons for using libjson-rpc-cpp in your next RPC project**
 - Full JSON-RPC 2.0 & 1.0 Client and Server Support.
 - jsonrpcstub - a tool that generates stub-classes for your JSON-RPC client AND server applications.
-- Ready to use HTTP server and client to provide simple interfaces for your JSON-RPC application.
+- Ready to use HTTP + TCP server and client to provide simple interfaces for your JSON-RPC application.
 - Cross platform build support and [precompiled binaries for WIN32](http://spiessknafl.at/libjson-rpc-cpp).
 - Super liberal [MIT-License](http://en.wikipedia.org/wiki/MIT_License). 
 
@@ -111,6 +111,8 @@ Default configuration should be fine for most systems, but here are available co
 - `-DHTTP_CLIENT=NO` disable the curl client.
 - `-DUNIX_DOMAIN_SOCKET_SERVER=NO` disable the unix domain socket server connector.
 - `-DUNIX_DOMAIN_SOCKET_CLIENT=NO` disable the unix domain socket client connector.
+- `-DTCP_SOCKET_SERVER=NO` disable the tcp socket server connector.
+- `-DTCP_SOCKET_CLIENT=NO` disable the tcp socket client connector.
 
 Using the framework
 ===================

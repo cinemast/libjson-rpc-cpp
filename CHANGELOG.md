@@ -1,3 +1,17 @@
+Changes in v0.7.0
+-----------------
+- Change: Requiring C++11 support (gcc >= 4.8)
+- Fix: armhf compatibility
+- Fix: Invalid client id field handling (removed int only check)
+- Fix: Security issues in unixdomainsocket connectors
+- Fix: Missing CURL include directive
+- Fix: Parallel build which failed due to failing CATCH dependency
+- Fix: Handling 64-bit ids
+- Fix: Invalid parameter check
+- Fix: Invalid pointer handling in HTTP-Server
+- NEW: HttpServer can now be configured to listen localhost only
+- NEW: TCP Server + Client connectors
+
 Changes in v0.6.0
 -----------------
 - NEW: pkg-config files for all shared libraries

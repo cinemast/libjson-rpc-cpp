@@ -50,7 +50,7 @@ void RpcProtocolClient::HandleResponse(const std::string &response, Json::Value&
     }
 }
 
-int RpcProtocolClient::HandleResponse(const Json::Value &value, Json::Value &result) throw(JsonRpcException)
+Json::Value RpcProtocolClient::HandleResponse(const Json::Value &value, Json::Value &result) throw(JsonRpcException)
 {
     if(this->ValidateResponse(value))
     {
@@ -67,7 +67,7 @@ int RpcProtocolClient::HandleResponse(const Json::Value &value, Json::Value &res
     {
         throw JsonRpcException(Errors::ERROR_CLIENT_INVALID_RESPONSE, " " + value.toStyledString());
     }
-    return value[KEY_ID].asInt();
+    return value[KEY_ID];
 }
 
 void RpcProtocolClient::BuildRequest(int id, const std::string &method, const Json::Value &parameter, Json::Value &result, bool isNotification)
@@ -91,9 +91,15 @@ void RpcProtocolClient::throwErrorException(const Json::Value &response)
         {
             throw JsonRpcException(response[KEY_ERROR][KEY_ERROR_CODE].asInt(), response[KEY_ERROR][KEY_ERROR_MESSAGE].asString(), response[KEY_ERROR][KEY_ERROR_DATA]);
         }
-        throw JsonRpcException(response[KEY_ERROR][KEY_ERROR_CODE].asInt(), response[KEY_ERROR][KEY_ERROR_MESSAGE].asString());
+        else
+        {
+            throw JsonRpcException(response[KEY_ERROR][KEY_ERROR_CODE].asInt(), response[KEY_ERROR][KEY_ERROR_MESSAGE].asString());
+        }
     }
-    throw JsonRpcException(response[KEY_ERROR][KEY_ERROR_CODE].asInt());
+    else
+    {
+        throw JsonRpcException(response[KEY_ERROR][KEY_ERROR_CODE].asInt());
+    }
 }
 
 bool RpcProtocolClient::ValidateResponse(const Json::Value& response)

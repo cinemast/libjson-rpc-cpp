@@ -18,7 +18,6 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <pthread.h>
-#include <set>
 
 #include "../abstractserverconnector.h"
 
@@ -30,7 +29,6 @@ namespace jsonrpc
 	class UnixDomainSocketServer: public AbstractServerConnector
 	{
 		public:
-
 			/**
 			 * @brief UnixDomainSocketServer, constructor for the included UnixDomainSocketServer
 			 * @param socket_path, a string containing the path to the unix socket
@@ -42,7 +40,6 @@ namespace jsonrpc
 
 			bool virtual SendResponse(const std::string& response, void* addInfo = NULL);
 
-
 		private:
 			bool running;
 			std::string socket_path;
@@ -50,11 +47,11 @@ namespace jsonrpc
 			struct sockaddr_un address;
 
 			pthread_t listenning_thread;
-			std::set<pthread_t> client_thread_pool;
 
 			static void* LaunchLoop(void *p_data);
 			void ListenLoop();
-            struct ClientConnection {
+			struct ClientConnection
+			{
 				UnixDomainSocketServer *instance;
 				int connection_fd;
 			};

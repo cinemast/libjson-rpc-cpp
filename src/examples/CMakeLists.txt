@@ -36,6 +36,24 @@ include_directories(${CMAKE_BINARY_DIR})
 include_directories(${JSONCPP_INCLUDE_DIRS})
 include_directories(${MHD_INCLUDE_DIRS})
 
+if(UNIX)
+	if (UNIX_DOMAIN_SOCKET_SERVER AND UNIX_DOMAIN_SOCKET_CLIENT)
+		add_executable(unixdomainsocketserversample unixdomainsocketserver.cpp)
+		target_link_libraries(unixdomainsocketserversample jsonrpcserver)
+	
+		add_executable(unixdomainsocketclientsample unixdomainsocketclient.cpp)
+		target_link_libraries(unixdomainsocketclientsample jsonrpcclient)
+	endif (UNIX_DOMAIN_SOCKET_SERVER AND UNIX_DOMAIN_SOCKET_CLIENT)
+endif(UNIX)
+
+if (TCP_SOCKET_SERVER AND TCP_SOCKET_CLIENT)
+	add_executable(tcpsocketclient tcpsocketclient.cpp)
+	target_link_libraries(tcpsocketclient jsonrpcclient)
+	
+	add_executable(tcpsocketserver tcpsocketserver.cpp)
+	target_link_libraries(tcpsocketserver jsonrpcserver)
+endif (TCP_SOCKET_SERVER AND TCP_SOCKET_CLIENT)
+
 if(HTTP_SERVER)
     add_executable(simpleserversample simpleserver.cpp)
     target_link_libraries(simpleserversample jsonrpcserver)
@@ -59,3 +77,4 @@ if (COMPILE_STUBGEN)
         target_link_libraries(stubserversample jsonrpcserver)
     endif()
 endif()
+

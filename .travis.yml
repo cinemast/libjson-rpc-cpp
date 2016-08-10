@@ -11,6 +11,10 @@ before_install:
  - sudo make install && sudo ldconfig
  - cd .. && sudo rm -rf libmicrohttpd-0.9.44
  - sudo pip install cpp-coveralls
+ -  sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+ -  sudo apt-get update -qq
+ -  if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
+ -  if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
 
 install:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
@@ -25,7 +29,6 @@ script:
     - mkdir -p build && cd build
     - cmake -DCMAKE_BUILD_TYPE=Debug -DHTTP_CLIENT=${HTTP_CLIENT} -DHTTP_SERVER=${HTTP_SERVER} -DCOMPILE_STUBGEN=${COMPILE_STUBGEN} .. 
     - make
-    - valgrind --leak-check=full --error-exitcode=1 ./bin/unit_testsuite
     - make test
     - sudo make install && sudo ldconfig
     - g++ ../src/examples/simpleclient.cpp -ljsonrpccpp-client -ljsoncpp -ljsonrpccpp-common -lcurl -o sampleclient

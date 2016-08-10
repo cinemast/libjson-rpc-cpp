@@ -29,7 +29,7 @@ namespace jsonrpc {
              * @param response
              * @param isError
              */
-            void addResponse(int id, Json::Value response, bool isError = false);
+            void addResponse(Json::Value& id, Json::Value response, bool isError = false);
 
             /**
              * @brief getResult method gets the result for a given request id (returned by BatchCall::addCall.
@@ -37,29 +37,33 @@ namespace jsonrpc {
              * @param id
              * @return
              */
+            Json::Value getResult(Json::Value& id);
+
             Json::Value getResult(int id);
 
 
-            void getResult(int id, Json::Value &result);
+            void getResult(Json::Value& id, Json::Value &result);
 
             /**
              * @brief getErrorCode method checks if for a given id, an error occurred in the batch request.
              * @param id
              */
-            int getErrorCode(int id);
+            int getErrorCode(Json::Value& id);
 
             /**
              * @brief getErrorMessage method gets the corresponding error message.
              * @param id
              * @return the error message in case of an error, an empty string if no error was found for the provided id.
              */
+            std::string getErrorMessage(Json::Value& id);
+
             std::string getErrorMessage(int id);
 
             bool hasErrors();
 
         private:
-            std::map<int, Json::Value> responses;
-            std::vector<int> errorResponses;
+            std::map<Json::Value, Json::Value> responses;
+            std::vector<Json::Value> errorResponses;
 
     };
 

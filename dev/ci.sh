@@ -7,7 +7,6 @@ build_configuration() {
     cd build
     cmake $1 ..
     make
-    make test
     mkdir -p root
     make DESTDIR=root install
     cd ..
@@ -37,11 +36,11 @@ valgrind --leak-check=full --xml=yes --xml-file=../reports/valgrind.xml ./bin/un
 
 
 echo "Generating coverage report"
-gcovr -x -r .. > ../reports/coverage.xml
-gcovr -r .. --html --html-details -o ../reports/coverage.html
+gcovr -e "build" -e "src/test" -x -r .. > ../reports/coverage.xml
+gcovr -e "build" -e "src/test" -r .. --html --html-details -o ../reports/coverage.html
 
 echo "Generating cppcheck report"
-cppcheck --enable=all --xml ../src --xml-version=2 2> ../reports/cppcheck.xml
+cppcheck -I ../src --enable=all --xml ../src --xml-version=2 2> ../reports/cppcheck.xml
 
 cd ..
 echo "Cleanup that mess"
