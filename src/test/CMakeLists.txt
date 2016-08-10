@@ -1,20 +1,34 @@
 
 set(CTEST_OUTPUT_ON_FAILURE TRUE)
-
 file(GLOB_RECURSE test_source *.cpp)
-file(GLOB test_specs *.json)
-
-file(COPY ${CMAKE_SOURCE_DIR}/src/examples/server.key ${CMAKE_SOURCE_DIR}/src/examples/server.pem DESTINATION ${CMAKE_BINARY_DIR})
-file(COPY ${CMAKE_SOURCE_DIR}/src/examples/server.key ${CMAKE_SOURCE_DIR}/src/examples/server.pem DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-file(COPY ${test_specs} DESTINATION ${CMAKE_BINARY_DIR})
-file(COPY ${test_specs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 include_directories(..)
 include_directories(${CMAKE_BINARY_DIR})
 include_directories(${JSONCPP_INCLUDE_DIRS})
 
+add_custom_command(
+        OUTPUT ${CMAKE_BINARY_DIR}/gen/abstractstubserver.h
+        COMMAND jsonrpcstub ARGS ${CMAKE_CURRENT_SOURCE_DIR}/spec.json --cpp-server=AbstractStubServer --cpp-server-file=${CMAKE_BINARY_DIR}/gen/abstractstubserver.h
+        MAIN_DEPENDENCY spec.json
+        DEPENDS jsonrpcstub
+        COMMENT "Generating Server Stubfiles"
+        VERBATIM
+)
+
+add_custom_command(
+        OUTPUT ${CMAKE_BINARY_DIR}/gen/stubclient.h
+        COMMAND jsonrpcstub ARGS ${CMAKE_CURRENT_SOURCE_DIR}/spec.json --cpp-client=StubClient --cpp-client-file=${CMAKE_BINARY_DIR}/gen/stubclient.h
+        MAIN_DEPENDENCY spec.json
+        DEPENDS jsonrpcstub
+        COMMENT "Generating Client Stubfile"
+        VERBATIM
+)
+
+
 if(HTTP_CLIENT AND HTTP_SERVER)
         add_definitions(-DHTTP_TESTING)
+        file(COPY ${CMAKE_SOURCE_DIR}/src/examples/server.key ${CMAKE_SOURCE_DIR}/src/examples/server.pem DESTINATION ${CMAKE_BINARY_DIR})
+        file(COPY ${CMAKE_SOURCE_DIR}/src/examples/server.key ${CMAKE_SOURCE_DIR}/src/examples/server.pem DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 else()
         list(REMOVE_ITEM test_source "${CMAKE_CURRENT_SOURCE_DIR}/testhttpserver.cpp")
 endif()
@@ -29,6 +43,11 @@ endif()
 
 if(COMPILE_STUBGEN)
 	add_definitions(-DSTUBGEN_TESTING)
+        file(GLOB test_specs *.json)
+        file(COPY ${test_specs} DESTINATION ${CMAKE_BINARY_DIR})
+        file(COPY ${test_specs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+        list(APPEND test_source "${CMAKE_BINARY_DIR}/gen/abstractstubserver.h")
+        list(APPEND test_source "${CMAKE_BINARY_DIR}/gen/stubclient.h")
 endif()
 
 add_executable(unit_testsuite ${test_source})
@@ -42,10 +61,8 @@ if (NOT CATCH_FOUND)
 endif()
 
 if(COMPILE_STUBGEN)
-        list(APPEND test_source "${CMAKE_BINARY_DIR}/gen/abstractstubserver.h")
-        list(APPEND test_source "${CMAKE_BINARY_DIR}/gen/stubclient.h")
         target_link_libraries(unit_testsuite libjsonrpcstub)
-        add_dependencies(unit_testsuite common_stubs)
+        add_dependencies(unit_testsuite libjsonrpcstub)
 endif()
 
 add_test(client ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite "[client]")
