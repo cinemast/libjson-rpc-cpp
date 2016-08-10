@@ -40,7 +40,7 @@ add_executable(jsonrpcstub main.cpp)
 target_link_libraries(jsonrpcstub jsonrpccommon libjsonrpcstub )
 
 #Generate manpage
-if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+if (NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 	configure_file("${CMAKE_SOURCE_DIR}/doc/manpage.in" "${CMAKE_BINARY_DIR}/manpage" @ONLY)
 	add_custom_command(OUTPUT jsonrpcstub.1.gz
 		COMMAND gzip -c "${CMAKE_BINARY_DIR}/manpage" > ${CMAKE_BINARY_DIR}/jsonrpcstub.1.gz
@@ -52,7 +52,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	install(FILES ${CMAKE_BINARY_DIR}/jsonrpcstub.1.gz DESTINATION share/man/man1/)
 	add_dependencies(jsonrpcstub manpage)
 
-endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+endif()
 
 CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/cmake/libjsonrpccpp-stub.pc.cmake ${CMAKE_BINARY_DIR}/libjsonrpccpp-stub.pc)
 
