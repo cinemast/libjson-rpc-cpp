@@ -3,21 +3,21 @@ language: cpp
 before_install:
  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
  - sudo apt-get update -qq
- - sudo apt-get install -qq libcurl4-openssl-dev libjsoncpp-dev libargtable2-dev libgnutls-dev libgcrypt11-dev valgrind wget gcc-4.8 g++-4.8
+ - sudo apt-get install -qq libcurl4-openssl-dev libjsoncpp-dev libargtable2-dev libgnutls-dev libgcrypt11-dev valgrind wget gcc-5 g++-5
  - wget http://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-0.9.44.tar.gz
  - tar -xvf libmicrohttpd-0.9.44.tar.gz
  - cd libmicrohttpd-0.9.44
  - ./configure && make
  - sudo make install && sudo ldconfig
  - cd .. && sudo rm -rf libmicrohttpd-0.9.44
- - sudo pip install cpp-coveralls
+ - sudo pip install codecov
  -  sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
  -  sudo apt-get update -qq
- -  if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
- -  if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+ -  if [ "$CXX" = "g++" ]; then export CXX="g++-5" CC="gcc-5"; fi
 
 install:
-  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-5" CC="gcc-5"; fi
+  - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-5 90
 
 env:
  - HTTP_SERVER=YES HTTP_CLIENT=YES COMPILE_STUBGEN=YES
@@ -34,6 +34,7 @@ script:
     - g++ ../src/examples/simpleclient.cpp -ljsonrpccpp-client -ljsoncpp -ljsonrpccpp-common -lcurl -o sampleclient
     - g++ ../src/examples/simpleserver.cpp -ljsonrpccpp-server -ljsoncpp -ljsonrpccpp-common -lmicrohttpd -o sampleserver
     - sudo make uninstall
-after_success:
     - cd ..
-    - coveralls -e src/test -e src/examples -e cmake -e /usr/include -e build/CMakeFiles -E '.*\.h' -E 'libmicrohttpd.*'
+    - ./dev/codecov.sh
+after_success:
+    - bash <(curl -s https://codecov.io/bash)
