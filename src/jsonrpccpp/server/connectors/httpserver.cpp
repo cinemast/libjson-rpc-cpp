@@ -147,7 +147,7 @@ int HttpServer::callback(void *cls, MHD_Connection *connection, const char *url,
             if (handler == NULL)
             {
                 client_connection->code = MHD_HTTP_INTERNAL_SERVER_ERROR;
-                client_connection->server->SendResponse("No client conneciton handler found", client_connection);
+                client_connection->server->SendResponse("No client connection handler found", client_connection);
             }
             else
             {

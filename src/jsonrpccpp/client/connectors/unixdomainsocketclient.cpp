@@ -44,7 +44,7 @@ void UnixDomainSocketClient::SendRPCMessage(const std::string& message, std::str
 	socket_fd = socket(AF_UNIX, SOCK_STREAM, 0);
 	if (socket_fd < 0)
 	{
-		throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Could not created unix domain socket");
+        throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Could not create unix domain socket");
 	}
 
 	memset(&address, 0, sizeof(sockaddr_un));
