@@ -3,7 +3,7 @@
  *************************************************************************
  * @file    abstractserver.h
  * @date    30.12.2012
- * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>
+ * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
  * @license See attached LICENSE.txt
  ************************************************************************/
 

@@ -3,7 +3,7 @@
  *************************************************************************
  * @file    xbmcremote.cpp
  * @date    03.06.2013
- * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>
+ * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
  * @license See attached LICENSE.txt
  ************************************************************************/
 

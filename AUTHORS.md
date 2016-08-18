@@ -1,4 +1,4 @@
-Peter Spiess-Knafl <peter.knafl@gmail.com>
+Peter Spiess-Knafl <dev@spiessknafl.at>
 + core library
 + cmake build system
 + stubgenerator

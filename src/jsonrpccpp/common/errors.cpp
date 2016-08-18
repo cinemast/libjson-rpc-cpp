@@ -3,7 +3,7 @@
  *************************************************************************
  * @file    errors.cpp
  * @date    31.12.2012
- * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>
+ * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
  * @license See attached LICENSE.txt
  ************************************************************************/
 
