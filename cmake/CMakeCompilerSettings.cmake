@@ -10,5 +10,6 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
 # http://stackoverflow.com/questions/7949781/undefined-symbols-for-architecture-i386-upgrading-project-to-ios-5
 	set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -Wnon-virtual-dtor -fPIC -O0")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-# no msvc flags for now
+        # Suppress warning C4290: C++ exception specification ignored except to indicate a function is not __declspec(nothrow)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -wd4290")
 endif()
