@@ -27,3 +27,12 @@ src/examples/gen/*
 
 *.tar.gz
 *.asc
+
+# misc
+bin
+win32-deps
+
+# Visual Studio files
+*.suo
+*.sdf
+*.opensdf
