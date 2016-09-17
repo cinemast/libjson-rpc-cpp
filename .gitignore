@@ -21,3 +21,12 @@ doc/html
 CMakeLists.txt.user*
 src/examples/gen/*
 *~
+
+# misc
+bin
+win32-deps
+
+# Visual Studio files
+*.suo
+*.sdf
+*.opensdf
