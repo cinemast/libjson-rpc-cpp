@@ -19,6 +19,7 @@ namespace jsonrpc
             void generateAssignments(Procedure& proc);
             void generateProcCall(Procedure &proc);
             std::string generateParameterDeclarationList(Procedure &proc);
+            static std::string class2Filename(const std::string &classname);
     };
 }
 #endif // PYTHON_CLIENT_STUB_GENERATOR_H
