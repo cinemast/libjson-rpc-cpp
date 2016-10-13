@@ -15,6 +15,7 @@
 #include "helper/cpphelper.h"
 #include "client/cppclientstubgenerator.h"
 #include "client/jsclientstubgenerator.h"
+#include "client/python_client_stub_generator.h"
 #include "server/cppserverstubgenerator.h"
 
 using namespace jsonrpc;
@@ -32,10 +33,13 @@ bool StubGeneratorFactory::createStubGenerators(int argc, char **argv, vector<Pr
     struct arg_str *cppclientfile   = arg_str0(NULL, "cpp-client-file", "<filename.h>", "name of the C++ client stub file");
     struct arg_str *jsclient        = arg_str0(NULL, "js-client", "<classname>", "name of the JavaScript client stub class");
     struct arg_str *jsclientfile    = arg_str0(NULL, "js-client-file", "<filename.js>", "name of the JavaScript client stub file");
+    struct arg_str *pyclient        = arg_str0(NULL, "python-client", "<classname>", "name of the Python client stub class");
+    struct arg_str *pyclientfile    = arg_str0(NULL, "python-client-file", "<filename.python>", "name of the Python client stub file");
+
 
 
     struct arg_end *end         = arg_end(20);
-    void* argtable[] = {inputfile, help, version, verbose, cppserver, cppserverfile, cppclient, cppclientfile, jsclient, jsclientfile,end};
+    void* argtable[] = {inputfile, help, version, verbose, cppserver, cppserverfile, cppclient, cppclientfile, jsclient, jsclientfile, pyclient, pyclientfile, end};
 
     if (arg_parse(argc,argv,argtable) > 0)
     {
@@ -120,6 +124,19 @@ bool StubGeneratorFactory::createStubGenerators(int argc, char **argv, vector<Pr
             if (verbose->count > 0)
                 fprintf(stdout, "Generating JavaScript Clientstub to: %s\n", filename.c_str());
             stubgenerators.push_back(new JSClientStubGenerator(jsclient->sval[0], procedures, filename));
+        }
+
+        if (pyclient->count > 0)
+        {
+            string filename;
+            if (pyclientfile->count > 0)
+                filename = pyclientfile->sval[0];
+            else
+                filename = PythonClientStubGenerator::class2Filename(pyclient->sval[0]);
+
+            if (verbose->count > 0)
+                fprintf(stdout, "Generating Python Clientstub to: %s\n", filename.c_str());
+            stubgenerators.push_back(new PythonClientStubGenerator(pyclient->sval[0], procedures, filename));
         }
     }
     catch (const JsonRpcException &ex)
