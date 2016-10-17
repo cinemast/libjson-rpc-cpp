@@ -2,7 +2,7 @@
  * libjson-rpc-cpp
  *************************************************************************
  * @file    linuxtcpsocketclient.cpp
- * @date    17.07.2015
+ * @date    17.10.2016
  * @author  Alexandre Poirot <alexandre.poirot@legrand.fr>
  * @license See attached LICENSE.txt
  ************************************************************************/
@@ -29,7 +29,6 @@ using namespace jsonrpc;
 using namespace std;
 
 LinuxTcpSocketClient::LinuxTcpSocketClient(const std::string& hostToConnect, const unsigned int &port) :
-	TcpSocketClientPrivate(),
 	hostToConnect(hostToConnect),
 	port(port)
 {
