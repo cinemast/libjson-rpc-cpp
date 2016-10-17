@@ -19,49 +19,49 @@ using namespace jsonrpc;
 using namespace std;
 
 TcpSocketServer::TcpSocketServer(const std::string& ipToBind, const unsigned int &port) :
-	AbstractServerConnector()
+    AbstractServerConnector()
 {
 #ifdef __WIN32__
-	this->realSocket = new WindowsTcpSocketServer(ipToBind, port);
+    this->realSocket = new WindowsTcpSocketServer(ipToBind, port);
 #elif __unix__
-	this->realSocket = new LinuxTcpSocketServer(ipToBind, port);
+    this->realSocket = new LinuxTcpSocketServer(ipToBind, port);
 #else
-	this->realSocket = NULL;
+    this->realSocket = NULL;
 #endif
 }
 
 TcpSocketServer::~TcpSocketServer()
 {
-	if(this->realSocket != NULL) 
-	{
-		delete this->realSocket;
-		this->realSocket = NULL;
-	}
+    if(this->realSocket != NULL)
+    {
+        delete this->realSocket;
+        this->realSocket = NULL;
+    }
 }
 
 bool TcpSocketServer::StartListening()
 {
-	if(this->realSocket != NULL)
-	{
-		this->realSocket->SetHandler(this->GetHandler());
-		return this->realSocket->StartListening();
-	}
-	else
-		return false;
+    if(this->realSocket != NULL)
+    {
+        this->realSocket->SetHandler(this->GetHandler());
+        return this->realSocket->StartListening();
+    }
+    else
+        return false;
 }
 
 bool TcpSocketServer::StopListening()
 {
-	if(this->realSocket != NULL)
-		return this->realSocket->StopListening();
-	else
-		return false;
+    if(this->realSocket != NULL)
+        return this->realSocket->StopListening();
+    else
+        return false;
 }
 
 bool TcpSocketServer::SendResponse(const string& response, void* addInfo)
 {
-	if(this->realSocket != NULL)
-		return this->realSocket->SendResponse(response, addInfo);
-	else
-		return false;
+    if(this->realSocket != NULL)
+        return this->realSocket->SendResponse(response, addInfo);
+    else
+        return false;
 }

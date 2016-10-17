@@ -23,9 +23,9 @@ namespace jsonrpc
          * This class hides OS specific features in real implementation of this client. Currently it has implementation for
          * both Linux and Windows.
          */
-	class TcpSocketClient : public IClientConnector
-	{
-		public:
+    class TcpSocketClient : public IClientConnector
+    {
+        public:
                         /**
                          * @brief TcpSocketClient, constructor for the included TcpSocketClient
                          *
@@ -34,7 +34,7 @@ namespace jsonrpc
                          * @param ipToConnect The ipv4 address on which the client should try to connect
                          * @param port The port on which the client should try to connect
                          */
-			TcpSocketClient(const std::string& ipToConnect, const unsigned int &port);
+            TcpSocketClient(const std::string& ipToConnect, const unsigned int &port);
                         /**
                          * @brief ~TcpSocketClient, the destructor of TcpSocketClient
                          */
@@ -45,11 +45,11 @@ namespace jsonrpc
                          * @param result The result of the call returned by the servsr
                          * @throw JsonRpcException Thrown when an issue is encounter with socket manipulation (see message of exception for more information about what happened).
                          */
-			virtual void SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException);
+            virtual void SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException);
 
-		private:
-			IClientConnector *realSocket; /*!< A pointer to the real implementation of this class depending of running OS*/
-	};
+        private:
+            IClientConnector *realSocket; /*!< A pointer to the real implementation of this class depending of running OS*/
+    };
 
 } /* namespace jsonrpc */
 #endif /* JSONRPC_CPP_TCPSOCKETCLIENT_H_ */
