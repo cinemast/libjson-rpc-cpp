@@ -44,6 +44,14 @@ if(UNIX)
 		add_executable(unixdomainsocketclientsample unixdomainsocketclient.cpp)
 		target_link_libraries(unixdomainsocketclientsample jsonrpcclient)
 	endif (UNIX_DOMAIN_SOCKET_SERVER AND UNIX_DOMAIN_SOCKET_CLIENT)
+
+  if (FILE_DESCRIPTOR_SERVER AND FILE_DESCRIPTOR_CLIENT)
+    add_executable(filedescriptorserversample filedescriptorserver.cpp)
+    target_link_libraries(filedescriptorserversample jsonrpcserver)
+  
+    add_executable(filedescriptorclientsample filedescriptorclient.cpp)
+    target_link_libraries(filedescriptorclientsample jsonrpcclient)
+  endif (FILE_DESCRIPTOR_SERVER AND FILE_DESCRIPTOR_CLIENT)
 endif(UNIX)
 
 if (TCP_SOCKET_SERVER AND TCP_SOCKET_CLIENT)
