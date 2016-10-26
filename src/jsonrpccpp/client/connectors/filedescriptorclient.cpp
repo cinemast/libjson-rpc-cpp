@@ -11,9 +11,12 @@
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <string>
 #include <cstdlib>
 #include <cstdio>
+
+#include <iostream>
 
 #define BUFFER_SIZE 64
 #ifndef DELIMITER_CHAR
@@ -25,7 +28,7 @@ using namespace jsonrpc;
 using namespace std;
 
 FileDescriptorClient::FileDescriptorClient(int inputfd, int outputfd) :
-  inputfd(inputfd), inputfd(outputfd)
+  inputfd(inputfd), outputfd(outputfd)
 {
 }
 
@@ -67,6 +70,8 @@ void FileDescriptorClient::SendRPCMessage(const std::string& message,
     throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR,
       "The input file descriptor is not readable");
 
+  ssize_t nbytes = 0;
+  char buffer[BUFFER_SIZE];
   do
   {
     nbytes = read(inputfd, buffer, BUFFER_SIZE);
@@ -74,22 +79,21 @@ void FileDescriptorClient::SendRPCMessage(const std::string& message,
   } while(result.find(DELIMITER_CHAR) == string::npos);
 }
 
-int FileDescriptorClient::IsReadable(int fd)
+bool FileDescriptorClient::IsReadable(int fd)
 {
   int o_accmode = 0;
   int ret = fcntl(fd, F_GETFL, &o_accmode);
-  if(ret  == -1 )
+  if (ret == -1)
     return ret;
-  return (((o_accmode & O_ACCMODE)) == O_RDONLY ||
+  return ((o_accmode & O_ACCMODE) == O_RDONLY ||
     (o_accmode & O_ACCMODE) == O_RDWR);
 }
 
-int FileDescriptorClient::IsWritable(int fd)
+bool FileDescriptorClient::IsWritable(int fd)
 {
-  int o_accmode = 0;
-  int ret = fcntl(fd, F_GETFL, &o_accmode);
-  if (ret  == -1)
+  int ret = fcntl(fd, F_GETFL);
+  if (ret == -1)
     return ret;
-  return (((o_accmode & O_ACCMODE)) == O_RDONLY ||
-    (o_accmode & O_ACCMODE) == O_RDWR);
+  return ((ret & O_WRONLY) || (ret & O_RDWR));
 }
+

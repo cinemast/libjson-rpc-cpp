@@ -95,11 +95,11 @@ if (FILE_DESCRIPTOR_SERVER)
 	list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT})
 endif()
 
-#if (FILE_DESCRIPTOR_CLIENT)
-#	list(APPEND client_connector_header "client/connectors/filedescriptorclient.h")
-#	list(APPEND client_connector_source "client/connectors/filedescriptorclient.cpp")
-#	list(APPEND client_connector_libs ${CMAKE_THREAD_LIBS_INIT})
-#endif()
+if (FILE_DESCRIPTOR_CLIENT)
+	list(APPEND client_connector_header "client/connectors/filedescriptorclient.h")
+	list(APPEND client_connector_source "client/connectors/filedescriptorclient.cpp")
+	list(APPEND client_connector_libs ${CMAKE_THREAD_LIBS_INIT})
+endif()
 
 # configure a header file to pass some of the CMake settings to the source code
 # TODO: move it to custom build step?

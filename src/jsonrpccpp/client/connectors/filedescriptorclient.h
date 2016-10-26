@@ -23,11 +23,11 @@ namespace jsonrpc
       virtual void SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException);
 
     private:
-      std::string path;
+      int inputfd;
+      int outputfd;
 
-      int IsReadable(int fd);
-      int IsWritable(int fd);
-
+      bool IsReadable(int fd);
+      bool IsWritable(int fd);
   };
 
 } /* namespace jsonrpc */

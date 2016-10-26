@@ -14,6 +14,8 @@
 #include <fcntl.h>
 #include <string>
 
+#include <iostream>
+
 using namespace jsonrpc;
 using namespace std;
 
@@ -32,7 +34,7 @@ bool FileDescriptorServer::StartListening()
   if(this->running)
     return false;
 
-  if (IsReadable(inputfd) && IsWritable(outputfd))
+  if (!IsReadable(inputfd) || !IsWritable(outputfd))
     return false;
 
   this->running = true;
@@ -58,8 +60,6 @@ bool FileDescriptorServer::StopListening()
 
 bool FileDescriptorServer::SendResponse(const string& response, void* addInfo)
 {
-  bool result = 0;
-
   if (!IsWritable(outputfd))
     return false;
 
@@ -71,6 +71,7 @@ bool FileDescriptorServer::SendResponse(const string& response, void* addInfo)
   if (DELIMITER_CHAR != '\n')
     toSend = toSend.substr(0, toSend.find_last_of('\n')) + DELIMITER_CHAR;
 
+  ssize_t result = 0;
   ssize_t nbytes = toSend.size();
   do
   {
@@ -115,7 +116,7 @@ bool FileDescriptorServer::IsReadable(int fd)
 {
   int o_accmode = 0;
   int ret = fcntl(fd, F_GETFL, &o_accmode);
-  if (ret == -1 )
+  if (ret == -1)
     return ret;
   return ((o_accmode & O_ACCMODE) == O_RDONLY ||
     (o_accmode & O_ACCMODE) == O_RDWR);
@@ -123,11 +124,9 @@ bool FileDescriptorServer::IsReadable(int fd)
 
 bool FileDescriptorServer::IsWritable(int fd)
 {
-  int o_accmode = 0;
-  int ret = fcntl(fd, F_GETFL, &o_accmode);
-  if (ret == -1 )
+  int ret = fcntl(fd, F_GETFL);
+  if (ret == -1)
     return ret;
-  return ((o_accmode & O_ACCMODE) == O_WRONLY ||
-    (o_accmode & O_ACCMODE) == O_RDWR);
+  return ((ret & O_WRONLY) || (ret & O_RDWR));
 }
 

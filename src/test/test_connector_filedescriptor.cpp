@@ -8,11 +8,14 @@
  ************************************************************************/
 
 #ifdef FILEDESCRIPTOR_TESTING
+#include <string.h>
 #include <catch.hpp>
 #include <unistd.h>
 #include <jsonrpccpp/server/connectors/filedescriptorserver.h>
 #include <jsonrpccpp/client/connectors/filedescriptorclient.h>
 #include "mockclientconnectionhandler.h"
+
+#include <iostream>
 
 #include "checkexception.h"
 
@@ -34,26 +37,26 @@ namespace testfiledescriptorserver
 
             F()
             {
-                int pipefd[2];
-                pipe(pipefd);
-                c2sfd = pipefd[0];
-                s2cfd = pipefd[1];
-                server = new FileDescriptorServer(c2sfd, s2cfd);
-                client = new FileDescriptorServer(s2cfd, c2sfd);
-                server.SetHandler(&handler);
-                REQUIRE(server.StartListening());
+                pipe(c2sfd);
+                pipe(s2cfd);
+                server = new FileDescriptorServer(c2sfd[0], s2cfd[1]);
+                client = new FileDescriptorClient(s2cfd[0], c2sfd[1]);
+                server->SetHandler(&handler);
+                REQUIRE(server->StartListening());
             }
             ~F()
             {
-                server.StopListening();
+                server->StopListening();
                 delete server;
                 delete client;
-                close(c2sfd);
-                close(s2cfd);
+                close(c2sfd[0]);
+                close(c2sfd[1]);
+                close(s2cfd[0]);
+                close(s2cfd[1]);
             }
 
-            int c2sfd; // Client to server fd
-            int s2cfd; // Server to client fd
+            int c2sfd[2]; // Client to server fd
+            int s2cfd[2]; // Server to client fd
     };
 
     bool check_exception1(JsonRpcException const&ex)
@@ -73,7 +76,7 @@ TEST_CASE_METHOD(F, "test_filedescriptor_success", TEST_MODULE)
     string expectedResult = "exampleresponse";
     expectedResult.push_back(DELIMITER_CHAR);
 
-    client.SendRPCMessage(request, result);
+    client->SendRPCMessage(request, result);
 
     CHECK(handler.request == request);
     CHECK(result == expectedResult);
@@ -82,15 +85,15 @@ TEST_CASE_METHOD(F, "test_filedescriptor_success", TEST_MODULE)
 
 TEST_CASE("test_filedescriptor_server_multiplestart", TEST_MODULE)
 {
-    int inputfd = mkstemp('/tmp/test_filedescriptor_input.XXXXXX');
-    int outputfd = mkstemp('/tmp/test_filedescriptor_output.XXXXXX');
+    char input_filename[38];
+    strncpy(input_filename, "/tmp/test_filedescriptor_input.XXXXXX", 37);
+    char output_filename[39];
+    strncpy(output_filename, "/tmp/test_filedescriptor_output.XXXXXX", 38);
+    int inputfd = mkstemp(input_filename);
+    int outputfd = mkstemp(output_filename);
     FileDescriptorServer server(inputfd, outputfd);
     CHECK(server.StartListening() == true);
     CHECK(server.StartListening() == false);
-
-    FileDescriptorServer server2(inputfd, outputfd);
-    CHECK(server2.StartListening() == false);
-    CHECK(server2.StopListening() == false);
 
     CHECK(server.StopListening() == true);
 
