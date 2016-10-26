@@ -121,9 +121,11 @@ TEST_CASE("test_integration_unixdomain", TEST_MODULE)
 }
 #endif
 #ifdef FILEDESCRIPTOR_TESTING
+/*
 
 #include <jsonrpccpp/server/connectors/filedescriptorserver.h>
 #include <jsonrpccpp/client/connectors/filedescriptorclient.h>
+
 
 TEST_CASE("test_integration_filedescriptor", TEST_MODULE)
 {
@@ -157,6 +159,7 @@ TEST_CASE("test_integration_filedescriptor", TEST_MODULE)
     close(s2cfd[0]);
     close(s2cfd[1]);
 }
+*/
 #endif
 
 

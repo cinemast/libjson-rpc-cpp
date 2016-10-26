@@ -14,8 +14,6 @@
 #include <fcntl.h>
 #include <string>
 
-#include <iostream>
-
 using namespace jsonrpc;
 using namespace std;
 
@@ -117,6 +115,7 @@ bool FileDescriptorServer::IsReadable(int fd)
   int o_accmode = 0;
   int ret = fcntl(fd, F_GETFL, &o_accmode);
   if (ret == -1)
+  if (ret == -1 )
     return ret;
   return ((o_accmode & O_ACCMODE) == O_RDONLY ||
     (o_accmode & O_ACCMODE) == O_RDWR);
