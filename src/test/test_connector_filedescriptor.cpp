@@ -17,6 +17,8 @@
 
 #include "checkexception.h"
 
+#include <iostream>
+
 using namespace jsonrpc;
 using namespace std;
 
@@ -78,6 +80,34 @@ TEST_CASE_METHOD(F, "test_filedescriptor_success", TEST_MODULE)
 
     CHECK(handler.request == request);
     CHECK(result == expectedResult);
+}
+
+TEST_CASE_METHOD(F, "test_filedescriptor_longpost", TEST_MODULE)
+{
+    int mb = 2;
+    unsigned long size = mb * 1024*1024;
+    char* str = (char*) malloc(size * sizeof(char));
+    if (str == NULL)
+    {
+        FAIL("Could not allocate enough memory for test");
+    }
+    for (unsigned long i=0; i < size; i++)
+    {
+        str[i] = (char)('a'+(i%26));
+    }
+    str[size-1] = '\n';
+
+    handler.response = str;
+    string response;
+    client->SendRPCMessage(str, response);
+
+    CHECK(handler.request == str);
+    CHECK(response == handler.response);
+    CHECK(response.size() == size);
+
+    free(str);
+
+    server->StopListening();
 }
 
 TEST_CASE_METHOD(F, "test_filedescriptor_success_with_delimiter", TEST_MODULE)
