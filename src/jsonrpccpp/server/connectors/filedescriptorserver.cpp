@@ -22,7 +22,7 @@ using namespace std;
 #ifndef DELIMITER_CHAR
 #define DELIMITER_CHAR char(0x0A)
 #endif
-#define READ_TIMEOUT 0.2 // Set timeout to 0.2 seconds
+#define READ_TIMEOUT 0.2 // Set timeout in seconds
 
 FileDescriptorServer::FileDescriptorServer(int inputfd, int outputfd) :
   running(false), inputfd(inputfd), outputfd(outputfd)
@@ -32,9 +32,6 @@ FileDescriptorServer::FileDescriptorServer(int inputfd, int outputfd) :
   FD_ZERO(&write_fds);
   FD_ZERO(&except_fds);
   FD_SET(inputfd, &read_fds);
-
-  timeout.tv_sec = 0;
-  timeout.tv_usec = (__suseconds_t) READ_TIMEOUT * 1000000;
 }
 
 bool FileDescriptorServer::StartListening()
@@ -65,9 +62,6 @@ bool FileDescriptorServer::StopListening()
 bool FileDescriptorServer::SendResponse(const string& response, void* addInfo)
 {
   (void)addInfo; // Suppress warning
-  if (!IsWritable(outputfd))
-    return false;
-
   string toSend = response;
   // If the DELIMITER_CHAR was not append, do it now
   if (toSend.find(DELIMITER_CHAR) == string::npos)
@@ -122,6 +116,9 @@ void FileDescriptorServer::ListenLoop()
 }
 
 int FileDescriptorServer::WaitForRead(int fd) {
+  // Has to be reset after every call, has POSIX allow the value to be modifiable by the system.
+  timeout.tv_sec = 0;
+  timeout.tv_usec = (__suseconds_t) (READ_TIMEOUT * 1000000);
   // Wait for something to read
   return select(fd + 1, &read_fds, &write_fds, &except_fds, &timeout);
 }

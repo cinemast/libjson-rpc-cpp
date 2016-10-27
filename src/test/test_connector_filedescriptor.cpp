@@ -15,8 +15,6 @@
 #include <jsonrpccpp/client/connectors/filedescriptorclient.h>
 #include "mockclientconnectionhandler.h"
 
-#include <iostream>
-
 #include "checkexception.h"
 
 using namespace jsonrpc;
@@ -92,16 +90,68 @@ TEST_CASE("test_filedescriptor_server_multiplestart", TEST_MODULE)
     CHECK(server.StartListening() == false);
 
     CHECK(server.StopListening() == true);
+    CHECK(server.StopListening() == false);
 
     close(fds[0]);
     close(fds[1]);
 }
 
-TEST_CASE("test_filedescriptor_client_invalid", TEST_MODULE)
+TEST_CASE("test_filedescriptor_server_input_fd_invalid", TEST_MODULE)
+{
+    int c2sfd[2];
+    pipe(c2sfd);
+    int s2cfd[2];
+    pipe(s2cfd);
+
+    FileDescriptorServer server(c2sfd[0], s2cfd[1]);
+    // Close the writing side of the client to server pipe, as if the client crashed.
+    close(c2sfd[0]);
+    string result;
+    CHECK(server.StartListening() == false);
+    close(c2sfd[1]);
+    close(s2cfd[1]);
+    close(s2cfd[0]);
+}
+
+TEST_CASE("test_filedescriptor_server_output_fd_invalid", TEST_MODULE)
+{
+    int c2sfd[2];
+    pipe(c2sfd);
+    int s2cfd[2];
+    pipe(s2cfd);
+
+    FileDescriptorServer server(c2sfd[0], s2cfd[1]);
+    // Close the writing side of the server to client pipe, as if the client crashed.
+    close(s2cfd[1]);
+    string result;
+    CHECK(server.StartListening() == false);
+    close(c2sfd[0]);
+    close(c2sfd[1]);
+    close(s2cfd[0]);
+}
+
+TEST_CASE("test_filedescriptor_client_output_fd_invalid", TEST_MODULE)
 {
     FileDescriptorClient client(2, 6);
     string result;
     CHECK_EXCEPTION_TYPE(client.SendRPCMessage("foobar", result), JsonRpcException, check_exception1);
+}
+
+TEST_CASE("test_filedescriptor_client_input_fd_invalid", TEST_MODULE)
+{
+    int c2sfd[2];
+    pipe(c2sfd);
+    int s2cfd[2];
+    pipe(s2cfd);
+
+    FileDescriptorClient client(s2cfd[0], c2sfd[1]);
+    // Close the reading side of the server to client pipe, as if the server crashed.
+    close(s2cfd[0]);
+    string result;
+    CHECK_EXCEPTION_TYPE(client.SendRPCMessage("foobar", result), JsonRpcException, check_exception1);
+    close(c2sfd[1]);
+    close(s2cfd[1]);
+    close(c2sfd[0]);
 }
 
 #endif // FILEDESCRIPTOR_TESTING

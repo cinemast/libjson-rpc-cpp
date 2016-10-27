@@ -27,7 +27,6 @@ namespace jsonrpc
       int outputfd;
 
       bool IsReadable(int fd);
-      bool IsWritable(int fd);
   };
 
 } /* namespace jsonrpc */

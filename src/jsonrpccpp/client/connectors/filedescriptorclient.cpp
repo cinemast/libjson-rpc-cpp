@@ -16,8 +16,6 @@
 #include <cstdlib>
 #include <cstdio>
 
-#include <iostream>
-
 #define BUFFER_SIZE 64
 #ifndef DELIMITER_CHAR
 #define DELIMITER_CHAR char(0x0A)
@@ -39,10 +37,6 @@ FileDescriptorClient::~FileDescriptorClient()
 void FileDescriptorClient::SendRPCMessage(const std::string& message,
   std::string& result) throw (JsonRpcException)
 {
-  if (!IsWritable(outputfd))
-    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR,
-      "The output file descriptor is not writable");
-
   bool fullyWritten = false;
   string toSend = message;
   do
@@ -59,7 +53,7 @@ void FileDescriptorClient::SendRPCMessage(const std::string& message,
 
     if (byteWritten < (ssize_t) toSend.size())
     {
-      int len = toSend.size() - byteWritten;
+      unsigned long len = toSend.size() - byteWritten;
       toSend = toSend.substr(byteWritten + sizeof(char), len);
     }
     else
@@ -84,16 +78,8 @@ bool FileDescriptorClient::IsReadable(int fd)
   int o_accmode = 0;
   int ret = fcntl(fd, F_GETFL, &o_accmode);
   if (ret == -1)
-    return ret;
+    return false;
   return ((o_accmode & O_ACCMODE) == O_RDONLY ||
     (o_accmode & O_ACCMODE) == O_RDWR);
-}
-
-bool FileDescriptorClient::IsWritable(int fd)
-{
-  int ret = fcntl(fd, F_GETFL);
-  if (ret == -1)
-    return ret;
-  return ((ret & O_WRONLY) || (ret & O_RDWR));
 }
 
