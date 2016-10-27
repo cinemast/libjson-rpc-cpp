@@ -99,12 +99,7 @@ void FileDescriptorServer::ListenLoop()
       int wait_ret = 0;
       if ((wait_ret = this->WaitForRead()) > 0 && FD_ISSET(inputfd, &read_fds))
       {
-        if (!(nbytes = read(inputfd, buffer, BUFFER_SIZE)))
-        {
-          // File closed
-          this->running = false;
-          break;
-        }
+        this->running = (nbytes = read(inputfd, buffer, BUFFER_SIZE)) != 0;
         request.append(buffer, nbytes);
       } else {
         if (wait_ret < 0) {
