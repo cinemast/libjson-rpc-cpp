@@ -42,21 +42,13 @@ void FileDescriptorClient::SendRPCMessage(const std::string& message,
   do
   {
     ssize_t byteWritten = write(outputfd, toSend.c_str(), toSend.size());
-    if (byteWritten < 1) {
-      char errorstr[MEX_ERR_MSG];
-      if (strerror_r(errno, errorstr, MEX_ERR_MSG) == 0)
-        throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, std::string(errorstr));
-      else
-        throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR,
-          "Unknown error occured while writing to the output file descriptor");
-    }
+    if (byteWritten < 1)
+      throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR,
+        "Unknown error occured while writing to the output file descriptor");
 
-    if (byteWritten < (ssize_t) toSend.size())
-    {
-      unsigned long len = toSend.size() - byteWritten;
-      toSend = toSend.substr(byteWritten + sizeof(char), len);
-    }
-    else
+    unsigned long len = toSend.size() - byteWritten;
+    toSend = toSend.substr(byteWritten, len);
+    if (toSend.size() == 0)
       fullyWritten = true;
   } while(!fullyWritten);
 
