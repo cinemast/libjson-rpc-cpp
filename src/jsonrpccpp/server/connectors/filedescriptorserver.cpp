@@ -53,10 +53,13 @@ bool FileDescriptorServer::StopListening()
 {
   if (!this->running)
     return false;
-
   this->running = false;
   pthread_join(this->listenning_thread, NULL);
   return !(this->running);
+}
+
+void FileDescriptorServer::Wait() const {
+  pthread_join(this->listenning_thread, NULL);
 }
 
 bool FileDescriptorServer::SendResponse(const string& response, void* addInfo)
@@ -97,11 +100,13 @@ void FileDescriptorServer::ListenLoop()
     do
     {
       // Wait for something to be read. Interrupt after a timeout to check it we should still wait or just stop.
-      if (this->WaitForRead(inputfd) == 1)
+      int wait_ret = 0;
+      if ((wait_ret = this->WaitForRead()) == 1)
       {
         // The client sent its json formatted request and a delimiter request.
         nbytes = read(inputfd, buffer, BUFFER_SIZE);
-        if (nbytes == 0) {
+        if (nbytes == 0)
+        {
           // File closed
           this->running = false;
           break;
@@ -115,12 +120,12 @@ void FileDescriptorServer::ListenLoop()
   }
 }
 
-int FileDescriptorServer::WaitForRead(int fd) {
-  // Has to be reset after every call, has POSIX allow the value to be modifiable by the system.
+int FileDescriptorServer::WaitForRead() {
+  // Has to be reset after every call, as POSIX allow the value to be modifiable by the system.
   timeout.tv_sec = 0;
   timeout.tv_usec = (__suseconds_t) (READ_TIMEOUT * 1000000);
   // Wait for something to read
-  return select(fd + 1, &read_fds, &write_fds, &except_fds, &timeout);
+  return select(inputfd + 1, &read_fds, &write_fds, &except_fds, &timeout);
 }
 
 bool FileDescriptorServer::IsReadable(int fd)

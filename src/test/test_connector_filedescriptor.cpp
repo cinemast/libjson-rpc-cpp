@@ -80,7 +80,6 @@ TEST_CASE_METHOD(F, "test_filedescriptor_success", TEST_MODULE)
     CHECK(result == expectedResult);
 }
 
-
 TEST_CASE("test_filedescriptor_server_multiplestart", TEST_MODULE)
 {
     int fds[2];

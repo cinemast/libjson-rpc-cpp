@@ -49,7 +49,12 @@ namespace jsonrpc
        */
       bool SendResponse(const std::string& response, void* addInfo = NULL);
 
-    private:
+      /**
+       * This method blocks the caller as long as the server is listening to its input.
+       */
+      void Wait() const;
+
+  private:
       bool running;
       int inputfd;
       int outputfd;
@@ -67,7 +72,7 @@ namespace jsonrpc
       bool IsReadable(int fd);
       bool IsWritable(int fd);
 
-    int WaitForRead(int fd);
+      int WaitForRead();
   };
 }
 
