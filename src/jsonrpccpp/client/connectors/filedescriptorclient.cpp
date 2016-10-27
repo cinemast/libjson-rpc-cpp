@@ -15,8 +15,10 @@
 #include <string>
 #include <cstdlib>
 #include <cstdio>
+#include <algorithm>
 
 #define BUFFER_SIZE 64
+#define MAX_WRITE_SIZE (long unsigned int) 1024
 #ifndef DELIMITER_CHAR
 #define DELIMITER_CHAR char(0x0A)
 #endif //DELIMITER_CHAR
@@ -41,7 +43,7 @@ void FileDescriptorClient::SendRPCMessage(const std::string& message,
   string toSend = message;
   do
   {
-    ssize_t byteWritten = write(outputfd, toSend.c_str(), toSend.size());
+    ssize_t byteWritten = write(outputfd, toSend.c_str(), min(toSend.size(), MAX_WRITE_SIZE));
     if (byteWritten < 1)
       throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR,
         "Unknown error occured while writing to the output file descriptor");

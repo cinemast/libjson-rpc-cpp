@@ -17,8 +17,6 @@
 
 #include "checkexception.h"
 
-#include <iostream>
-
 using namespace jsonrpc;
 using namespace std;
 
