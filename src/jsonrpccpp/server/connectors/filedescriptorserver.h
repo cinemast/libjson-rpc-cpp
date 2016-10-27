@@ -54,12 +54,20 @@ namespace jsonrpc
       int inputfd;
       int outputfd;
 
+      // For select operation
+      fd_set read_fds;
+      fd_set write_fds;
+      fd_set except_fds;
+      struct timeval timeout;
+
       pthread_t listenning_thread;
 
       static void* LaunchLoop(void *p_data);
       void ListenLoop();
       bool IsReadable(int fd);
       bool IsWritable(int fd);
+
+    int WaitForRead(int fd);
   };
 }
 

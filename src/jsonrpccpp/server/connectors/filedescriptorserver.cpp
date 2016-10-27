@@ -8,6 +8,7 @@
  ************************************************************************/
 
 #include "filedescriptorserver.h"
+#include <sys/select.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -21,10 +22,19 @@ using namespace std;
 #ifndef DELIMITER_CHAR
 #define DELIMITER_CHAR char(0x0A)
 #endif
+#define READ_TIMEOUT 0.2 // Set timeout to 0.2 seconds
 
 FileDescriptorServer::FileDescriptorServer(int inputfd, int outputfd) :
   running(false), inputfd(inputfd), outputfd(outputfd)
 {
+  // One time initialization for select operation
+  FD_ZERO(&read_fds);
+  FD_ZERO(&write_fds);
+  FD_ZERO(&except_fds);
+  FD_SET(inputfd, &read_fds);
+
+  timeout.tv_sec = 0;
+  timeout.tv_usec = (__suseconds_t ) READ_TIMEOUT * 1000000;
 }
 
 bool FileDescriptorServer::StartListening()
@@ -37,10 +47,6 @@ bool FileDescriptorServer::StartListening()
 
   this->running = true;
   int ret = pthread_create(&(this->listenning_thread), NULL, FileDescriptorServer::LaunchLoop, this);
-  if(ret != 0)
-  {
-    pthread_detach(this->listenning_thread);
-  }
   this->running = static_cast<bool>(ret == 0);
 
   return this->running;
@@ -81,7 +87,6 @@ bool FileDescriptorServer::SendResponse(const string& response, void* addInfo)
 
 void* FileDescriptorServer::LaunchLoop(void *p_data)
 {
-  pthread_detach(pthread_self());
   FileDescriptorServer *instance = reinterpret_cast<FileDescriptorServer*>(p_data);;
   instance->ListenLoop();
   return NULL;
@@ -95,19 +100,29 @@ void FileDescriptorServer::ListenLoop()
     ssize_t nbytes;
     string request;
     do
-    { //The client sends its json formatted request and a delimiter request.
-      nbytes = read(inputfd, buffer, BUFFER_SIZE);
-      if (nbytes == 0) {
-        // File closed
-        this->running = false;
-        break;
+    {
+      // Wait for something to be read. Interrupt after a timeout to check it we should still wait or just stop.
+      if (this->WaitForRead(inputfd) == 1)
+      {
+        // The client sent its json formatted request and a delimiter request.
+        nbytes = read(inputfd, buffer, BUFFER_SIZE);
+        if (nbytes == 0) {
+          // File closed
+          this->running = false;
+          break;
+        }
+        request.append(buffer, nbytes);
       }
-      request.append(buffer, nbytes);
-    } while (request.find(DELIMITER_CHAR) == string::npos);
-    if (nbytes) {
+    } while (this->running && request.find(DELIMITER_CHAR) == string::npos);
+    if (this->running) { // False if either the input fd was closed or someone interrupted us with ::StopListening.
       this->OnRequest(request, NULL);
     }
   }
+}
+
+int FileDescriptorServer::WaitForRead(int fd) {
+  // Wait for something to read
+  return select(fd + 1, &read_fds, &write_fds, &except_fds, &timeout);
 }
 
 bool FileDescriptorServer::IsReadable(int fd)
@@ -115,7 +130,6 @@ bool FileDescriptorServer::IsReadable(int fd)
   int o_accmode = 0;
   int ret = fcntl(fd, F_GETFL, &o_accmode);
   if (ret == -1)
-  if (ret == -1 )
     return ret;
   return ((o_accmode & O_ACCMODE) == O_RDONLY ||
     (o_accmode & O_ACCMODE) == O_RDWR);
