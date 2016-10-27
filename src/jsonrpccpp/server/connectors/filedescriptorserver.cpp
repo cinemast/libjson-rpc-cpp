@@ -27,11 +27,6 @@ using namespace std;
 FileDescriptorServer::FileDescriptorServer(int inputfd, int outputfd) :
   running(false), inputfd(inputfd), outputfd(outputfd)
 {
-  // One time initialization for select operation
-  FD_ZERO(&read_fds);
-  FD_ZERO(&write_fds);
-  FD_ZERO(&except_fds);
-  FD_SET(inputfd, &read_fds);
 }
 
 bool FileDescriptorServer::StartListening()
@@ -99,19 +94,24 @@ void FileDescriptorServer::ListenLoop()
     string request;
     do
     {
-      // Wait for something to be read. Interrupt after a timeout to check it we should still wait or just stop.
+      // Wait for something to be read.
+      // Interrupt after a timeout to check it we should still wait or just stop.
       int wait_ret = 0;
-      if ((wait_ret = this->WaitForRead()) == 1)
+      if ((wait_ret = this->WaitForRead()) > 0 && FD_ISSET(inputfd, &read_fds))
       {
-        // The client sent its json formatted request and a delimiter request.
-        nbytes = read(inputfd, buffer, BUFFER_SIZE);
-        if (nbytes == 0)
+        if (!(nbytes = read(inputfd, buffer, BUFFER_SIZE)))
         {
           // File closed
           this->running = false;
           break;
         }
         request.append(buffer, nbytes);
+      } else {
+        if (wait_ret < 0) {
+          // File closed
+          this->running = false;
+          break;
+        }
       }
     } while (this->running && request.find(DELIMITER_CHAR) == string::npos);
     if (this->running) { // False if either the input fd was closed or someone interrupted us with ::StopListening.
@@ -122,6 +122,10 @@ void FileDescriptorServer::ListenLoop()
 
 int FileDescriptorServer::WaitForRead() {
   // Has to be reset after every call, as POSIX allow the value to be modifiable by the system.
+  FD_ZERO(&read_fds);
+  FD_ZERO(&write_fds);
+  FD_ZERO(&except_fds);
+  FD_SET(inputfd, &read_fds);
   timeout.tv_sec = 0;
   timeout.tv_usec = (__suseconds_t) (READ_TIMEOUT * 1000000);
   // Wait for something to read

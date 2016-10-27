@@ -80,6 +80,23 @@ TEST_CASE_METHOD(F, "test_filedescriptor_success", TEST_MODULE)
     CHECK(result == expectedResult);
 }
 
+TEST_CASE_METHOD(F, "test_filedescriptor_success_with_delimiter", TEST_MODULE)
+{
+    handler.response = "exampleresponse";
+    handler.response.push_back(DELIMITER_CHAR);
+    handler.timeout = 100;
+    string result;
+    string request = "examplerequest";
+    request.push_back(DELIMITER_CHAR);
+    string expectedResult = "exampleresponse";
+    expectedResult.push_back(DELIMITER_CHAR);
+
+    client->SendRPCMessage(request, result);
+
+    CHECK(handler.request == request);
+    CHECK(result == expectedResult);
+}
+
 TEST_CASE("test_filedescriptor_server_multiplestart", TEST_MODULE)
 {
     int fds[2];
@@ -91,9 +108,30 @@ TEST_CASE("test_filedescriptor_server_multiplestart", TEST_MODULE)
     CHECK(server.StopListening() == true);
     CHECK(server.StopListening() == false);
 
+    server.Wait();
+
     close(fds[0]);
     close(fds[1]);
 }
+
+TEST_CASE("test_filedescriptor_server_input_fd_invalid_while_listening", TEST_MODULE)
+{
+    int c2sfd[2];
+    pipe(c2sfd);
+    int s2cfd[2];
+    pipe(s2cfd);
+
+    FileDescriptorServer server(c2sfd[0], s2cfd[1]);
+    // Close the writing side of the client to server pipe, as if the client crashed.
+    CHECK(server.StartListening() == true);
+    close(c2sfd[0]);
+    server.Wait();
+
+    close(c2sfd[1]);
+    close(s2cfd[1]);
+    close(s2cfd[0]);
+}
+
 
 TEST_CASE("test_filedescriptor_server_input_fd_invalid", TEST_MODULE)
 {
@@ -105,7 +143,6 @@ TEST_CASE("test_filedescriptor_server_input_fd_invalid", TEST_MODULE)
     FileDescriptorServer server(c2sfd[0], s2cfd[1]);
     // Close the writing side of the client to server pipe, as if the client crashed.
     close(c2sfd[0]);
-    string result;
     CHECK(server.StartListening() == false);
     close(c2sfd[1]);
     close(s2cfd[1]);
@@ -122,7 +159,6 @@ TEST_CASE("test_filedescriptor_server_output_fd_invalid", TEST_MODULE)
     FileDescriptorServer server(c2sfd[0], s2cfd[1]);
     // Close the writing side of the server to client pipe, as if the client crashed.
     close(s2cfd[1]);
-    string result;
     CHECK(server.StartListening() == false);
     close(c2sfd[0]);
     close(c2sfd[1]);
