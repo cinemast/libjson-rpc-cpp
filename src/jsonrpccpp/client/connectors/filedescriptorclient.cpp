@@ -57,7 +57,7 @@ void FileDescriptorClient::SendRPCMessage(const std::string& message,
           "Unknown error occured while writing to the output file descriptor");
     }
 
-    if (byteWritten < toSend.size())
+    if (byteWritten < (ssize_t) toSend.size())
     {
       int len = toSend.size() - byteWritten;
       toSend = toSend.substr(byteWritten + sizeof(char), len);

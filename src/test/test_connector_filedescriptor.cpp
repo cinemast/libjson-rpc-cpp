@@ -85,20 +85,16 @@ TEST_CASE_METHOD(F, "test_filedescriptor_success", TEST_MODULE)
 
 TEST_CASE("test_filedescriptor_server_multiplestart", TEST_MODULE)
 {
-    char input_filename[38];
-    strncpy(input_filename, "/tmp/test_filedescriptor_input.XXXXXX", 37);
-    char output_filename[39];
-    strncpy(output_filename, "/tmp/test_filedescriptor_output.XXXXXX", 38);
-    int inputfd = mkstemp(input_filename);
-    int outputfd = mkstemp(output_filename);
-    FileDescriptorServer server(inputfd, outputfd);
+    int fds[2];
+    pipe(fds);
+    FileDescriptorServer server(fds[0], fds[1]);
     CHECK(server.StartListening() == true);
     CHECK(server.StartListening() == false);
 
     CHECK(server.StopListening() == true);
 
-    close(inputfd);
-    close(outputfd);
+    close(fds[0]);
+    close(fds[1]);
 }
 
 TEST_CASE("test_filedescriptor_client_invalid", TEST_MODULE)

@@ -34,7 +34,7 @@ FileDescriptorServer::FileDescriptorServer(int inputfd, int outputfd) :
   FD_SET(inputfd, &read_fds);
 
   timeout.tv_sec = 0;
-  timeout.tv_usec = (__suseconds_t ) READ_TIMEOUT * 1000000;
+  timeout.tv_usec = (__suseconds_t) READ_TIMEOUT * 1000000;
 }
 
 bool FileDescriptorServer::StartListening()
@@ -64,6 +64,7 @@ bool FileDescriptorServer::StopListening()
 
 bool FileDescriptorServer::SendResponse(const string& response, void* addInfo)
 {
+  (void)addInfo; // Suppress warning
   if (!IsWritable(outputfd))
     return false;
 
@@ -82,7 +83,7 @@ bool FileDescriptorServer::SendResponse(const string& response, void* addInfo)
     result = write(outputfd, &(toSend.c_str()[toSend.size() - nbytes]), toSend.size() - result);
     nbytes -= result;
   } while (result && nbytes); // While we are still writing and there is still to write
-  return result;
+  return result != 0;
 }
 
 void* FileDescriptorServer::LaunchLoop(void *p_data)
@@ -130,7 +131,7 @@ bool FileDescriptorServer::IsReadable(int fd)
   int o_accmode = 0;
   int ret = fcntl(fd, F_GETFL, &o_accmode);
   if (ret == -1)
-    return ret;
+    return false;
   return ((o_accmode & O_ACCMODE) == O_RDONLY ||
     (o_accmode & O_ACCMODE) == O_RDWR);
 }
@@ -139,7 +140,7 @@ bool FileDescriptorServer::IsWritable(int fd)
 {
   int ret = fcntl(fd, F_GETFL);
   if (ret == -1)
-    return ret;
+    return false;
   return ((ret & O_WRONLY) || (ret & O_RDWR));
 }
 
