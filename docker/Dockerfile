@@ -27,6 +27,7 @@ libjsoncpp-dev \
 libargtable2-dev \
 libcurl4-openssl-dev \
 libmicrohttpd-dev \
+gcovr \
 git 
 
 # Clone and build libjson-rpc-cpp

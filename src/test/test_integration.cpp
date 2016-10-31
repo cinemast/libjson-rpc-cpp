@@ -120,5 +120,45 @@ TEST_CASE("test_integration_unixdomain", TEST_MODULE)
     server.StopListening();
 }
 #endif
+#ifdef FILEDESCRIPTOR_TESTING
+
+#include <jsonrpccpp/server/connectors/filedescriptorserver.h>
+#include <jsonrpccpp/client/connectors/filedescriptorclient.h>
+
+
+TEST_CASE("test_integration_filedescriptor", TEST_MODULE)
+{
+    int c2sfd[2]; // Client to server fd
+    int s2cfd[2]; // Server to client fd
+    pipe(c2sfd);
+    pipe(s2cfd);
+
+    FileDescriptorServer sconn(c2sfd[0], s2cfd[1]);
+    FileDescriptorClient cconn(s2cfd[0], c2sfd[1]);
+
+    StubServer server(sconn);
+    server.StartListening();
+    StubClient client(cconn);
+
+    CHECK(client.addNumbers(3,4) == 7);
+    CHECK(client.addNumbers2(3.2,4.2) == 7.4);
+    CHECK(client.sayHello("Test") == "Hello Test");
+    CHECK(client.methodWithoutParameters() == "foo");
+    CHECK(client.isEqual("str1", "str1") == true);
+    CHECK(client.isEqual("str1", "str2") == false);
+
+    Json::Value result = client.buildObject("Test", 33);
+    CHECK(result["name"].asString() == "Test");
+    CHECK(result["age"].asInt() == 33);
+
+    server.StopListening();
+
+    close(c2sfd[0]);
+    close(c2sfd[1]);
+    close(s2cfd[0]);
+    close(s2cfd[1]);
+}
+#endif
+
 
 #endif
