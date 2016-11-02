@@ -1,4 +1,4 @@
-#include "python_client_stub_generator.h"
+#include "pyclientstubgenerator.h"
 #include <algorithm>
 
 #define TEMPLATE_PYTHON_CLIENT_SIGCLASS "class <stubname>(client.Client):"
@@ -10,8 +10,8 @@
 #define TEMPLATE_NAMED_ASSIGNMENT "parameters[\'<paramname>\'] = <paramname>"
 #define TEMPLATE_POSITION_ASSIGNMENT "parameters.append(<paramname>)"
 
-#define TEMPLATE_METHODCALL "result = self.callMethod(\'<name>\', parameters)"
-#define TEMPLATE_NOTIFICATIONCALL "self.callNotification(\'<name>\', parameters)"
+#define TEMPLATE_METHODCALL "result = self.call_method(\'<name>\', parameters)"
+#define TEMPLATE_NOTIFICATIONCALL "self.call_notification(\'<name>\', parameters)"
 
 using namespace std;
 using namespace jsonrpc;
