@@ -33,8 +33,8 @@ bool StubGeneratorFactory::createStubGenerators(int argc, char **argv, vector<Pr
     struct arg_str *cppclientfile   = arg_str0(NULL, "cpp-client-file", "<filename.h>", "name of the C++ client stub file");
     struct arg_str *jsclient        = arg_str0(NULL, "js-client", "<classname>", "name of the JavaScript client stub class");
     struct arg_str *jsclientfile    = arg_str0(NULL, "js-client-file", "<filename.js>", "name of the JavaScript client stub file");
-    struct arg_str *pyclient        = arg_str0(NULL, "python-client", "<classname>", "name of the Python client stub class");
-    struct arg_str *pyclientfile    = arg_str0(NULL, "python-client-file", "<filename.py>", "name of the Python client stub file");
+    struct arg_str *pyclient        = arg_str0(NULL, "py-client", "<classname>", "name of the Python client stub class");
+    struct arg_str *pyclientfile    = arg_str0(NULL, "py-client-file", "<filename.py>", "name of the Python client stub file");
 
 
 
