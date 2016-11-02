@@ -5,6 +5,10 @@
 
 namespace jsonrpc
 {
+    /**
+     * The stub client this class generates requires jsonrpc_pyclient
+     * to be installed from pypi.
+     */
     class PythonClientStubGenerator : public StubGenerator
     {
         public:
@@ -20,6 +24,7 @@ namespace jsonrpc
             void generateProcCall(Procedure &proc);
             std::string generateParameterDeclarationList(Procedure &proc);
             static std::string class2Filename(const std::string &classname);
+            static std::string normalizeString(const std::string &text);
     };
 }
 #endif // PYTHON_CLIENT_STUB_GENERATOR_H
