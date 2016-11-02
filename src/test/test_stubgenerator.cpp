@@ -14,6 +14,7 @@
 #include <stubgenerator/server/cppserverstubgenerator.h>
 #include <stubgenerator/client/cppclientstubgenerator.h>
 #include <stubgenerator/client/jsclientstubgenerator.h>
+#include <stubgenerator/client/pyclientstubgenerator.h>
 #include <stubgenerator/helper/cpphelper.h>
 #include <stubgenerator/stubgeneratorfactory.h>
 
@@ -105,6 +106,25 @@ TEST_CASE("test_stubgen_jsclient", TEST_MODULE)
     CHECK(result.find("TestStubClient.prototype.test_notification2 = function(object, values, callbackSuccess, callbackError)") != string::npos);
 
     CHECK(JSClientStubGenerator::class2Filename("TestClass") == "testclass.js");
+}
+
+TEST_CASE("test_stubgen_pyclient", TEST_MODULE)
+{
+    stringstream stream;
+    vector<Procedure> procedures = SpecificationParser::GetProceduresFromFile("testspec6.json");
+    PythonClientStubGenerator stubgen("TestStubClient", procedures, stream);
+    stubgen.generateStub();
+    string result = stream.str();
+
+    CHECK(result.find("from jsonrpc_pyclient import client") != string::npos);
+    CHECK(result.find("class TestStubClient(client.Client):") != string::npos);
+    CHECK(result.find("def __init__(self, connector, version='2.0'):") != string::npos);
+    CHECK(result.find("def test_method(self, name):") != string::npos);
+    CHECK(result.find("def test_notification(self, name):") != string::npos);
+    CHECK(result.find("def test_method2(self, object, values):") != string::npos);
+    CHECK(result.find("def test_notification2(self, object, values):") != string::npos);
+
+    CHECK(PythonClientStubGenerator::class2Filename("TestClass") == "testclass.py");
 }
 
 TEST_CASE("test_stubgen_indentation", TEST_MODULE)
