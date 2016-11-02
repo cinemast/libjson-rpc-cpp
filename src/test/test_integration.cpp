@@ -12,7 +12,9 @@
 #include <catch.hpp>
 
 #include <jsonrpccpp/server/connectors/httpserver.h>
+#ifdef HTTP_TESTING
 #include <jsonrpccpp/client/connectors/httpclient.h>
+#endif
 
 #include "gen/abstractstubserver.h"
 #include "gen/stubclient.h"
