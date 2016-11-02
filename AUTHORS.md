@@ -33,6 +33,9 @@ Alexandre Poirot <alexandre.poirot@gmail.com>
 + adapted build file to generate pkg-config file for this lib.
 + added client and server connectors that use Tcp Sockets on Linux and Windows (uses native socket and thread API on each OS)
 
+Trevor Vannoy <trevor.vannoy@flukecal.com>
++ python client stub generator
+
 Bugfixes (chronological order)
 ==============================
 
