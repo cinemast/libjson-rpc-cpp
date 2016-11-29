@@ -63,3 +63,6 @@ Erik Lundin
 
 Michał Górny <mgorny@gentoo.org>
 + bugfixes in the build system
+
+Trevor Vannoy <trevor.vannoy@flukecal.com>
++ fixed tcp socket client compile issues
