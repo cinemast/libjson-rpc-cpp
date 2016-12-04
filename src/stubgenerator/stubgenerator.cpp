@@ -18,6 +18,7 @@
 #include "server/cppserverstubgenerator.h"
 #include "client/cppclientstubgenerator.h"
 #include "client/jsclientstubgenerator.h"
+#include "client/pyclientstubgenerator.h"
 
 using namespace std;
 using namespace jsonrpc;
