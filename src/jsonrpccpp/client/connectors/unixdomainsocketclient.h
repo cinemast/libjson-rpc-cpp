@@ -27,4 +27,4 @@ namespace jsonrpc
     };
 
 } /* namespace jsonrpc */
-#endif /* JSONRPC_CPP_HTTPCLIENT_H_ */
+#endif /* JSONRPC_CPP_UNIXDOMAINSOCKETCLIENT_H_ */

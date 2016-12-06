@@ -3,7 +3,7 @@
  *************************************************************************
  * @file    mockserverconnector.h
  * @date    10/10/2014
- * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>
+ * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
  * @license See attached LICENSE.txt
  ************************************************************************/
 

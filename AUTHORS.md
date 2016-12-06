@@ -1,4 +1,4 @@
-Peter Spiess-Knafl <peter.knafl@gmail.com>
+Peter Spiess-Knafl <dev@spiessknafl.at>
 + core library
 + cmake build system
 + stubgenerator
@@ -30,11 +30,14 @@ Marek Kotewicz <marek.kotewicz@gmail.com>
 
 Alexandre Poirot <alexandre.poirot@gmail.com>
 + added client and server connectors that use Unix Domain Sockets
-+ adapted build file to generate pkg-config file for this lib.
++ adapted build file to generate pkg-config file for this lib
 + added client and server connectors that use Tcp Sockets on Linux and Windows (uses native socket and thread API on each OS)
 
 Trevor Vannoy <trevor.vannoy@flukecal.com>
 + python client stub generator
+
+Jean-Daniel Michaud <jean.daniel,michaud@gmail.com>
++ added server/client file descriptor support
 
 Bugfixes (chronological order)
 ==============================

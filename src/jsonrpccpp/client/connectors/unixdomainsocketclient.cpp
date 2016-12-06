@@ -38,15 +38,14 @@ UnixDomainSocketClient::~UnixDomainSocketClient()
 
 void UnixDomainSocketClient::SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException)
 {
-    sockaddr_un address;
-    int socket_fd, nbytes;
-    char buffer[BUFFER_SIZE];
-    socket_fd = socket(AF_UNIX, SOCK_STREAM, 0);
-    if (socket_fd < 0)
-    {
-        throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Could not created unix domain socket");
-    }
-
+	sockaddr_un address;
+	int socket_fd, nbytes;
+	char buffer[BUFFER_SIZE];
+	socket_fd = socket(AF_UNIX, SOCK_STREAM, 0);
+	if (socket_fd < 0)
+	{
+        throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Could not create unix domain socket");
+	}
     memset(&address, 0, sizeof(sockaddr_un));
 
     address.sun_family = AF_UNIX;

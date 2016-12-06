@@ -3,7 +3,7 @@
  *************************************************************************
  * @file    httpserver.cpp
  * @date    31.12.2012
- * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>
+ * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
  * @license See attached LICENSE.txt
  ************************************************************************/
 
@@ -51,13 +51,22 @@ bool HttpServer::StartListening()
 {
     if(!this->running)
     {
+        const bool has_epoll = (MHD_is_feature_supported(MHD_FEATURE_EPOLL) == MHD_YES);
+        const bool has_poll = (MHD_is_feature_supported(MHD_FEATURE_POLL) == MHD_YES);
+        unsigned int mhd_flags;
+        if (has_epoll)
+            mhd_flags = MHD_USE_EPOLL_INTERNALLY;
+        else if (has_poll)
+            mhd_flags = MHD_USE_POLL_INTERNALLY;
+        else
+            mhd_flags = MHD_USE_SELECT_INTERNALLY;
         if (this->path_sslcert != "" && this->path_sslkey != "")
         {
             try {
                 SpecificationParser::GetFileContent(this->path_sslcert, this->sslcert);
                 SpecificationParser::GetFileContent(this->path_sslkey, this->sslkey);
 
-                this->daemon = MHD_start_daemon(MHD_USE_SSL | MHD_USE_SELECT_INTERNALLY, this->port, NULL, NULL, HttpServer::callback, this, MHD_OPTION_HTTPS_MEM_KEY, this->sslkey.c_str(), MHD_OPTION_HTTPS_MEM_CERT, this->sslcert.c_str(), MHD_OPTION_THREAD_POOL_SIZE, this->threads, MHD_OPTION_END);
+                this->daemon = MHD_start_daemon(MHD_USE_SSL | mhd_flags, this->port, NULL, NULL, HttpServer::callback, this, MHD_OPTION_HTTPS_MEM_KEY, this->sslkey.c_str(), MHD_OPTION_HTTPS_MEM_CERT, this->sslcert.c_str(), MHD_OPTION_THREAD_POOL_SIZE, this->threads, MHD_OPTION_END);
             }
             catch (JsonRpcException& ex)
             {
@@ -66,7 +75,7 @@ bool HttpServer::StartListening()
         }
         else
         {
-            this->daemon = MHD_start_daemon(MHD_USE_SELECT_INTERNALLY, this->port, NULL, NULL, HttpServer::callback, this,   MHD_OPTION_THREAD_POOL_SIZE, this->threads, MHD_OPTION_END);
+            this->daemon = MHD_start_daemon(mhd_flags, this->port, NULL, NULL, HttpServer::callback, this,   MHD_OPTION_THREAD_POOL_SIZE, this->threads, MHD_OPTION_END);
         }
         if (this->daemon != NULL)
             this->running = true;
@@ -147,7 +156,7 @@ int HttpServer::callback(void *cls, MHD_Connection *connection, const char *url,
             if (handler == NULL)
             {
                 client_connection->code = MHD_HTTP_INTERNAL_SERVER_ERROR;
-                client_connection->server->SendResponse("No client conneciton handler found", client_connection);
+                client_connection->server->SendResponse("No client connection handler found", client_connection);
             }
             else
             {

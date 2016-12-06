@@ -3,7 +3,7 @@
  *************************************************************************
  * @file    specificationparser.cpp
  * @date    12.03.2013
- * @author  Peter Spiess-Knafl <peter.knafl@gmail.com>
+ * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
  * @license See attached LICENSE.txt
  ************************************************************************/
 
@@ -44,7 +44,7 @@ vector<Procedure>   SpecificationParser::GetProceduresFromString(const string &c
         GetProcedure(val[i], proc);
         if (procnames.find(proc.GetProcedureName()) != procnames.end())
         {
-            throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX, "Procedurename not uniqe: " + proc.GetProcedureName());
+            throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX, "Procedurename not unique: " + proc.GetProcedureName());
         }
         procnames[proc.GetProcedureName()] = proc;
         result.push_back(proc);

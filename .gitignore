@@ -21,3 +21,6 @@ doc/html
 CMakeLists.txt.user*
 src/examples/gen/*
 *~
+
+# IntelliJ
+.idea
