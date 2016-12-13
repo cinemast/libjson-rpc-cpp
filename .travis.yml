@@ -20,14 +20,14 @@ install:
   - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-5 90
 
 env:
- - HTTP_SERVER=YES HTTP_CLIENT=YES COMPILE_STUBGEN=YES
+   - HTTP_SERVER=YES HTTP_CLIENT=YES COMPILE_STUBGEN=YES TCP_SOCKET_SERVER=YES TCP_SOCKET_CLIENT=YES
 
 compiler:
-  - gcc
+    - gcc
 
 script: 
     - mkdir -p build && cd build
-    - cmake -DCMAKE_BUILD_TYPE=Debug -DHTTP_CLIENT=${HTTP_CLIENT} -DHTTP_SERVER=${HTTP_SERVER} -DCOMPILE_STUBGEN=${COMPILE_STUBGEN} .. 
+    - cmake -DCMAKE_BUILD_TYPE=Debug -DHTTP_CLIENT=${HTTP_CLIENT} -DHTTP_SERVER=${HTTP_SERVER} -DTCP_SOCKET_SERVER=${TCP_SOCKET_SERVER} -DTCP_SOCKET_CLIENT=${TCP_SOCKET_CLIENT} -DCOMPILE_STUBGEN=${COMPILE_STUBGEN} ..
     - make
     - make test
     - sudo make install && sudo ldconfig
