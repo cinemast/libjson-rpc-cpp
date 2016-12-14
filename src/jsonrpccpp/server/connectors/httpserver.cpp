@@ -51,22 +51,14 @@ bool HttpServer::StartListening()
 {
     if(!this->running)
     {
-        bool has_epoll = false;
-        bool has_poll = false;
         unsigned int mhd_flags = MHD_USE_SELECT_INTERNALLY;
 
-#ifdef MHD_FEATURE_EPOLL
-        has_epoll = (MHD_is_feature_supported(MHD_FEATURE_EPOLL) == MHD_YES);
-        if (has_epoll)
+#if (MHD_VERSION >= 0x00095100)
+        if (MHD_is_feature_supported(MHD_FEATURE_EPOLL) == MHD_YES)
             mhd_flags = MHD_USE_EPOLL_INTERNALLY;
-#endif
-
-#ifdef MHD_FEATURE_POLL
-        has_poll = (MHD_is_feature_supported(MHD_FEATURE_POLL) == MHD_YES);
-        if (!has_epoll && has_poll)
+        else if (MHD_is_feature_supported(MHD_FEATURE_POLL) == MHD_YES)
             mhd_flags = MHD_USE_POLL_INTERNALLY;
 #endif
-
         if (this->path_sslcert != "" && this->path_sslkey != "")
         {
             try {
