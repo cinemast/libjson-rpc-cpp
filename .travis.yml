@@ -30,6 +30,7 @@ script:
     - cmake -DCMAKE_BUILD_TYPE=Debug -DHTTP_CLIENT=${HTTP_CLIENT} -DHTTP_SERVER=${HTTP_SERVER} -DTCP_SOCKET_SERVER=${TCP_SOCKET_SERVER} -DTCP_SOCKET_CLIENT=${TCP_SOCKET_CLIENT} -DCOMPILE_STUBGEN=${COMPILE_STUBGEN} ..
     - make
     - make test
+    - ./bin/unit_testsuite -r console
     - sudo make install && sudo ldconfig
     - g++ ../src/examples/simpleclient.cpp -ljsonrpccpp-client -ljsoncpp -ljsonrpccpp-common -lcurl -o sampleclient
     - g++ ../src/examples/simpleserver.cpp -ljsonrpccpp-server -ljsoncpp -ljsonrpccpp-common -lmicrohttpd -o sampleserver
