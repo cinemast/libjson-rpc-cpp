@@ -12,6 +12,7 @@
 
 #include <string>
 #include <pthread.h>
+#include <sys/select.h>
 
 #include "../abstractserverconnector.h"
 
