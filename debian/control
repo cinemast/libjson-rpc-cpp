@@ -1,0 +1,29 @@
+Source: libjson-rpc-cpp
+Priority: optional
+Maintainer: Peter Spiess-Knafl <peter.knafl@bitmovin.net>
+Build-Depends: debhelper (>= 7.0.0), cmake
+Standards-Version: 3.9.4
+Section: libs
+Homepage: https://github.com/cinemast/libjson-rpc-cpp
+Vcs-Git: https://github.com/cinemast/libjson-rpc-cpp.git
+Vcs-Browser: https://github.com/cinemast/libjson-rpc-cpp
+
+Package: libjson-rpc-cpp-dev
+Section: libdevel
+Architecture: any
+Depends: libjson-rpc-cpp0 (= ${binary:Version})
+Description: jsonrpc framework for C++ - development tools
+ Headers and development tools for libjson-rpc-cpp.
+
+Package: libjson-rpc-cpp0
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: jsonrpc framework for C++
+ jsonrpc framework for C++, including server and client support
+ with stubgenerator.
+ .
+ This C++ library provides a json-rpc (remote procedure call) framework
+ for Linux and MacOS (or any other UNIX derivate).
+ It is fully JSON-RPC 2.0 compatible (JSON-RPC 2.0)
+ and provides additional features, such as generic authentication mechanisms.
