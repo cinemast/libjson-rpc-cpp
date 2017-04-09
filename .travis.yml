@@ -1,42 +1,39 @@
 language: cpp
 dist: trusty
 sudo: required
+services:
+  - docker
 before_install:
- - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
- - sudo apt-get update -qq
- - sudo apt-get install -qq libcurl4-openssl-dev libjsoncpp-dev libargtable2-dev libgnutls-dev libgcrypt11-dev valgrind wget gcc-5 g++-5
- - wget http://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-0.9.52.tar.gz
- - tar -xvf libmicrohttpd-0.9.52.tar.gz
- - cd libmicrohttpd-0.9.52
- - ./configure && make
- - sudo make install && sudo ldconfig
- - cd .. && sudo rm -rf libmicrohttpd-0.9.52
- - sudo pip install codecov
- -  sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
- -  sudo apt-get update -qq
- -  if [ "$CXX" = "g++" ]; then export CXX="g++-5" CC="gcc-5"; fi
-
-install:
-  - if [ "$CXX" = "g++" ]; then export CXX="g++-5" CC="gcc-5"; fi
-  - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-5 90
+  - |
+   if [ "$OS" == "native" ];
+   then 
+    sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+    sudo apt-get update -qq
+    sudo apt-get install -qq libcurl4-openssl-dev libjsoncpp-dev libargtable2-dev libgnutls-dev libgcrypt11-dev valgrind wget gcc-5 g++-5
+    wget http://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-0.9.52.tar.gz
+    tar -xvf libmicrohttpd-0.9.52.tar.gz
+    cd libmicrohttpd-0.9.52
+    ./configure && make
+    sudo make install && sudo ldconfig
+    cd .. && sudo rm -rf libmicrohttpd-0.9.52
+    sudo pip install codecov
+    sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+    sudo apt-get update -qq
+    sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-5 90
+   fi
 
 env:
-   - HTTP_SERVER=YES HTTP_CLIENT=YES COMPILE_STUBGEN=YES TCP_SOCKET_SERVER=YES TCP_SOCKET_CLIENT=YES
+  - OS=native
+  - OS=fedora
+  - OS=arch
+  - OS=debian8
+  - OS=debian9
+  - OS=ubuntu1604
+  - OS=ubuntu1704
 
 compiler:
     - gcc
 
-script: 
-    - mkdir -p build && cd build
-    - cmake -DCMAKE_BUILD_TYPE=Debug -DHTTP_CLIENT=${HTTP_CLIENT} -DHTTP_SERVER=${HTTP_SERVER} -DTCP_SOCKET_SERVER=${TCP_SOCKET_SERVER} -DTCP_SOCKET_CLIENT=${TCP_SOCKET_CLIENT} -DCOMPILE_STUBGEN=${COMPILE_STUBGEN} ..
-    - make
-    - make test
-    - ./bin/unit_testsuite -r console
-    - sudo make install && sudo ldconfig
-    - g++ ../src/examples/simpleclient.cpp -ljsonrpccpp-client -ljsoncpp -ljsonrpccpp-common -lcurl -o sampleclient
-    - g++ ../src/examples/simpleserver.cpp -ljsonrpccpp-server -ljsoncpp -ljsonrpccpp-common -lmicrohttpd -o sampleserver
-    - sudo make uninstall
-    - cd ..
-    - ./dev/codecov.sh
-after_success:
-    - bash <(curl -s https://codecov.io/bash)
+script:
+    - if [[ "$OS" == "native" ]]; then sudo ./docker/build_test_install.sh; ./dev/codecov.sh; bash <(curl -s https://codecov.io/bash); fi
+    - if [[ "$OS" != "native" ]]; then cd docker; make ${OS}; fi
