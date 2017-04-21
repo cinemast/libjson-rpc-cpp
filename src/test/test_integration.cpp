@@ -11,8 +11,8 @@
 #ifdef STUBGEN_TESTING
 #include <catch.hpp>
 
-#include <jsonrpccpp/server/connectors/httpserver.h>
 #ifdef HTTP_TESTING
+#include <jsonrpccpp/server/connectors/httpserver.h>
 #include <jsonrpccpp/client/connectors/httpclient.h>
 #endif
 
