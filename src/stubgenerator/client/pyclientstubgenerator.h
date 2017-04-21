@@ -8,6 +8,7 @@ namespace jsonrpc
     /**
      * The stub client this class generates requires jsonrpc_pyclient
      * to be installed from pypi.
+     * https://github.com/tvannoy/jsonrpc_pyclient
      */
     class PythonClientStubGenerator : public StubGenerator
     {
