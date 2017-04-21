@@ -26,13 +26,6 @@ void BatchResponse::addResponse(Json::Value &id, Json::Value response, bool isEr
     responses[id] = response;
 }
 
-Json::Value BatchResponse::getResult(Json::Value& id)
-{
-    Json::Value result;
-    getResult(id, result);
-    return result;
-}
-
 Json::Value BatchResponse::getResult(int id)
 {
     Json::Value result;

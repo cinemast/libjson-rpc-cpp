@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+mkdir -p ../build
 cd ../build
 
 echo "Building debug build"
@@ -10,7 +12,7 @@ bin/unit_testsuite
 
 echo "Generate HTML report"
 mkdir -p reports
-gcovr -r .. -d -e "build" -e "src/test" --html --html-details -o reports/coverage.html
+gcovr -r .. -d -e "build" -e "src/test" -e "src/examples" -e "src/stubgenerator/main.cpp" --html --html-details -o reports/coverage.html
 xdg-open reports/coverage.html
 cd ../dev
 
