@@ -11,16 +11,16 @@
 
 # only look in default directories
 find_path(
-	CURL_INCLUDE_DIR 
-	NAMES curl/curl.h
-	DOC "curl include dir"
+    CURL_INCLUDE_DIR
+    NAMES curl/curl.h
+    DOC "curl include dir"
 )
 
 find_library(
-	CURL_LIBRARY
-	# names from cmake's FindCURL
-	NAMES curl curllib libcurl_imp curllib_static libcurl
-	DOC "curl library"
+    CURL_LIBRARY
+    # names from cmake's FindCURL
+    NAMES curl curllib libcurl_imp curllib_static libcurl
+    DOC "curl library"
 )
 
 set(CURL_INCLUDE_DIRS ${CURL_INCLUDE_DIR})
@@ -30,20 +30,17 @@ set(CURL_LIBRARIES ${CURL_LIBRARY})
 # same naming convention as in qt (appending debug library with d)
 # boost is using the same "hack" as us with "optimized" and "debug"
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-	find_library(
-		CURL_LIBRARY_DEBUG
-		NAMES curld libcurld
-		DOC "curl debug library"
-	)
-	
-	set(CURL_LIBRARIES optimized ${CURL_LIBRARIES} debug ${CURL_LIBRARY_DEBUG})
-
+    find_library(
+        CURL_LIBRARY_DEBUG
+        NAMES curld libcurld
+        DOC "curl debug library"
+    )
+    set(CURL_LIBRARIES optimized ${CURL_LIBRARIES} debug ${CURL_LIBRARY_DEBUG})
 endif()
 
 # handle the QUIETLY and REQUIRED arguments and set CURL_FOUND to TRUE
 # if all listed variables are TRUE, hide their existence from configuration view
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(CURL DEFAULT_MSG
-	CURL_INCLUDE_DIR CURL_LIBRARY)
+find_package_handle_standard_args(CURL DEFAULT_MSG CURL_INCLUDE_DIR CURL_LIBRARY)
 mark_as_advanced (CURL_INCLUDE_DIR CURL_LIBRARY)
 

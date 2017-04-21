@@ -21,37 +21,37 @@ message(STATUS "Threads: ${CMAKE_THREADS_LIBS_INIT}")
 
 # find Argtable
 if(${COMPILE_STUBGEN})
-	find_package(Argtable REQUIRED)
-	message(STATUS "Argtable header: ${ARGTABLE_INCLUDE_DIRS}")
-	message(STATUS "Argtable lib   : ${ARGTABLE_LIBRARIES}")
+    find_package(Argtable REQUIRED)
+    message(STATUS "Argtable header: ${ARGTABLE_INCLUDE_DIRS}")
+    message(STATUS "Argtable lib   : ${ARGTABLE_LIBRARIES}")
 endif()
 
-if(${HTTP_CLIENT})
 # find CURL
-	find_package(CURL REQUIRED)
-	message(STATUS "CURL header: ${CURL_INCLUDE_DIRS}")
-	message(STATUS "CURL lib   : ${CURL_LIBRARIES}")
+if(${HTTP_CLIENT})
+    find_package(CURL REQUIRED)
+    message(STATUS "CURL header: ${CURL_INCLUDE_DIRS}")
+    message(STATUS "CURL lib   : ${CURL_LIBRARIES}")
 endif()
 
-if (${HTTP_SERVER})
 # find libmicrohttpd
-	find_package(MHD REQUIRED)
-	message(STATUS "MHD header: ${MHD_INCLUDE_DIRS}")
-	message(STATUS "MHD lib   : ${MHD_LIBRARIES}")
+if (${HTTP_SERVER})
+
+    find_package(MHD REQUIRED)
+    message(STATUS "MHD header: ${MHD_INCLUDE_DIRS}")
+    message(STATUS "MHD lib   : ${MHD_LIBRARIES}")
 endif()
 
 # find doxygen
 find_package(Doxygen)
 
 if (${COMPILE_TESTS})
-
-	find_package(Catch)
-	if(NOT CATCH_FOUND)
-		message("Could not find catch, downloading it now")
+    find_package(Catch)
+    if(NOT CATCH_FOUND)
+        message("Could not find catch, downloading it now")
     	# Includes Catch in the project:
-	   	add_subdirectory(${CMAKE_SOURCE_DIR}/src/catch)
-	   	include_directories(${CATCH_INCLUDE_DIR} ${COMMON_INCLUDES})
-	else()
-    	INCLUDE_DIRECTORIES(${CATCH_INCLUDE_DIRS})
-	endif()
+        add_subdirectory(${CMAKE_SOURCE_DIR}/src/catch)
+        include_directories(${CATCH_INCLUDE_DIR} ${COMMON_INCLUDES})
+    else()
+        include_directories(${CATCH_INCLUDE_DIRS})
+    endif()
 endif()

@@ -12,15 +12,15 @@
 
 # only look in default directories
 find_path(
-	JSONCPP_INCLUDE_DIR 
-	NAMES jsoncpp/json/json.h json/json.h
-	DOC "jsoncpp include dir"
+    JSONCPP_INCLUDE_DIR
+    NAMES jsoncpp/json/json.h json/json.h
+    DOC "jsoncpp include dir"
 )
 
 find_library(
-	JSONCPP_LIBRARY
-	NAMES jsoncpp
-	DOC "jsoncpp library"
+    JSONCPP_LIBRARY
+    NAMES jsoncpp
+    DOC "jsoncpp library"
 )
 
 set(JSONCPP_INCLUDE_DIRS ${JSONCPP_INCLUDE_DIR})
@@ -30,33 +30,30 @@ set(JSONCPP_LIBRARIES ${JSONCPP_LIBRARY})
 # same naming convention as in qt (appending debug library with d)
 # boost is using the same "hack" as us with "optimized" and "debug"
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-	find_library(
-		JSONCPP_LIBRARY_DEBUG
-		NAMES jsoncppd
-		DOC "jsoncpp debug library"
-	)
-	
-	set(JSONCPP_LIBRARIES optimized ${JSONCPP_LIBRARIES} debug ${JSONCPP_LIBRARY_DEBUG})
-
+    find_library(
+        JSONCPP_LIBRARY_DEBUG
+        NAMES jsoncppd
+        DOC "jsoncpp debug library"
+    )
+    set(JSONCPP_LIBRARIES optimized ${JSONCPP_LIBRARIES} debug ${JSONCPP_LIBRARY_DEBUG})
 endif()
 
 # find JSONCPP_INCLUDE_PREFIX
 find_path(
-	JSONCPP_INCLUDE_PREFIX
-	NAMES json.h
-	PATH_SUFFIXES jsoncpp/json json
+    JSONCPP_INCLUDE_PREFIX
+    NAMES json.h
+    PATH_SUFFIXES jsoncpp/json json
 )
 
 if (${JSONCPP_INCLUDE_PREFIX} MATCHES "jsoncpp")
-	set(JSONCPP_INCLUDE_PREFIX "jsoncpp/json")
+    set(JSONCPP_INCLUDE_PREFIX "jsoncpp/json")
 else()
-	set(JSONCPP_INCLUDE_PREFIX "json")
+    set(JSONCPP_INCLUDE_PREFIX "json")
 endif()
 
 # handle the QUIETLY and REQUIRED arguments and set JSONCPP_FOUND to TRUE
 # if all listed variables are TRUE, hide their existence from configuration view
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(jsoncpp DEFAULT_MSG
-	JSONCPP_INCLUDE_DIR JSONCPP_LIBRARY)
+find_package_handle_standard_args(jsoncpp DEFAULT_MSG JSONCPP_INCLUDE_DIR JSONCPP_LIBRARY)
 mark_as_advanced (JSONCPP_INCLUDE_DIR JSONCPP_LIBRARY)
 
