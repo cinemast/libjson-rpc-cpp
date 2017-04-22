@@ -117,17 +117,6 @@ void FileDescriptorServer::ListenLoop()
 }
 
 int FileDescriptorServer::WaitForRead() {
-<<<<<<< HEAD
-  // Has to be reset after every call, as POSIX allow the value to be modifiable by the system.
-  FD_ZERO(&read_fds);
-  FD_ZERO(&write_fds);
-  FD_ZERO(&except_fds);
-  FD_SET(inputfd, &read_fds);
-  timeout.tv_sec = 0;
-  timeout.tv_usec = (suseconds_t) (READ_TIMEOUT * 1000000);
-  // Wait for something to read
-  return select(inputfd + 1, &read_fds, &write_fds, &except_fds, &timeout);
-=======
     // Has to be reset after every call, as POSIX allow the value to be modifiable by the system.
     FD_ZERO(&read_fds);
     FD_ZERO(&write_fds);
@@ -137,7 +126,6 @@ int FileDescriptorServer::WaitForRead() {
     timeout.tv_usec = (suseconds_t) (READ_TIMEOUT * 1000000);
     // Wait for something to read
     return select(inputfd + 1, &read_fds, &write_fds, &except_fds, &timeout);
->>>>>>> Fix indentation in unidxdomainsocketclient and filedescriptorserver
 }
 
 bool FileDescriptorServer::IsReadable(int fd)
