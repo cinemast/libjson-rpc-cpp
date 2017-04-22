@@ -11,6 +11,7 @@
 #define JSONRPC_CPP_FILEDESCRIPTORSERVERCONNECTOR_H_
 
 #include <string>
+#include <sys/time.h>
 #include <pthread.h>
 
 #include "../abstractserverconnector.h"
@@ -77,4 +78,3 @@ namespace jsonrpc
 }
 
 #endif /* JSONRPC_CPP_FILEDESCRIPTORSERVERCONNECTOR_H_ */
-
