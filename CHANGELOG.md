@@ -1,3 +1,33 @@
+# Change Log
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](http://keepachangelog.com/)
+and this project adheres to [Semantic Versioning](http://semver.org/).
+
+## [Unreleased]
+### Fixed
+- Typo in ERROR_CLIENT_CONNECTOR exception
+- Integration testsuite when run without HTTP
+- dev/testcoverage.sh script which did not create the build directory
+- Indentation in CMakeLists.txt files
+
+### Added
+- File descriptor client and server connector
+- Docker based build system for testing on multiple distributions
+
+### Removed
+- Method `BatchResponse::getResult(Json::Value& id)`
+- Scripts dev/ci.sh, dev/createpackage.sh, dev/installdeps.sh
+
+### Changed
+- Migrated from coveralls.io to codecov.io
+- Changed maintainer e-mail address
+- Use libmicrohttpd's EPOLL where possible (lmhd >= 0.9.52)
+- Added `set -e` to testcoverage.sh script
+- Changelog format to [keepachangelog.com](http://keepachangelog.com/en/0.3.0/)
+
+
+
 Changes in v0.7.0
 -----------------
 - Change: Requiring C++11 support (gcc >= 4.8)
