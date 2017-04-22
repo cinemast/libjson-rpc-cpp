@@ -19,15 +19,17 @@
 #include <iostream>
 
 #define BUFFER_SIZE 64
+#ifndef PATH_MAX
 #define PATH_MAX 108
+#endif
 #ifndef DELIMITER_CHAR
 #define DELIMITER_CHAR char(0x0A)
-#endif //DELIMITER_CHAR
+#endif
 
 using namespace jsonrpc;
 using namespace std;
 
-    UnixDomainSocketClient::UnixDomainSocketClient(const std::string& path)
+UnixDomainSocketClient::UnixDomainSocketClient(const std::string& path)
 : path(path)
 {
 }
