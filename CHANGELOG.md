@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - File descriptor client and server connector
 - Docker based build system for testing on multiple distributions
+- CI Integration for OSX build
 
 ### Removed
 - Method `BatchResponse::getResult(Json::Value& id)`
@@ -26,116 +27,148 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added `set -e` to testcoverage.sh script
 - Changelog format to [keepachangelog.com](http://keepachangelog.com/en/0.3.0/)
 
+## [v0.7.0] - 2016-08-10
+### Fixed
+- armhf compatibility
+- Invalid client id field handling (removed int only check)
+- Security issues in unixdomainsocket connectors
+- Missing CURL include directive
+- Parallel build which failed due to failing CATCH dependency
+- Handling 64-bit ids
+- Invalid parameter check
+- Invalid pointer handling in HTTP-Server
 
+### Added
+- HttpServer can now be configured to listen localhost only
+- TCP Server + Client connectors
 
-Changes in v0.7.0
------------------
-- Change: Requiring C++11 support (gcc >= 4.8)
-- Fix: armhf compatibility
-- Fix: Invalid client id field handling (removed int only check)
-- Fix: Security issues in unixdomainsocket connectors
-- Fix: Missing CURL include directive
-- Fix: Parallel build which failed due to failing CATCH dependency
-- Fix: Handling 64-bit ids
-- Fix: Invalid parameter check
-- Fix: Invalid pointer handling in HTTP-Server
-- NEW: HttpServer can now be configured to listen localhost only
-- NEW: TCP Server + Client connectors
+## Changed
+- Requiring C++11 support (gcc >= 4.8)
 
-Changes in v0.6.0
------------------
-- NEW: pkg-config files for all shared libraries
-- NEW: UNIX Socket client + server connector
-- NEW: multiarch support
-- Change: unit testing framework to catch
-- Change: allow disabling shared library build
-- Change: split out shared/static library for stubgenerator
+## [v0.6.0] - 2015-06-27
+### Added
+- pkg-config files for all shared libraries
+- UNIX Socket client + server connector
+- multiarch support
 
-Changes in v0.5.0
------------------
-- Added `--version` option to jsonrpcstub.
-- Added msvc support.
-- Added data field support for JsonRpcException.
-- Added contributions guide: https://github.com/cinemast/libjson-rpc-cpp#contributions
+### Changed
+- unit testing framework to catch
+- allow disabling shared library build
+- split out shared/static library for stubgenerator
+
+## [v0.5.0] - 2015-04-07
+### Fixed
+- building tests with examples disabled.
+- unnecessary rebuilds of stubs on each `make` call.
+
+### Added
+- `--version` option to jsonrpcstub.
+- msvc support.
+- data field support for JsonRpcException.
+- contributions guide: https://github.com/cinemast/libjson-rpc-cpp#contributions
 - HttpClient uses Http Keep-Alive, which improves performance drastically.
-- Added multiarch support.
-- Fixed building tests with examples disabled.
+- multiarch support.
+
+### Changed
 - Made static library build optional (via `BUILD_STATIC_LIBS`).
-- Fixed unnecessary rebuilds of stubs on each `make` call.
 
-Changes in v0.4.2
------------------
-- Fix of spelling mistakes.
+## [v0.4.2] - 2015-01-21
+### Fixed
+- Some spelling mistakes.
+- HttpServer with Threading option in SSL startup.
+
+### Changed
 - Use CMAKE versioning in manpage.
-- Improving include scheme of jsoncpp.
-- Bugfix in HttpServer with Threading option in SSL startup.
+- Improvied include scheme of jsoncpp.
 
-Changes in v0.4.1
------------------
-- Added coverity scan support
-- [Added API compatibility report](http://upstream.rosalinux.ru/versions/libjson-rpc-cpp.html)
+## [v0.4.1] - 2014-12-01
+### Added
+- coverity scan support
+- [API compatibility report](http://upstream.rosalinux.ru/versions/libjson-rpc-cpp.html)
+- Stubgenerator option for protocol switches (JSON-RPC 1.0 & 2.0)
+
+### Changed
 - Improved manpage
-- Extended Stubgenerator for protocol switches (JSON-RPC 1.0 & 2.0)
 
-Changes in v0.4
----------------
-- Memory leak fixes
-- Switched Http Server to libmicrohttpd
-- Added full WIN32 build support
+## [v0.4] - 2014-11-21
+### Fixed
+- Memory leaks
+
+### Added
+- Full WIN32 build support
+- JavaScript client stub support
 - Improved test coverage (100% line coverage)
-- Added JavaScript client stub support
+
+### Changed
+- Switched Http Server to libmicrohttpd
 - Removed TCP Client/Server implementation due to security and codestyle problems.
-- Finally removed dirty pointer stuff in bindAndAddX() methods.
+- Removed dirty pointer stuff in bindAndAddX() methods.
 - Using call by value in generated stubs for primitive data types.
 
-Changes in v0.3.2
------------------
-- Bugfixes
-- Additional testcases for client + server -> higher testcoverage
+## [v0.3.2] - 2014-10-26
+### Fixed
+- Minor bugs
+
+### Added
+- Testcases for client + server -> higher testcoverage
 - JSON-RPC 1 Client + Server support
+
+### Changed
 - Refactorings in server for JSON-RPC 1 support
 - Hiding irrelevant API headers from installation
 - Renamed AbstractClientConnector to IClientConnector (please regenearte your client stubs after upgrading)
 - Reactivated dev/testcoverage.sh to measure testcoverage.
 
-Changes in v0.3.1
------------------
-- Bugfixes
+## [v0.3.1] - 2014-10-22
+### Fixed
+- Minor bugs
+
+### Added
+- Experimental Javascript client to stubgenerator
+
+### Changed
 - Changed SOVERSION
-- Added experimental Javascript client to stubgenerator
 - Adapted HTTP Server to enable CORS.
 
-Changes in v0.3
----------------
+## [v0.3] - 2014-10-19
+### Fixed
+- Renamed .so files to avoid collisions with makerbot's libjsonrpc.
+- Invalid Batchcalls in Client and Server caused runtime exceptions.
+
+### Added
+- Namespace/package support for generated stub classes.
+- CMake options to enable/disable Stubgenerator, Examples, Connectors and Testsuite.
+- Boost-test based unit testing suite, which makes testing more flexible.
+
+### Changed
 - Split up server and client into separate libraries
 - Lot's of refactorings in the build system and stubgenerator.
-- Added namespace/package support for generated stub classes.
-- libjson-cpp is no longer directly embedded.
-- Simplified spec format: a procedure specification without `return` field is a notification.
-- Introduced a boost-test based unit testing suite, which makes testing more flexible.
-- Added CMake options to enable/disable Stubgenerator, Examples, Connectors and Testsuite.
 - Removed Autotools support (because of all the changes in this release).
-- Bugfix: renamed .so files to avoid collisions with makerbot's libjsonrpc.
-- Bugfix: Invalid Batchcalls in Client and Server caused runtime exceptions.
+- Removed embedded libjson-cpp.
+- Simplified spec format: a procedure specification without `return` field is a notification.
 
-Changes in v0.2.1
------------------
-- Added support for positional parameters. (see at [example specification](https://github.com/cinemast/libjson-rpc-cpp/blob/master/src/example/spec.json) how to declare them)
+# [v0.2.1] - 2013-07-27
+### Added
+- Support for positional parameters. (see at [example specification](https://github.com/cinemast/libjson-rpc-cpp/blob/master/src/example/spec.json) how to declare them)
 
-Changes in v0.2
----------------
-- Minor bugfixes.
+## [0.2] - 2013-05-29
+### Fixed
+- Minor bugs
+
+### Added
+- Stub generator for client and server.
+- SpecificationWriter to generate Specifications from RPC-Server definitions.
+- SpecificationParser to parse a Specification file and generate Methods for the RPC-Server.
+- Automated testing after build phase (using `make test`)
+
+### Changed
 - Refactored architecture.
-- stub generator for client and server.
-- removed mandatory configuration files (making it more compatible for embedded use cases).
-- Introduced SpecificationWriter to generate Specifications from RPC-Server definitions.
-- Introduced SpecificationParser to parse a Specification file and generate Methods for the RPC-Server.
+- Removed mandatory configuration files (making it more compatible for embedded use cases).
 - Updated JsonCPP library
 - Update Mongoose library
 - Enable SSL Support (provided by mongoose)
-- Introduced automated testing after build phase (using `make test`)
 - Embedding dependent libraries (to avoid naming conflicts)
 
-Known issues
--------------
-- Under Ubuntu 12.04 SSL support is not enabled in the libmicrohttpd-dev package that is provided by ubuntu. Look at the [.travis.yml](https://github.com/cinemast/libjson-rpc-cpp/blob/develop/.travis.yml) file to see how I cope with this.
+## [0.1] - 2013-02-07
+### Added
+- Initial release
