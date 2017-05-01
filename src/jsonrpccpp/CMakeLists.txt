@@ -4,7 +4,7 @@ file(GLOB jsonrpc_header_common common/*.h)
 file(GLOB jsonrpc_source_common common/*.c*)
 
 # setup server headers and sources
-file(GLOB jsonrpc_install_header_server 
+file(GLOB jsonrpc_install_header_server
 	server/requesthandlerfactory.h
 	server/abstractserver.h
 	server/abstractserverconnector.h
@@ -43,7 +43,7 @@ endif()
 if (HTTP_SERVER)
 	list(APPEND server_connector_header "server/connectors/httpserver.h")
 	list(APPEND server_connector_source "server/connectors/httpserver.cpp")
-	list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT} ${MHD_LIBRARIES})  
+	list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT} ${MHD_LIBRARIES})
 endif()
 
 # setup sources for unix domain socket connectors
@@ -204,7 +204,7 @@ if (WIN32)
 	install(DIRECTORY ${CMAKE_SOURCE_DIR}/win32-deps/include DESTINATION .)
 endif()
 
-install(TARGETS ${ALL_LIBS}
+install(TARGETS ${ALL_LIBS} EXPORT jsonrpccppTargets
 	LIBRARY DESTINATION lib${LIB_SUFFIX}/${CMAKE_LIBRARY_PATH}
 	ARCHIVE DESTINATION lib${LIB_SUFFIX}/${CMAKE_LIBRARY_PATH}
 	RUNTIME DESTINATION bin
@@ -219,10 +219,8 @@ CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/cmake/libjsonrpccpp-client.pc.cmake ${CMAKE
 CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/cmake/libjsonrpccpp-server.pc.cmake ${CMAKE_BINARY_DIR}/libjsonrpccpp-server.pc)
 CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/cmake/libjsonrpccpp-common.pc.cmake ${CMAKE_BINARY_DIR}/libjsonrpccpp-common.pc)
 
-INSTALL(FILES 
+INSTALL(FILES
     "${CMAKE_BINARY_DIR}/libjsonrpccpp-server.pc"
     "${CMAKE_BINARY_DIR}/libjsonrpccpp-client.pc"
     "${CMAKE_BINARY_DIR}/libjsonrpccpp-common.pc"
     DESTINATION "lib${LIB_SUFFIX}/${CMAKE_LIBRARY_PATH}/pkgconfig")
-
-

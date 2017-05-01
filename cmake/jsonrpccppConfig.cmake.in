@@ -1,0 +1,13 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+find_dependency(Threads)
+# TODO: add jsoncpp dependency
+if(@HTTP_CLIENT@)
+  find_dependency(CURL)
+endif()
+if(@HTTP_SERVER@)
+  find_dependency(MHD)
+endif()
+
+include(${CMAKE_CURRENT_LIST_DIR}/jsonrpccppTargets.cmake)

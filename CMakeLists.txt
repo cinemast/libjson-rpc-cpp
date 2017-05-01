@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 project(libjson-rpc-cpp)
 
-# list command no longer ignores empty elements 
+# list command no longer ignores empty elements
 cmake_policy(SET CMP0007 NEW)
 cmake_policy(SET CMP0012 NEW)
 
@@ -90,7 +90,7 @@ endif()
 
 # setup test suite
 if (COMPILE_TESTS)
-        enable_testing(true)
+	enable_testing()
 	add_subdirectory(src/test)
 endif()
 
@@ -112,6 +112,31 @@ configure_file(
 add_custom_target(
 	uninstall
 	COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
+)
+
+# CMake package
+include(CMakePackageConfigHelpers)
+include(GNUInstallDirs)
+set(config_install_destination ${CMAKE_INSTALL_LIBDIR}/jsonrpccpp/cmake)
+configure_package_config_file(
+	cmake/jsonrpccppConfig.cmake.in jsonrpccppConfig.cmake
+	INSTALL_DESTINATION ${config_install_destination}
+)
+write_basic_package_version_file(
+	jsonrpccppConfigVersion.cmake
+	VERSION ${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}
+	COMPATIBILITY ExactVersion
+)
+install(
+	EXPORT jsonrpccppTargets
+	DESTINATION ${config_install_destination}
+	NAMESPACE jsonrpccpp::
+)
+install(
+	FILES
+	${CMAKE_CURRENT_BINARY_DIR}/jsonrpccppConfig.cmake
+	${CMAKE_CURRENT_BINARY_DIR}/jsonrpccppConfigVersion.cmake
+	DESTINATION ${config_install_destination}
 )
 
 # packaging stuff
