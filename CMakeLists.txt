@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 
 # setup directory where we should look for cmake files
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 option(HUNTER_ENABLED "Enable Hunter package manager" NO)
 include(HunterGate)
