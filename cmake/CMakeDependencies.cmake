@@ -29,6 +29,7 @@ endif()
 
 if(${HTTP_CLIENT})
 # find CURL
+	hunter_add_package(CURL)
 	find_package(CURL REQUIRED)
 	message(STATUS "CURL header: ${CURL_INCLUDE_DIRS}")
 	message(STATUS "CURL lib   : ${CURL_LIBRARIES}")
