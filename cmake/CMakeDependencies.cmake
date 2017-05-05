@@ -10,6 +10,7 @@ set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${CMAKE_SOURCE_DIR}/win32-deps")
 # find JSONCPP
 # TODO: handle windows debug libraries!
 # TODO: fix FindJSONCPP file!
+hunter_add_package(jsoncpp)
 find_package(Jsoncpp)
 message(STATUS "Jsoncpp header: ${JSONCPP_INCLUDE_DIRS}")
 message(STATUS "Jsoncpp lib   : ${JSONCPP_LIBRARIES}")

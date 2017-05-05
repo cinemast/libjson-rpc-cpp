@@ -1,9 +1,9 @@
 # Find jsoncpp
 #
 # Find the jsoncpp includes and library
-# 
-# if you nee to add a custom library search path, do it via via CMAKE_PREFIX_PATH 
-# 
+#
+# if you nee to add a custom library search path, do it via via CMAKE_PREFIX_PATH
+#
 # This module defines
 #  JSONCPP_INCLUDE_DIRS, where to find header, etc.
 #  JSONCPP_LIBRARIES, the libraries needed to use jsoncpp.
@@ -12,8 +12,8 @@
 
 # only look in default directories
 find_path(
-	JSONCPP_INCLUDE_DIR 
-	NAMES jsoncpp/json/json.h json/json.h
+	JSONCPP_INCLUDE_DIR
+	NAMES json/json.h jsoncpp/json/json.h
 	DOC "jsoncpp include dir"
 )
 
@@ -35,7 +35,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 		NAMES jsoncppd
 		DOC "jsoncpp debug library"
 	)
-	
+
 	set(JSONCPP_LIBRARIES optimized ${JSONCPP_LIBRARIES} debug ${JSONCPP_LIBRARY_DEBUG})
 
 endif()
@@ -59,4 +59,3 @@ include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(jsoncpp DEFAULT_MSG
 	JSONCPP_INCLUDE_DIR JSONCPP_LIBRARY)
 mark_as_advanced (JSONCPP_INCLUDE_DIR JSONCPP_LIBRARY)
-
