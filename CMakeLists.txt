@@ -1,4 +1,15 @@
 cmake_minimum_required(VERSION 3.0)
+
+# setup directory where we should look for cmake files
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
+
+option(HUNTER_ENABLED "Enable Hunter package manager" NO)
+include(HunterGate)
+HunterGate(
+	URL "https://github.com/ruslo/hunter/archive/v0.18.47.tar.gz"
+	SHA1 "f0c476a3a0f9edd6182936d8c4460811f112189c"
+)
+
 project(libjson-rpc-cpp)
 
 # list command no longer ignores empty elements
@@ -54,9 +65,6 @@ endif(UNIX)
 message(STATUS "COMPILE_TESTS: ${COMPILE_TESTS}")
 message(STATUS "COMPILE_STUBGEN: ${COMPILE_STUBGEN}")
 message(STATUS "COMPILE_EXAMPLES: ${COMPILE_EXAMPLES}")
-
-# setup directory where we should look for cmake files
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
 
 # setup compiler settings && dependencies
 include(CMakeCompilerSettings)
