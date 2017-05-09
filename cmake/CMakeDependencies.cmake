@@ -33,11 +33,15 @@ if(${COMPILE_STUBGEN})
 endif()
 
 if(${HTTP_CLIENT})
-# find CURL
-	hunter_add_package(CURL)
-	find_package(CURL REQUIRED)
-	message(STATUS "CURL header: ${CURL_INCLUDE_DIRS}")
-	message(STATUS "CURL lib   : ${CURL_LIBRARIES}")
+	# find CURL
+	if(HUNTER_ENABLED)
+		hunter_add_package(CURL)
+		find_package(CURL CONFIG REQUIRED)
+	else()
+		find_package(CURL REQUIRED)
+		message(STATUS "CURL header: ${CURL_INCLUDE_DIR}")
+		message(STATUS "CURL lib   : ${CURL_LIBRARY}")
+	endif()
 endif()
 
 if (${HTTP_SERVER})

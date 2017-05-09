@@ -5,8 +5,8 @@
 # if you nee to add a custom library search path, do it via via CMAKE_PREFIX_PATH
 #
 # This module defines
-#  CURL_INCLUDE_DIRS, where to find header, etc.
-#  CURL_LIBRARIES, the libraries needed to use curl.
+#  CURL_INCLUDE_DIR, where to find header, etc.
+#  CURL_LIBRARY, the libraries needed to use curl.
 #  CURL_FOUND, If false, do not try to use curl.
 
 # only look in default directories
@@ -23,23 +23,13 @@ find_library(
 	DOC "curl library"
 )
 
-if(HUNTER_ENABLED)
-	find_library(openssl_library NAMES openssl ssl)
-	find_library(crypto_library NAMES crypto)
-	find_library(z_library NAMES z)
-	find_library(idn_library NAMES idn)
-	set(
-		curl_dependencies
-		${openssl_library}
-		${crypto_library}
-		${z_library}
-		${idn_library}
-		${CMAKE_DL_LIBS}
-	)
-endif()
-
-set(CURL_INCLUDE_DIRS ${CURL_INCLUDE_DIR})
-set(CURL_LIBRARIES ${CURL_LIBRARY} ${curl_dependencies})
+add_library(CURL::libcurl UNKNOWN IMPORTED)
+set_target_properties(
+	CURL::libcurl
+	PROPERTIES
+	IMPORTED_LOCATION "${CURL_LIBRARY}"
+	INTERFACE_INCLUDE_DIRECTORIES "${CURL_INCLUDE_DIR}"
+)
 
 # debug library on windows
 # same naming convention as in qt (appending debug library with d)
@@ -51,8 +41,12 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 		DOC "curl debug library"
 	)
 
-	set(CURL_LIBRARIES optimized ${CURL_LIBRARIES} debug ${CURL_LIBRARY_DEBUG})
-
+	set_target_properties(
+		CURL::libcurl
+		PROPERTIES
+		IMPORTED_LOCATION_DEBUG "${CURL_LIBRARY_DEBUG}"
+	)
+	set(CURL_LIBRARY optimized ${CURL_LIBRARY} debug ${CURL_LIBRARY_DEBUG})
 endif()
 
 # handle the QUIETLY and REQUIRED arguments and set CURL_FOUND to TRUE
