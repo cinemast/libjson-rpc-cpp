@@ -112,20 +112,19 @@ install(FILES "${PROJECT_BINARY_DIR}/gen/jsonrpccpp/common/jsonparser.h" DESTINA
 
 # include required directories
 include_directories(..)
-include_directories(${JSONCPP_INCLUDE_DIRS})
 include_directories(${MHD_INCLUDE_DIRS})
 
 # setup shared common library
 if (BUILD_SHARED_LIBS)
 	add_library(jsonrpccommon SHARED ${jsonrpc_source_common} ${jsonrpc_header} ${jsonrpc_helper_source_common})
-	target_link_libraries(jsonrpccommon ${JSONCPP_LIBRARIES})
+	target_link_libraries(jsonrpccommon jsoncpp_lib_static)
 	set_target_properties(jsonrpccommon PROPERTIES OUTPUT_NAME jsonrpccpp-common)
 endif()
 
 # setup static common library
 if (BUILD_STATIC_LIBS OR MSVC)
 	add_library(jsonrpccommonStatic STATIC ${jsonrpc_source_common} ${jsonrpc_header} ${jsonrpc_helper_source_common})
-	target_link_libraries(jsonrpccommonStatic ${JSONCPP_LIBRARIES})
+	target_link_libraries(jsonrpccommonStatic jsoncpp_lib_static)
 	set_target_properties(jsonrpccommonStatic PROPERTIES OUTPUT_NAME jsonrpccpp-common)
 
 	if (NOT BUILD_SHARED_LIBS)

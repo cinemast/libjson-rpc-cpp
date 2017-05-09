@@ -5,10 +5,11 @@
 # if you nee to add a custom library search path, do it via via CMAKE_PREFIX_PATH
 #
 # This module defines
-#  JSONCPP_INCLUDE_DIRS, where to find header, etc.
-#  JSONCPP_LIBRARIES, the libraries needed to use jsoncpp.
+#  JSONCPP_INCLUDE_DIR, where to find header, etc.
+#  JSONCPP_LIBRARY, the libraries needed to use jsoncpp.
 #  JSONCPP_FOUND, If false, do not try to use jsoncpp.
-#  JSONCPP_INCLUDE_PREFIX, include prefix for jsoncpp
+#  JSONCPP_INCLUDE_PREFIX, include prefix for jsoncpp.
+#  jsoncpp_lib_static imported library.
 
 # only look in default directories
 find_path(
@@ -23,8 +24,13 @@ find_library(
 	DOC "jsoncpp library"
 )
 
-set(JSONCPP_INCLUDE_DIRS ${JSONCPP_INCLUDE_DIR})
-set(JSONCPP_LIBRARIES ${JSONCPP_LIBRARY})
+add_library(jsoncpp_lib_static UNKNOWN IMPORTED)
+set_target_properties(
+	jsoncpp_lib_static
+	PROPERTIES
+	IMPORTED_LOCATION "${JSONCPP_LIBRARY}"
+	INTERFACE_INCLUDE_DIRECTORIES "${JSONCPP_INCLUDE_DIR}"
+)
 
 # debug library on windows
 # same naming convention as in qt (appending debug library with d)
@@ -36,7 +42,12 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 		DOC "jsoncpp debug library"
 	)
 
-	set(JSONCPP_LIBRARIES optimized ${JSONCPP_LIBRARIES} debug ${JSONCPP_LIBRARY_DEBUG})
+	set_target_properties(
+		jsoncpp_lib_static
+		PROPERTIES
+		IMPORTED_LOCATION_DEBUG "${JSONCPP_LIBRARY_DEBUG}"
+	)
+	set(JSONCPP_LIBRARY optimized ${JSONCPP_LIBRARY} debug ${JSONCPP_LIBRARY_DEBUG})
 
 endif()
 
@@ -52,6 +63,8 @@ if (${JSONCPP_INCLUDE_PREFIX} MATCHES "jsoncpp")
 else()
 	set(JSONCPP_INCLUDE_PREFIX "json")
 endif()
+
+
 
 # handle the QUIETLY and REQUIRED arguments and set JSONCPP_FOUND to TRUE
 # if all listed variables are TRUE, hide their existence from configuration view
