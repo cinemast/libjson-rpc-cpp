@@ -123,27 +123,28 @@ add_custom_target(
 )
 
 # CMake package
+set(package_name "libjson-rpc-cpp")
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
-set(config_install_destination ${CMAKE_INSTALL_LIBDIR}/jsonrpccpp/cmake)
+set(config_install_destination ${CMAKE_INSTALL_LIBDIR}/${package_name}/cmake)
 configure_package_config_file(
-	cmake/jsonrpccppConfig.cmake.in jsonrpccppConfig.cmake
+	cmake/${package_name}Config.cmake.in ${package_name}Config.cmake
 	INSTALL_DESTINATION ${config_install_destination}
 )
 write_basic_package_version_file(
-	jsonrpccppConfigVersion.cmake
+	${package_name}ConfigVersion.cmake
 	VERSION ${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}
 	COMPATIBILITY ExactVersion
 )
 install(
-	EXPORT jsonrpccppTargets
+	EXPORT ${package_name}Targets
 	DESTINATION ${config_install_destination}
-	NAMESPACE jsonrpccpp::
+	NAMESPACE ${package_name}::
 )
 install(
 	FILES
-	${CMAKE_CURRENT_BINARY_DIR}/jsonrpccppConfig.cmake
-	${CMAKE_CURRENT_BINARY_DIR}/jsonrpccppConfigVersion.cmake
+	${CMAKE_CURRENT_BINARY_DIR}/${package_name}Config.cmake
+	${CMAKE_CURRENT_BINARY_DIR}/${package_name}ConfigVersion.cmake
 	DESTINATION ${config_install_destination}
 )
 

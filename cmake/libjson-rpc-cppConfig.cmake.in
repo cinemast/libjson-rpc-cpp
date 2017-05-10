@@ -20,4 +20,4 @@ if(@HTTP_SERVER@)
   find_dependency(MHD)
 endif()
 
-include(${CMAKE_CURRENT_LIST_DIR}/jsonrpccppTargets.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/libjson-rpc-cppTargets.cmake)
