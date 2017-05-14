@@ -49,6 +49,8 @@ set(COMPILE_TESTS YES CACHE BOOL "Compile test framework")
 set(COMPILE_STUBGEN YES CACHE BOOL "Compile the stubgenerator")
 set(COMPILE_EXAMPLES YES CACHE BOOL "Compile example programs")
 
+option(WITH_COVERAGE "Build with code coverage flags" ON)
+
 # print actual settings
 if(UNIX)
 	message(STATUS "UNIX_DOMAIN_SOCKET_SERVER: ${UNIX_DOMAIN_SOCKET_SERVER}")
