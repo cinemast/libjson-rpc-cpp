@@ -122,12 +122,12 @@ endif()
 
 # setup static common library
 if (BUILD_STATIC_LIBS OR MSVC)
-	add_library(jsonrpccommonStatic STATIC ${jsonrpc_source_common} ${jsonrpc_header} ${jsonrpc_helper_source_common})
-	target_link_libraries(jsonrpccommonStatic jsoncpp_lib_static)
-	set_target_properties(jsonrpccommonStatic PROPERTIES OUTPUT_NAME jsonrpccpp-common)
+	add_library(common STATIC ${jsonrpc_source_common} ${jsonrpc_header} ${jsonrpc_helper_source_common})
+	target_link_libraries(common jsoncpp_lib_static)
+	set_target_properties(common PROPERTIES OUTPUT_NAME jsonrpccpp-common)
 
 	if (NOT BUILD_SHARED_LIBS)
-		add_library(jsonrpccommon ALIAS jsonrpccommonStatic)
+		add_library(jsonrpccommon ALIAS common)
 	endif()
 endif()
 
@@ -141,12 +141,12 @@ endif()
 
 # setup static client library
 if (BUILD_STATIC_LIBS OR MSVC)
-	add_library(jsonrpcclientStatic STATIC ${jsonrpc_source_client} ${jsonrpc_header} ${jsonrpc_header_client} ${client_connector_source})
-	target_link_libraries(jsonrpcclientStatic jsonrpccommonStatic ${client_connector_libs})
-	set_target_properties(jsonrpcclientStatic PROPERTIES OUTPUT_NAME jsonrpccpp-client)
+	add_library(client STATIC ${jsonrpc_source_client} ${jsonrpc_header} ${jsonrpc_header_client} ${client_connector_source})
+	target_link_libraries(client common ${client_connector_libs})
+	set_target_properties(client PROPERTIES OUTPUT_NAME jsonrpccpp-client)
 
 	if (NOT BUILD_SHARED_LIBS)
-		add_library(jsonrpcclient ALIAS jsonrpcclientStatic)
+		add_library(jsonrpcclient ALIAS client)
 	endif()
 endif()
 
@@ -160,12 +160,12 @@ endif()
 
 # setup static server library
 if (BUILD_STATIC_LIBS OR MSVC)
-	add_library(jsonrpcserverStatic STATIC ${jsonrpc_source_server} ${jsonrpc_header} ${jsonrpc_header_server} ${server_connector_source})
-	target_link_libraries(jsonrpcserverStatic jsonrpccommonStatic ${server_connector_libs})
-	set_target_properties(jsonrpcserverStatic PROPERTIES OUTPUT_NAME jsonrpccpp-server)
+	add_library(server STATIC ${jsonrpc_source_server} ${jsonrpc_header} ${jsonrpc_header_server} ${server_connector_source})
+	target_link_libraries(server common ${server_connector_libs})
+	set_target_properties(server PROPERTIES OUTPUT_NAME jsonrpccpp-server)
 
 	if (NOT BUILD_SHARED_LIBS)
-		add_library(jsonrpcserver ALIAS jsonrpcserverStatic)
+		add_library(jsonrpcserver ALIAS server)
 	endif()
 endif()
 
@@ -176,7 +176,7 @@ if (BUILD_SHARED_LIBS OR NOT BUILD_STATIC_LIBS)
 endif()
 
 if (BUILD_STATIC_LIBS OR MSVC)
-	list(APPEND ALL_LIBS jsonrpccommonStatic jsonrpcclientStatic jsonrpcserverStatic)
+	list(APPEND ALL_LIBS common client server)
 endif()
 
 # setup version

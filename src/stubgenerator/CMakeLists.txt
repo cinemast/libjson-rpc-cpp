@@ -18,7 +18,7 @@ endif()
 # setup static common library
 if (BUILD_STATIC_LIBS)
         add_library(libjsonrpcstubStatic STATIC ${jsonrpcstub_source} ${jsonrpcstub_header} ${jsonrpc_helper_source_common})
-        target_link_libraries(libjsonrpcstubStatic jsonrpccommonStatic ${ARGTABLE_LIBRARIES})
+        target_link_libraries(libjsonrpcstubStatic common ${ARGTABLE_LIBRARIES})
         set_target_properties(libjsonrpcstubStatic PROPERTIES OUTPUT_NAME jsonrpccpp-stub)
 
         if (NOT BUILD_SHARED_LIBS)
