@@ -77,10 +77,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 
-if (WIN32)
-	set(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/dist)
-endif()
-
 # setup global include_directories (for backwards compatibility)
 include_directories("${CMAKE_BINARY_DIR}/gen/")
 include_directories("${CMAKE_BINARY_DIR}/gen/jsonrpccpp/common")

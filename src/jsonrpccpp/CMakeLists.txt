@@ -195,7 +195,8 @@ install(FILES ${jsonrpc_install_header_server}  DESTINATION include/jsonrpccpp/s
 install(FILES ${client_connector_header}        DESTINATION include/jsonrpccpp/client/connectors)
 install(FILES ${server_connector_header}        DESTINATION include/jsonrpccpp/server/connectors)
 
-if (WIN32)
+if (WIN32 AND NOT HUNTER_ENABLED)
+	# On Windows copy manually installed dependencies unless Hunter is used.
 	file(GLOB win32_libs ${CMAKE_SOURCE_DIR}/win32-deps/lib/*.dll)
 	file(COPY ${win32_libs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 	install(FILES ${win32_libs} DESTINATION bin)
