@@ -1,7 +1,18 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
+
+# setup directory where we should look for cmake files
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
+option(HUNTER_ENABLED "Enable Hunter package manager" NO)
+include(HunterGate)
+HunterGate(
+	URL "https://github.com/ruslo/hunter/archive/v0.18.47.tar.gz"
+	SHA1 "f0c476a3a0f9edd6182936d8c4460811f112189c"
+)
+
 project(libjson-rpc-cpp)
 
-# list command no longer ignores empty elements 
+# list command no longer ignores empty elements
 cmake_policy(SET CMP0007 NEW)
 cmake_policy(SET CMP0012 NEW)
 
@@ -55,9 +66,6 @@ message(STATUS "COMPILE_TESTS: ${COMPILE_TESTS}")
 message(STATUS "COMPILE_STUBGEN: ${COMPILE_STUBGEN}")
 message(STATUS "COMPILE_EXAMPLES: ${COMPILE_EXAMPLES}")
 
-# setup directory where we should look for cmake files
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
-
 # setup compiler settings && dependencies
 include(CMakeCompilerSettings)
 include(CMakeDependencies)
@@ -90,7 +98,7 @@ endif()
 
 # setup test suite
 if (COMPILE_TESTS)
-        enable_testing(true)
+	enable_testing()
 	add_subdirectory(src/test)
 endif()
 
@@ -112,6 +120,31 @@ configure_file(
 add_custom_target(
 	uninstall
 	COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
+)
+
+# CMake package
+include(CMakePackageConfigHelpers)
+include(GNUInstallDirs)
+set(config_install_destination ${CMAKE_INSTALL_LIBDIR}/jsonrpccpp/cmake)
+configure_package_config_file(
+	cmake/jsonrpccppConfig.cmake.in jsonrpccppConfig.cmake
+	INSTALL_DESTINATION ${config_install_destination}
+)
+write_basic_package_version_file(
+	jsonrpccppConfigVersion.cmake
+	VERSION ${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}
+	COMPATIBILITY ExactVersion
+)
+install(
+	EXPORT jsonrpccppTargets
+	DESTINATION ${config_install_destination}
+	NAMESPACE jsonrpccpp::
+)
+install(
+	FILES
+	${CMAKE_CURRENT_BINARY_DIR}/jsonrpccppConfig.cmake
+	${CMAKE_CURRENT_BINARY_DIR}/jsonrpccppConfigVersion.cmake
+	DESTINATION ${config_install_destination}
 )
 
 # packaging stuff

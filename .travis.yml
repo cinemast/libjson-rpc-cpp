@@ -1,4 +1,5 @@
 language: cpp
+dist: trusty
 
 before_install:
  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
@@ -25,9 +26,9 @@ env:
 compiler:
   - gcc
 
-script: 
+script:
     - mkdir -p build && cd build
-    - cmake -DCMAKE_BUILD_TYPE=Debug -DHTTP_CLIENT=${HTTP_CLIENT} -DHTTP_SERVER=${HTTP_SERVER} -DCOMPILE_STUBGEN=${COMPILE_STUBGEN} .. 
+    - cmake -DCMAKE_BUILD_TYPE=Debug -DHTTP_CLIENT=${HTTP_CLIENT} -DHTTP_SERVER=${HTTP_SERVER} -DCOMPILE_STUBGEN=${COMPILE_STUBGEN} ..
     - make
     - make test
     - sudo make install && sudo ldconfig
