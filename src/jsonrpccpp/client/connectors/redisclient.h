@@ -12,6 +12,7 @@
 
 #include "../iclientconnector.h"
 #include <jsonrpccpp/common/exception.h>
+#include <hiredis/hiredis.h>
 
 namespace jsonrpc
 {
@@ -72,11 +73,17 @@ namespace jsonrpc
              * @brief Queue that we are messaging
              */
             std::string queue;
+            std::string ret_queue;
 
             /**
              * @brief Timeout for http request in milliseconds
              */
             long timeout;
+
+            /**
+             * @brief Our connection to the redis server
+             */
+            redisContext * con;
     };
 
 } /* namespace jsonrpc */

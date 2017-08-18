@@ -51,9 +51,12 @@ endif()
 if (REDIS_CLIENT)
     list(APPEND client_connector_header "client/connectors/redisclient.h")
     list(APPEND client_connector_source "client/connectors/redisclient.cpp")
+    list(APPEND client_connector_libs ${HIREDIS_LIBRARIES})
+    include_directories(${HIREDIS_INCLUDE_DIRS})
 endif()
 
 if (REDIS_SERVER)
+    list(APPEND server_connector_libs ${HIREDIS_LIBRARIES})
 endif()
 
 # setup sources for unix domain socket connectors

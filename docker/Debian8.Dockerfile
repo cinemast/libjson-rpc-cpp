@@ -1,8 +1,17 @@
 FROM debian:8
 MAINTAINER Peter Spiess-Knafl <dev@spiessknafl.at>
 
-RUN apt-get update && apt-get install -y wget build-essential cmake \
-libjsoncpp-dev libargtable2-dev libcurl4-openssl-dev libmicrohttpd-dev git
+RUN apt-get update && apt-get install -y \
+    wget \
+    build-essential \
+    cmake \
+    libjsoncpp-dev \
+    libargtable2-dev \
+    libcurl4-openssl-dev \
+    libmicrohttpd-dev \
+    git \
+    libhiredis-dev \
+    redis-server
 
 RUN mkdir /app
 COPY docker/build_test_install.sh /app

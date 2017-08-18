@@ -1,7 +1,18 @@
 FROM fedora:latest
 MAINTAINER Peter Spiess-Knafl <dev@spiessknafl.at>
 
-RUN dnf -y install gcc-c++ jsoncpp-devel libcurl-devel libmicrohttpd-devel catch-devel git cmake make argtable-devel
+RUN dnf -y install \
+    gcc-c++ \
+    jsoncpp-devel \
+    libcurl-devel \
+    libmicrohttpd-devel \
+    catch-devel \
+    git \
+    cmake \
+    make \
+    argtable-devel \
+    hiredis-devel \
+    redis
 
 RUN mkdir /app
 COPY docker/build_test_install.sh /app
