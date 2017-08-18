@@ -73,7 +73,6 @@ namespace jsonrpc
              * @brief Queue that we are messaging
              */
             std::string queue;
-            std::string ret_queue;
 
             /**
              * @brief Timeout for http request in milliseconds

@@ -54,9 +54,10 @@ TEST_CASE_METHOD(F, "test_redis_client_init", TEST_MODULE)
 TEST_CASE_METHOD(F, "test_redis_client_send", TEST_MODULE)
 {
     RedisClient client(CLIENT_HOST, TEST_PORT, TEST_QUEUE);
+    client.SetTimeout(1);
 
     string result;
-    CHECK_EXCEPTION_TYPE(client.SendRPCMessage("test", result), JsonRpcException, check_exception2);
+    client.SendRPCMessage("test", result);
 }
 
 #endif
