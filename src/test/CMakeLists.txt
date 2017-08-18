@@ -32,6 +32,10 @@ else()
     list(REMOVE_ITEM test_source "${CMAKE_CURRENT_SOURCE_DIR}/testhttpserver.cpp")
 endif()
 
+if(REDIS_CLIENT AND REDIS_SERVER)
+    add_definitions(-DREDIS_TESTING)
+endif()
+
 if(UNIX_DOMAIN_SOCKET_SERVER AND UNIX_DOMAIN_SOCKET_CLIENT)
     add_definitions(-DUNIXDOMAINSOCKET_TESTING)
 endif()
@@ -74,6 +78,10 @@ add_test(NAME common WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTI
 
 if(HTTP_CLIENT AND HTTP_SERVER)
     add_test(NAME connector_http WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite "[connector_http]")
+endif()
+
+if(REDIS_CLIENT AND REDIS_SERVER)
+    add_test(NAME connector_redis WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite "[connector_redis]")
 endif()
 
 if (UNIX_DOMAIN_SOCKET_CLIENT AND UNIX_DOMAIN_SOCKET_SERVER)

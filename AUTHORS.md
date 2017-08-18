@@ -39,6 +39,9 @@ Trevor Vannoy <trevor.vannoy@flukecal.com>
 Jean-Daniel Michaud <jean.daniel,michaud@gmail.com>
 + added server/client file descriptor support
 
+Jacques Software <software@jacques.com.au>
++ added support for redis connector
+
 Bugfixes (chronological order)
 ==============================
 
