@@ -56,7 +56,9 @@ if (REDIS_CLIENT)
 endif()
 
 if (REDIS_SERVER)
-    list(APPEND server_connector_libs ${HIREDIS_LIBRARIES})
+    list(APPEND server_connector_header "server/connectors/redisserver.h")
+    list(APPEND server_connector_source "server/connectors/redisserver.cpp")
+    list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT} ${HIREDIS_LIBRARIES})
 endif()
 
 # setup sources for unix domain socket connectors

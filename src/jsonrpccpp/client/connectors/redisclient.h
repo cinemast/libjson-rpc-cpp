@@ -85,5 +85,8 @@ namespace jsonrpc
             redisContext * con;
     };
 
+    // Exported here for unit testing purposes.
+    void GetReturnQueue(redisContext * con, const std::string& prefix, std::string& ret_queue);
+
 } /* namespace jsonrpc */
 #endif /* JSONRPC_CPP_REDISCLIENT_H_ */

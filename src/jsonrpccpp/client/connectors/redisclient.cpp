@@ -76,7 +76,7 @@ void ProcessReply(redisReply * reply, std::string& result) {
  * @param prefix Prefix for the queue name.
  * @param ret_queue The name is returned here.
  */
-void GetReturnQueue(redisContext * con, const std::string& prefix, std::string& ret_queue) {
+void jsonrpc::GetReturnQueue(redisContext * con, const std::string& prefix, std::string& ret_queue) {
     char id[17];
     std::stringstream str;
     genRandom(id, 16);
@@ -97,6 +97,7 @@ void GetReturnQueue(redisContext * con, const std::string& prefix, std::string& 
         freeReplyObject(reply);
         // If we are really unlucky and the queue already exists then we try again.
         GetReturnQueue(con, prefix, ret_queue);
+        return;
     }
     freeReplyObject(reply);
 }
