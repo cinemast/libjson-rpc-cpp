@@ -8,8 +8,10 @@ file(GLOB jsonrpc_install_header_server
 	server/requesthandlerfactory.h
 	server/abstractserver.h
 	server/abstractserverconnector.h
+        server/abstractthreadedserver.h
 	server/iprocedureinvokationhandler.h
 	server/iclientconnectionhandler.h
+        server/threadpool.h
 )
 file(GLOB jsonrpc_header_server server/*.h)
 file(GLOB jsonrpc_source_server server/*.c*)

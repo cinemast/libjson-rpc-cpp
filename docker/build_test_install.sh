@@ -12,14 +12,14 @@ make -j$(nproc)
 make install
 ldconfig
 cd ../src/examples
-g++ simpleclient.cpp $CLIENT_LIBS -o simpleclient
-g++ simpleserver.cpp $SERVER_LIBS -o simpleserver
+g++ -std=c++11 simpleclient.cpp $CLIENT_LIBS -o simpleclient
+g++ -std=c++11 simpleserver.cpp $SERVER_LIBS -o simpleserver
 
 mkdir gen && cd gen
 jsonrpcstub ../spec.json --cpp-server=AbstractStubServer --cpp-client=StubClient
 cd ..
-g++ stubclient.cpp $CLIENT_LIBS -o stubclient
-g++ stubserver.cpp $SERVER_LIBS -o stubserver
+g++ -std=c++11 stubclient.cpp $CLIENT_LIBS -o stubclient
+g++ -std=c++11 stubserver.cpp $SERVER_LIBS -o stubserver
 
 test -f simpleclient
 test -f simpleserver
