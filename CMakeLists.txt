@@ -1,7 +1,18 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
+
+# setup directory where we should look for cmake files
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
+option(HUNTER_ENABLED "Enable Hunter package manager" NO)
+include(HunterGate)
+HunterGate(
+	URL "https://github.com/ruslo/hunter/archive/v0.18.47.tar.gz"
+	SHA1 "f0c476a3a0f9edd6182936d8c4460811f112189c"
+)
+
 project(libjson-rpc-cpp)
 
-# list command no longer ignores empty elements 
+# list command no longer ignores empty elements
 cmake_policy(SET CMP0007 NEW)
 cmake_policy(SET CMP0012 NEW)
 
@@ -38,6 +49,8 @@ set(COMPILE_TESTS YES CACHE BOOL "Compile test framework")
 set(COMPILE_STUBGEN YES CACHE BOOL "Compile the stubgenerator")
 set(COMPILE_EXAMPLES YES CACHE BOOL "Compile example programs")
 
+option(WITH_COVERAGE "Build with code coverage flags" ON)
+
 # print actual settings
 if(UNIX)
 	message(STATUS "UNIX_DOMAIN_SOCKET_SERVER: ${UNIX_DOMAIN_SOCKET_SERVER}")
@@ -55,9 +68,6 @@ message(STATUS "COMPILE_TESTS: ${COMPILE_TESTS}")
 message(STATUS "COMPILE_STUBGEN: ${COMPILE_STUBGEN}")
 message(STATUS "COMPILE_EXAMPLES: ${COMPILE_EXAMPLES}")
 
-# setup directory where we should look for cmake files
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
-
 # setup compiler settings && dependencies
 include(CMakeCompilerSettings)
 include(CMakeDependencies)
@@ -66,10 +76,6 @@ include(CMakeDependencies)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
-
-if (WIN32)
-	set(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/dist)
-endif()
 
 # setup global include_directories (for backwards compatibility)
 include_directories("${CMAKE_BINARY_DIR}/gen/")
@@ -90,7 +96,7 @@ endif()
 
 # setup test suite
 if (COMPILE_TESTS)
-        enable_testing(true)
+	enable_testing()
 	add_subdirectory(src/test)
 endif()
 
@@ -112,6 +118,32 @@ configure_file(
 add_custom_target(
 	uninstall
 	COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
+)
+
+# CMake package
+set(package_name "libjson-rpc-cpp")
+include(CMakePackageConfigHelpers)
+include(GNUInstallDirs)
+set(config_install_destination ${CMAKE_INSTALL_LIBDIR}/${package_name}/cmake)
+configure_package_config_file(
+	cmake/${package_name}Config.cmake.in ${package_name}Config.cmake
+	INSTALL_DESTINATION ${config_install_destination}
+)
+write_basic_package_version_file(
+	${package_name}ConfigVersion.cmake
+	VERSION ${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}
+	COMPATIBILITY ExactVersion
+)
+install(
+	EXPORT ${package_name}Targets
+	DESTINATION ${config_install_destination}
+	NAMESPACE ${package_name}::
+)
+install(
+	FILES
+	${CMAKE_CURRENT_BINARY_DIR}/${package_name}Config.cmake
+	${CMAKE_CURRENT_BINARY_DIR}/${package_name}ConfigVersion.cmake
+	DESTINATION ${config_install_destination}
 )
 
 # packaging stuff

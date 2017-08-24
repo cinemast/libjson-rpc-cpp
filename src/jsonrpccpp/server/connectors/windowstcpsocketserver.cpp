@@ -63,7 +63,7 @@ bool WindowsTcpSocketServer::StartListening()
 		this->address.sin_addr.s_addr = inet_addr(this->ipToBind.c_str());
 		this->address.sin_port = htons(this->port);
 
-		if(bind(this->socket_fd, reinterpret_cast<SOCKADDR*>(&(this->address)), sizeof(SOCKADDR_IN)) != 0)
+		if(::bind(this->socket_fd, reinterpret_cast<SOCKADDR*>(&(this->address)), sizeof(SOCKADDR_IN)) != 0)
 		{
 			return false;
 		}
@@ -211,7 +211,7 @@ bool WindowsTcpSocketServer::WriteToSocket(const SOCKET& fd, const string& toWri
 	string toSend = toWrite;
 	do
 	{
-		ssize_t byteWritten = send(fd, toSend.c_str(), toSend.size(), 0);
+		unsigned long byteWritten = send(fd, toSend.c_str(), toSend.size(), 0);
 		if(byteWritten < 0)
 		{
 			errorOccured = true;

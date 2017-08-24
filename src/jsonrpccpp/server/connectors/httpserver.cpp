@@ -55,7 +55,14 @@ bool HttpServer::StartListening()
         const bool has_poll = (MHD_is_feature_supported(MHD_FEATURE_POLL) == MHD_YES);
         unsigned int mhd_flags;
         if (has_epoll)
+            // In MHD version 0.9.44 the flag is renamed to
+            // MHD_USE_EPOLL_INTERNALLY_LINUX_ONLY. In later versions both
+            // are deprecated.
+            #if defined(MHD_USE_EPOLL_INTERNALLY)
             mhd_flags = MHD_USE_EPOLL_INTERNALLY;
+            #else
+            mhd_flags = MHD_USE_EPOLL_INTERNALLY_LINUX_ONLY;
+            #endif
         else if (has_poll)
             mhd_flags = MHD_USE_POLL_INTERNALLY;
         else
@@ -180,4 +187,3 @@ int HttpServer::callback(void *cls, MHD_Connection *connection, const char *url,
 
     return MHD_YES;
 }
-
