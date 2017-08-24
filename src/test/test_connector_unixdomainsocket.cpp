@@ -24,18 +24,18 @@ using namespace std;
 
 #define TEST_MODULE "[connector_unixdomainsocket]"
 
-#define SOCKET_PATH "/tmp/jsonrpccpp-socket"
-
 namespace testunixdomainsocketserver
 {
     struct F {
+            string filename;
             UnixDomainSocketServer server;
             UnixDomainSocketClient client;
             MockClientConnectionHandler handler;
 
             F() :
-                server(SOCKET_PATH),
-                client(SOCKET_PATH)
+                filename(tmpnam(nullptr)),
+                server(filename),
+                client(filename)
             {
                 server.SetHandler(&handler);
                 REQUIRE(server.StartListening());
@@ -43,7 +43,7 @@ namespace testunixdomainsocketserver
             ~F()
             {
                 server.StopListening();
-                unlink(SOCKET_PATH);
+                remove(filename.c_str());
             }
     };
 
@@ -73,17 +73,19 @@ TEST_CASE_METHOD(F, "test_unixdomainsocket_success", TEST_MODULE)
 
 TEST_CASE("test_unixdomainsocket_server_multiplestart", TEST_MODULE)
 {
-    UnixDomainSocketServer server(SOCKET_PATH);
+    string filename = tmpnam(nullptr);
+
+    UnixDomainSocketServer server(filename);
     CHECK(server.StartListening() == true);
     CHECK(server.StartListening() == false);
 
-    UnixDomainSocketServer server2(SOCKET_PATH);
+    UnixDomainSocketServer server2(filename);
     CHECK(server2.StartListening() == false);
     CHECK(server2.StopListening() == false);
 
     CHECK(server.StopListening() == true);
 
-    unlink(SOCKET_PATH);
+    remove(filename.c_str());
 }
 
 TEST_CASE("test_unixdomainsocket_client_invalid", TEST_MODULE)

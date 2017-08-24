@@ -43,7 +43,7 @@ int main()
 {
 	try
 	{
-		UnixDomainSocketServer server("/tmp/unixdomainsocketexample");
+        UnixDomainSocketServer server("./unixdomainsocketexample");
 		SampleServer serv(server);
 		if (serv.StartListening())
 		{

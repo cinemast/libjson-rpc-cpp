@@ -24,7 +24,6 @@ using namespace std;
 
 #define TEST_PORT 8383
 #define CLIENT_URL "http://localhost:8383"
-#define TEST_PATH "/tmp/jsonrpccppintegrationtest"
 
 #define TEST_MODULE "[integration]"
 
@@ -101,8 +100,9 @@ TEST_CASE("test_integration_http", TEST_MODULE)
 
 TEST_CASE("test_integration_unixdomain", TEST_MODULE)
 {
-    UnixDomainSocketServer sconn(TEST_PATH);
-    UnixDomainSocketClient cconn(TEST_PATH);
+    string filename = tmpnam(nullptr);
+    UnixDomainSocketServer sconn(filename);
+    UnixDomainSocketClient cconn(filename);
 
     StubServer server(sconn);
     server.StartListening();
@@ -120,6 +120,7 @@ TEST_CASE("test_integration_unixdomain", TEST_MODULE)
     CHECK(result["age"].asInt() == 33);
 
     server.StopListening();
+    remove(filename.c_str());
 }
 #endif
 #ifdef FILEDESCRIPTOR_TESTING

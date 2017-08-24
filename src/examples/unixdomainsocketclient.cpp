@@ -14,7 +14,7 @@ using namespace std;
 
 int main()
 {
-	UnixDomainSocketClient client("/tmp/unixdomainsocketexample");
+    UnixDomainSocketClient client("./unixdomainsocketexample");
 	Client c(client);
 
 	Json::Value params;

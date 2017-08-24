@@ -8,7 +8,7 @@ cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release \
 	-DBUILD_STATIC_LIBS=ON -DTCP_SOCKET_SERVER=YES -DTCP_SOCKET_CLIENT=YES \
 	-DBUILD_SHARED_LIBS=ON ..
 make -j$(nproc)
-make test
+./bin/unit_testsuite
 make install
 ldconfig
 cd ../src/examples
