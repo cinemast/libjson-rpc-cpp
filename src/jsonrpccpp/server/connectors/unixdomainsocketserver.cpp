@@ -15,7 +15,6 @@
 #include <cstring>
 #include <fcntl.h>
 #include <iostream>
-#include <jsonrpccpp/common/specificationparser.h>
 #include <sstream>
 #include <sys/types.h>
 #include <unistd.h>
