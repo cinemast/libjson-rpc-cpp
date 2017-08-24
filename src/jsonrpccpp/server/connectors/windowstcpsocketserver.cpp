@@ -63,10 +63,10 @@ bool WindowsTcpSocketServer::StartListening()
         this->address.sin_addr.s_addr = inet_addr(this->ipToBind.c_str());
         this->address.sin_port = htons(this->port);
 
-        if(bind(this->socket_fd, reinterpret_cast<SOCKADDR*>(&(this->address)), sizeof(SOCKADDR_IN)) != 0)
-        {
-            return false;
-        }
+		if(::bind(this->socket_fd, reinterpret_cast<SOCKADDR*>(&(this->address)), sizeof(SOCKADDR_IN)) != 0)
+		{
+			return false;
+		}
 
         if(listen(this->socket_fd, 5) != 0)
         {
@@ -206,26 +206,25 @@ DWORD WINAPI WindowsTcpSocketServer::GenerateResponse(LPVOID lp_data)
 
 bool WindowsTcpSocketServer::WriteToSocket(const SOCKET& fd, const string& toWrite)
 {
-    bool fullyWritten = false;
-    bool errorOccured = false;
-    string toSend = toWrite;
-    do
-    {
-        ssize_t byteWritten = send(fd, toSend.c_str(), toSend.size(), 0);
-        if(byteWritten < 0)
-        {
-            errorOccured = true;
-            CleanClose(fd);
-        }
-        else if(byteWritten < toSend.size())
-        {
-            int len = toSend.size() - byteWritten;
-            toSend = toSend.substr(byteWritten + sizeof(char), len);
-        }
-        else
-            fullyWritten = true;
-    } while(!fullyWritten && !errorOccured);
-
+	bool fullyWritten = false;
+	bool errorOccured = false;
+	string toSend = toWrite;
+	do
+	{
+		unsigned long byteWritten = send(fd, toSend.c_str(), toSend.size(), 0);
+		if(byteWritten < 0)
+		{
+			errorOccured = true;
+			CleanClose(fd);
+		}
+		else if(byteWritten < toSend.size())
+		{
+			int len = toSend.size() - byteWritten;
+			toSend = toSend.substr(byteWritten + sizeof(char), len);
+		}
+		else
+			fullyWritten = true;
+	} while(!fullyWritten && !errorOccured);
     return fullyWritten && !errorOccured;
 }
 

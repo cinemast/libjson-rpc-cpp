@@ -36,7 +36,7 @@ void RpcProtocolClient::BuildRequest(const std::string &method, const Json::Valu
     result = writer.write(request);
 }
 
-void RpcProtocolClient::HandleResponse(const std::string &response, Json::Value& result) throw(JsonRpcException)
+void RpcProtocolClient::HandleResponse(const std::string &response, Json::Value& result) 
 {
     Json::Reader reader;
     Json::Value value;
@@ -50,7 +50,7 @@ void RpcProtocolClient::HandleResponse(const std::string &response, Json::Value&
     }
 }
 
-Json::Value RpcProtocolClient::HandleResponse(const Json::Value &value, Json::Value &result) throw(JsonRpcException)
+Json::Value RpcProtocolClient::HandleResponse(const Json::Value &value, Json::Value &result) 
 {
     if(this->ValidateResponse(value))
     {

@@ -38,7 +38,7 @@ LinuxTcpSocketClient::~LinuxTcpSocketClient()
 {
 }
 
-void LinuxTcpSocketClient::SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException)
+void LinuxTcpSocketClient::SendRPCMessage(const std::string& message, std::string& result) 
 {
     int socket_fd = this->Connect();
     char buffer[BUFFER_SIZE];
@@ -120,7 +120,7 @@ void LinuxTcpSocketClient::SendRPCMessage(const std::string& message, std::strin
     close(socket_fd);
 }
 
-int LinuxTcpSocketClient::Connect() throw (JsonRpcException)
+int LinuxTcpSocketClient::Connect() 
 {
     if(this->IsIpv4Address(this->hostToConnect))
     {
@@ -171,7 +171,7 @@ int LinuxTcpSocketClient::Connect() throw (JsonRpcException)
     }
 }
 
-int LinuxTcpSocketClient::Connect(const string& ip, const int& port) throw (JsonRpcException)
+int LinuxTcpSocketClient::Connect(const string& ip, const int& port) 
 {
     sockaddr_in address;
     int socket_fd;

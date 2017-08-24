@@ -38,7 +38,7 @@ TcpSocketClient::~TcpSocketClient()
     }
 }
 
-void TcpSocketClient::SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException)
+void TcpSocketClient::SendRPCMessage(const std::string& message, std::string& result) 
 {
     if(this->realSocket != NULL)
     {

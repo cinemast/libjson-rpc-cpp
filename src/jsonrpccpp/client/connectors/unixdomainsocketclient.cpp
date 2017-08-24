@@ -38,7 +38,7 @@ UnixDomainSocketClient::~UnixDomainSocketClient()
 {
 }
 
-void UnixDomainSocketClient::SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException)
+void UnixDomainSocketClient::SendRPCMessage(const std::string& message, std::string& result) 
 {
 	sockaddr_un address;
 	int socket_fd, nbytes;

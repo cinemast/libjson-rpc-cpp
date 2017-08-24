@@ -25,7 +25,7 @@ It is fully JSON-RPC [2.0 & 1.0 compatible](http://www.jsonrpc.org/specification
 
 Overview
 =========
-![libjson-rpc-cpp logo](https://github.com/cinemast/libjson-rpc-cpp/blob/develop/dev/artwork/overview.png?raw=true)
+![libjson-rpc-cpp logo](dev/artwork/overview.png?raw=true)
 
 Install the framework
 =====================

@@ -37,7 +37,7 @@ void MockClientConnector::SetResponse(const std::string &response)
     this->response = response;
 }
 
-void MockClientConnector::SendRPCMessage(const string &message, string &result) throw(JsonRpcException)
+void MockClientConnector::SendRPCMessage(const string &message, string &result) 
 {
     request = message;
     result = this->response;

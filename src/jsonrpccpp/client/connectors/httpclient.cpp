@@ -53,7 +53,7 @@ void init_string(struct string *s)
     s->ptr[0] = '\0';
 }
 
-HttpClient::HttpClient(const std::string& url) throw(JsonRpcException)
+HttpClient::HttpClient(const std::string& url) 
     : url(url)
 {
     this->timeout = 10000;
@@ -65,7 +65,7 @@ HttpClient::~HttpClient()
     curl_easy_cleanup(curl);
 }
 
-void HttpClient::SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException)
+void HttpClient::SendRPCMessage(const std::string& message, std::string& result) 
 {
     curl_easy_setopt(curl, CURLOPT_URL, this->url.c_str());
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunc);

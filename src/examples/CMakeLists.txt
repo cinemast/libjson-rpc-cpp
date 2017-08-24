@@ -33,7 +33,6 @@ add_custom_command(
 
 include_directories(..)
 include_directories(${CMAKE_BINARY_DIR})
-include_directories(${JSONCPP_INCLUDE_DIRS})
 include_directories(${MHD_INCLUDE_DIRS})
 
 if(UNIX)

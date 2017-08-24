@@ -4,7 +4,6 @@ file(GLOB_RECURSE test_source *.cpp)
 
 include_directories(..)
 include_directories(${CMAKE_BINARY_DIR})
-include_directories(${JSONCPP_INCLUDE_DIRS})
 
 add_custom_command(
     OUTPUT ${CMAKE_BINARY_DIR}/gen/abstractstubserver.h

@@ -14,7 +14,7 @@
 
 #define TEMPLATE_CPPCLIENT_SIGCONSTRUCTOR "<stubname>(jsonrpc::IClientConnector &conn, jsonrpc::clientVersion_t type = jsonrpc::JSONRPC_CLIENT_V2) : jsonrpc::Client(conn, type) {}"
 
-#define TEMPLATE_CPPCLIENT_SIGMETHOD "<returntype> <methodname>(<parameters>) throw (jsonrpc::JsonRpcException)"
+#define TEMPLATE_CPPCLIENT_SIGMETHOD "<returntype> <methodname>(<parameters>) "
 
 #define TEMPLATE_NAMED_ASSIGNMENT "p[\"<paramname>\"] = <paramname>;"
 #define TEMPLATE_POSITION_ASSIGNMENT "p.append(<paramname>);"

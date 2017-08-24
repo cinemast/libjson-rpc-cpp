@@ -13,6 +13,7 @@
 #include <string>
 #include <sys/time.h>
 #include <pthread.h>
+#include <sys/select.h>
 
 #include "../abstractserverconnector.h"
 

@@ -10,10 +10,16 @@ set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${CMAKE_SOURCE_DIR}/win32-deps")
 # find JSONCPP
 # TODO: handle windows debug libraries!
 # TODO: fix FindJSONCPP file!
-find_package(Jsoncpp)
-message(STATUS "Jsoncpp header: ${JSONCPP_INCLUDE_DIRS}")
-message(STATUS "Jsoncpp lib   : ${JSONCPP_LIBRARIES}")
-message(STATUS "Jsoncpp prefix: ${JSONCPP_INCLUDE_PREFIX}")
+if(HUNTER_ENABLED)
+	hunter_add_package(jsoncpp)
+	find_package(jsoncpp CONFIG REQUIRED)
+	set(JSONCPP_INCLUDE_PREFIX "json")
+else()
+	find_package(Jsoncpp REQUIRED)
+	message(STATUS "Jsoncpp header: ${JSONCPP_INCLUDE_DIR}")
+	message(STATUS "Jsoncpp lib   : ${JSONCPP_LIBRARY}")
+	message(STATUS "Jsoncpp prefix: ${JSONCPP_INCLUDE_PREFIX}")
+endif()
 
 # find Threads!
 find_package(Threads)
@@ -26,11 +32,16 @@ if(${COMPILE_STUBGEN})
     message(STATUS "Argtable lib   : ${ARGTABLE_LIBRARIES}")
 endif()
 
-# find CURL
 if(${HTTP_CLIENT})
-    find_package(CURL REQUIRED)
-    message(STATUS "CURL header: ${CURL_INCLUDE_DIRS}")
-    message(STATUS "CURL lib   : ${CURL_LIBRARIES}")
+	# find CURL
+	if(HUNTER_ENABLED)
+		hunter_add_package(CURL)
+		find_package(CURL CONFIG REQUIRED)
+	else()
+		find_package(CURL REQUIRED)
+		message(STATUS "CURL header: ${CURL_INCLUDE_DIR}")
+		message(STATUS "CURL lib   : ${CURL_LIBRARY}")
+	endif()
 endif()
 
 # find libmicrohttpd

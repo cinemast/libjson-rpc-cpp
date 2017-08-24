@@ -16,7 +16,7 @@
 #include <cstdio>
 #include <fcntl.h>
 #include <unistd.h>
-#include <string>
+#include <cstring>
 
 using namespace jsonrpc;
 using namespace std;

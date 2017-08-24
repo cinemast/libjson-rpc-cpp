@@ -15,13 +15,13 @@ using namespace std;
 using namespace jsonrpc;
 
 
-vector<Procedure>   SpecificationParser::GetProceduresFromFile  (const string &filename) throw(JsonRpcException)
+vector<Procedure>   SpecificationParser::GetProceduresFromFile  (const string &filename)
 {
     string content;
     GetFileContent(filename, content);
     return GetProceduresFromString(content);
 }
-vector<Procedure>   SpecificationParser::GetProceduresFromString(const string &content) throw(JsonRpcException)
+vector<Procedure>   SpecificationParser::GetProceduresFromString(const string &content)
 {
 
     Json::Reader reader;

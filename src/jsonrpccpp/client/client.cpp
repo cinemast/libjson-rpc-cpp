@@ -23,7 +23,7 @@ Client::~Client()
     delete this->protocol;
 }
 
-void Client::CallMethod(const std::string &name, const Json::Value &parameter, Json::Value& result) throw(JsonRpcException)
+void Client::CallMethod(const std::string &name, const Json::Value &parameter, Json::Value& result) 
 {
     std::string request, response;
     protocol->BuildRequest(name, parameter, request, false);
@@ -31,7 +31,7 @@ void Client::CallMethod(const std::string &name, const Json::Value &parameter, J
     protocol->HandleResponse(response, result);
 }
 
-void Client::CallProcedures(const BatchCall &calls, BatchResponse &result) throw(JsonRpcException)
+void Client::CallProcedures(const BatchCall &calls, BatchResponse &result) 
 {
     std::string request, response;
     request = calls.toString();
@@ -64,21 +64,21 @@ void Client::CallProcedures(const BatchCall &calls, BatchResponse &result) throw
     }
 }
 
-BatchResponse Client::CallProcedures(const BatchCall &calls) throw(JsonRpcException)
+BatchResponse Client::CallProcedures(const BatchCall &calls) 
 {
     BatchResponse result;
     this->CallProcedures(calls, result);
     return result;
 }
 
-Json::Value Client::CallMethod(const std::string& name, const Json::Value& parameter) throw(JsonRpcException)
+Json::Value Client::CallMethod(const std::string& name, const Json::Value& parameter) 
 {
     Json::Value result;
     this->CallMethod(name, parameter, result);
     return result;
 }
 
-void Client::CallNotification(const std::string& name, const Json::Value& parameter) throw(JsonRpcException)
+void Client::CallNotification(const std::string& name, const Json::Value& parameter) 
 {
     std::string request, response;
     protocol->BuildRequest(name, parameter, request, true);

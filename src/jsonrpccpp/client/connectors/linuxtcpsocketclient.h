@@ -37,7 +37,7 @@ namespace jsonrpc
              * @param result The result of the call returned by the server
              * @throw JsonRpcException Thrown when an issue is encountered with socket manipulation (see message of exception for more information about what happened).
              */
-            virtual void SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException);
+            virtual void SendRPCMessage(const std::string& message, std::string& result) ;
 
         private:
             std::string hostToConnect;    /*!< The hostname or the ipv4 address on which the client should try to connect*/
@@ -52,7 +52,7 @@ namespace jsonrpc
              * @returns A file descriptor to the successfully connected socket
              * @throw JsonRpcException Thrown when an issue is encountered while trying to connect (see message of exception for more information about what happened).
              */
-            int Connect() throw (JsonRpcException);
+            int Connect() ;
             /**
              * @brief Connects to provided ip and port.
              *
@@ -63,7 +63,7 @@ namespace jsonrpc
              * @returns A file descriptor to the successfully connected socket
              * @throw JsonRpcException Thrown when an issue is encountered while trying to connect (see message of exception for more information about what happened).
              */
-            int Connect(const std::string& ip, const int& port) throw (JsonRpcException);
+            int Connect(const std::string& ip, const int& port) ;
             /**
              * @brief Check if provided ip is an ipv4 address.
              *

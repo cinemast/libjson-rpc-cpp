@@ -61,10 +61,10 @@ TEST_CASE("test stubgen cppclient", TEST_MODULE)
     CHECK(result.find("namespace ns1") != string::npos);
     CHECK(result.find("namespace ns2") != string::npos);
     CHECK(result.find("class TestStubClient : public jsonrpc::Client") != string::npos);
-    CHECK(result.find("std::string test_method(const std::string& name) throw (jsonrpc::JsonRpcException)") != string::npos);
-    CHECK(result.find("void test_notification(const std::string& name) throw (jsonrpc::JsonRpcException)") != string::npos);
-    CHECK(result.find("double test_method2(const Json::Value& object, const Json::Value& values) throw (jsonrpc::JsonRpcException)") != string::npos);
-    CHECK(result.find("void test_notification2(const Json::Value& object, const Json::Value& values) throw (jsonrpc::JsonRpcException)") != string::npos);
+    CHECK(result.find("std::string test_method(const std::string& name) ") != string::npos);
+    CHECK(result.find("void test_notification(const std::string& name) ") != string::npos);
+    CHECK(result.find("double test_method2(const Json::Value& object, const Json::Value& values) ") != string::npos);
+    CHECK(result.find("void test_notification2(const Json::Value& object, const Json::Value& values) ") != string::npos);
     CHECK(result.find("#endif //JSONRPC_CPP_STUB_NS1_NS2_TESTSTUBCLIENT_H_") != string::npos);
 
     CHECK(CPPHelper::class2Filename("ns1::ns2::TestClass") == "testclass.h");

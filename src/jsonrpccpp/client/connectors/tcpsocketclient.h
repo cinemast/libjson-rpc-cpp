@@ -45,7 +45,7 @@ namespace jsonrpc
                          * @param result The result of the call returned by the servsr
                          * @throw JsonRpcException Thrown when an issue is encounter with socket manipulation (see message of exception for more information about what happened).
                          */
-            virtual void SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException);
+            virtual void SendRPCMessage(const std::string& message, std::string& result) ;
 
         private:
             IClientConnector *realSocket; /*!< A pointer to the real implementation of this class depending of running OS*/

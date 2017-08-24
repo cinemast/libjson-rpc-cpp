@@ -23,7 +23,7 @@ namespace jsonrpc {
 
             std::string GetRequest();
             Json::Value GetJsonRequest();
-            virtual void SendRPCMessage(const std::string& message, std::string& result) throw(JsonRpcException);
+            virtual void SendRPCMessage(const std::string& message, std::string& result) ;
 
         private:
             std::string response;

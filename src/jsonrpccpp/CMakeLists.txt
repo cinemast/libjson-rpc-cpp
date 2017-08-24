@@ -4,12 +4,12 @@ file(GLOB jsonrpc_header_common common/*.h)
 file(GLOB jsonrpc_source_common common/*.c*)
 
 # setup server headers and sources
-file(GLOB jsonrpc_install_header_server 
-    server/requesthandlerfactory.h
-    server/abstractserver.h
-    server/abstractserverconnector.h
-    server/iprocedureinvokationhandler.h
-    server/iclientconnectionhandler.h
+file(GLOB jsonrpc_install_header_server
+	server/requesthandlerfactory.h
+	server/abstractserver.h
+	server/abstractserverconnector.h
+	server/iprocedureinvokationhandler.h
+	server/iclientconnectionhandler.h
 )
 file(GLOB jsonrpc_header_server server/*.h)
 file(GLOB jsonrpc_source_server server/*.c*)
@@ -34,16 +34,15 @@ set(server_connector_libs   "")
 
 # setup sources for http connectors
 if (HTTP_CLIENT)
-    list(APPEND client_connector_header "client/connectors/httpclient.h")
-    list(APPEND client_connector_source "client/connectors/httpclient.cpp")
-    list(APPEND client_connector_libs ${CURL_LIBRARIES})
-    include_directories(${CURL_INCLUDE_DIRS})
+	list(APPEND client_connector_header "client/connectors/httpclient.h")
+	list(APPEND client_connector_source "client/connectors/httpclient.cpp")
+	list(APPEND client_connector_libs CURL::libcurl)
 endif()
 
 if (HTTP_SERVER)
-    list(APPEND server_connector_header "server/connectors/httpserver.h")
-    list(APPEND server_connector_source "server/connectors/httpserver.cpp")
-    list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT} ${MHD_LIBRARIES})
+	list(APPEND server_connector_header "server/connectors/httpserver.h")
+	list(APPEND server_connector_source "server/connectors/httpserver.cpp")
+	list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT} ${MHD_LIBRARIES})
 endif()
 
 # setup sources for unix domain socket connectors
@@ -111,25 +110,24 @@ install(FILES "${PROJECT_BINARY_DIR}/gen/jsonrpccpp/common/jsonparser.h" DESTINA
 
 # include required directories
 include_directories(..)
-include_directories(${JSONCPP_INCLUDE_DIRS})
 include_directories(${MHD_INCLUDE_DIRS})
 
 # setup shared common library
 if (BUILD_SHARED_LIBS)
-    add_library(jsonrpccommon SHARED ${jsonrpc_source_common} ${jsonrpc_header} ${jsonrpc_helper_source_common})
-    target_link_libraries(jsonrpccommon ${JSONCPP_LIBRARIES})
-    set_target_properties(jsonrpccommon PROPERTIES OUTPUT_NAME jsonrpccpp-common)
+	add_library(jsonrpccommon SHARED ${jsonrpc_source_common} ${jsonrpc_header} ${jsonrpc_helper_source_common})
+	target_link_libraries(jsonrpccommon jsoncpp_lib_static)
+	set_target_properties(jsonrpccommon PROPERTIES OUTPUT_NAME jsonrpccpp-common)
 endif()
 
 # setup static common library
 if (BUILD_STATIC_LIBS OR MSVC)
-    add_library(jsonrpccommonStatic STATIC ${jsonrpc_source_common} ${jsonrpc_header} ${jsonrpc_helper_source_common})
-    target_link_libraries(jsonrpccommonStatic ${JSONCPP_LIBRARIES})
-    set_target_properties(jsonrpccommonStatic PROPERTIES OUTPUT_NAME jsonrpccpp-common)
+	add_library(common STATIC ${jsonrpc_source_common} ${jsonrpc_header} ${jsonrpc_helper_source_common})
+	target_link_libraries(common jsoncpp_lib_static)
+	set_target_properties(common PROPERTIES OUTPUT_NAME jsonrpccpp-common)
 
-    if (NOT BUILD_SHARED_LIBS)
-        add_library(jsonrpccommon ALIAS jsonrpccommonStatic)
-    endif()
+	if (NOT BUILD_SHARED_LIBS)
+		add_library(jsonrpccommon ALIAS common)
+	endif()
 endif()
 
 # setup shared client library
@@ -142,13 +140,13 @@ endif()
 
 # setup static client library
 if (BUILD_STATIC_LIBS OR MSVC)
-    add_library(jsonrpcclientStatic STATIC ${jsonrpc_source_client} ${jsonrpc_header} ${jsonrpc_header_client} ${client_connector_source})
-    target_link_libraries(jsonrpcclientStatic jsonrpccommonStatic ${client_connector_libs})
-    set_target_properties(jsonrpcclientStatic PROPERTIES OUTPUT_NAME jsonrpccpp-client)
+	add_library(client STATIC ${jsonrpc_source_client} ${jsonrpc_header} ${jsonrpc_header_client} ${client_connector_source})
+	target_link_libraries(client common ${client_connector_libs})
+	set_target_properties(client PROPERTIES OUTPUT_NAME jsonrpccpp-client)
 
-    if (NOT BUILD_SHARED_LIBS)
-        add_library(jsonrpcclient ALIAS jsonrpcclientStatic)
-    endif()
+	if (NOT BUILD_SHARED_LIBS)
+		add_library(jsonrpcclient ALIAS client)
+	endif()
 endif()
 
 # setup shared server library
@@ -161,13 +159,13 @@ endif()
 
 # setup static server library
 if (BUILD_STATIC_LIBS OR MSVC)
-    add_library(jsonrpcserverStatic STATIC ${jsonrpc_source_server} ${jsonrpc_header} ${jsonrpc_header_server} ${server_connector_source})
-    target_link_libraries(jsonrpcserverStatic jsonrpccommonStatic ${server_connector_libs})
-    set_target_properties(jsonrpcserverStatic PROPERTIES OUTPUT_NAME jsonrpccpp-server)
+	add_library(server STATIC ${jsonrpc_source_server} ${jsonrpc_header} ${jsonrpc_header_server} ${server_connector_source})
+	target_link_libraries(server common ${server_connector_libs})
+	set_target_properties(server PROPERTIES OUTPUT_NAME jsonrpccpp-server)
 
-    if (NOT BUILD_SHARED_LIBS)
-        add_library(jsonrpcserver ALIAS jsonrpcserverStatic)
-    endif()
+	if (NOT BUILD_SHARED_LIBS)
+		add_library(jsonrpcserver ALIAS server)
+	endif()
 endif()
 
 set(ALL_LIBS)
@@ -177,7 +175,7 @@ if (BUILD_SHARED_LIBS OR NOT BUILD_STATIC_LIBS)
 endif()
 
 if (BUILD_STATIC_LIBS OR MSVC)
-	list(APPEND ALL_LIBS jsonrpccommonStatic jsonrpcclientStatic jsonrpcserverStatic)
+	list(APPEND ALL_LIBS common client server)
 endif()
 
 # setup version
@@ -196,17 +194,18 @@ install(FILES ${jsonrpc_install_header_server}  DESTINATION include/jsonrpccpp/s
 install(FILES ${client_connector_header}        DESTINATION include/jsonrpccpp/client/connectors)
 install(FILES ${server_connector_header}        DESTINATION include/jsonrpccpp/server/connectors)
 
-if (WIN32)
-    file(GLOB win32_libs ${CMAKE_SOURCE_DIR}/win32-deps/lib/*.dll)
-    file(COPY ${win32_libs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-    install(FILES ${win32_libs} DESTINATION bin)
-    install(DIRECTORY ${CMAKE_SOURCE_DIR}/win32-deps/include DESTINATION .)
+if (WIN32 AND NOT HUNTER_ENABLED)
+	# On Windows copy manually installed dependencies unless Hunter is used.
+	file(GLOB win32_libs ${CMAKE_SOURCE_DIR}/win32-deps/lib/*.dll)
+	file(COPY ${win32_libs} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+	install(FILES ${win32_libs} DESTINATION bin)
+	install(DIRECTORY ${CMAKE_SOURCE_DIR}/win32-deps/include DESTINATION .)
 endif()
 
-install(TARGETS ${ALL_LIBS}
-    LIBRARY DESTINATION lib${LIB_SUFFIX}/${CMAKE_LIBRARY_PATH}
-    ARCHIVE DESTINATION lib${LIB_SUFFIX}/${CMAKE_LIBRARY_PATH}
-    RUNTIME DESTINATION bin
+install(TARGETS ${ALL_LIBS} EXPORT libjson-rpc-cppTargets
+	LIBRARY DESTINATION lib${LIB_SUFFIX}/${CMAKE_LIBRARY_PATH}
+	ARCHIVE DESTINATION lib${LIB_SUFFIX}/${CMAKE_LIBRARY_PATH}
+	RUNTIME DESTINATION bin
 )
 
 #set pkg-config
@@ -218,10 +217,8 @@ configure_file(${PROJECT_SOURCE_DIR}/cmake/libjsonrpccpp-client.pc.cmake ${CMAKE
 configure_file(${PROJECT_SOURCE_DIR}/cmake/libjsonrpccpp-server.pc.cmake ${CMAKE_BINARY_DIR}/libjsonrpccpp-server.pc)
 configure_file(${PROJECT_SOURCE_DIR}/cmake/libjsonrpccpp-common.pc.cmake ${CMAKE_BINARY_DIR}/libjsonrpccpp-common.pc)
 
-install(FILES
+INSTALL(FILES
     "${CMAKE_BINARY_DIR}/libjsonrpccpp-server.pc"
     "${CMAKE_BINARY_DIR}/libjsonrpccpp-client.pc"
     "${CMAKE_BINARY_DIR}/libjsonrpccpp-common.pc"
     DESTINATION "lib${LIB_SUFFIX}/${CMAKE_LIBRARY_PATH}/pkgconfig")
-
-

@@ -3,24 +3,23 @@ file(GLOB_RECURSE jsonrpcstub_header *.h)
 list(REMOVE_ITEM jsonrpcstub_source "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp")
 
 include_directories(..)
-include_directories(${JSONCPP_INCLUDE_DIRS})
 include_directories(${ARGTABLE_INCLUDE_DIRS})
 
 set(ALL_LIBS)
 
 
 if (BUILD_SHARED_LIBS)
-    add_library(libjsonrpcstub SHARED ${jsonrpcstub_source} ${jsonrpcstub_header} ${jsonrpc_helper_source_common})
-    target_link_libraries(libjsonrpcstub jsonrpccommon ${JSONCPP_LIBRARIES} ${ARGTABLE_LIBRARIES})
-    set_target_properties(libjsonrpcstub PROPERTIES OUTPUT_NAME jsonrpccpp-stub)
-    list(APPEND ALL_LIBS libjsonrpcstub)
+        add_library(libjsonrpcstub SHARED ${jsonrpcstub_source} ${jsonrpcstub_header} ${jsonrpc_helper_source_common})
+        target_link_libraries(libjsonrpcstub jsonrpccommon ${ARGTABLE_LIBRARIES})
+        set_target_properties(libjsonrpcstub PROPERTIES OUTPUT_NAME jsonrpccpp-stub)
+        list(APPEND ALL_LIBS libjsonrpcstub)
 endif()
 
 # setup static common library
 if (BUILD_STATIC_LIBS)
-    add_library(libjsonrpcstubStatic STATIC ${jsonrpcstub_source} ${jsonrpcstub_header} ${jsonrpc_helper_source_common})
-    target_link_libraries(libjsonrpcstubStatic jsonrpccommonStatic ${JSONCPP_LIBRARIES} ${ARGTABLE_LIBRARIES})
-    set_target_properties(libjsonrpcstubStatic PROPERTIES OUTPUT_NAME jsonrpccpp-stub)
+        add_library(libjsonrpcstubStatic STATIC ${jsonrpcstub_source} ${jsonrpcstub_header} ${jsonrpc_helper_source_common})
+        target_link_libraries(libjsonrpcstubStatic common ${ARGTABLE_LIBRARIES})
+        set_target_properties(libjsonrpcstubStatic PROPERTIES OUTPUT_NAME jsonrpccpp-stub)
 
     if (NOT BUILD_SHARED_LIBS)
         add_library(libjsonrpcstub ALIAS libjsonrpcstubStatic)
@@ -63,4 +62,3 @@ install(TARGETS ${ALL_LIBS} jsonrpcstub
     ARCHIVE DESTINATION lib${LIB_SUFFIX}/${CMAKE_LIBRARY_PATH}
     RUNTIME DESTINATION bin
 )
-

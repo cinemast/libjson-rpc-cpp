@@ -37,7 +37,7 @@ FileDescriptorClient::~FileDescriptorClient()
 }
 
 void FileDescriptorClient::SendRPCMessage(const std::string& message,
-  std::string& result) throw (JsonRpcException)
+  std::string& result) 
 {
   bool fullyWritten = false;
   string toSend = message;

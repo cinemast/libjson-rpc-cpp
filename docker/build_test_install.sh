@@ -5,7 +5,8 @@ CLIENT_LIBS="-ljsoncpp -lcurl -ljsonrpccpp-common -ljsonrpccpp-client"
 SERVER_LIBS="-ljsoncpp -lmicrohttpd -ljsonrpccpp-common -ljsonrpccpp-server"
 mkdir -p build && cd build
 cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release \
-	-DBUILD_STATIC_LIBS=ON -DBUILD_SHARED_LIBS=ON ..
+	-DBUILD_STATIC_LIBS=ON -DTCP_SOCKET_SERVER=YES -DTCP_SOCKET_CLIENT=YES \
+	-DBUILD_SHARED_LIBS=ON ..
 make -j$(nproc)
 make test
 make install

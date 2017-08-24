@@ -18,8 +18,8 @@ namespace jsonrpc {
     class SpecificationParser
     {
         public:
-            static std::vector<Procedure> GetProceduresFromFile(const std::string& filename)    throw (JsonRpcException);
-            static std::vector<Procedure> GetProceduresFromString(const std::string& spec)      throw (JsonRpcException);
+            static std::vector<Procedure> GetProceduresFromFile(const std::string& filename)    ;
+            static std::vector<Procedure> GetProceduresFromString(const std::string& spec)      ;
 
             static void         GetFileContent  (const std::string& filename, std::string& target);
 
