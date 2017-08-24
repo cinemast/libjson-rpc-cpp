@@ -27,7 +27,7 @@ struct F {
   UnixDomainSocketClient client;
   MockClientConnectionHandler handler;
 
-  F() : filename(tmpnam(nullptr)), server(filename), client(filename) {
+  F() : filename("/tmp/somedomainsocket"), server("/tmp/somedomainsocket"), client("/tmp/somedomainsocket") {
     server.SetHandler(&handler);
     REQUIRE(server.StartListening());
   }
@@ -57,7 +57,7 @@ TEST_CASE_METHOD(F, "test_unixdomainsocket_success", TEST_MODULE) {
 }
 
 TEST_CASE("test_unixdomainsocket_server_multiplestart", TEST_MODULE) {
-  string filename = tmpnam(nullptr);
+  string filename = "/tmp/somedomainsocket";
 
   UnixDomainSocketServer server(filename);
   CHECK(server.StartListening() == true);

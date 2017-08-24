@@ -1,5 +1,6 @@
 #include "streamreader.h"
 #include <unistd.h>
+#include <stdlib.h>
 
 using namespace jsonrpc;
 using namespace std;

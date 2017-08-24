@@ -50,7 +50,7 @@ bool UnixDomainSocketServer::InitializeListener() {
   this->address.sun_family = AF_UNIX;
   strncpy(this->address.sun_path, this->socket_path.c_str(), 107);
 
-  if (bind(this->socket_fd,
+  if (::bind(this->socket_fd,
            reinterpret_cast<struct sockaddr *>(&(this->address)),
            sizeof(struct sockaddr_un)) != 0) {
     return false;

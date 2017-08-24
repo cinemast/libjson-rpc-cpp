@@ -39,7 +39,6 @@ public:
   virtual void HandleConnection(int connection);
 
 private:
-  bool running;
   int inputfd;
   int outputfd;
   StreamReader reader;
