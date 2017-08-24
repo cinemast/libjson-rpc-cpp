@@ -24,7 +24,7 @@ using namespace std;
 #ifndef DELIMITER_CHAR
 #define DELIMITER_CHAR char(0x0A)
 #endif
-#define READ_TIMEOUT 0.2 // Set timeout in seconds
+#define READ_TIMEOUT 0.001 // Set timeout in seconds
 
 FileDescriptorServer::FileDescriptorServer(int inputfd, int outputfd)
     : AbstractThreadedServer(0), running(false), inputfd(inputfd),
@@ -41,7 +41,16 @@ bool FileDescriptorServer::InitializeListener() {
   return true;
 }
 
-int FileDescriptorServer::CheckForConnection() { return 1; }
+int FileDescriptorServer::CheckForConnection() {
+  FD_ZERO(&read_fds);
+  FD_ZERO(&write_fds);
+  FD_ZERO(&except_fds);
+  FD_SET(inputfd, &read_fds);
+  timeout.tv_sec = 0;
+  timeout.tv_usec = (suseconds_t)(READ_TIMEOUT * 1000000);
+  // Wait for something to read
+  return select(inputfd + 1, &read_fds, &write_fds, &except_fds, &timeout);
+}
 
 void FileDescriptorServer::HandleConnection(int connection) {
   (void)(connection);

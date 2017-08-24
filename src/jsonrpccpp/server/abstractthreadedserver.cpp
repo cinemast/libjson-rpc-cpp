@@ -37,7 +37,7 @@ void AbstractThreadedServer::ListenLoop() {
   while (this->running) {
     int conn = this->CheckForConnection();
 
-    if (conn >= 0) {
+    if (conn > 0) {
       if (this->threads > 0) {
         this->threadPool.enqueue(&AbstractThreadedServer::HandleConnection,
                                  this, conn);

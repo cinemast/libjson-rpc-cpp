@@ -49,6 +49,12 @@ private:
 
   bool IsReadable(int fd);
   bool IsWritable(int fd);
+
+  // For select operation
+  fd_set read_fds;
+  fd_set write_fds;
+  fd_set except_fds;
+  struct timeval timeout;
 };
 }
 

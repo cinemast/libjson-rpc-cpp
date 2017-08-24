@@ -84,13 +84,11 @@ TEST_CASE_METHOD(F, "test_filedescriptor_longpost", TEST_MODULE) {
   string response;
   client->SendRPCMessage(str, response);
 
-  // CHECK(handler.request == str);
+  CHECK(handler.request == str);
   CHECK(response.size() == size);
-  // CHECK(response == handler.response);
+  CHECK(response == handler.response);
 
   free(str);
-
-  server->StopListening();
 }
 
 TEST_CASE_METHOD(F, "test_filedescriptor_success_with_delimiter", TEST_MODULE) {
