@@ -40,7 +40,7 @@ void UnixDomainSocketClient::SendRPCMessage(const std::string &message,
   memset(&address, 0, sizeof(sockaddr_un));
 
   address.sun_family = AF_UNIX;
-  snprintf(address.sun_path, PATH_MAX, "%s", this->path.c_str());
+  strncpy(address.sun_path, this->path.c_str(), 107);
 
   if (connect(socket_fd, (struct sockaddr *)&address, sizeof(sockaddr_un)) !=
       0) {
