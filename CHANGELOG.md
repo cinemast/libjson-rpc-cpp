@@ -17,9 +17,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - File descriptor client and server connector
 - Docker based build system for testing on multiple distributions
 - CI Integration for OSX build
+- `StreamReader` and `StreamWriter` classes to handle the buffering
 
 ### Removed
 - Method `BatchResponse::getResult(Json::Value& id)`
+- Method `AbstractServerConnector::SendResponse()`
 - Scripts dev/ci.sh, dev/createpackage.sh, dev/installdeps.sh
 
 ### Changed
@@ -28,6 +30,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Use libmicrohttpd's EPOLL where possible (lmhd >= 0.9.52)
 - Added `set -e` to testcoverage.sh script
 - Changelog format to [keepachangelog.com](http://keepachangelog.com/en/0.3.0/)
+- Refactored all socket-based client and server connectors to reduce code duplication
+- Changed interfaces for `AbstractServerConnector` to avoid the ugly `void *` backpointer
 
 ## [v0.7.0] - 2016-08-10
 ### Fixed
