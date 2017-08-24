@@ -10,6 +10,7 @@
 #include "specificationparser.h"
 #include <jsonrpccpp/common/jsonparser.h>
 #include <fstream>
+#include <iomanip>
 
 using namespace std;
 using namespace jsonrpc;
@@ -146,7 +147,7 @@ void                SpecificationParser::GetPositionalParameters(Json::Value &va
     for (unsigned int i=0; i < val[KEY_SPEC_PROCEDURE_PARAMETERS].size(); i++)
     {
         stringstream paramname;
-        paramname << "param" << (i+1);
+        paramname << "param" << std::setfill('0') << std::setw(2) << (i + 1);
         result.AddParameter(paramname.str(), toJsonType(val[KEY_SPEC_PROCEDURE_PARAMETERS][i]));
     }
 }
