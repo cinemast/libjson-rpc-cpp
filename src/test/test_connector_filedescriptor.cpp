@@ -80,12 +80,13 @@ TEST_CASE_METHOD(F, "test_filedescriptor_longpost", TEST_MODULE) {
   for (unsigned long i = 0; i < size; i++) {
     str[i] = (char)('a' + (i % 26));
   }
+  str[size - 1] = '\0';
   handler.response = str;
   string response;
   client->SendRPCMessage(str, response);
 
   CHECK(handler.request == str);
-  CHECK(response.size() == size);
+  CHECK(response.size() == size - 1);
   CHECK(response == handler.response);
 
   free(str);

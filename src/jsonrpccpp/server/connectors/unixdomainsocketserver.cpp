@@ -24,10 +24,12 @@ using namespace std;
 
 UnixDomainSocketServer::UnixDomainSocketServer(const string &socket_path,
                                                size_t threads)
-    : AbstractThreadedServer(threads), socket_path(socket_path) {}
+    : AbstractThreadedServer(threads), socket_path(socket_path), socket_fd(-1) {
+}
 
 UnixDomainSocketServer::~UnixDomainSocketServer() {
-  close(this->socket_fd);
+  if (this->socket_fd != -1)
+    close(this->socket_fd);
   unlink(this->socket_path.c_str());
 }
 
