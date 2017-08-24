@@ -37,11 +37,6 @@ LinuxTcpSocketServer::~LinuxTcpSocketServer() {
   close(this->socket_fd);
 }
 
-bool LinuxTcpSocketServer::SendResponse(const string &response, void *addInfo) {
-  // TODO: remove once finished with refactoring
-  return true;
-}
-
 bool LinuxTcpSocketServer::InitializeListener() {
   this->socket_fd = socket(AF_INET, SOCK_STREAM, 0);
   if (this->socket_fd < 0) {

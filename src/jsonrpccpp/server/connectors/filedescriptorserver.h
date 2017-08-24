@@ -34,8 +34,6 @@ public:
    */
   FileDescriptorServer(int inputfd, int outputfd);
 
-  bool SendResponse(const std::string &response, void *addInfo = NULL);
-
   virtual bool InitializeListener();
   virtual int CheckForConnection();
   virtual void HandleConnection(int connection);

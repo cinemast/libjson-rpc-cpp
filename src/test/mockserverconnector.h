@@ -10,31 +10,28 @@
 #ifndef JSONRPC_MOCKSERVERCONNECTOR_H
 #define JSONRPC_MOCKSERVERCONNECTOR_H
 
-#include <jsonrpccpp/server/abstractserverconnector.h>
 #include <jsonrpccpp/common/jsonparser.h>
+#include <jsonrpccpp/server/abstractserverconnector.h>
 
 namespace jsonrpc {
 
-    class MockServerConnector : public AbstractServerConnector
-    {
-        public:
-            MockServerConnector();
+class MockServerConnector : public AbstractServerConnector {
+public:
+  MockServerConnector();
 
-            virtual bool StartListening();
-            virtual bool StopListening();
+  virtual bool StartListening();
+  virtual bool StopListening();
 
-            bool virtual SendResponse(const std::string& response, void* addInfo = NULL);
+  bool SetRequest(const std::string &request);
+  Json::Value GetJsonRequest();
 
-            bool SetRequest(const std::string &request);
-            Json::Value GetJsonRequest();
+  std::string GetResponse();
+  Json::Value GetJsonResponse();
 
-            std::string GetResponse();
-            Json::Value GetJsonResponse();
-
-        private:
-            std::string request;
-            std::string response;
-    };
+private:
+  std::string request;
+  std::string response;
+};
 
 } // namespace jsonrpc
 

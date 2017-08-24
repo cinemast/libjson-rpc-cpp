@@ -82,8 +82,3 @@ void UnixDomainSocketServer::HandleConnection(int connection) {
 
   close(connection);
 }
-
-bool UnixDomainSocketServer::SendResponse(const string &response,
-                                          void *addInfo) {
-  return true;
-}

@@ -42,19 +42,6 @@ public:
 
   virtual ~LinuxTcpSocketServer();
 
-  /**
-   * @brief The real implementation TcpSocketServer::SendResponse method.
-   *
-   * This method sends the result of the RPC Call over the tcp socket that the
-   * client has used to perform its request.
-   * @param response The response to send to the client
-   * @param addInfo Additionnal parameters (mainly client socket file
-   * descriptor)
-   * @return A boolean that indicates the success or the failure of the
-   * operation.
-   */
-  bool SendResponse(const std::string &response, void *addInfo = NULL);
-
   virtual bool InitializeListener();
   virtual int CheckForConnection();
   virtual void HandleConnection(int connection);

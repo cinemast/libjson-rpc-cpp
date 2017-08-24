@@ -42,8 +42,6 @@ public:
   virtual int CheckForConnection();
   virtual void HandleConnection(int connection);
 
-  bool virtual SendResponse(const std::string &response, void *addInfo = NULL);
-
 private:
   std::string socket_path;
   int socket_fd;

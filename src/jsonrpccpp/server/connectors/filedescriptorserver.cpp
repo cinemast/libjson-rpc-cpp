@@ -30,11 +30,6 @@ FileDescriptorServer::FileDescriptorServer(int inputfd, int outputfd)
     : AbstractThreadedServer(0), running(false), inputfd(inputfd),
       outputfd(outputfd), reader(DEFAULT_BUFFER_SIZE) {}
 
-bool FileDescriptorServer::SendResponse(const string &response, void *addInfo) {
-  // TODO: remove this method
-  return true;
-}
-
 bool FileDescriptorServer::InitializeListener() {
   if (!IsReadable(inputfd) || !IsWritable(outputfd))
     return false;
