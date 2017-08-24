@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Integration testsuite when run without HTTP
 - dev/testcoverage.sh script which did not create the build directory
 - Indentation in CMakeLists.txt files
+- Positional parameters with more than 10 items
+- C++11 deprecated dynamic excpetion specifiers have been removed
 
 ### Added
 - File descriptor client and server connector
