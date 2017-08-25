@@ -11,7 +11,7 @@
 
 #ifdef __WIN32__
 #include "windowstcpsocketclient.h"
-#elif __unix__
+#else
 #include "linuxtcpsocketclient.h"
 #endif
 
@@ -22,10 +22,8 @@ TcpSocketClient::TcpSocketClient(const std::string& ipToConnect, const unsigned 
 {
 #ifdef __WIN32__
     this->realSocket = new WindowsTcpSocketClient(ipToConnect, port);
-#elif __unix__
-    this->realSocket = new LinuxTcpSocketClient(ipToConnect, port);
 #else
-    this->realSocket = NULL;
+    this->realSocket = new LinuxTcpSocketClient(ipToConnect, port);
 #endif
 }
 

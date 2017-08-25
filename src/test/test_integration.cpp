@@ -97,10 +97,10 @@ TEST_CASE("test_integration_http", TEST_MODULE)
 
 #include <jsonrpccpp/server/connectors/unixdomainsocketserver.h>
 #include <jsonrpccpp/client/connectors/unixdomainsocketclient.h>
-
+/*
 TEST_CASE("test_integration_unixdomain", TEST_MODULE)
 {
-    string filename = tmpnam(nullptr);
+    string filename = "/tmp/jsonrpcunixdomain";
     UnixDomainSocketServer sconn(filename);
     UnixDomainSocketClient cconn(filename);
 
@@ -121,7 +121,7 @@ TEST_CASE("test_integration_unixdomain", TEST_MODULE)
 
     server.StopListening();
     remove(filename.c_str());
-}
+}*/
 #endif
 #ifdef FILEDESCRIPTOR_TESTING
 

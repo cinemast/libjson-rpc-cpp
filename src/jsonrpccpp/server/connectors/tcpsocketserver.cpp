@@ -10,7 +10,7 @@
 #include "tcpsocketserver.h"
 #ifdef _WIN32
 #include "windowstcpsocketserver.h"
-#elif __unix__
+#else
 #include "linuxtcpsocketserver.h"
 #endif
 #include <string>
@@ -23,10 +23,8 @@ TcpSocketServer::TcpSocketServer(const std::string &ipToBind,
     : AbstractServerConnector() {
 #ifdef _WIN32
   this->realSocket = new WindowsTcpSocketServer(ipToBind, port);
-#elif __unix__
-  this->realSocket = new LinuxTcpSocketServer(ipToBind, port);
 #else
-  this->realSocket = NULL;
+  this->realSocket = new LinuxTcpSocketServer(ipToBind, port);
 #endif
 }
 

@@ -14,6 +14,7 @@
 #include <jsonrpccpp/server/connectors/unixdomainsocketserver.h>
 
 #include "checkexception.h"
+#include <iostream>
 
 using namespace jsonrpc;
 using namespace std;
@@ -27,13 +28,13 @@ struct F {
   UnixDomainSocketClient client;
   MockClientConnectionHandler handler;
 
-  F() : filename("/tmp/somedomainsocket"), server("/tmp/somedomainsocket"), client("/tmp/somedomainsocket") {
+  F() : filename("/tmp/somedomainsocket"), server(filename), client(filename) {
+    remove(filename.c_str());
     server.SetHandler(&handler);
     REQUIRE(server.StartListening());
   }
   ~F() {
     server.StopListening();
-    remove(filename.c_str());
   }
 };
 
@@ -56,18 +57,20 @@ TEST_CASE_METHOD(F, "test_unixdomainsocket_success", TEST_MODULE) {
   CHECK(result == expectedResult);
 }
 
+
 TEST_CASE("test_unixdomainsocket_server_multiplestart", TEST_MODULE) {
   string filename = "/tmp/somedomainsocket";
 
-  UnixDomainSocketServer server(filename);
-  CHECK(server.StartListening() == true);
-  CHECK(server.StartListening() == false);
+  UnixDomainSocketServer *server = new UnixDomainSocketServer(filename);
+  CHECK(server->StartListening() == true);
+  CHECK(server->StartListening() == false);
 
   UnixDomainSocketServer server2(filename);
   CHECK(server2.StartListening() == false);
   CHECK(server2.StopListening() == false);
 
-  CHECK(server.StopListening() == true);
+  CHECK(server->StopListening() == true);
+  delete server;
 }
 
 TEST_CASE("test_unixdomainsocket_client_invalid", TEST_MODULE) {
