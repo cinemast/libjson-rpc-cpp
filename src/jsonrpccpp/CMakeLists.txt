@@ -47,6 +47,20 @@ if (HTTP_SERVER)
 	list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT} ${MHD_LIBRARIES})
 endif()
 
+# setup sources for redis connectors
+if (REDIS_CLIENT)
+    list(APPEND client_connector_header "client/connectors/redisclient.h")
+    list(APPEND client_connector_source "client/connectors/redisclient.cpp")
+    list(APPEND client_connector_libs ${HIREDIS_LIBRARIES})
+    include_directories(${HIREDIS_INCLUDE_DIRS})
+endif()
+
+if (REDIS_SERVER)
+    list(APPEND server_connector_header "server/connectors/redisserver.h")
+    list(APPEND server_connector_source "server/connectors/redisserver.cpp")
+    list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT} ${HIREDIS_LIBRARIES})
+endif()
+
 # setup sources for unix domain socket connectors
 if (UNIX_DOMAIN_SOCKET_SERVER)
     list(APPEND server_connector_header "server/connectors/unixdomainsocketserver.h")

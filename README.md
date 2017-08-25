@@ -71,6 +71,7 @@ Install the dependencies
 - [libjsoncpp](https://github.com/open-source-parsers/jsoncpp)
 - [libargtable](http://argtable.sourceforge.net/)
 - [cmake](http://www.cmake.org/)
+- [libhiredis](https://redislabs.com/lp/hiredis/)
 
 **UNIX**
 
@@ -109,6 +110,8 @@ Default configuration should be fine for most systems, but here are available co
 - `-DCOMPILE_EXAMPLES=NO` disables examples.
 - `-DHTTP_SERVER=NO` disable the libmicrohttpd webserver.
 - `-DHTTP_CLIENT=NO` disable the curl client.
+- `-DREDIS_SERVER=NO` disable the redis server connector.
+- `-DREDIS_CLIENT=NO` disable the redis client connector.
 - `-DUNIX_DOMAIN_SOCKET_SERVER=NO` disable the unix domain socket server connector.
 - `-DUNIX_DOMAIN_SOCKET_CLIENT=NO` disable the unix domain socket client connector.
 - `-DFILE_DESCRIPTOR_SERVER=NO` disable the file descriptor server connector.

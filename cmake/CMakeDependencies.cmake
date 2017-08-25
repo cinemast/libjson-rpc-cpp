@@ -52,6 +52,14 @@ if (${HTTP_SERVER})
     message(STATUS "MHD lib   : ${MHD_LIBRARIES}")
 endif()
 
+# find hiredis
+if (${REDIS_SERVER})
+
+    find_package(Hiredis REQUIRED)
+    message(STATUS "Hiredis header: ${HIREDIS_INCLUDE_DIRS}")
+    message(STATUS "Hiredis lib   : ${HIREDIS_LIBRARIES}")
+endif()
+
 # find doxygen
 find_package(Doxygen)
 

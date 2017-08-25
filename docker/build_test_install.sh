@@ -1,8 +1,8 @@
 set -v
 set -e
 
-CLIENT_LIBS="-ljsoncpp -lcurl -ljsonrpccpp-common -ljsonrpccpp-client"
-SERVER_LIBS="-ljsoncpp -lmicrohttpd -ljsonrpccpp-common -ljsonrpccpp-server"
+CLIENT_LIBS="-ljsoncpp -lcurl -ljsonrpccpp-common -ljsonrpccpp-client -lhiredis"
+SERVER_LIBS="-ljsoncpp -lmicrohttpd -ljsonrpccpp-common -ljsonrpccpp-server -lhiredis"
 mkdir -p build && cd build
 cmake -DCMAKE_INSTALL_PREFIX=/usr -DWITH_COVERAGE=YES -DCMAKE_BUILD_TYPE=Release \
 	-DBUILD_STATIC_LIBS=ON -DTCP_SOCKET_SERVER=YES -DTCP_SOCKET_CLIENT=YES \

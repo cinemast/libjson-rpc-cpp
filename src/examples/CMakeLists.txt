@@ -68,6 +68,16 @@ if(HTTP_CLIENT)
     target_link_libraries(simpleclientsample jsonrpcclient)
 endif()
 
+if(REDIS_SERVER)
+    add_executable(redisserversample redisserver.cpp)
+    target_link_libraries(redisserversample jsonrpcserver)
+endif()
+
+if(REDIS_CLIENT)
+    add_executable(redisclientsample redisclient.cpp)
+    target_link_libraries(redisclientsample jsonrpcclient)
+endif()
+
 if (COMPILE_STUBGEN)
     if(HTTP_CLIENT)
         add_executable(stubclientsample stubclient.cpp ${CMAKE_BINARY_DIR}/gen/stubclient.h)
