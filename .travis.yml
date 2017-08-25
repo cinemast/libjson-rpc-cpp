@@ -27,24 +27,24 @@ before_install:
      brew install libmicrohttpd --with-ssl
     fi
 
-    matrix:
-      include:
-        - env: OS=fedora
-          os: linux
-        - env: OS=arch
-          os: linux
-        - env: OS=debian8
-          os: linux
-        - env: OS=debian9
-          os: linux
-        - env: OS=ubuntu1604
-          os: linux
-        - env: OS=ubuntu1704
-          os: linux
-        - env: OS=native
-          os: linux
-        - env: OS=native
-    os: osx
+matrix:
+  include:
+    - env: OS=fedora
+      os: linux
+    - env: OS=arch
+      os: linux
+    - env: OS=debian8
+      os: linux
+    - env: OS=debian9
+      os: linux
+    - env: OS=ubuntu1604
+      os: linux
+    - env: OS=ubuntu1704
+      os: linux
+    - env: OS=native
+      os: linux
+    - env: OS=native
+      os: osx
 
 compiler:
     - gcc
