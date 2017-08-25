@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/cinemast/libjson-rpc-cpp.png?branch=master)](https://travis-ci.org/cinemast/libjson-rpc-cpp) [![codecov](https://codecov.io/gh/cinemast/libjson-rpc-cpp/branch/master/graph/badge.svg)](https://codecov.io/gh/cinemast/libjson-rpc-cpp) [![Coverity Status](https://scan.coverity.com/projects/3169/badge.svg?flat=1)](https://scan.coverity.com/projects/3169)
+Master [![Build Status](https://travis-ci.org/cinemast/libjson-rpc-cpp.png?branch=master)](https://travis-ci.org/cinemast/libjson-rpc-cpp) [![codecov](https://codecov.io/gh/cinemast/libjson-rpc-cpp/branch/master/graph/badge.svg)](https://codecov.io/gh/cinemast/libjson-rpc-cpp)
+Develop [![Build Status](https://travis-ci.org/cinemast/libjson-rpc-cpp.png?branch=develop)](https://travis-ci.org/cinemast/libjson-rpc-cpp) [![codecov](https://codecov.io/gh/cinemast/libjson-rpc-cpp/branch/develop/graph/badge.svg)](https://codecov.io/gh/cinemast/libjson-rpc-cpp) |
+[![Coverity Status](https://scan.coverity.com/projects/3169/badge.svg?flat=1)](https://scan.coverity.com/projects/3169)
 
 libjson-rpc-cpp
 ===============
@@ -13,7 +15,7 @@ It is fully JSON-RPC [2.0 & 1.0 compatible](http://www.jsonrpc.org/specification
 - jsonrpcstub - a tool that generates stub-classes for your JSON-RPC client AND server applications.
 - Ready to use HTTP + TCP server and client to provide simple interfaces for your JSON-RPC application.
 - Cross platform build support and [precompiled binaries for WIN32](http://spiessknafl.at/libjson-rpc-cpp).
-- Super liberal [MIT-License](http://en.wikipedia.org/wiki/MIT_License). 
+- Super liberal [MIT-License](http://en.wikipedia.org/wiki/MIT_License).
 
 **Other good reasons to use libjson-rpc-cpp**
 - Easy to use [cmake](http://www.cmake.org) cross platform build system.
@@ -129,7 +131,7 @@ This example will show the most simple way to create a rpc server and client. If
 [
 	{
 		"name": "sayHello",
-		"params": { 
+		"params": {
 			"name": "Peter"
 		},
 		"returns" : "Hello Peter"
@@ -253,7 +255,7 @@ Developer Information
 =====================
 Contributions
 -------------
-Contributions of any kind are always very welcome. 
+Contributions of any kind are always very welcome.
 Here are some suggestions:
 - Bugreports
 - Bugfixes
@@ -301,7 +303,7 @@ A compatiblity report can be found [here](http://upstream.rosalinux.ru/versions/
 
 License
 -------
-This framework is licensed under [MIT](http://en.wikipedia.org/wiki/MIT_License). 
+This framework is licensed under [MIT](http://en.wikipedia.org/wiki/MIT_License).
 All of this libraries dependencies are licensed under MIT compatible licenses.
 
 Documentation
@@ -319,7 +321,7 @@ This generates the Latex and HTML documentation into `build/doc`
 
 Run the tests
 -------------
-Simply run: 
+Simply run:
 
 ```sh
 make test
