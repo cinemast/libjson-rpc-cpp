@@ -43,6 +43,10 @@ matrix:
       os: linux
     - env: OS=native
       os: linux
+      compiler: clang
+    - env: OS=native
+      os: linux
+      compiler: gcc
     - env: OS=native
       os: osx
 
