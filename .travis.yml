@@ -49,6 +49,7 @@ matrix:
       compiler: gcc
     - env: OS=native
       os: osx
+      compiler: clang
 
 compiler:
     - gcc
