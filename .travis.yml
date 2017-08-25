@@ -5,35 +5,51 @@ services:
   - docker
 before_install:
   - |
-   if [ "$OS" == "native" ];
-   then
-    sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-    sudo apt-get update -qq
-    sudo apt-get install -qq libcurl4-openssl-dev libjsoncpp-dev libargtable2-dev libgnutls-dev libgcrypt11-dev valgrind wget gcc-5 g++-5 libhiredis-dev redis-server
-    wget http://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-0.9.52.tar.gz
-    tar -xvf libmicrohttpd-0.9.52.tar.gz
-    cd libmicrohttpd-0.9.52
-    ./configure && make
-    sudo make install && sudo ldconfig
-    cd .. && sudo rm -rf libmicrohttpd-0.9.52
-    sudo pip install codecov
-    sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-    sudo apt-get update -qq
-    sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-5 90
-   fi
+    if [[ "$OS" == "native" && "$TRAVIS_OS_NAME" == "linux" ]]
+    then
+     sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+     sudo apt-get update -qq
+     sudo apt-get install -qq libcurl4-openssl-dev libjsoncpp-dev libargtable2-dev libgnutls-dev libgcrypt11-dev valgrind wget gcc-5 g++-5
+     wget http://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-0.9.52.tar.gz
+     tar -xvf libmicrohttpd-0.9.52.tar.gz
+     cd libmicrohttpd-0.9.52
+     ./configure && make
+     sudo make install && sudo ldconfig
+     cd .. && sudo rm -rf libmicrohttpd-0.9.52
+     sudo pip install codecov
+     sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+     sudo apt-get update -qq
+     sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-5 90
+    elif [[ "$TRAVIS_OS_NAME" == "osx" ]]
+    then
+     brew update
+     brew install jsoncpp argtable curl hiredis redis
+     brew install libmicrohttpd --with-ssl
+    fi
 
-env:
-  - OS=native
-  - OS=fedora
-  - OS=arch
-  - OS=debian8
-  - OS=debian9
-  - OS=ubuntu1604
-  - OS=ubuntu1704
+    matrix:
+      include:
+        - env: OS=fedora
+          os: linux
+        - env: OS=arch
+          os: linux
+        - env: OS=debian8
+          os: linux
+        - env: OS=debian9
+          os: linux
+        - env: OS=ubuntu1604
+          os: linux
+        - env: OS=ubuntu1704
+          os: linux
+        - env: OS=native
+          os: linux
+        - env: OS=native
+    os: osx
 
 compiler:
     - gcc
 
 script:
-    - if [[ "$OS" == "native" ]]; then sudo ./docker/build_test_install.sh; ./dev/codecov.sh; bash <(curl -s https://codecov.io/bash); fi
+    - if [[ "$OS" == "native" ]]; then sudo ./docker/build_test_install.sh; fi
+    - if [[ "$OS" == "native" && "$TRAVIS_OS_NAME" == "linux" ]]; then ./dev/codecov.sh; bash <(curl -s https://codecov.io/bash); fi
     - if [[ "$OS" != "native" ]]; then cd docker; make ${OS}; fi
