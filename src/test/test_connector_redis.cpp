@@ -111,8 +111,15 @@ TEST_CASE("test_redis_client_error", TEST_MODULE)
     CHECK_EXCEPTION_TYPE(RedisClient client(TEST_HOST, TEST_PORT+1, TEST_QUEUE), JsonRpcException, check_exception1);
 }
 
+#ifdef __APPLE__
+#define RAND_FIRST "2PN0bdwPY7CA8M06"
+#define RAND_SECOND "zVKEkhHgZVgtV1iT"
+#else
 #define RAND_FIRST "fa37JncCHryDsbza"
 #define RAND_SECOND "yy4cBWDxS22JjzhM"
+#endif
+
+
 
 TEST_CASE_METHOD(F, "test_redis_client_ret_queue", TEST_MODULE)
 {

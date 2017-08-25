@@ -29,7 +29,7 @@ using namespace std;
 LinuxTcpSocketServer::LinuxTcpSocketServer(const std::string &ipToBind,
                                            const unsigned int &port,
                                            size_t threads)
-    : AbstractThreadedServer(threads), running(false), ipToBind(ipToBind),
+    : AbstractThreadedServer(threads), ipToBind(ipToBind),
       port(port) {}
 
 LinuxTcpSocketServer::~LinuxTcpSocketServer() {

@@ -49,6 +49,7 @@ bool TestRedisServer::Start()
         cerr << "ERROR: Failed to fork for redis server!" << endl;
         return -1;
     }
+
     if (pid == 0) {
         this->StartProcess(pipefd);
     }
@@ -68,7 +69,9 @@ bool TestRedisServer::Stop()
     if (pid != 0) {
         kill(pid, 9);
         pid = 0;
+        return true;
     }
+    return false;
 }
 
 
@@ -100,7 +103,6 @@ bool TestRedisServer::WaitProcess(int pipefd[2])
     return false;
 }
 
-
 void TestRedisServer::StartProcess(int pipefd[2])
 {
     // Close the unused read end
@@ -119,6 +121,6 @@ void TestRedisServer::StartProcess(int pipefd[2])
     dup2(pipefd[1], STDOUT_FILENO);
 
     // Start redis server with our redis.conf
-    execl(REDIS_BIN_DIR REDIS_BIN, REDIS_BIN, REDIS_CONF, NULL);
+    execlp(REDIS_BIN, REDIS_BIN, REDIS_CONF, (char*)NULL);
     exit(-1);
 }

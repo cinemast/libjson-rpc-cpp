@@ -11,6 +11,7 @@
 #define JSONRPC_TESTREDISSERVER_H
 
 #include <string>
+#include <sys/types.h>
 
 namespace jsonrpc {
 

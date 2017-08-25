@@ -47,9 +47,7 @@ public:
   virtual void HandleConnection(int connection);
 
 private:
-  bool running;
   std::string ipToBind;
-
   unsigned int port;
   int socket_fd;
   struct sockaddr_in address;
