@@ -54,6 +54,6 @@ compiler:
     - gcc
 
 script:
-    - if [[ "$OS" == "native" ]]; then sudo ./docker/build_test_install.sh; fi
+    - if [[ "$OS" == "native" ]]; then ./docker/build_test_install.sh; fi
     - if [[ "$OS" == "native" && "$TRAVIS_OS_NAME" == "linux" && "$COMPILER" == "gcc" ]]; then ./dev/codecov.sh; bash <(curl -s https://codecov.io/bash); fi
     - if [[ "$OS" != "native" ]]; then cd docker; make ${OS}; fi

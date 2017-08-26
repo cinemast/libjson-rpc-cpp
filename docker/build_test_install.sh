@@ -9,8 +9,15 @@ cmake -DCMAKE_INSTALL_PREFIX=/usr -DWITH_COVERAGE=YES -DCMAKE_BUILD_TYPE=Release
 	-DBUILD_SHARED_LIBS=ON ..
 make -j$(nproc)
 ./bin/unit_testsuite
-make install
-ldconfig
+
+if [ "$OS" == "native" ]
+then
+	sudo make install
+	sudo ldconfig
+else
+	make install
+	ldconfig
+fi
 cd ../src/examples
 g++ -std=c++11 simpleclient.cpp $CLIENT_LIBS -o simpleclient
 g++ -std=c++11 simpleserver.cpp $SERVER_LIBS -o simpleserver
