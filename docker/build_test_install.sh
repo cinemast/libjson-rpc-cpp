@@ -12,10 +12,10 @@ make -j$(nproc)
 
 if [ "$OS" == "native" ]
 then
-	sudo make install
+	sudo make install DESTDIR=/usr/local
 	sudo ldconfig
 else
-	make install
+	make install DESTDIR=/usr/local
 	ldconfig
 fi
 cd ../src/examples
