@@ -36,6 +36,8 @@ matrix:
       os: linux
     - env: OS=debian9
       os: linux
+    - env: OS=debian10
+      os: linux
     - env: OS=ubuntu1604
       os: linux
     - env: OS=ubuntu1704
