@@ -103,7 +103,7 @@ void jsonrpc::GetReturnQueue(redisContext * con, const std::string& prefix, std:
 }
 
 
-RedisClient::RedisClient(const std::string& host, int port, const std::string& queue) throw(JsonRpcException)
+RedisClient::RedisClient(const std::string& host, int port, const std::string& queue)
     : queue(queue), con(NULL)
 {
     this->timeout = 10;
@@ -135,7 +135,7 @@ RedisClient::~RedisClient()
 }
 
 
-void RedisClient::SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException)
+void RedisClient::SendRPCMessage(const std::string& message, std::string& result)
 {
     std::string ret_queue;
     GetReturnQueue(con, queue, ret_queue);

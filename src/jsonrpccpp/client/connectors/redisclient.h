@@ -42,7 +42,7 @@ namespace jsonrpc
              * @param port The port of the redis server.
              * @param queue The queue to send to.
              */
-            RedisClient(const std::string& host, int port, const std::string& queue) throw (JsonRpcException);
+            RedisClient(const std::string& host, int port, const std::string& queue);
             virtual ~RedisClient();
 
 
@@ -51,7 +51,7 @@ namespace jsonrpc
              * @param message The message to send.
              * @param result The returned message from the server.
              */
-            virtual void SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException);
+            virtual void SendRPCMessage(const std::string& message, std::string& result);
 
 
             /**
