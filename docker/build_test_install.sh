@@ -4,7 +4,7 @@ set -e
 CLIENT_LIBS="-ljsoncpp -lcurl -ljsonrpccpp-common -ljsonrpccpp-client -lhiredis"
 SERVER_LIBS="-ljsoncpp -lmicrohttpd -ljsonrpccpp-common -ljsonrpccpp-server -lhiredis"
 mkdir -p build && cd build
-cmake -DCMAKE_INSTALL_PREFIX=/usr -DWITH_COVERAGE=YES -DCMAKE_BUILD_TYPE=Release \
+cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DWITH_COVERAGE=YES -DCMAKE_BUILD_TYPE=Release \
 	-DBUILD_STATIC_LIBS=ON -DTCP_SOCKET_SERVER=YES -DTCP_SOCKET_CLIENT=YES \
 	-DBUILD_SHARED_LIBS=ON ..
 make -j$(nproc)
@@ -12,10 +12,10 @@ make -j$(nproc)
 
 if [ "$OS" == "native" ]
 then
-	sudo make install DESTDIR=/usr/local
+	sudo make install
 	sudo ldconfig
 else
-	make install DESTDIR=/usr/local
+	make install
 	ldconfig
 fi
 cd ../src/examples
