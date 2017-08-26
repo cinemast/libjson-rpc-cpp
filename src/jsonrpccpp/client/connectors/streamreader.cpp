@@ -1,6 +1,3 @@
 #include "streamreader.h"
 
-StreamReader::StreamReader()
-{
-
-}
+StreamReader::StreamReader() {}

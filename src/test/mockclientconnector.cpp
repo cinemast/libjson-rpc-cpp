@@ -12,33 +12,25 @@
 using namespace jsonrpc;
 using namespace std;
 
-MockClientConnector::MockClientConnector()
-{
+MockClientConnector::MockClientConnector() {}
+
+string MockClientConnector::GetRequest() { return request; }
+
+Json::Value MockClientConnector::GetJsonRequest() {
+  Json::Reader reader;
+  Json::Value result;
+  if (reader.parse(request, result))
+    return result;
+  else
+    return Json::nullValue;
 }
 
-string MockClientConnector::GetRequest()
-{
-    return request;
+void MockClientConnector::SetResponse(const std::string &response) {
+  this->response = response;
 }
 
-Json::Value MockClientConnector::GetJsonRequest()
-{
-    Json::Reader reader;
-    Json::Value result;
-    if (reader.parse(request, result))
-        return result;
-    else
-        return Json::nullValue;
-
-}
-
-void MockClientConnector::SetResponse(const std::string &response)
-{
-    this->response = response;
-}
-
-void MockClientConnector::SendRPCMessage(const string &message, string &result) 
-{
-    request = message;
-    result = this->response;
+void MockClientConnector::SendRPCMessage(const string &message,
+                                         string &result) {
+  request = message;
+  result = this->response;
 }

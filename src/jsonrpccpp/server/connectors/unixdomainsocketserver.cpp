@@ -51,8 +51,8 @@ bool UnixDomainSocketServer::InitializeListener() {
   strncpy(this->address.sun_path, this->socket_path.c_str(), 107);
 
   if (::bind(this->socket_fd,
-           reinterpret_cast<struct sockaddr *>(&(this->address)),
-           sizeof(struct sockaddr_un)) != 0) {
+             reinterpret_cast<struct sockaddr *>(&(this->address)),
+             sizeof(struct sockaddr_un)) != 0) {
     return false;
   }
 

@@ -14,7 +14,7 @@ coverage: test
 	mkdir -p reports
 	gcovr -r . -d -e "build" -e "src/test" -e "src/examples" -e "src/stubgenerator/main.cpp" --html --html-details -o reports/coverage.html
 
-formate:
+format:
 	find . -name "*.h" -o -name "*.cpp" -exec clang-format -i {} \;
 
 test: build

@@ -2,7 +2,8 @@
  * @file filedescriptorclient.cpp
  * @date 27.10.2016
  * @author Jean-Daniel Michaud <jean.daniel,michaud@gmail.com>
- * @brief An example implementation of a client based on plain old file descriptors
+ * @brief An example implementation of a client based on plain old file
+ * descriptors
  */
 
 /*
@@ -28,28 +29,24 @@
  * compliant json string in the standard input to test it.
  */
 
+#include <iostream>
 #include <jsonrpccpp/client.h>
 #include <jsonrpccpp/client/connectors/filedescriptorclient.h>
-#include <iostream>
 #include <unistd.h>
 
 using namespace jsonrpc;
 using namespace std;
 
-int main()
-{
+int main() {
   FileDescriptorClient client(STDIN_FILENO, STDOUT_FILENO);
   Client c(client);
 
   Json::Value params;
   params["name"] = "Peter";
 
-  try
-  {
+  try {
     cerr << "client:" << c.CallMethod("sayHello", params) << endl;
-  }
-  catch (JsonRpcException& e)
-  {
+  } catch (JsonRpcException &e) {
     cerr << e.what() << endl;
   }
 }

@@ -5,29 +5,23 @@
  * @brief unixdomainsocketclient.cpp
  */
 
+#include <iostream>
 #include <jsonrpccpp/client.h>
 #include <jsonrpccpp/client/connectors/unixdomainsocketclient.h>
-#include <iostream>
 
 using namespace jsonrpc;
 using namespace std;
 
-int main()
-{
-    UnixDomainSocketClient client("./unixdomainsocketexample");
-	Client c(client);
+int main() {
+  UnixDomainSocketClient client("./unixdomainsocketexample");
+  Client c(client);
 
-	Json::Value params;
-	params["name"] = "Peter";
+  Json::Value params;
+  params["name"] = "Peter";
 
-	try
-	{
-		cout << c.CallMethod("sayHello", params) << endl;
-	}
-	catch (JsonRpcException& e)
-	{
-		cerr << e.what() << endl;
-	}
-
-
+  try {
+    cout << c.CallMethod("sayHello", params) << endl;
+  } catch (JsonRpcException &e) {
+    cerr << e.what() << endl;
+  }
 }

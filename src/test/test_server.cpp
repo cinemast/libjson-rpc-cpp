@@ -30,7 +30,7 @@ struct F1 {
 
   F1() : server(c, JSONRPC_SERVER_V1) {}
 };
-}
+} // namespace testserver
 using namespace testserver;
 
 TEST_CASE_METHOD(F, "test_server_v2_method_success", TEST_MODULE) {

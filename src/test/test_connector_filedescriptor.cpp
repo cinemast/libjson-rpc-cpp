@@ -54,7 +54,7 @@ struct F {
 bool check_exception1(JsonRpcException const &ex) {
   return ex.GetCode() == Errors::ERROR_CLIENT_CONNECTOR;
 }
-}
+} // namespace testfiledescriptorserver
 using namespace testfiledescriptorserver;
 
 TEST_CASE_METHOD(F, "test_filedescriptor_success", TEST_MODULE) {

@@ -33,15 +33,13 @@ struct F {
     server.SetHandler(&handler);
     REQUIRE(server.StartListening());
   }
-  ~F() {
-    server.StopListening();
-  }
+  ~F() { server.StopListening(); }
 };
 
 bool check_exception1(JsonRpcException const &ex) {
   return ex.GetCode() == Errors::ERROR_CLIENT_CONNECTOR;
 }
-}
+} // namespace testunixdomainsocketserver
 using namespace testunixdomainsocketserver;
 
 TEST_CASE_METHOD(F, "test_unixdomainsocket_success", TEST_MODULE) {
@@ -56,7 +54,6 @@ TEST_CASE_METHOD(F, "test_unixdomainsocket_success", TEST_MODULE) {
   CHECK(handler.request == request);
   CHECK(result == expectedResult);
 }
-
 
 TEST_CASE("test_unixdomainsocket_server_multiplestart", TEST_MODULE) {
   string filename = "/tmp/somedomainsocket";

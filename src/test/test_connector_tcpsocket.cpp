@@ -43,7 +43,7 @@ struct F {
 bool check_exception1(JsonRpcException const &ex) {
   return ex.GetCode() == Errors::ERROR_CLIENT_CONNECTOR;
 }
-}
+} // namespace testtcpsocketserver
 using namespace testtcpsocketserver;
 
 TEST_CASE_METHOD(F, "test_tcpsocket_success", TEST_MODULE) {
