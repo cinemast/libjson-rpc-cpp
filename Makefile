@@ -25,3 +25,4 @@ test: build
 
 clean:
 	rm -rf build
+	rm -rf reports
