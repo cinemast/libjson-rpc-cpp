@@ -56,7 +56,6 @@ compiler:
     - gcc
 
 script:
-    - make check-format
     - if [[ "$OS" == "native" ]]; then ./docker/build_test_install.sh; fi
     - if [[ "$OS" == "native" && "$TRAVIS_OS_NAME" == "linux" && "$COMPILER" == "gcc" ]]; then ./dev/codecov.sh; fi
     - if [[ "$OS" != "native" ]]; then cd docker; make ${OS}; fi
