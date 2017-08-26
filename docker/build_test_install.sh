@@ -9,11 +9,6 @@ else
 	PREFIX=/usr
 fi
 
-if [ "$OS" != "native" ]
-then
-	make check-format
-fi
-
 CLIENT_LIBS="-ljsoncpp -lcurl -ljsonrpccpp-common -ljsonrpccpp-client -lhiredis"
 SERVER_LIBS="-ljsoncpp -lmicrohttpd -ljsonrpccpp-common -ljsonrpccpp-server -lhiredis"
 mkdir -p build && cd build

@@ -7,6 +7,7 @@ If you plan to contribute to libjson-rpc-cpp, please skim the following informat
 The [Makefile](Makefile) contains useful commands that makes development for libjson-rpc-cpp easier.
 
 * `make build`: builds the framework in the default configuration
+* `make build-docker`: builds the framework for all distributions in docker
 * `make test`: runs all tests
 * `make format`: formats all cpp and header files with `clang-format`
 * `make check-format`: checks if the sources have been formatted
