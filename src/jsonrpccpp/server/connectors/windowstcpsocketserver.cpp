@@ -124,8 +124,8 @@ DWORD WINAPI WindowsTcpSocketServer::LaunchLoop(LPVOID lp_data) {
   instance->ListenLoop();
   CloseHandle(GetCurrentThread());
   return 0; // DO NOT USE ExitThread function here! ExitThread does not call
-            // destructors for allocated objects and therefore it would lead to a
-            // memory leak.
+            // destructors for allocated objects and therefore it would lead to
+            // a memory leak.
 }
 
 void WindowsTcpSocketServer::ListenLoop() {
@@ -184,8 +184,8 @@ DWORD WINAPI WindowsTcpSocketServer::GenerateResponse(LPVOID lp_data) {
   instance->OnRequest(request, reinterpret_cast<void *>(connection_fd));
   CloseHandle(GetCurrentThread());
   return 0; // DO NOT USE ExitThread function here! ExitThread does not call
-            // destructors for allocated objects and therefore it would lead to a
-            // memory leak.
+            // destructors for allocated objects and therefore it would lead to
+            // a memory leak.
 }
 
 bool WindowsTcpSocketServer::WriteToSocket(const SOCKET &fd,

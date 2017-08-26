@@ -17,6 +17,9 @@ coverage: test
 format:
 	find . -name "*.h" -o -name "*.cpp" -exec clang-format -i {} \;
 
+check-format: format
+	git diff --exit-code
+
 test: build
 	cd build &&	./bin/unit_testsuite
 
