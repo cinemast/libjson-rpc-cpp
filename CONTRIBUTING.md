@@ -29,7 +29,7 @@ Here are some suggestions:
   - Adding new connectors.
   - Adding new languages to the stubgenerator.
 
-Additionally you can find a wishlost and planned features [here](https://github.com/cinemast/libjson-rpc-cpp/projects/1)
+Additionally you can find a wishlist and planned features [here](https://github.com/cinemast/libjson-rpc-cpp/projects/1)
 
 ### Guidelines / Conventions
 
