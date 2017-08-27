@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [v1.0.0] - 2017-08-27
 ### Fixed
 - Typo in ERROR_CLIENT_CONNECTOR exception
 - Integration testsuite when run without HTTP
