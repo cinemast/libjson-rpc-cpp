@@ -21,10 +21,10 @@ if (${CMAKE_MAJOR_VERSION} GREATER 2)
     cmake_policy(SET CMP0042 OLD)
 endif()
 
-set(MAJOR_VERSION 0)
-set(MINOR_VERSION 7)
+set(MAJOR_VERSION 1)
+set(MINOR_VERSION 0)
 set(PATCH_VERSION 0)
-set(SO_VERSION    0)
+set(SO_VERSION    1)
 
 set(BUILD_SHARED_LIBS YES CACHE BOOL "Build shared libraries")
 set(BUILD_STATIC_LIBS NO CACHE BOOL "Build static libraries")
