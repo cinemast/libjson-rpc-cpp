@@ -12,17 +12,23 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Indentation in CMakeLists.txt files
 - Positional parameters with more than 10 items
 - C++11 deprecated dynamic excpetion specifiers have been removed
+- libmicrohttpd legacy detection for `EPOLL`
 
 ### Added
 - File descriptor client and server connector
+- Redis client and server connector
 - Docker based build system for testing on multiple distributions
+- Python client stubgenerator
 - CI Integration for OSX build
 - `StreamReader` and `StreamWriter` classes to handle the buffering
+- [Makefile](Makefile) for developer/contributor related functions
 
 ### Removed
 - Method `BatchResponse::getResult(Json::Value& id)`
 - Method `AbstractServerConnector::SendResponse()`
 - Scripts dev/ci.sh, dev/createpackage.sh, dev/installdeps.sh
+- `dev/coverage.sh` in favor of `make coverage`
+- Windows support, which will hopefully come back soon
 
 ### Changed
 - Migrated from coveralls.io to codecov.io

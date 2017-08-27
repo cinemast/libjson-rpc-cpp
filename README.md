@@ -11,8 +11,8 @@ It is fully JSON-RPC [2.0 & 1.0 compatible](http://www.jsonrpc.org/specification
 ![libjson-rpc-cpp logo](https://github.com/cinemast/libjson-rpc-cpp/blob/master/dev/artwork/logo.png?raw=true)
 
 **5 good reasons for using libjson-rpc-cpp in your next RPC project**
-- Full JSON-RPC 2.0 & partial JSON-RPC 1.0 Client and Server Support.
-- jsonrpcstub - a tool that generates stub-classes for your JSON-RPC client AND server applications.
+- Full JSON-RPC 2.0 & partial JSON-RPC 1.0 client and server Support.
+- jsonrpcstub - a tool that generates stub-classes for your JSON-RPC client and server applications.
 - Ready to use HTTP + TCP server and client to provide simple interfaces for your JSON-RPC application.
 - Cross platform build support for Linux and OS X.
 - Super liberal [MIT-License](http://en.wikipedia.org/wiki/MIT_License).
