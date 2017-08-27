@@ -257,7 +257,7 @@ References
 - [cpp-ethereum](https://github.com/ethereum/cpp-ethereum): C++ implementations for the ethereum crypto currency.
 - [mage-sdk-cpp](https://github.com/mage/mage-sdk-cpp): a game engine.
 - [bitcodin](http://www.bitmovin.net): a scalable cloud based video transcoding platform.
-- [wgslib](http://wgslib.com/): A web geostatistics library.
+- [wgslib](http://wgslib.com/): a web geostatistics library.
 - [bitcoin-api-cpp](https://github.com/minium/bitcoin-api-cpp): a C++ interface to bitcoin.
 - [NIT DASH Content Server](http://www.nit.eu/offer/research-projects-products/334-http2dash): Dynamic Adaptive Streaming over HTTP server.
 
