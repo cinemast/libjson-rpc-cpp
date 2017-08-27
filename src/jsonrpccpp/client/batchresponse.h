@@ -37,8 +37,6 @@ namespace jsonrpc {
              * @param id
              * @return
              */
-            Json::Value getResult(Json::Value& id);
-
             Json::Value getResult(int id);
 
 

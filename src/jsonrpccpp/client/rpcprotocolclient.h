@@ -50,7 +50,7 @@ namespace jsonrpc {
              * @brief Does the same as Json::Value RpcProtocolClient::HandleResponse(const std::string& response) throw(Exception)
              * but returns result as reference for performance speed up.
              */
-            void HandleResponse(const std::string &response, Json::Value &result) throw (JsonRpcException);
+            void HandleResponse(const std::string &response, Json::Value &result) ;
 
             /**
              * @brief HandleResponse
@@ -58,7 +58,7 @@ namespace jsonrpc {
              * @param result
              * @return response id
              */
-            Json::Value HandleResponse(const Json::Value &response, Json::Value &result) throw (JsonRpcException);
+            Json::Value HandleResponse(const Json::Value &response, Json::Value &result) ;
 
             static const std::string KEY_PROTOCOL_VERSION;
             static const std::string KEY_PROCEDURE_NAME;

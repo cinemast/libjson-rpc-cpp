@@ -8,18 +8,20 @@ file(GLOB jsonrpc_install_header_server
 	server/requesthandlerfactory.h
 	server/abstractserver.h
 	server/abstractserverconnector.h
+        server/abstractthreadedserver.h
 	server/iprocedureinvokationhandler.h
 	server/iclientconnectionhandler.h
+        server/threadpool.h
 )
 file(GLOB jsonrpc_header_server server/*.h)
 file(GLOB jsonrpc_source_server server/*.c*)
 
 # setup client headers and sources
 file(GLOB jsonrpc_install_header_client
-	client/batchcall.h
-	client/batchresponse.h
-	client/client.h
-	client/iclientconnector.h
+    client/batchcall.h
+    client/batchresponse.h
+    client/client.h
+    client/iclientconnector.h
 )
 file(GLOB jsonrpc_header_client client/*.h)
 file(GLOB jsonrpc_source_client client/*.c*)
@@ -45,63 +47,76 @@ if (HTTP_SERVER)
 	list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT} ${MHD_LIBRARIES})
 endif()
 
+# setup sources for redis connectors
+if (REDIS_CLIENT)
+    list(APPEND client_connector_header "client/connectors/redisclient.h")
+    list(APPEND client_connector_source "client/connectors/redisclient.cpp")
+    list(APPEND client_connector_libs ${HIREDIS_LIBRARIES})
+    include_directories(${HIREDIS_INCLUDE_DIRS})
+endif()
+
+if (REDIS_SERVER)
+    list(APPEND server_connector_header "server/connectors/redisserver.h")
+    list(APPEND server_connector_source "server/connectors/redisserver.cpp")
+    list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT} ${HIREDIS_LIBRARIES})
+endif()
+
 # setup sources for unix domain socket connectors
 if (UNIX_DOMAIN_SOCKET_SERVER)
-	list(APPEND server_connector_header "server/connectors/unixdomainsocketserver.h")
-	list(APPEND server_connector_source "server/connectors/unixdomainsocketserver.cpp")
-	list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT})
+    list(APPEND server_connector_header "server/connectors/unixdomainsocketserver.h")
+    list(APPEND server_connector_source "server/connectors/unixdomainsocketserver.cpp")
+    list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT})
 endif()
 
 if (UNIX_DOMAIN_SOCKET_CLIENT)
-	list(APPEND client_connector_header "client/connectors/unixdomainsocketclient.h")
-	list(APPEND client_connector_source "client/connectors/unixdomainsocketclient.cpp")
+    list(APPEND client_connector_header "client/connectors/unixdomainsocketclient.h")
+    list(APPEND client_connector_source "client/connectors/unixdomainsocketclient.cpp")
 endif()
 
 # setup sources for tcp socket connectors
 if (TCP_SOCKET_SERVER)
-	list(APPEND server_connector_header "server/connectors/tcpsocketserver.h")
-	list(APPEND server_connector_source "server/connectors/tcpsocketserver.cpp")
-	if (WIN32)
-		list(APPEND server_connector_header "server/connectors/windowstcpsocketserver.h")
-		list(APPEND server_connector_source "server/connectors/windowstcpsocketserver.cpp")
-		list(APPEND server_connector_libs ws2_32)
-	endif()
-	if(UNIX)
-		list(APPEND server_connector_header "server/connectors/linuxtcpsocketserver.h")
-		list(APPEND server_connector_source "server/connectors/linuxtcpsocketserver.cpp")
-	endif()
-	list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT})
+    list(APPEND server_connector_header "server/connectors/tcpsocketserver.h")
+    list(APPEND server_connector_source "server/connectors/tcpsocketserver.cpp")
+    if (WIN32)
+        list(APPEND server_connector_header "server/connectors/windowstcpsocketserver.h")
+        list(APPEND server_connector_source "server/connectors/windowstcpsocketserver.cpp")
+        list(APPEND server_connector_libs ws2_32)
+    endif()
+    if(UNIX)
+        list(APPEND server_connector_header "server/connectors/linuxtcpsocketserver.h")
+        list(APPEND server_connector_source "server/connectors/linuxtcpsocketserver.cpp")
+    endif()
+    list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT})
 endif()
 
 if (TCP_SOCKET_CLIENT)
-	list(APPEND client_connector_header "client/connectors/tcpsocketclient.h")
-	list(APPEND client_connector_source "client/connectors/tcpsocketclient.cpp")
-	if (WIN32)
-		list(APPEND client_connector_header "client/connectors/windowstcpsocketclient.h")
-		list(APPEND client_connector_source "client/connectors/windowstcpsocketclient.cpp")
-		list(APPEND client_connector_libs ws2_32)
-	endif()
-	if(UNIX)
-		list(APPEND client_connector_header "client/connectors/linuxtcpsocketclient.h")
-		list(APPEND client_connector_source "client/connectors/linuxtcpsocketclient.cpp")
-	endif()
-	list(APPEND client_connector_libs ${CMAKE_THREAD_LIBS_INIT})
+    list(APPEND client_connector_header "client/connectors/tcpsocketclient.h")
+    list(APPEND client_connector_source "client/connectors/tcpsocketclient.cpp")
+    if (WIN32)
+        list(APPEND client_connector_header "client/connectors/windowstcpsocketclient.h")
+        list(APPEND client_connector_source "client/connectors/windowstcpsocketclient.cpp")
+        list(APPEND client_connector_libs ws2_32)
+    endif()
+    if(UNIX)
+        list(APPEND client_connector_header "client/connectors/linuxtcpsocketclient.h")
+        list(APPEND client_connector_source "client/connectors/linuxtcpsocketclient.cpp")
+    endif()
+    list(APPEND client_connector_libs ${CMAKE_THREAD_LIBS_INIT})
 endif()
 
 if (FILE_DESCRIPTOR_SERVER)
-	list(APPEND server_connector_header "server/connectors/filedescriptorserver.h")
-	list(APPEND server_connector_source "server/connectors/filedescriptorserver.cpp")
-	list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT})
+    list(APPEND server_connector_header "server/connectors/filedescriptorserver.h")
+    list(APPEND server_connector_source "server/connectors/filedescriptorserver.cpp")
+    list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT})
 endif()
 
 if (FILE_DESCRIPTOR_CLIENT)
-	list(APPEND client_connector_header "client/connectors/filedescriptorclient.h")
-	list(APPEND client_connector_source "client/connectors/filedescriptorclient.cpp")
-	list(APPEND client_connector_libs ${CMAKE_THREAD_LIBS_INIT})
+    list(APPEND client_connector_header "client/connectors/filedescriptorclient.h")
+    list(APPEND client_connector_source "client/connectors/filedescriptorclient.cpp")
+    list(APPEND client_connector_libs ${CMAKE_THREAD_LIBS_INIT})
 endif()
 
 # configure a header file to pass some of the CMake settings to the source code
-# TODO: move it to custom build step?
 file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/gen/jsonrpccpp/common")
 configure_file("${PROJECT_SOURCE_DIR}/src/jsonrpccpp/version.h.in" "${CMAKE_BINARY_DIR}/gen/jsonrpccpp/version.h")
 configure_file("${PROJECT_SOURCE_DIR}/src/jsonrpccpp/common/jsonparser.h.in" "${CMAKE_BINARY_DIR}/gen/jsonrpccpp/common/jsonparser.h")
@@ -133,10 +148,10 @@ endif()
 
 # setup shared client library
 if (BUILD_SHARED_LIBS)
-	add_library(jsonrpcclient SHARED ${jsonrpc_source_client} ${jsonrpc_header} ${jsonrpc_header_client} ${client_connector_source})
-	add_dependencies(jsonrpcclient jsonrpccommon)
-	target_link_libraries(jsonrpcclient jsonrpccommon ${client_connector_libs})
-	set_target_properties(jsonrpcclient PROPERTIES OUTPUT_NAME jsonrpccpp-client)
+    add_library(jsonrpcclient SHARED ${jsonrpc_source_client} ${jsonrpc_header} ${jsonrpc_header_client} ${client_connector_source})
+    add_dependencies(jsonrpcclient jsonrpccommon)
+    target_link_libraries(jsonrpcclient jsonrpccommon ${client_connector_libs})
+    set_target_properties(jsonrpcclient PROPERTIES OUTPUT_NAME jsonrpccpp-client)
 endif()
 
 # setup static client library
@@ -152,10 +167,10 @@ endif()
 
 # setup shared server library
 if (BUILD_SHARED_LIBS)
-	add_library(jsonrpcserver SHARED ${jsonrpc_source_server} ${jsonrpc_header} ${jsonrpc_header_server} ${server_connector_source})
-	add_dependencies(jsonrpcserver jsonrpccommon)
-	target_link_libraries(jsonrpcserver jsonrpccommon ${server_connector_libs})
-	set_target_properties(jsonrpcserver PROPERTIES OUTPUT_NAME jsonrpccpp-server)
+    add_library(jsonrpcserver SHARED ${jsonrpc_source_server} ${jsonrpc_header} ${jsonrpc_header_server} ${server_connector_source})
+    add_dependencies(jsonrpcserver jsonrpccommon)
+    target_link_libraries(jsonrpcserver jsonrpccommon ${server_connector_libs})
+    set_target_properties(jsonrpcserver PROPERTIES OUTPUT_NAME jsonrpccpp-server)
 endif()
 
 # setup static server library
@@ -172,7 +187,7 @@ endif()
 set(ALL_LIBS)
 
 if (BUILD_SHARED_LIBS OR NOT BUILD_STATIC_LIBS)
-	list(APPEND ALL_LIBS jsonrpccommon jsonrpcclient jsonrpcserver)
+    list(APPEND ALL_LIBS jsonrpccommon jsonrpcclient jsonrpcserver)
 endif()
 
 if (BUILD_STATIC_LIBS OR MSVC)
@@ -214,9 +229,9 @@ get_filename_component(FULL_PATH_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} ABSOLUTE
 set(FULL_PATH_INCLUDEDIR "${FULL_PATH_INSTALL_PREFIX}/include")
 set(FULL_PATH_LIBDIR "${FULL_PATH_INSTALL_PREFIX}/lib/${CMAKE_LIBRARY_PATH}")
 
-CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/cmake/libjsonrpccpp-client.pc.cmake ${CMAKE_BINARY_DIR}/libjsonrpccpp-client.pc)
-CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/cmake/libjsonrpccpp-server.pc.cmake ${CMAKE_BINARY_DIR}/libjsonrpccpp-server.pc)
-CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/cmake/libjsonrpccpp-common.pc.cmake ${CMAKE_BINARY_DIR}/libjsonrpccpp-common.pc)
+configure_file(${PROJECT_SOURCE_DIR}/cmake/libjsonrpccpp-client.pc.cmake ${CMAKE_BINARY_DIR}/libjsonrpccpp-client.pc)
+configure_file(${PROJECT_SOURCE_DIR}/cmake/libjsonrpccpp-server.pc.cmake ${CMAKE_BINARY_DIR}/libjsonrpccpp-server.pc)
+configure_file(${PROJECT_SOURCE_DIR}/cmake/libjsonrpccpp-common.pc.cmake ${CMAKE_BINARY_DIR}/libjsonrpccpp-common.pc)
 
 INSTALL(FILES
     "${CMAKE_BINARY_DIR}/libjsonrpccpp-server.pc"

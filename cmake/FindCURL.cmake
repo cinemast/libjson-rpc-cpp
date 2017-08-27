@@ -17,10 +17,10 @@ find_path(
 )
 
 find_library(
-	CURL_LIBRARY
-	# names from cmake's FindCURL
-	NAMES curl curllib libcurl_imp curllib_static libcurl
-	DOC "curl library"
+    CURL_LIBRARY
+    # names from cmake's FindCURL
+    NAMES curl curllib libcurl_imp curllib_static libcurl
+    DOC "curl library"
 )
 
 add_library(CURL::libcurl UNKNOWN IMPORTED)
@@ -52,6 +52,5 @@ endif()
 # handle the QUIETLY and REQUIRED arguments and set CURL_FOUND to TRUE
 # if all listed variables are TRUE, hide their existence from configuration view
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(CURL DEFAULT_MSG
-	CURL_INCLUDE_DIR CURL_LIBRARY)
+find_package_handle_standard_args(CURL DEFAULT_MSG CURL_INCLUDE_DIR CURL_LIBRARY)
 mark_as_advanced (CURL_INCLUDE_DIR CURL_LIBRARY)

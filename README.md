@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/cinemast/libjson-rpc-cpp.png?branch=master)](https://travis-ci.org/cinemast/libjson-rpc-cpp) [![codecov](https://codecov.io/gh/cinemast/libjson-rpc-cpp/branch/master/graph/badge.svg)](https://codecov.io/gh/cinemast/libjson-rpc-cpp) [![Coverity Status](https://scan.coverity.com/projects/3169/badge.svg?flat=1)](https://scan.coverity.com/projects/3169)
+Master [![Build Status](https://travis-ci.org/cinemast/libjson-rpc-cpp.png?branch=master)](https://travis-ci.org/cinemast/libjson-rpc-cpp) [![codecov](https://codecov.io/gh/cinemast/libjson-rpc-cpp/branch/master/graph/badge.svg)](https://codecov.io/gh/cinemast/libjson-rpc-cpp)
+Develop [![Build Status](https://travis-ci.org/cinemast/libjson-rpc-cpp.png?branch=develop)](https://travis-ci.org/cinemast/libjson-rpc-cpp) [![codecov](https://codecov.io/gh/cinemast/libjson-rpc-cpp/branch/develop/graph/badge.svg)](https://codecov.io/gh/cinemast/libjson-rpc-cpp) |
+[![Coverity Status](https://scan.coverity.com/projects/3169/badge.svg?flat=1)](https://scan.coverity.com/projects/3169)
 
 libjson-rpc-cpp
 ===============
@@ -9,16 +11,16 @@ It is fully JSON-RPC [2.0 & 1.0 compatible](http://www.jsonrpc.org/specification
 ![libjson-rpc-cpp logo](https://github.com/cinemast/libjson-rpc-cpp/blob/master/dev/artwork/logo.png?raw=true)
 
 **5 good reasons for using libjson-rpc-cpp in your next RPC project**
-- Full JSON-RPC 2.0 & 1.0 Client and Server Support.
-- jsonrpcstub - a tool that generates stub-classes for your JSON-RPC client AND server applications.
+- Full JSON-RPC 2.0 & partial JSON-RPC 1.0 client and server Support.
+- jsonrpcstub - a tool that generates stub-classes for your JSON-RPC client and server applications.
 - Ready to use HTTP + TCP server and client to provide simple interfaces for your JSON-RPC application.
-- Cross platform build support and [precompiled binaries for WIN32](http://spiessknafl.at/libjson-rpc-cpp).
-- Super liberal [MIT-License](http://en.wikipedia.org/wiki/MIT_License). 
+- Cross platform build support for Linux and OS X.
+- Super liberal [MIT-License](http://en.wikipedia.org/wiki/MIT_License).
 
 **Other good reasons to use libjson-rpc-cpp**
 - Easy to use [cmake](http://www.cmake.org) cross platform build system.
 - Clean and simple architecture, which makes it easy to extend.
-- Tested under MacOS X (10.9), GNU/Linux (Debian 8 64-bit), Windows 7 (MinGW32) and Raspbian Wheezy (armhf).
+- Continuously tested under MacOS, and [various linux distributions](https://travis-ci.org/cinemast/libjson-rpc-cpp).
 - Automated testing using `make test`.
 - Useful Examples provided. e.g. XBMC Remote using json-rpc client part and stub generator.
 - The stubgenerator currently supports C++ and JavaScript.
@@ -71,16 +73,12 @@ Install the dependencies
 - [libjsoncpp](https://github.com/open-source-parsers/jsoncpp)
 - [libargtable](http://argtable.sourceforge.net/)
 - [cmake](http://www.cmake.org/)
+- [libhiredis](https://redislabs.com/lp/hiredis/)
 
 **UNIX**
 
 For Debian and Arch GNU/Linux based systems, all dependencies are available via the package manager.
 For OS X all dependencies are available in [Brew](http://brew.sh)
-
-**Windows**
-
-- Download the precompiled dependencies form [here](https://spiessknafl.at/libjson-rpc-cpp/libjson-rpc-cpp_win32-deps.zip).
-- Extract it into the cloned repository, so that there is a `win32-deps` folder in the root project directory.
 
 Build
 -----
@@ -109,6 +107,8 @@ Default configuration should be fine for most systems, but here are available co
 - `-DCOMPILE_EXAMPLES=NO` disables examples.
 - `-DHTTP_SERVER=NO` disable the libmicrohttpd webserver.
 - `-DHTTP_CLIENT=NO` disable the curl client.
+- `-DREDIS_SERVER=NO` disable the redis server connector.
+- `-DREDIS_CLIENT=NO` disable the redis client connector.
 - `-DUNIX_DOMAIN_SOCKET_SERVER=NO` disable the unix domain socket server connector.
 - `-DUNIX_DOMAIN_SOCKET_CLIENT=NO` disable the unix domain socket client connector.
 - `-DFILE_DESCRIPTOR_SERVER=NO` disable the file descriptor server connector.
@@ -126,7 +126,7 @@ This example will show the most simple way to create a rpc server and client. If
 [
 	{
 		"name": "sayHello",
-		"params": { 
+		"params": {
 			"name": "Peter"
 		},
 		"returns" : "Hello Peter"
@@ -233,93 +233,32 @@ Compile the client with:
 g++ main.cpp -ljsoncpp -lcurl -ljsonrpccpp-common -ljsonrpccpp-client -o sampleclient
 ```
 
+## Contributions
+
+Please take a look at [CONTRIBUTING.md](CONTRIBUTING.md)
+
+## Changelogs
+
+Changelogs can be found [here](CHANGELOG.md).
+
+## API compatibility
+We do our best to keep the API/ABI stable, to prevent problems when updating this framework.
+A compatiblity report can be found [here](http://upstream.rosalinux.ru/versions/libjson-rpc-cpp.html).
+
+## License
+This framework is licensed under [MIT](http://en.wikipedia.org/wiki/MIT_License).
+All of this libraries dependencies are licensed under MIT compatible licenses.
+
+
 References
 ==========
 - [NASA Ames Research Center](http://www.nasa.gov/centers/ames/home/): use it to obtain aircraft state information from an aircraft simulator.
 - [LaseShark 3D Printer](https://github.com/macpod/lasershark_3dp): used to control the firmware of the 3D printer.
-- [cpp-ethereum](https://github.com/ethereum/cpp-ethereum): a distributed computing framework.
+- [cpp-ethereum](https://github.com/ethereum/cpp-ethereum): C++ implementations for the ethereum crypto currency.
 - [mage-sdk-cpp](https://github.com/mage/mage-sdk-cpp): a game engine.
 - [bitcodin](http://www.bitmovin.net): a scalable cloud based video transcoding platform.
-- [wgslib](http://wgslib.com/): A web geostatistics library.
+- [wgslib](http://wgslib.com/): a web geostatistics library.
 - [bitcoin-api-cpp](https://github.com/minium/bitcoin-api-cpp): a C++ interface to bitcoin.
 - [NIT DASH Content Server](http://www.nit.eu/offer/research-projects-products/334-http2dash): Dynamic Adaptive Streaming over HTTP server.
 
 If you use this library and find it useful, I would be very pleased if you let me know about it.
-
-Developer Information
-=====================
-Contributions
--------------
-Contributions of any kind are always very welcome. 
-Here are some suggestions:
-- Bugreports
-- Bugfixes
-- Extending documentation (especially doxygen)
-- Suggestion of new features
-- New features:
-  - Adding new connectors.
-  - Adding new languages to the stubgenerator.
-
-**Guidelines / Conventions**
-
-We do not want to prevent you from contributing by having too strict guidelines.
-If you have ideas for improvement, just do it your way, rather than doing it not at all.
-
-Anyway here is a list of how we would prefer your contributions:
-- Issues:
-  - Use the issue tracker on github to report bugs or improvements.
-  - Please avoid sending me mails directly, as this is not visible to others.
-  - Please close issues on your own if you think a problem has been dealt with.
-- Code contributions:
-  - Please raise a pull-request against the develop branch.
-  - If you add features, please keep the test-coverage at 100% and document them (doxygen, manpage, etc.).
-  - If you fix a bug, please refer the issue in the [commit message](https://help.github.com/articles/closing-issues-via-commit-messages/).
-  - Please make sure that the travis-ci build passes (you will get notified if you raise a pull-request).
-  - Add yourself to the AUTHORS.md.
-  - Use 4 spaces instead of tabs.
-
-Mailing list
-------------
-[libjsonrpccpp-devel@lists.sourceforge.net](https://lists.sourceforge.net/lists/listinfo/libjsonrpccpp-devel)
-
-Roadmap for next release
-------------------------
-- Generate client stubs for other languages.
-- Extend doxygen documentation.
-
-Changelogs
-----------
-Changelogs can be found [here](https://github.com/cinemast/libjson-rpc-cpp/blob/master/CHANGELOG.md).
-
-API compatibility
------------------
-We do our best to keep the API/ABI stable, to prevent problems when updating this framework.
-A compatiblity report can be found [here](http://upstream.rosalinux.ru/versions/libjson-rpc-cpp.html).
-
-License
--------
-This framework is licensed under [MIT](http://en.wikipedia.org/wiki/MIT_License). 
-All of this libraries dependencies are licensed under MIT compatible licenses.
-
-Documentation
--------------
-
-The documentation for this library can be generated using doxygen.
-If it is installed on your system, you can simply type:
-
-```sh
-cd build
-make doc
-```
-
-This generates the Latex and HTML documentation into `build/doc`
-
-Run the tests
--------------
-Simply run: 
-
-```sh
-make test
-```
-
-Testcoverage can be retrieved by invoking the [dev/testcoverage.sh script](https://github.com/cinemast/libjson-rpc-cpp/blob/master/dev/testcoverage.sh) inside the `dev` folder.

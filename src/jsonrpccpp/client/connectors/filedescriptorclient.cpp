@@ -8,72 +8,57 @@
  ************************************************************************/
 
 #include "filedescriptorclient.h"
-#include <string.h>
-#include <errno.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <string>
-#include <cstdlib>
-#include <cstdio>
+#include "../../common/sharedconstants.h"
+#include "../../common/streamreader.h"
+#include "../../common/streamwriter.h"
 #include <algorithm>
+#include <cstdio>
+#include <cstdlib>
+#include <errno.h>
+#include <fcntl.h>
+#include <string.h>
+#include <string>
+#include <unistd.h>
 
-#define BUFFER_SIZE 64
-#define MAX_WRITE_SIZE (long unsigned int) 1024
-#ifndef DELIMITER_CHAR
-#define DELIMITER_CHAR char(0x0A)
-#endif //DELIMITER_CHAR
 #define MEX_ERR_MSG 255
 
 using namespace jsonrpc;
 using namespace std;
 
-FileDescriptorClient::FileDescriptorClient(int inputfd, int outputfd) :
-  inputfd(inputfd), outputfd(outputfd)
-{
-}
+FileDescriptorClient::FileDescriptorClient(int inputfd, int outputfd)
+    : inputfd(inputfd), outputfd(outputfd) {}
 
-FileDescriptorClient::~FileDescriptorClient()
-{
-}
+FileDescriptorClient::~FileDescriptorClient() {}
 
-void FileDescriptorClient::SendRPCMessage(const std::string& message,
-  std::string& result) throw (JsonRpcException)
-{
-  bool fullyWritten = false;
-  string toSend = message;
-  do
-  {
-    ssize_t byteWritten = write(outputfd, toSend.c_str(), min(toSend.size(), MAX_WRITE_SIZE));
-    if (byteWritten < 1)
-      throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR,
+void FileDescriptorClient::SendRPCMessage(const std::string &message,
+                                          std::string &result) {
+
+  string toSend = message + DEFAULT_DELIMITER_CHAR;
+  StreamWriter writer;
+
+  if (!writer.Write(toSend, outputfd)) {
+    throw JsonRpcException(
+        Errors::ERROR_CLIENT_CONNECTOR,
         "Unknown error occured while writing to the output file descriptor");
-
-    unsigned long len = toSend.size() - byteWritten;
-    toSend = toSend.substr(byteWritten, len);
-    if (toSend.size() == 0)
-      fullyWritten = true;
-  } while(!fullyWritten);
+  }
 
   if (!IsReadable(inputfd))
     throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR,
-      "The input file descriptor is not readable");
+                           "The input file descriptor is not readable");
 
-  ssize_t nbytes = 0;
-  char buffer[BUFFER_SIZE];
-  do
-  {
-    nbytes = read(inputfd, buffer, BUFFER_SIZE);
-    result.append(buffer, nbytes);
-  } while(result.find(DELIMITER_CHAR) == string::npos);
+  StreamReader reader(DEFAULT_BUFFER_SIZE);
+  if (!reader.Read(result, inputfd, DEFAULT_DELIMITER_CHAR)) {
+    throw JsonRpcException(
+        Errors::ERROR_CLIENT_CONNECTOR,
+        "Unknown error occured while reading from input file descriptor");
+  }
 }
 
-bool FileDescriptorClient::IsReadable(int fd)
-{
+bool FileDescriptorClient::IsReadable(int fd) {
   int o_accmode = 0;
   int ret = fcntl(fd, F_GETFL, &o_accmode);
   if (ret == -1)
     return false;
   return ((o_accmode & O_ACCMODE) == O_RDONLY ||
-    (o_accmode & O_ACCMODE) == O_RDWR);
+          (o_accmode & O_ACCMODE) == O_RDWR);
 }
-

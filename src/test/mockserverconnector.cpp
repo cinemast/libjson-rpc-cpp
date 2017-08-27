@@ -12,55 +12,35 @@
 using namespace jsonrpc;
 using namespace std;
 
+MockServerConnector::MockServerConnector() {}
 
-MockServerConnector::MockServerConnector()
-{
+bool MockServerConnector::StartListening() { return true; }
+
+bool MockServerConnector::StopListening() { return true; }
+
+bool MockServerConnector::SetRequest(const string &request) {
+  this->request = request;
+  this->response = "";
+  this->ProcessRequest(request, this->response);
+  return true;
 }
 
-bool MockServerConnector::StartListening()
-{
-    return true;
+Json::Value MockServerConnector::GetJsonRequest() {
+  Json::Reader reader;
+  Json::Value result;
+  if (reader.parse(request, result))
+    return result;
+  else
+    return Json::nullValue;
 }
 
-bool MockServerConnector::StopListening()
-{
-    return true;
-}
+string MockServerConnector::GetResponse() { return this->response; }
 
-bool MockServerConnector::SendResponse(const string &response, void *addInfo)
-{
-    (void)addInfo;
-    this->response = response;
-    return true;
-}
-
-bool MockServerConnector::SetRequest(const string &request)
-{
-    this->request = request;
-    return this->OnRequest(this->request, NULL);
-}
-
-Json::Value MockServerConnector::GetJsonRequest()
-{
-    Json::Reader reader;
-    Json::Value result;
-    if (reader.parse(request, result))
-        return result;
-    else
-        return Json::nullValue;
-}
-
-string MockServerConnector::GetResponse()
-{
-    return this->response;
-}
-
-Json::Value MockServerConnector::GetJsonResponse()
-{
-    Json::Reader reader;
-    Json::Value result;
-    if (reader.parse(response, result))
-        return result;
-    else
-        return Json::nullValue;
+Json::Value MockServerConnector::GetJsonResponse() {
+  Json::Reader reader;
+  Json::Value result;
+  if (reader.parse(response, result))
+    return result;
+  else
+    return Json::nullValue;
 }

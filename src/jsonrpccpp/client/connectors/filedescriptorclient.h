@@ -20,7 +20,7 @@ namespace jsonrpc
     public:
       FileDescriptorClient(int inputfd, int outputfd);
       virtual ~FileDescriptorClient();
-      virtual void SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException);
+      virtual void SendRPCMessage(const std::string& message, std::string& result) ;
 
     private:
       int inputfd;

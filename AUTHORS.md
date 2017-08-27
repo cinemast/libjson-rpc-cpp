@@ -33,8 +33,14 @@ Alexandre Poirot <alexandre.poirot@gmail.com>
 + adapted build file to generate pkg-config file for this lib
 + added client and server connectors that use Tcp Sockets on Linux and Windows (uses native socket and thread API on each OS)
 
+Trevor Vannoy <trevor.vannoy@flukecal.com>
++ python client stub generator
+
 Jean-Daniel Michaud <jean.daniel,michaud@gmail.com>
 + added server/client file descriptor support
+
+Jacques Software <software@jacques.com.au>
++ added support for redis connector
 
 Bugfixes (chronological order)
 ==============================
@@ -66,3 +72,6 @@ Erik Lundin
 
 Michał Górny <mgorny@gentoo.org>
 + bugfixes in the build system
+
+Trevor Vannoy <trevor.vannoy@flukecal.com>
++ fixed tcp socket client compile issues

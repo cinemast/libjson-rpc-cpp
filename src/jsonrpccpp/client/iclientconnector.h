@@ -20,7 +20,7 @@ namespace jsonrpc
         public:
             virtual ~IClientConnector(){}
 
-            virtual void SendRPCMessage(const std::string& message, std::string& result) throw(JsonRpcException) = 0;
+            virtual void SendRPCMessage(const std::string& message, std::string& result)  = 0;
     };
 } /* namespace jsonrpc */
 #endif /* JSONRPC_CPP_CLIENTCONNECTOR_H_ */

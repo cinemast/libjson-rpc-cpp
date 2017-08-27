@@ -15,16 +15,16 @@
 
 namespace jsonrpc
 {
-	class UnixDomainSocketClient : public IClientConnector
-	{
-		public:
-			UnixDomainSocketClient(const std::string& path);
-			virtual ~UnixDomainSocketClient();
-			virtual void SendRPCMessage(const std::string& message, std::string& result) throw (JsonRpcException);
+    class UnixDomainSocketClient : public IClientConnector
+    {
+        public:
+            UnixDomainSocketClient(const std::string& path);
+            virtual ~UnixDomainSocketClient();
+            virtual void SendRPCMessage(const std::string& message, std::string& result) ;
 
-		private:
-			std::string path;
-	};
+        private:
+            std::string path;
+    };
 
 } /* namespace jsonrpc */
 #endif /* JSONRPC_CPP_UNIXDOMAINSOCKETCLIENT_H_ */

@@ -10,72 +10,49 @@
 #ifndef JSONRPC_CPP_FILEDESCRIPTORSERVERCONNECTOR_H_
 #define JSONRPC_CPP_FILEDESCRIPTORSERVERCONNECTOR_H_
 
-#include <string>
+#include "../../common/streamreader.h"
+#include "../../common/streamwriter.h"
+#include "../abstractthreadedserver.h"
 #include <pthread.h>
+#include <string>
 #include <sys/select.h>
+#include <sys/time.h>
 
-#include "../abstractserverconnector.h"
-
-namespace jsonrpc
-{
+namespace jsonrpc {
+/**
+ * This class is the file descriptor implementation of an
+ * AbstractServerConnector.
+ * It uses the POSIX file API and POSIX thread API to performs its job.
+ * Each client request is handled in a new thread.
+ */
+class FileDescriptorServer : public AbstractThreadedServer {
+public:
   /**
-   * This class is the file descriptor implementation of an AbstractServerConnector.
-   * It uses the POSIX file API and POSIX thread API to performs its job.
-   * Each client request is handled in a new thread.
+   * AbstractServerConnector
+   * @param inputfd The file descriptor already open for us to read
+   * @param outputfd The file descriptor already open for us to write
    */
-  class FileDescriptorServer: public AbstractServerConnector
-  {
-    public:
-      /**
-       * AbstractServerConnector
-       * @param inputfd The file descriptor already open for us to read
-       * @param outputfd The file descriptor already open for us to write
-       */
-      FileDescriptorServer(int inputfd, int outputfd);
-      /**
-       * This method launches the listening loop that will handle client connections.
-       * @return true if the file is readable, false otherwise.
-       */
-      bool StartListening();
-      /**
-       * This method stops the listening loop that will handle client connections.
-       * @return True if successful, false otherwise of if not listening.
-       */
-      bool StopListening();
-      /**
-       * This method sends the result of the RPC Call over the output file
-       * @param response The response to send to the client
-       * @param addInfo Additionnal parameters
-       * @return A boolean that indicates the success or the failure of the operation.
-       */
-      bool SendResponse(const std::string& response, void* addInfo = NULL);
+  FileDescriptorServer(int inputfd, int outputfd);
 
-      /**
-       * This method blocks the caller as long as the server is listening to its input.
-       */
-      void Wait() const;
+  virtual bool InitializeListener();
+  virtual int CheckForConnection();
+  virtual void HandleConnection(int connection);
 
-  private:
-      bool running;
-      int inputfd;
-      int outputfd;
+private:
+  int inputfd;
+  int outputfd;
+  StreamReader reader;
+  StreamWriter writer;
 
-      // For select operation
-      fd_set read_fds;
-      fd_set write_fds;
-      fd_set except_fds;
-      struct timeval timeout;
+  bool IsReadable(int fd);
+  bool IsWritable(int fd);
 
-      pthread_t listenning_thread;
-
-      static void* LaunchLoop(void *p_data);
-      void ListenLoop();
-      bool IsReadable(int fd);
-      bool IsWritable(int fd);
-
-      int WaitForRead();
-  };
+  // For select operation
+  fd_set read_fds;
+  fd_set write_fds;
+  fd_set except_fds;
+  struct timeval timeout;
+};
 }
 
 #endif /* JSONRPC_CPP_FILEDESCRIPTORSERVERCONNECTOR_H_ */
-

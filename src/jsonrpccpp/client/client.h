@@ -30,13 +30,13 @@ namespace jsonrpc
             Client(IClientConnector &connector, clientVersion_t version = JSONRPC_CLIENT_V2);
             virtual ~Client();
 
-            void        CallMethod          (const std::string &name, const Json::Value &parameter, Json::Value& result) throw (JsonRpcException);
-            Json::Value CallMethod          (const std::string &name, const Json::Value &parameter) throw (JsonRpcException);
+            void        CallMethod          (const std::string &name, const Json::Value &parameter, Json::Value& result) ;
+            Json::Value CallMethod          (const std::string &name, const Json::Value &parameter) ;
 
-            void           CallProcedures      (const BatchCall &calls, BatchResponse &response) throw (JsonRpcException);
-            BatchResponse  CallProcedures      (const BatchCall &calls) throw (JsonRpcException);
+            void           CallProcedures      (const BatchCall &calls, BatchResponse &response) ;
+            BatchResponse  CallProcedures      (const BatchCall &calls) ;
 
-            void        CallNotification    (const std::string& name, const Json::Value& parameter) throw (JsonRpcException);
+            void        CallNotification    (const std::string& name, const Json::Value& parameter) ;
 
         private:
            IClientConnector  &connector;
