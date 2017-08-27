@@ -1,6 +1,7 @@
 # This file is only used for development for convinience functions as
 # quick builds and tests
 
+GIT_VERSION := $(shell git describe --abbrev=4 --dirty --always --tags)
 .PHONY: build
 
 build:
@@ -19,6 +20,12 @@ format:
 
 check-format: format
 	git diff --exit-code
+
+tarball:
+	git archive --format=tar.gz --prefix=libjson-rpc-cpp-$(GIT_VERSION)/ -o libjson-rpc-cpp-$(GIT_VERSION).tar.gz HEAD
+
+signed-taball: tarball
+	gpg --armor --detach-sign libjson-rpc-cpp-$(GIT_VERSION).tar.gz
 
 test: build
 	cd build &&	./bin/unit_testsuite
