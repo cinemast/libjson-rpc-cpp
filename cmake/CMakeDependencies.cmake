@@ -53,7 +53,7 @@ if (${HTTP_SERVER})
 endif()
 
 # find hiredis
-if (${REDIS_SERVER})
+if (${REDIS_SERVER} OR ${REDIS_CLIENT})
 
     find_package(Hiredis REQUIRED)
     message(STATUS "Hiredis header: ${HIREDIS_INCLUDE_DIRS}")
