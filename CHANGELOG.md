@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## UNRELEASED
+### Fixed
+- Fix missing hiredis libs when using only REDIS_CLIENT
+- Fix running tests in parallel (#204)
+
+
 ## [v1.0.0] - 2017-08-27
 ### Fixed
 - Typo in ERROR_CLIENT_CONNECTOR exception

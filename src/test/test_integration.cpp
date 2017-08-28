@@ -21,8 +21,8 @@
 using namespace jsonrpc;
 using namespace std;
 
-#define TEST_PORT 8383
-#define CLIENT_URL "http://localhost:8383"
+#define TEST_PORT 8484
+#define CLIENT_URL "http://localhost:8484"
 
 #define TEST_MODULE "[integration]"
 
@@ -84,16 +84,16 @@ TEST_CASE("test_integration_http", TEST_MODULE) {
 
 #include <jsonrpccpp/client/connectors/unixdomainsocketclient.h>
 #include <jsonrpccpp/server/connectors/unixdomainsocketserver.h>
-/*
+
 TEST_CASE("test_integration_unixdomain", TEST_MODULE)
 {
-    string filename = "/tmp/jsonrpcunixdomain";
-    UnixDomainSocketServer sconn(filename);
-    UnixDomainSocketClient cconn(filename);
+    string filename = "/tmp/jsonrpcunixdomain-integration";
+    UnixDomainSocketServer *sconn = new UnixDomainSocketServer(filename);
+    UnixDomainSocketClient *cconn = new UnixDomainSocketClient(filename);
 
-    StubServer server(sconn);
-    server.StartListening();
-    StubClient client(cconn);
+    StubServer* server = new StubServer(*sconn);
+    server->StartListening();
+    StubClient client(*cconn);
 
     CHECK(client.addNumbers(3,4) == 7);
     CHECK(client.addNumbers2(3.2,4.2) == 7.4);
@@ -106,9 +106,11 @@ TEST_CASE("test_integration_unixdomain", TEST_MODULE)
     CHECK(result["name"].asString() == "Test");
     CHECK(result["age"].asInt() == 33);
 
-    server.StopListening();
-    remove(filename.c_str());
-}*/
+    server->StopListening();
+    delete sconn;
+    delete cconn;
+    delete server;
+}
 #endif
 #ifdef FILEDESCRIPTOR_TESTING
 
