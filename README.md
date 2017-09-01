@@ -38,6 +38,12 @@ Install the framework
 sudo apt-get install libjsonrpccpp-dev libjsonrpccpp-tools
 ```
 
+**Fedora**
+
+```sh
+sudo dnf install libjson-rpc-cpp-devel libjson-rpc-cpp-tools
+```
+
 **Arch Linux**
 
 For Arch Linux there is a [PKGBUILD provided in the AUR](https://aur.archlinux.org/packages/libjson-rpc-cpp/).
