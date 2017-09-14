@@ -59,7 +59,7 @@ public:
    *
    * This method stops the listening loop that will handle client connections.
    * The return value depends on the current listening states :
-   *  - listening and successfuly stops the listen loop returns true
+   *  - listening and successfully stops the listen loop returns true
    *  - is called while not listening returns false
    *
    * @return A boolean that indicates the success or the failure of the

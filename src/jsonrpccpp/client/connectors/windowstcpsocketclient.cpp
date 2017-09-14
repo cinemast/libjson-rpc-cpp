@@ -247,7 +247,7 @@ struct ClientSocketInitializer {
     WSADATA init;
     if (WSAStartup(MAKEWORD(2, 2), &init) != 0) {
       throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR,
-                             "An issue occured while WSAStartup executed.");
+                             "An issue occurred while WSAStartup executed.");
     }
   }
 
@@ -255,7 +255,7 @@ struct ClientSocketInitializer {
 
   {
     if (WSACleanup() != 0) {
-      cerr << "An issue occured while WSAClean executed." << endl;
+      cerr << "An issue occurred while WSAClean executed." << endl;
     }
   }
 };

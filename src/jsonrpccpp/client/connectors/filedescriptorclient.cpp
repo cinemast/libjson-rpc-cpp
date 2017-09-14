@@ -39,7 +39,7 @@ void FileDescriptorClient::SendRPCMessage(const std::string &message,
   if (!writer.Write(toSend, outputfd)) {
     throw JsonRpcException(
         Errors::ERROR_CLIENT_CONNECTOR,
-        "Unknown error occured while writing to the output file descriptor");
+        "Unknown error occurred while writing to the output file descriptor");
   }
 
   if (!IsReadable(inputfd))
@@ -50,7 +50,7 @@ void FileDescriptorClient::SendRPCMessage(const std::string &message,
   if (!reader.Read(result, inputfd, DEFAULT_DELIMITER_CHAR)) {
     throw JsonRpcException(
         Errors::ERROR_CLIENT_CONNECTOR,
-        "Unknown error occured while reading from input file descriptor");
+        "Unknown error occurred while reading from input file descriptor");
   }
 }
 
