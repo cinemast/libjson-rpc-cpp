@@ -85,31 +85,30 @@ TEST_CASE("test_integration_http", TEST_MODULE) {
 #include <jsonrpccpp/client/connectors/unixdomainsocketclient.h>
 #include <jsonrpccpp/server/connectors/unixdomainsocketserver.h>
 
-TEST_CASE("test_integration_unixdomain", TEST_MODULE)
-{
-    string filename = "/tmp/jsonrpcunixdomain-integration";
-    UnixDomainSocketServer *sconn = new UnixDomainSocketServer(filename);
-    UnixDomainSocketClient *cconn = new UnixDomainSocketClient(filename);
+TEST_CASE("test_integration_unixdomain", TEST_MODULE) {
+  string filename = "/tmp/jsonrpcunixdomain-integration";
+  UnixDomainSocketServer *sconn = new UnixDomainSocketServer(filename);
+  UnixDomainSocketClient *cconn = new UnixDomainSocketClient(filename);
 
-    StubServer* server = new StubServer(*sconn);
-    server->StartListening();
-    StubClient client(*cconn);
+  StubServer *server = new StubServer(*sconn);
+  server->StartListening();
+  StubClient client(*cconn);
 
-    CHECK(client.addNumbers(3,4) == 7);
-    CHECK(client.addNumbers2(3.2,4.2) == 7.4);
-    CHECK(client.sayHello("Test") == "Hello Test");
-    CHECK(client.methodWithoutParameters() == "foo");
-    CHECK(client.isEqual("str1", "str1") == true);
-    CHECK(client.isEqual("str1", "str2") == false);
+  CHECK(client.addNumbers(3, 4) == 7);
+  CHECK(client.addNumbers2(3.2, 4.2) == 7.4);
+  CHECK(client.sayHello("Test") == "Hello Test");
+  CHECK(client.methodWithoutParameters() == "foo");
+  CHECK(client.isEqual("str1", "str1") == true);
+  CHECK(client.isEqual("str1", "str2") == false);
 
-    Json::Value result = client.buildObject("Test", 33);
-    CHECK(result["name"].asString() == "Test");
-    CHECK(result["age"].asInt() == 33);
+  Json::Value result = client.buildObject("Test", 33);
+  CHECK(result["name"].asString() == "Test");
+  CHECK(result["age"].asInt() == 33);
 
-    server->StopListening();
-    delete sconn;
-    delete cconn;
-    delete server;
+  server->StopListening();
+  delete sconn;
+  delete cconn;
+  delete server;
 }
 #endif
 #ifdef FILEDESCRIPTOR_TESTING
