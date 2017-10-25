@@ -29,11 +29,11 @@ namespace jsonrpc
             typedef void(S::*methodPointer_t)       (const Json::Value &parameter, Json::Value &result);
             typedef void(S::*notificationPointer_t) (const Json::Value &parameter);
 
-            AbstractServer(AbstractServerConnector &connector, serverVersion_t type = JSONRPC_SERVER_V2) :
-                connection(connector)
+            AbstractServer(AbstractServerConnector &connector, serverVersion_t type = JSONRPC_SERVER_V2)
             {
                 this->handler = RequestHandlerFactory::createProtocolHandler(type, *this);
                 connector.SetHandler(this->handler);
+                connections.emplace_back(&connector);
             }
 
             virtual ~AbstractServer()
@@ -43,12 +43,32 @@ namespace jsonrpc
 
             bool StartListening()
             {
-                return connection.StartListening();
+              bool result = true;
+              for (auto const& connector : connections) {
+                if (connector->StartListening() != true)
+                  result = false;
+              }
+              return result;
             }
 
             bool StopListening()
             {
-                return connection.StopListening();
+              bool result = true;
+              for (auto const& connector : connections) {
+                if (connector->StopListening() != true)
+                  result = false;
+              }
+              return result;
+            }
+
+            /**
+             * This method allows addition of multiple AbstractServerConnector implementations
+             * to abstract server stub
+             */
+            void addConnector(AbstractServerConnector &connector)
+            {
+              connector.SetHandler(this->handler);
+              connections.emplace_back(&connector);
             }
 
             virtual void HandleMethodCall(Procedure &proc, const Json::Value& input, Json::Value& output)
@@ -87,7 +107,7 @@ namespace jsonrpc
             }
 
         private:
-            AbstractServerConnector                         &connection;
+            std::vector<AbstractServerConnector *>          connections;
             IProtocolHandler                                *handler;
             std::map<std::string, methodPointer_t>          methods;
             std::map<std::string, notificationPointer_t>    notifications;
