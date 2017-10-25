@@ -8,7 +8,6 @@
 #include <iostream>
 #include <jsonrpccpp/server.h>
 #include <jsonrpccpp/server/connectors/httpserver.h>
-#include <jsonrpccpp/server/connectors/unixdomainsocketserver.h>
 #include <stdio.h>
 #include <string>
 

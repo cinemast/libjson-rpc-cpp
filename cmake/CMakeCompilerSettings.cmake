@@ -14,5 +14,6 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
     endif()
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-    # no msvc flags for now
+        # Suppress warning C4290: C++ exception specification ignored except to indicate a function is not __declspec(nothrow)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -wd4290")
 endif()

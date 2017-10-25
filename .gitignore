@@ -27,3 +27,31 @@ src/examples/gen/*
 
 *.tar.gz
 *.asc
+
+# CMake
+CMakeFiles
+CMakeCache.txt
+*.cmake
+*.pc
+
+# Visual Studio files
+/.vscode
+*.sln
+*.vcxproj
+*.suo
+*.sdf
+*.opensdf
+*.obj
+*.log
+*.tlog
+*.filters
+Win32
+
+# misc
+bin
+lib
+gen
+win32-deps
+catch/
+**/*.dir/*
+*spec*.json

@@ -16,7 +16,7 @@ if (BUILD_SHARED_LIBS)
 endif()
 
 # setup static common library
-if (BUILD_STATIC_LIBS)
+if (BUILD_STATIC_LIBS OR MSVC)
         add_library(libjsonrpcstubStatic STATIC ${jsonrpcstub_source} ${jsonrpcstub_header} ${jsonrpc_helper_source_common})
         target_link_libraries(libjsonrpcstubStatic common ${ARGTABLE_LIBRARIES})
         set_target_properties(libjsonrpcstubStatic PROPERTIES OUTPUT_NAME jsonrpccpp-stub)
@@ -32,8 +32,11 @@ set(VERSION_STRING ${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION})
 set_target_properties(${ALL_LIBS} PROPERTIES VERSION "${VERSION_STRING}" SOVERSION "${SO_VERSION}")
 
 add_executable(jsonrpcstub main.cpp)
-target_link_libraries(jsonrpcstub jsonrpccommon libjsonrpcstub )
-
+if (BUILD_STATIC_LIBS AND NOT BUILD_SHARED_LIBS)
+        target_link_libraries(jsonrpcstub jsonrpccommonStatic libjsonrpcstubStatic )
+else()
+        target_link_libraries(jsonrpcstub jsonrpccommon libjsonrpcstub )
+endif()
 #Generate manpage
 if (NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
     configure_file("${CMAKE_SOURCE_DIR}/doc/manpage.in" "${CMAKE_BINARY_DIR}/manpage" @ONLY)
