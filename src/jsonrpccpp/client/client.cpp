@@ -12,9 +12,9 @@
 
 using namespace jsonrpc;
 
-Client::Client(IClientConnector &connector, clientVersion_t version)
+Client::Client(IClientConnector &connector, clientVersion_t version, bool omitEndingLineFeed)
     : connector(connector) {
-  this->protocol = new RpcProtocolClient(version);
+  this->protocol = new RpcProtocolClient(version, omitEndingLineFeed);
 }
 
 Client::~Client() { delete this->protocol; }
