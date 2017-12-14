@@ -74,6 +74,7 @@ Install the dependencies
 - [libargtable](http://argtable.sourceforge.net/)
 - [cmake](http://www.cmake.org/)
 - [libhiredis](https://redislabs.com/lp/hiredis/)
+- [catch](https://github.com/catchorg/Catch2)
 
 **UNIX**
 
