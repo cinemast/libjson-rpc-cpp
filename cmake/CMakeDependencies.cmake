@@ -70,6 +70,7 @@ if (${COMPILE_TESTS})
     	# Includes Catch in the project:
         add_subdirectory(${CMAKE_SOURCE_DIR}/src/catch)
         include_directories(${CATCH_INCLUDE_DIR} ${COMMON_INCLUDES})
+        message("Catch directory: ${CATCH_INCLUDE_DIR} ${COMMON_INCLUDES}")
     else()
         include_directories(${CATCH_INCLUDE_DIRS})
     endif()
