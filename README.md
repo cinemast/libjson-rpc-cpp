@@ -23,7 +23,7 @@ It is fully JSON-RPC [2.0 & 1.0 compatible](http://www.jsonrpc.org/specification
 - Continuously tested under MacOS, and [various linux distributions](https://travis-ci.org/cinemast/libjson-rpc-cpp).
 - Automated testing using `make test`.
 - Useful Examples provided. e.g. XBMC Remote using json-rpc client part and stub generator.
-- The stubgenerator currently supports C++ and JavaScript.
+- The stubgenerator currently supports C++, JavaScript, and Python.
 
 Overview
 =========
