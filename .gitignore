@@ -31,8 +31,7 @@ src/examples/gen/*
 # CMake
 CMakeFiles
 CMakeCache.txt
-*.cmake
-*.pc
+
 
 # Visual Studio files
 /.vscode
@@ -52,6 +51,4 @@ bin
 lib
 gen
 win32-deps
-catch/
 **/*.dir/*
-*spec*.json
