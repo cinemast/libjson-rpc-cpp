@@ -25,17 +25,15 @@ make -j$(nproc)
 echo "Running test suite"
 ./bin/unit_testsuite
 
-if [ "$OS" == "native" ]
+if [ "$OS" == "linux" ]
 then
-	sudo make install
-	if [ "$TRAVIS_OS_NAME" != "osx" ]
-	then
-		sudo ldconfig
-	fi
-else
-	make install
+ 	make install
 	ldconfig
+elif [ "$OS" == "osx" ]
+	sudo make install
+	sudo ldconfig
 fi
+
 cd ../src/examples
 g++ -std=c++11 simpleclient.cpp $CLIENT_LIBS -o simpleclient
 g++ -std=c++11 simpleserver.cpp $SERVER_LIBS -o simpleserver
