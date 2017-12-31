@@ -1,6 +1,6 @@
 FROM debian:buster
 MAINTAINER Peter Spiess-Knafl <dev@spiessknafl.at>
-
+ENV OS=debian10
 RUN apt-get update && apt-get install -y \
     wget \
     build-essential \

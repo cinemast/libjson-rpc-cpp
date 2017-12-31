@@ -1,6 +1,6 @@
 FROM base/archlinux:latest
 MAINTAINER Peter Spiess-Knafl <dev@spiessknafl.at>
-
+ENV OS=arch
 RUN pacman -Sy --noconfirm \
     sudo \
     sed \

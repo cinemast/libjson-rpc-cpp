@@ -1,6 +1,6 @@
 FROM fedora:latest
 MAINTAINER Peter Spiess-Knafl <dev@spiessknafl.at>
-
+ENV OS=fedora
 RUN dnf -y install \
     gcc-c++ \
     jsoncpp-devel \

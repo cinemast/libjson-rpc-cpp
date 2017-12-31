@@ -1,14 +1,7 @@
 #!/bin/bash
-set -v
-set -e
+set -evu
 
-if [ "$TRAVIS_OS_NAME" == "osx" ]
-then
-	PREFIX=/usr/local
-else
-	PREFIX=/usr
-fi
-
+PREFIX=/usr/local
 CLIENT_LIBS="-ljsoncpp -lcurl -ljsonrpccpp-common -ljsonrpccpp-client -lhiredis"
 SERVER_LIBS="-ljsoncpp -lmicrohttpd -ljsonrpccpp-common -ljsonrpccpp-server -lhiredis"
 mkdir -p build && cd build
@@ -25,13 +18,12 @@ make -j$(nproc)
 echo "Running test suite"
 ./bin/unit_testsuite
 
-if [ "$OS" == "linux" ]
+if [ "$OS" != "osx" ]
 then
  	make install
 	ldconfig
-elif [ "$OS" == "osx" ]
+else
 	sudo make install
-	sudo ldconfig
 fi
 
 cd ../src/examples
@@ -50,9 +42,10 @@ test -f stubserver
 test -f stubclient
 
 cd ../../build
-if [ "$OS" == "native" ]
+
+if [ "$OS" != "osx" ]
 then
-	sudo make uninstall
-else
 	make uninstall
+else
+	sudo make uninstall
 fi

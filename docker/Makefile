@@ -23,4 +23,5 @@ fedora: Fedora.Dockerfile
 	docker build --rm -f $< ..
 
 osx:
+	export OS=osx
 	cd .. && ./docker/build_test_install.sh
