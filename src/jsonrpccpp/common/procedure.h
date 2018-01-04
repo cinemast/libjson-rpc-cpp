@@ -53,7 +53,7 @@ namespace jsonrpc
              *
              * If the valid parameters are of Type JSON_ARRAY or JSON_OBJECT, they can only be checked for name and not for their structure.
              */
-            bool ValidateParameters(const Json::Value &parameters) const;
+            bool ValdiateParameters(const Json::Value &parameters) const;
 
 
             //Various get methods.

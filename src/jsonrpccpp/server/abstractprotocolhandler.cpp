@@ -76,7 +76,7 @@ int AbstractProtocolHandler::ValidateRequest(const Json::Value &request) {
       } else if (this->GetRequestType(request) == RPC_NOTIFICATION &&
                  proc.GetProcedureType() == RPC_METHOD) {
         error = Errors::ERROR_SERVER_PROCEDURE_IS_METHOD;
-      } else if (!proc.ValidateParameters(request[KEY_REQUEST_PARAMETERS])) {
+      } else if (!proc.ValdiateParameters(request[KEY_REQUEST_PARAMETERS])) {
         error = Errors::ERROR_RPC_INVALID_PARAMS;
       }
     } else {
