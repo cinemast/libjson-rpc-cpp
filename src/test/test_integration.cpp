@@ -26,6 +26,8 @@ using namespace std;
 
 #define TEST_MODULE "[integration]"
 
+#include<algorithm>
+
 char
 rand_alnum()
 {
