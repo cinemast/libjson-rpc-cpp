@@ -4,11 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## UNRELEASED
+## [v1.1.0] - 2018-01-04
 ### Fixed
 - Fix missing hiredis libs when using only REDIS_CLIENT
 - Fix running tests in parallel (#204)
-
+- Fix fetching new version of catch, if it is not installed locally
+- Disable UnixDomainSocket Connectors by default, they introduce flaky tests
+- Merged MSVC related PR.
 
 ## [v1.0.0] - 2017-08-27
 ### Fixed

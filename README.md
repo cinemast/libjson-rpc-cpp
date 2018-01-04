@@ -115,8 +115,8 @@ Default configuration should be fine for most systems, but here are available co
 - `-DHTTP_CLIENT=NO` disable the curl client.
 - `-DREDIS_SERVER=NO` disable the redis server connector.
 - `-DREDIS_CLIENT=NO` disable the redis client connector.
-- `-DUNIX_DOMAIN_SOCKET_SERVER=NO` disable the unix domain socket server connector.
-- `-DUNIX_DOMAIN_SOCKET_CLIENT=NO` disable the unix domain socket client connector.
+- `-DUNIX_DOMAIN_SOCKET_SERVER=YES` enable the unix domain socket server connector.
+- `-DUNIX_DOMAIN_SOCKET_CLIENT=YES` enable the unix domain socket client connector.
 - `-DFILE_DESCRIPTOR_SERVER=NO` disable the file descriptor server connector.
 - `-DFILE_DESCRIPTOR_CLIENT=NO` disable the file descriptor client connector.
 - `-DTCP_SOCKET_SERVER=NO` disable the tcp socket server connector.

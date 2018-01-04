@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 MAINTAINER Peter Spiess-Knafl <dev@spiessknafl.at>
-
+ENV OS=ubuntu1604
 RUN apt-get update && apt-get install -y \
     wget \
     build-essential \

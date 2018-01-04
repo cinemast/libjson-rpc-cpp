@@ -1,27 +1,10 @@
 language: cpp
 dist: trusty
-sudo: required
 services:
   - docker
 before_install:
   - |
-    if [[ "$OS" == "native" && "$TRAVIS_OS_NAME" == "linux" ]]
-    then
-     sudo apt-get install -qq wget
-     sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-     sudo add-apt-repository 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-5.0 main' -y
-     wget -O - http://llvm.org/apt/llvm-snapshot.gpg.key | sudo apt-key add -
-     sudo apt-get update -qq
-     sudo apt-get install -qq libcurl4-openssl-dev libhiredis-dev redis-server libjsoncpp-dev libargtable2-dev libgnutls-dev libgcrypt11-dev valgrind wget gcc-5 g++-5 clang-5.0
-     wget http://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-0.9.52.tar.gz
-     tar -xvf libmicrohttpd-0.9.52.tar.gz
-     cd libmicrohttpd-0.9.52
-     ./configure && make
-     sudo make install && sudo ldconfig
-     cd .. && sudo rm -rf libmicrohttpd-0.9.52
-     sudo pip install codecov
-     sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-5 90
-    elif [[ "$TRAVIS_OS_NAME" == "osx" ]]
+    if [[ "$TRAVIS_OS_NAME" == "osx" ]]
     then
      brew update
      brew install jsoncpp argtable curl hiredis redis
@@ -44,20 +27,9 @@ matrix:
       os: linux
     - env: OS=ubuntu1704
       os: linux
-    - env: OS=native
-      os: linux
-      compiler: clang
-    - env: OS=native
-      os: linux
-      compiler: gcc
-    - env: OS=native
+    - env: OS=osx
       os: osx
       compiler: clang
 
-compiler:
-    - gcc
-
 script:
-    - if [[ "$OS" == "native" ]]; then ./docker/build_test_install.sh; fi
-    - if [[ "$OS" == "native" && "$TRAVIS_OS_NAME" == "linux" && "$COMPILER" == "gcc" ]]; then ./dev/codecov.sh; fi
-    - if [[ "$OS" != "native" ]]; then cd docker; make ${OS}; fi
+    - cd docker && make ${OS};

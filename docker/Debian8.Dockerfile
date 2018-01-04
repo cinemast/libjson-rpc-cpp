@@ -1,6 +1,6 @@
 FROM debian:8
 MAINTAINER Peter Spiess-Knafl <dev@spiessknafl.at>
-
+ENV OS=debian8
 RUN apt-get update && apt-get install -y \
     wget \
     build-essential \

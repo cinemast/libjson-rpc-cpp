@@ -41,8 +41,8 @@ endif()
 
 # defaults for modules that can be enabled/disabled
 if(UNIX)
-    set(UNIX_DOMAIN_SOCKET_SERVER YES CACHE BOOL "Include Unix Domain Socket server")
-    set(UNIX_DOMAIN_SOCKET_CLIENT YES CACHE BOOL "Include Unix Domain Socket client")
+    set(UNIX_DOMAIN_SOCKET_SERVER NO CACHE BOOL "Include Unix Domain Socket server")
+    set(UNIX_DOMAIN_SOCKET_CLIENT NO CACHE BOOL "Include Unix Domain Socket client")
     set(FILE_DESCRIPTOR_SERVER YES CACHE BOOL "Include File Descriptor server")
     set(FILE_DESCRIPTOR_CLIENT YES CACHE BOOL "Include File Descriptor client")
 endif(UNIX)
