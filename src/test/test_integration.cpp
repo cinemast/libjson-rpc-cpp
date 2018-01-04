@@ -26,6 +26,25 @@ using namespace std;
 
 #define TEST_MODULE "[integration]"
 
+char
+rand_alnum()
+{
+    char c;
+    while (!std::isalnum(c = static_cast<char>(std::rand())))
+        ;
+    return c;
+}
+
+
+std::string
+rand_alnum_str (std::string::size_type sz)
+{
+    std::string s;
+    s.reserve  (sz);
+    generate_n (std::back_inserter(s), sz, rand_alnum);
+    return s;
+}
+
 class StubServer : public AbstractStubServer {
 public:
   StubServer(AbstractServerConnector &connector)
@@ -86,7 +105,7 @@ TEST_CASE("test_integration_http", TEST_MODULE) {
 #include <jsonrpccpp/server/connectors/unixdomainsocketserver.h>
 
 TEST_CASE("test_integration_unixdomain", TEST_MODULE) {
-  string filename = "/tmp/jsonrpcunixdomain-integration";
+  string filename = "/tmp/jrpcux_" + rand_alnum_str(10);
   UnixDomainSocketServer *sconn = new UnixDomainSocketServer(filename);
   UnixDomainSocketClient *cconn = new UnixDomainSocketClient(filename);
 

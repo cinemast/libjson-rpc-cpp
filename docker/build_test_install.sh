@@ -12,13 +12,11 @@ CLIENT_LIBS="-ljsoncpp -lcurl -ljsonrpccpp-common -ljsonrpccpp-client -lhiredis"
 SERVER_LIBS="-ljsoncpp -lmicrohttpd -ljsonrpccpp-common -ljsonrpccpp-server -lhiredis"
 mkdir -p build && cd build
 
-echo "Running cmake"
 echo "PREFIX: $PREFIX"
 cmake -DCMAKE_INSTALL_PREFIX="$PREFIX" -DWITH_COVERAGE=YES -DCMAKE_BUILD_TYPE=Release \
 	-DBUILD_STATIC_LIBS=ON -DTCP_SOCKET_SERVER=YES -DTCP_SOCKET_CLIENT=YES \
 	-DBUILD_SHARED_LIBS=ON ..
 
-echo "Running make"
 make -j$(nproc)
 
 echo "Running test suite"
