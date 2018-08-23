@@ -17,8 +17,6 @@ matrix:
       os: linux
     - env: OS=arch
       os: linux
-    - env: OS=debian8
-      os: linux
     - env: OS=debian9
       os: linux
     - env: OS=debian10
