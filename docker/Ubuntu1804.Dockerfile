@@ -1,6 +1,6 @@
-FROM ubuntu:17.04
+FROM ubuntu:18.04
 MAINTAINER Peter Spiess-Knafl <dev@spiessknafl.at>
-ENV OS=ubuntu1704
+ENV OS=ubuntu1804
 RUN apt-get update && apt-get install -y \
     wget \
     build-essential \
