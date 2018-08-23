@@ -1,5 +1,5 @@
 
-all: debian8 debian9 debian10 ubuntu1604 ubuntu1704 arch fedora
+all: debian8 debian9 debian10 ubuntu1604 ubuntu1704 arch fedora centos
 
 debian8: Debian8.Dockerfile
 	docker build --rm -f $< ..
@@ -13,7 +13,7 @@ debian10: Debian10.Dockerfile
 ubuntu1604: Ubuntu1604.Dockerfile
 	docker build --rm -f $< ..
 
-ubuntu1704: Ubuntu1704.Dockerfile
+ubuntu1804: Ubuntu1804.Dockerfile
 	docker build --rm -f $< ..
 
 arch: ArchLinux.Dockerfile
