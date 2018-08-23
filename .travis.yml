@@ -25,7 +25,7 @@ matrix:
       os: linux
     - env: OS=ubuntu1604
       os: linux
-    - env: OS=ubuntu1704
+    - env: OS=ubuntu1804
       os: linux
     - env: OS=osx
       os: osx
