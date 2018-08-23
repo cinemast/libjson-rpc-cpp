@@ -38,6 +38,7 @@ if (${REDIS_SERVER} OR ${REDIS_CLIENT})
     message(STATUS "Hiredis lib   : ${HIREDIS_LIBRARIES}")
 endif()
 
+find_package(Threads REQUIRED)
 find_package(Doxygen)
 
 if (${COMPILE_TESTS})
