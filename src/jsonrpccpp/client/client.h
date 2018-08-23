@@ -27,7 +27,7 @@ namespace jsonrpc
     class Client
     {
         public:
-            Client(IClientConnector &connector, clientVersion_t version = JSONRPC_CLIENT_V2);
+            Client(IClientConnector &connector, clientVersion_t version = JSONRPC_CLIENT_V2, bool omitEndingLineFeed = false);
             virtual ~Client();
 
             void        CallMethod          (const std::string &name, const Json::Value &parameter, Json::Value& result) ;
