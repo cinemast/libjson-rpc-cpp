@@ -20,7 +20,7 @@ cmake -DCMAKE_INSTALL_PREFIX="$PREFIX" -DWITH_COVERAGE=YES -DCMAKE_BUILD_TYPE=Re
 make -j$(nproc)
 
 echo "Running test suite"
-./bin/unit_testsuite
+./bin/unit_testsuite --durations yes
 
 if [ "$OS" != "osx" ]
 then
