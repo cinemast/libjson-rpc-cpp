@@ -23,8 +23,8 @@ const std::string RpcProtocolClient::KEY_ERROR_CODE = "code";
 const std::string RpcProtocolClient::KEY_ERROR_MESSAGE = "message";
 const std::string RpcProtocolClient::KEY_ERROR_DATA = "data";
 
-RpcProtocolClient::RpcProtocolClient(clientVersion_t version)
-    : version(version) {}
+RpcProtocolClient::RpcProtocolClient(clientVersion_t version, bool omitEndingLineFeed)
+    : version(version), omitEndingLineFeed(omitEndingLineFeed) {}
 
 void RpcProtocolClient::BuildRequest(const std::string &method,
                                      const Json::Value &parameter,
@@ -32,6 +32,9 @@ void RpcProtocolClient::BuildRequest(const std::string &method,
   Json::Value request;
   Json::FastWriter writer;
   this->BuildRequest(1, method, parameter, request, isNotification);
+  if (omitEndingLineFeed) {
+    writer.omitEndingLineFeed();
+  }
   result = writer.write(request);
 }
 

@@ -24,7 +24,7 @@ namespace jsonrpc {
     class RpcProtocolClient
     {
         public:
-            RpcProtocolClient(clientVersion_t version = JSONRPC_CLIENT_V2);
+            RpcProtocolClient(clientVersion_t version = JSONRPC_CLIENT_V2, bool omitEndingLineFeed = false);
 
             /**
              * @brief This method builds a valid json-rpc 2.0 request object based on passed parameters.
@@ -73,6 +73,7 @@ namespace jsonrpc {
 
         private:
             clientVersion_t version;
+            bool omitEndingLineFeed;
 
             void BuildRequest(int id, const std::string& method, const Json::Value& parameter, Json::Value& result, bool isNotification);
             bool ValidateResponse(const Json::Value &response);

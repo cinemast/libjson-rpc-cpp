@@ -136,6 +136,7 @@ TEST_CASE("test_integration_unixdomain", TEST_MODULE) {
 
 #include <jsonrpccpp/client/connectors/filedescriptorclient.h>
 #include <jsonrpccpp/server/connectors/filedescriptorserver.h>
+#include <unistd.h>
 
 TEST_CASE("test_integration_filedescriptor", TEST_MODULE) {
   int c2sfd[2]; // Client to server fd
