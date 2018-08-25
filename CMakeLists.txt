@@ -81,6 +81,7 @@ message(STATUS "COMPILE_EXAMPLES: ${COMPILE_EXAMPLES}")
 # setup compiler settings && dependencies
 include(CMakeCompilerSettings)
 include(CMakeDependencies)
+include(GNUInstallDirs)
 
 # setup output directories
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
@@ -133,7 +134,6 @@ add_custom_target(
 # CMake package
 set(package_name "libjson-rpc-cpp")
 include(CMakePackageConfigHelpers)
-include(GNUInstallDirs)
 set(config_install_destination ${CMAKE_INSTALL_LIBDIR}/${package_name}/cmake)
 configure_package_config_file(
 	cmake/${package_name}Config.cmake.in ${package_name}Config.cmake

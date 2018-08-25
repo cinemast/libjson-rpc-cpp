@@ -38,7 +38,7 @@ set(server_connector_libs   "")
 if (HTTP_CLIENT)
 	list(APPEND client_connector_header "client/connectors/httpclient.h")
 	list(APPEND client_connector_source "client/connectors/httpclient.cpp")
-	list(APPEND client_connector_libs CURL::libcurl)
+	list(APPEND client_connector_libs ${CURL_LIBRARIES})
 endif()
 
 if (HTTP_SERVER)
@@ -219,15 +219,15 @@ if (WIN32 AND NOT HUNTER_ENABLED)
 endif()
 
 install(TARGETS ${ALL_LIBS} EXPORT libjson-rpc-cppTargets
-	LIBRARY DESTINATION lib${LIB_SUFFIX}/${CMAKE_LIBRARY_PATH}
-	ARCHIVE DESTINATION lib${LIB_SUFFIX}/${CMAKE_LIBRARY_PATH}
+	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 	RUNTIME DESTINATION bin
 )
 
 #set pkg-config
 get_filename_component(FULL_PATH_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} ABSOLUTE)
 set(FULL_PATH_INCLUDEDIR "${FULL_PATH_INSTALL_PREFIX}/include")
-set(FULL_PATH_LIBDIR "${FULL_PATH_INSTALL_PREFIX}/lib/${CMAKE_LIBRARY_PATH}")
+set(FULL_PATH_LIBDIR "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
 
 configure_file(${PROJECT_SOURCE_DIR}/cmake/libjsonrpccpp-client.pc.cmake ${CMAKE_BINARY_DIR}/libjsonrpccpp-client.pc)
 configure_file(${PROJECT_SOURCE_DIR}/cmake/libjsonrpccpp-server.pc.cmake ${CMAKE_BINARY_DIR}/libjsonrpccpp-server.pc)
@@ -237,4 +237,4 @@ INSTALL(FILES
     "${CMAKE_BINARY_DIR}/libjsonrpccpp-server.pc"
     "${CMAKE_BINARY_DIR}/libjsonrpccpp-client.pc"
     "${CMAKE_BINARY_DIR}/libjsonrpccpp-common.pc"
-    DESTINATION "lib${LIB_SUFFIX}/${CMAKE_LIBRARY_PATH}/pkgconfig")
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")

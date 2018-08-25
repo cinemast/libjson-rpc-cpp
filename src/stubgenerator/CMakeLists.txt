@@ -54,14 +54,14 @@ configure_file(${CMAKE_SOURCE_DIR}/cmake/libjsonrpccpp-stub.pc.cmake ${CMAKE_BIN
 
 install(FILES
     "${CMAKE_BINARY_DIR}/libjsonrpccpp-stub.pc"
-    DESTINATION "lib/${CMAKE_LIBRARY_PATH}/pkgconfig")
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/stubgenerator/
     DESTINATION include/jsonrpccpp/stubgen
     FILES_MATCHING PATTERN "*.h")
 
 install(TARGETS ${ALL_LIBS} jsonrpcstub
-    LIBRARY DESTINATION lib${LIB_SUFFIX}/${CMAKE_LIBRARY_PATH}
-    ARCHIVE DESTINATION lib${LIB_SUFFIX}/${CMAKE_LIBRARY_PATH}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION bin
 )
