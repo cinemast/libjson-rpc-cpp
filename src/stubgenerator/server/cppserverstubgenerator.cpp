@@ -32,8 +32,13 @@
 #define TEMPLATE_CPPSERVER_SIGMETHOD                                           \
   "inline virtual void <procedurename>I(const Json::Value &request, "          \
   "Json::Value &response)"
+#define TEMPLATE_CPPSERVER_SIGMETHOD_WITHOUT_PARAMS                            \
+  "inline virtual void <procedurename>I(const Json::Value &/*request*/, "      \
+  "Json::Value &response)"
 #define TEMPLATE_CPPSERVER_SIGNOTIFICATION                                     \
   "inline virtual void <procedurename>I(const Json::Value &request)"
+#define TEMPLATE_CPPSERVER_SIGNOTIFICATION_WITHOUT_PARAMS                      \
+  "inline virtual void <procedurename>I(const Json::Value &/*request*/)"
 
 #define TEMPLATE_SERVER_ABSTRACTDEFINITION                                     \
   "virtual <returntype> <procedurename>(<parameterlist>) = 0;"
@@ -91,9 +96,9 @@ void CPPServerStubGenerator::generateStub() {
 void CPPServerStubGenerator::generateBindings() {
   string tmp;
   this->increaseIndentation();
-  for (vector<Procedure>::iterator it = this->procedures.begin();
+  for (vector<Procedure>::const_iterator it = this->procedures.begin();
        it != this->procedures.end(); ++it) {
-    Procedure &proc = *it;
+    const Procedure &proc = *it;
     if (proc.GetProcedureType() == RPC_METHOD) {
       tmp = TEMPLATE_CPPSERVER_METHODBINDING;
     } else {
@@ -118,22 +123,36 @@ void CPPServerStubGenerator::generateBindings() {
 }
 
 void CPPServerStubGenerator::generateProcedureDefinitions() {
-  for (vector<Procedure>::iterator it = this->procedures.begin();
+  for (vector<Procedure>::const_iterator it = this->procedures.begin();
        it != this->procedures.end(); ++it) {
-    Procedure &proc = *it;
-    if (proc.GetProcedureType() == RPC_METHOD)
-      this->writeLine(
-          replaceAll(TEMPLATE_CPPSERVER_SIGMETHOD, "<procedurename>",
-                     CPPHelper::normalizeString(proc.GetProcedureName())));
-    else
-      this->writeLine(
-          replaceAll(TEMPLATE_CPPSERVER_SIGNOTIFICATION, "<procedurename>",
-                     CPPHelper::normalizeString(proc.GetProcedureName())));
+    const Procedure &proc = *it;
+    if (proc.GetProcedureType() == RPC_METHOD) {
+      if (!proc.GetParameters().empty()) {
+        this->writeLine(
+            replaceAll(TEMPLATE_CPPSERVER_SIGMETHOD, "<procedurename>",
+                      CPPHelper::normalizeString(proc.GetProcedureName())));
+      }
+      else {
+        this->writeLine(
+            replaceAll(TEMPLATE_CPPSERVER_SIGMETHOD_WITHOUT_PARAMS, "<procedurename>",
+                      CPPHelper::normalizeString(proc.GetProcedureName())));
+      }
+    }
+    else {
+      if (!proc.GetParameters().empty()) {
+        this->writeLine(
+            replaceAll(TEMPLATE_CPPSERVER_SIGNOTIFICATION, "<procedurename>",
+                      CPPHelper::normalizeString(proc.GetProcedureName())));
+      }
+      else {
+        this->writeLine(
+            replaceAll(TEMPLATE_CPPSERVER_SIGNOTIFICATION_WITHOUT_PARAMS, "<procedurename>",
+                      CPPHelper::normalizeString(proc.GetProcedureName())));
+      }
+    }
 
     this->writeLine("{");
     this->increaseIndentation();
-    if (proc.GetParameters().empty())
-      this->writeLine("(void)request;");
 
     if (proc.GetProcedureType() == RPC_METHOD)
       this->write("response = ");
@@ -166,7 +185,7 @@ void CPPServerStubGenerator::generateAbstractDefinitions() {
   }
 }
 
-string CPPServerStubGenerator::generateBindingParameterlist(Procedure &proc) {
+string CPPServerStubGenerator::generateBindingParameterlist(const Procedure &proc) {
   stringstream parameter;
   const parameterNameList_t &list = proc.GetParameters();
 
@@ -178,7 +197,7 @@ string CPPServerStubGenerator::generateBindingParameterlist(Procedure &proc) {
   return parameter.str();
 }
 
-void CPPServerStubGenerator::generateParameterMapping(Procedure &proc) {
+void CPPServerStubGenerator::generateParameterMapping(const Procedure &proc) {
   string tmp;
   const parameterNameList_t &params = proc.GetParameters();
   int i = 0;

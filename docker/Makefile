@@ -1,5 +1,5 @@
 
-all: debian9 debian10 ubuntu1604 ubuntu1704 arch fedora centos
+all: debian9 debian10 ubuntu1604 ubuntu1804 arch fedora centos
 
 debian9: Debian9.Dockerfile
 	docker build --rm -f $< ..

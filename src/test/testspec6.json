@@ -30,5 +30,8 @@
     {
         "name": "testmethod5",
         "returns": []
+    },
+    {
+        "name": "testmethod6"
     }
 ]

@@ -108,6 +108,20 @@ TEST_CASE("test stubgen cppserver", TEST_MODULE) {
                     "\"name\",jsonrpc::JSON_STRING, NULL), "
                     "&ns1::ns2::TestStubServer::test_methodI);") !=
         string::npos);
+  CHECK(result.find("inline virtual void test_notificationI("
+                    "const Json::Value &request)") !=
+        string::npos);
+  CHECK(result.find("inline virtual void test_methodI("
+                    "const Json::Value &request, "
+                    "Json::Value &response)") !=
+        string::npos);
+  CHECK(result.find("inline virtual void testmethod5I("
+                     "const Json::Value &/*request*/, "
+                     "Json::Value &response)") !=
+        string::npos);
+  CHECK(result.find("inline virtual void testmethod6I("
+                    "const Json::Value &/*request*/)") !=
+        string::npos);
   CHECK(result.find("#endif //JSONRPC_CPP_STUB_NS1_NS2_TESTSTUBSERVER_H_") !=
         string::npos);
 }
@@ -230,7 +244,7 @@ TEST_CASE_METHOD(F, "test_stubgen_factory_success", TEST_MODULE) {
   CHECK(StubGeneratorFactory::createStubGenerators(
             5, (char **)argv, procedures, stubgens, stdout, stderr) == true);
   CHECK(stubgens.size() == 3);
-  CHECK(procedures.size() == 7);
+  CHECK(procedures.size() == 8);
 
   StubGeneratorFactory::deleteStubGenerators(stubgens);
 }
@@ -251,7 +265,7 @@ TEST_CASE_METHOD(F, "test_stubgen_factory_fileoverride", TEST_MODULE) {
   CHECK(StubGeneratorFactory::createStubGenerators(
             9, (char **)argv, procedures, stubgens, stdout, stderr) == true);
   CHECK(stubgens.size() == 3);
-  CHECK(procedures.size() == 7);
+  CHECK(procedures.size() == 8);
   StubGeneratorFactory::deleteStubGenerators(stubgens);
 }
 
