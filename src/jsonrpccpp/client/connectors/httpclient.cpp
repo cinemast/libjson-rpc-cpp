@@ -60,6 +60,8 @@ HttpClient::~HttpClient() { curl_easy_cleanup(curl); }
 
 void HttpClient::SendRPCMessage(const std::string &message,
                                 std::string &result) {
+
+  curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
   curl_easy_setopt(curl, CURLOPT_URL, this->url.c_str());
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunc);
 
