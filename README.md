@@ -160,45 +160,8 @@ This generates a serverstub and a clientstub class.
 
 Extend the abstract server stub and implement all pure virtual (abstract) methods defined in `spec.json`.
 
-```cpp
-#include "abstractstubserver.h"
-#include <jsonrpccpp/server/connectors/httpserver.h>
+[See src/examples/stubserver.cpp](src/examples/stubserver.cpp)
 
-using namespace jsonrpc;
-using namespace std;
-
-class MyStubServer : public AbstractStubServer
-{
-    public:
-        MyStubServer(AbstractServerConnector &connector);
-
-        virtual void notifyServer();
-        virtual std::string sayHello(const std::string& name);
-};
-
-MyStubServer::MyStubServer(AbstractServerConnector &connector) :
-    AbstractStubServer(connector)
-{
-}
-void MyStubServer::notifyServer()
-{
-    cout << "Server got notified" << endl;
-}
-string MyStubServer::sayHello(const string &name)
-{
-    return "Hello " + name;
-}
-
-int main()
-{
-    HttpServer httpserver(8383);
-    MyStubServer s(httpserver);
-    s.StartListening();
-    getchar();
-    s.StopListening();
-    return 0;
-}
-```
 
 In the main function the concrete server is instantiated and started. That is all for the server. Any JSON-RPC 2.0 compliant client can now connect to your server.
 
@@ -209,30 +172,10 @@ g++ main.cpp -ljsoncpp -lmicrohttpd -ljsonrpccpp-common -ljsonrpccpp-server -o s
 ```
 
 ### Step 4: Create the client application
-```cpp
-#include <iostream>
 
-#include "stubclient.h"
-#include <jsonrpccpp/client/connectors/httpclient.h>
 
-using namespace jsonrpc;
-using namespace std;
+[See src/examples/stubserver.cpp](src/examples/stubclient.cpp)
 
-int main()
-{
-    HttpClient httpclient("http://localhost:8383");
-    StubClient c(httpclient);
-    try
-    {
-        cout << c.sayHello("Peter") << endl;
-        c.notifyServer();
-    }
-    catch (JsonRpcException e)
-    {
-        cerr << e.what() << endl;
-    }
-}
-```
 
 Compile the client with:
 
