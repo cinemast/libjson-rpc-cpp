@@ -20,7 +20,10 @@ int BatchCall::addCall(const string &methodname, const Json::Value &params,
   Json::Value call;
   call[RpcProtocolClient::KEY_PROTOCOL_VERSION] = "2.0";
   call[RpcProtocolClient::KEY_PROCEDURE_NAME] = methodname;
-  call[RpcProtocolClient::KEY_PARAMETER] = params;
+
+  if(params.isNull() || params.size() > 0)
+    call[RpcProtocolClient::KEY_PARAMETER] = params;
+
   if (!isNotification) {
     call[RpcProtocolClient::KEY_ID] = this->id++;
   }
