@@ -34,7 +34,11 @@ MyStubServer::MyStubServer(AbstractServerConnector &connector,
 
 void MyStubServer::notifyServer() { cout << "Server got notified" << endl; }
 
-string MyStubServer::sayHello(const string &name) { return "Hello " + name; }
+string MyStubServer::sayHello(const string &name) {
+    if (name == "")
+        throw JsonRpcException(-32100, "Name was empty");
+    return "Hello " + name;
+}
 
 int MyStubServer::addNumbers(int param1, int param2) { return param1 + param2; }
 

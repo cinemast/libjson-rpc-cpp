@@ -46,6 +46,8 @@ int main() {
     cout << "Compare: " << c.isEqual("Peter", "peter") << endl;
     cout << "Build object: " << c.buildObject("Peter", 1990) << endl;
 
+    c.sayHello(""); //expects a server error
+
   } catch (JsonRpcException &e) {
     cerr << e.what() << endl;
   }
