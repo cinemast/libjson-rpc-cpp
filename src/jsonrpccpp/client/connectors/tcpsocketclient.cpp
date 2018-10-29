@@ -28,10 +28,7 @@ TcpSocketClient::TcpSocketClient(const std::string &ipToConnect,
 }
 
 TcpSocketClient::~TcpSocketClient() {
-  if (this->realSocket != NULL) {
-    delete this->realSocket;
-    this->realSocket = NULL;
-  }
+  delete this->realSocket;
 }
 
 void TcpSocketClient::SendRPCMessage(const std::string &message,
