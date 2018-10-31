@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v1.1.1] - 2018-10-31
+
+### Fixed
+- Build issue on RHEL7 (#244, #246)
+- Build with empty install prefix (#226)
+- GnuInstallDirs handling for library targets (#239)
+- Disabled libcurl signal handlers (#210)
+- Terrible performance for socket based connectors (#229)
+- Library versioning error (1.1.0 release actually specified 1.0.0)
+
+### Added
+- Missing documentation about python stubgenerator (#222)
+- Parameter to enable omitEndingLineFeed() (#213)
+- Documenation in examples about throwing serverside errors (#249)
+
+### Changed
+- Updated CI images to use Ubuntu 18.04 instead of 17.04
+- Disabled FileDescriptor connectors by default
+- Removed custom FindCURL cmake module (#237)
+- Parameter handling of procedurs without params in stubgenerator
+
 ## [v1.1.0] - 2018-01-04
 ### Fixed
 - Fix missing hiredis libs when using only REDIS_CLIENT
