@@ -160,7 +160,7 @@ This generates a serverstub and a clientstub class.
 
 Extend the abstract server stub and implement all pure virtual (abstract) methods defined in `spec.json`.
 
-[See src/examples/stubserver.cpp](src/examples/stubserver.cpp)
+See [src/examples/stubserver.cpp](src/examples/stubserver.cpp)
 
 
 In the main function the concrete server is instantiated and started. That is all for the server. Any JSON-RPC 2.0 compliant client can now connect to your server.
@@ -174,7 +174,7 @@ g++ main.cpp -ljsoncpp -lmicrohttpd -ljsonrpccpp-common -ljsonrpccpp-server -o s
 ### Step 4: Create the client application
 
 
-[See src/examples/stubserver.cpp](src/examples/stubclient.cpp)
+See [src/examples/stubclient.cpp](src/examples/stubclient.cpp)
 
 
 Compile the client with:
