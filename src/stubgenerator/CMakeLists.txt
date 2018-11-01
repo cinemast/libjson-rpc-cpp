@@ -41,7 +41,7 @@ endif()
 if (NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
     configure_file("${CMAKE_SOURCE_DIR}/doc/manpage.in" "${CMAKE_BINARY_DIR}/jsonrpcstub.1" @ONLY)
     add_custom_target(manpage ALL DEPENDS ${CMAKE_BINARY_DIR}/jsonrpcstub.1)
-    install(FILES ${CMAKE_BINARY_DIR}/jsonrpcstub.1 DESTINATION share/man/man1/)
+    install(FILES ${CMAKE_BINARY_DIR}/jsonrpcstub.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1/)
     add_dependencies(jsonrpcstub manpage)
 endif()
 
