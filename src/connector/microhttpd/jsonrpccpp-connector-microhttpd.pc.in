@@ -1,0 +1,8 @@
+libdir=@CMAKE_INSTALL_FULL_LIBDIR@
+includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@
+
+Name: libjsonrpccpp-connector-microhttpd
+Description: A libmicrohttpd based server implementation for libjson-rpc-cpp.
+Version: @VERSION_STRING@
+Libs: -L${libdir} -ljsonrpccpp-connector-microhttpd -lmicrohttpd
+Cflags: -I${includedir}
