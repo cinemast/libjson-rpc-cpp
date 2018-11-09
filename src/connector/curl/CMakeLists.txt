@@ -9,6 +9,11 @@ set_target_properties(jsonrpccpp-connector-curl PROPERTIES
   VERSION ${VERSION_STRING}
 )
 
+configure_file(jsonrpccpp-connector-curl.pc.in ${CMAKE_BINARY_DIR}/jsonrpccpp-connector-curl.pc @ONLY)
+install(FILES ${CMAKE_BINARY_DIR}/jsonrpccpp-connector-curl.pc 
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+)
+
 install(TARGETS jsonrpccpp-connector-curl 
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}

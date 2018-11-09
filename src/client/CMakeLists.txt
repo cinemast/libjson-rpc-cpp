@@ -14,6 +14,11 @@ add_library(jsonrpccpp-client
   VERSION ${VERSION_STRING}
 )
 
+configure_file(jsonrpccpp-client.pc.in ${CMAKE_BINARY_DIR}/jsonrpccpp-client.pc @ONLY)
+install(FILES ${CMAKE_BINARY_DIR}/jsonrpccpp-client.pc 
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+)
+
 install(TARGETS jsonrpccpp-client 
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}

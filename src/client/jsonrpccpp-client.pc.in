@@ -1,0 +1,8 @@
+libdir=@CMAKE_INSTALL_FULL_LIBDIR@
+includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@
+
+Name: libjsonrpccpp-client
+Description: JSON-RPC 1.0 and 2.0 capable client
+Version: @VERSION_STRING@
+Libs: -L${libdir} -ljsonrpccpp-client -ljsoncpp
+Cflags: -I${includedir}

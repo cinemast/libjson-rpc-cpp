@@ -1,0 +1,8 @@
+libdir=@CMAKE_INSTALL_FULL_LIBDIR@
+includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@
+
+Name: libjsonrpccpp-connector-curl
+Description: A libcurl based client implementation for libjson-rpc-cpp.
+Version: @VERSION_STRING@
+Libs: -L${libdir} -ljsonrpccpp-connector-curl -lcurl
+Cflags: -I${includedir}
