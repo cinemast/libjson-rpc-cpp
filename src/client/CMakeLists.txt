@@ -21,3 +21,10 @@ install(TARGETS jsonrpccpp-client
   PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/jsonrpccpp/client
 )
 
+if (COMPILE_TESTS)
+    target_sources(jsonrpccpp-unittest PRIVATE 
+        ${CMAKE_CURRENT_SOURCE_DIR}/test_client.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/mockclientconnector.cpp
+    )
+    add_test(client ${BMAKE_BINARY_DIR}/jsonrpccpp-unittest "[client]" --durations yes)
+endif()

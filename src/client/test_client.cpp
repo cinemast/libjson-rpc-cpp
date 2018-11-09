@@ -1,23 +1,15 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    test_client.cpp
- * @date    28.09.2013
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
-#include "checkexception.h"
-#include "mockclientconnector.h"
 #include <catch.hpp>
-#include <jsonrpccpp/client.h>
+#include "mockclientconnector.h"
+#include "client.h"
 
 #define TEST_MODULE "[client]"
 
 using namespace jsonrpc;
 using namespace std;
+using Catch::Matchers::Contains;
 
 namespace testclient {
+  /*
 bool check_exception1(JsonRpcException const &ex) {
   return ex.GetCode() == Errors::ERROR_RPC_JSON_PARSE_ERROR;
 }
@@ -29,7 +21,7 @@ bool check_exception2(JsonRpcException const &ex) {
 bool check_exception3(JsonRpcException const &ex) {
   return ex.GetCode() == Errors::ERROR_RPC_INVALID_REQUEST &&
          ex.GetData().size() == 2;
-}
+}*/
 
 struct F {
   MockClientConnector c;
@@ -87,48 +79,50 @@ TEST_CASE_METHOD(F, "test_client_v2_errorresponse", TEST_MODULE) {
   c.SetResponse("{\"jsonrpc\":\"2.0\", \"error\": {\"code\": -32600, "
                 "\"message\": \"Invalid Request\", \"data\": [1,2]}, \"id\": "
                 "null}");
-  CHECK_EXCEPTION_TYPE(client.CallMethod("abcd", Json::nullValue),
-                       JsonRpcException, check_exception3);
+
+  REQUIRE_THROWS_WITH(client.CallMethod("abcd", Json::nullValue), "JsonRpcException -32600: Invalid Request");
 }
 
+
 TEST_CASE_METHOD(F, "test_client_v2_invalidjson", TEST_MODULE) {
-  c.SetResponse("{\"method\":234");
-  CHECK_EXCEPTION_TYPE(client.CallMethod("abcd", Json::nullValue),
-                       JsonRpcException, check_exception1);
+  string response = "{\"method\":234";
+  c.SetResponse(response);
+
+  REQUIRE_THROWS_WITH(client.CallMethod("abcd", Json::nullValue), Contains("JsonRpcException -32700") && Contains(response));
 }
+
 
 TEST_CASE_METHOD(F, "test_client_v2_invalidresponse", TEST_MODULE) {
   c.SetResponse("{\"jsonrpc\":\"2.0\", \"id\": 1, \"resulto\": 23}");
-  CHECK_EXCEPTION_TYPE(client.CallMethod("abcd", Json::nullValue),
-                       JsonRpcException, check_exception2);
+  CHECK_THROWS_WITH(client.CallMethod("abcd", Json::nullValue), Contains("JsonRpcException -32001"));
+ 
   c.SetResponse("{\"jsonrpc\":\"2.0\", \"id2\": 1, \"result\": 23}");
-  CHECK_EXCEPTION_TYPE(client.CallMethod("abcd", Json::nullValue),
-                       JsonRpcException, check_exception2);
+  CHECK_THROWS_WITH(client.CallMethod("abcd", Json::nullValue), Contains("JsonRpcException -32001"));
+
   c.SetResponse("{\"jsonrpc\":\"1.0\", \"id\": 1, \"result\": 23}");
-  CHECK_EXCEPTION_TYPE(client.CallMethod("abcd", Json::nullValue),
-                       JsonRpcException, check_exception2);
+  CHECK_THROWS_WITH(client.CallMethod("abcd", Json::nullValue), Contains("JsonRpcException -32001"));
+
   c.SetResponse("{\"id\": 1, \"result\": 23}");
-  CHECK_EXCEPTION_TYPE(client.CallMethod("abcd", Json::nullValue),
-                       JsonRpcException, check_exception2);
+  CHECK_THROWS_WITH(client.CallMethod("abcd", Json::nullValue), Contains("JsonRpcException -32001"));
+
   c.SetResponse(
       "{\"jsonrpc\":\"2.0\", \"id\": 1, \"result\": 23, \"error\": {}}");
-  CHECK_EXCEPTION_TYPE(client.CallMethod("abcd", Json::nullValue),
-                       JsonRpcException, check_exception2);
+  CHECK_THROWS_WITH(client.CallMethod("abcd", Json::nullValue), Contains("JsonRpcException -32001"));
+
   c.SetResponse("{\"jsonrpc\":\"2.0\", \"id\": 1, \"error\": {}}");
-  CHECK_EXCEPTION_TYPE(client.CallMethod("abcd", Json::nullValue),
-                       JsonRpcException, check_exception2);
+  CHECK_THROWS_WITH(client.CallMethod("abcd", Json::nullValue), Contains("JsonRpcException -32001"));
+
   c.SetResponse("{\"jsonrpc\":\"2.0\", \"result\": 23}");
-  CHECK_EXCEPTION_TYPE(client.CallMethod("abcd", Json::nullValue),
-                       JsonRpcException, check_exception2);
+  CHECK_THROWS_WITH(client.CallMethod("abcd", Json::nullValue), Contains("JsonRpcException -32001"));
+
   c.SetResponse("{}");
-  CHECK_EXCEPTION_TYPE(client.CallMethod("abcd", Json::nullValue),
-                       JsonRpcException, check_exception2);
+  CHECK_THROWS_WITH(client.CallMethod("abcd", Json::nullValue), Contains("JsonRpcException -32001"));
+
   c.SetResponse("[]");
-  CHECK_EXCEPTION_TYPE(client.CallMethod("abcd", Json::nullValue),
-                       JsonRpcException, check_exception2);
+  CHECK_THROWS_WITH(client.CallMethod("abcd", Json::nullValue), Contains("JsonRpcException -32001"));
+
   c.SetResponse("23");
-  CHECK_EXCEPTION_TYPE(client.CallMethod("abcd", Json::nullValue),
-                       JsonRpcException, check_exception2);
+  CHECK_THROWS_WITH(client.CallMethod("abcd", Json::nullValue), Contains("JsonRpcException -32001"));
 }
 
 TEST_CASE_METHOD(F, "test_client_v2_batchcall_success", TEST_MODULE) {
@@ -158,6 +152,7 @@ TEST_CASE_METHOD(F, "test_client_v2_batchcall_success", TEST_MODULE) {
   bc.toString(false);
 }
 
+
 TEST_CASE_METHOD(F, "test_client_v2_batchcall_error", TEST_MODULE) {
   BatchCall bc;
   CHECK(bc.addCall("abc", Json::nullValue, false) == 1);
@@ -180,16 +175,13 @@ TEST_CASE_METHOD(F, "test_client_v2_batchcall_error", TEST_MODULE) {
   CHECK(response.getErrorMessage(3) == "");
 
   c.SetResponse("{}");
-  CHECK_EXCEPTION_TYPE(client.CallProcedures(bc), JsonRpcException,
-                       check_exception2);
+  CHECK_THROWS_WITH(client.CallMethod("abcd", Json::nullValue), Contains("JsonRpcException -32001"));
 
   c.SetResponse("[1,2,3]");
-  CHECK_EXCEPTION_TYPE(client.CallProcedures(bc), JsonRpcException,
-                       check_exception2);
+  CHECK_THROWS_WITH(client.CallMethod("abcd", Json::nullValue), Contains("JsonRpcException -32001"));
 
   c.SetResponse("[[],[],[]]");
-  CHECK_EXCEPTION_TYPE(client.CallProcedures(bc), JsonRpcException,
-                       check_exception2);
+  CHECK_THROWS_WITH(client.CallMethod("abcd", Json::nullValue), Contains("JsonRpcException -32001"));
 }
 
 TEST_CASE_METHOD(F1, "test_client_v1_method_success", TEST_MODULE) {
@@ -223,41 +215,38 @@ TEST_CASE_METHOD(F1, "test_client_v1_notification_success", TEST_MODULE) {
 TEST_CASE_METHOD(F1, "test_client_v1_errorresponse", TEST_MODULE) {
   c.SetResponse("{\"result\": null, \"error\": {\"code\": -32600, \"message\": "
                 "\"Invalid Request\", \"data\": [1,2]}, \"id\": null}");
-  CHECK_EXCEPTION_TYPE(client.CallMethod("abcd", Json::nullValue),
-                       JsonRpcException, check_exception3);
+  CHECK_THROWS_WITH(client.CallMethod("abcd", Json::nullValue), Contains("JsonRpcException -32600"));
 
   c.SetResponse("{\"result\": null, \"error\": {\"code\": -32600, \"message\": "
                 "\"Invalid Request\", \"data\": [1,2]}, \"id\": null}");
-  CHECK_EXCEPTION_TYPE(client.CallMethod("abcd", Json::nullValue),
-                       JsonRpcException, check_exception3);
+  CHECK_THROWS_WITH(client.CallMethod("abcd", Json::nullValue), Contains("JsonRpcException -32600"));
 }
 
 TEST_CASE_METHOD(F1, "test_client_v1_invalidresponse", TEST_MODULE) {
   c.SetResponse("{\"id\": 1, \"resulto\": 23, \"error\": null}");
-  CHECK_EXCEPTION_TYPE(client.CallMethod("abcd", Json::nullValue),
-                       JsonRpcException, check_exception2);
+  CHECK_THROWS_WITH(client.CallMethod("abcd", Json::nullValue), Contains("JsonRpcException -32001"));
+
   c.SetResponse("{\"id\": 1, \"result\": 23}");
-  CHECK_EXCEPTION_TYPE(client.CallMethod("abcd", Json::nullValue),
-                       JsonRpcException, check_exception2);
+  CHECK_THROWS_WITH(client.CallMethod("abcd", Json::nullValue), Contains("JsonRpcException -32001"));
+
   c.SetResponse("{\"id\": 1, \"error\": null}");
-  CHECK_EXCEPTION_TYPE(client.CallMethod("abcd", Json::nullValue),
-                       JsonRpcException, check_exception2);
+ CHECK_THROWS_WITH(client.CallMethod("abcd", Json::nullValue), Contains("JsonRpcException -32001"));
+
   c.SetResponse("{\"id\": 1}");
-  CHECK_EXCEPTION_TYPE(client.CallMethod("abcd", Json::nullValue),
-                       JsonRpcException, check_exception2);
+  CHECK_THROWS_WITH(client.CallMethod("abcd", Json::nullValue), Contains("JsonRpcException -32001"));
+
   c.SetResponse("{\"id\": 1, \"result\": 23, \"error\": {}}");
-  CHECK_EXCEPTION_TYPE(client.CallMethod("abcd", Json::nullValue),
-                       JsonRpcException, check_exception2);
+  CHECK_THROWS_WITH(client.CallMethod("abcd", Json::nullValue), Contains("JsonRpcException -32001"));
+
   c.SetResponse("{\"id\": 1, \"result\": null, \"error\": {}}");
-  CHECK_EXCEPTION_TYPE(client.CallMethod("abcd", Json::nullValue),
-                       JsonRpcException, check_exception2);
+  CHECK_THROWS_WITH(client.CallMethod("abcd", Json::nullValue), Contains("JsonRpcException -32001"));
+
   c.SetResponse("{}");
-  CHECK_EXCEPTION_TYPE(client.CallMethod("abcd", Json::nullValue),
-                       JsonRpcException, check_exception2);
+  CHECK_THROWS_WITH(client.CallMethod("abcd", Json::nullValue), Contains("JsonRpcException -32001"));
+
   c.SetResponse("[]");
-  CHECK_EXCEPTION_TYPE(client.CallMethod("abcd", Json::nullValue),
-                       JsonRpcException, check_exception2);
+  CHECK_THROWS_WITH(client.CallMethod("abcd", Json::nullValue), Contains("JsonRpcException -32001"));
+
   c.SetResponse("23");
-  CHECK_EXCEPTION_TYPE(client.CallMethod("abcd", Json::nullValue),
-                       JsonRpcException, check_exception2);
+  CHECK_THROWS_WITH(client.CallMethod("abcd", Json::nullValue), Contains("JsonRpcException -32001"));
 }

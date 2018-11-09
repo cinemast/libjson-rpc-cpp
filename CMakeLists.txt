@@ -35,6 +35,7 @@ elseif (${CMAKE_CXX_COMPILER_ID} MATCHES "MSVC")
 endif()
 
 if(COMPILE_TESTS)
+  enable_testing()
   set(TEST_LIBRARIES "")
   add_subdirectory(src/test)
 endif()

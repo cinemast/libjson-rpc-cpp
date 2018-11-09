@@ -12,14 +12,14 @@ endif()
 find_path(CATCH_INCLUDE_DIR NAMES catch.hpp)
 include_directories(${CATCH_INCLUDE_DIR})
 
-
-
-enable_testing()
 add_executable(jsonrpccpp-unittest unittests.cpp)
 
 find_package(jsoncpp CONFIG REQUIRED)
 target_link_libraries(jsonrpccpp-unittest PRIVATE jsoncpp_lib)
 
+if (JSONRPC_CLIENT)
+  target_link_libraries(jsonrpccpp-unittest PRIVATE jsonrpccpp-client)
+endif()
 
 if(${CONNECTOR_MICROHTTPD} OR ${CONNECTOR_CURL})
   find_package(CURL REQUIRED)
