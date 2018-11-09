@@ -1,15 +1,6 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    abstractprotocolhandler.cpp
- * @date    10/23/2014
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
 #include "abstractprotocolhandler.h"
-#include <jsonrpccpp/common/errors.h>
-#include <jsonrpccpp/common/jsonparser.h>
+#include "../exception.h"
+#include "../jsonparser.h"
 
 #include <map>
 
@@ -36,8 +27,8 @@ void AbstractProtocolHandler::HandleRequest(const std::string &request,
   if (reader.parse(request, req, false)) {
     this->HandleJsonRequest(req, resp);
   } else {
-    this->WrapError(Json::nullValue, Errors::ERROR_RPC_JSON_PARSE_ERROR,
-                    Errors::GetErrorMessage(Errors::ERROR_RPC_JSON_PARSE_ERROR),
+    this->WrapError(Json::nullValue, ExceptionCode::ERROR_INVALID_JSON,
+                    "JSON_PARSE_ERROR: The JSON-Object is not JSON-Valid",
                     resp);
   }
 
@@ -64,7 +55,7 @@ int AbstractProtocolHandler::ValidateRequest(const Json::Value &request) {
   int error = 0;
   Procedure proc;
   if (!this->ValidateRequestFields(request)) {
-    error = Errors::ERROR_RPC_INVALID_REQUEST;
+    error = ExceptionCode::ERROR_SERVER_INVALID_REQUEST;
   } else {
     map<string, Procedure>::iterator it =
         this->procedures.find(request[KEY_REQUEST_METHODNAME].asString());
@@ -72,15 +63,15 @@ int AbstractProtocolHandler::ValidateRequest(const Json::Value &request) {
       proc = it->second;
       if (this->GetRequestType(request) == RPC_METHOD &&
           proc.GetProcedureType() == RPC_NOTIFICATION) {
-        error = Errors::ERROR_SERVER_PROCEDURE_IS_NOTIFICATION;
+        error = ExceptionCode::ERROR_SERVER_PROCEDURE_IS_NOTIFICATION;
       } else if (this->GetRequestType(request) == RPC_NOTIFICATION &&
                  proc.GetProcedureType() == RPC_METHOD) {
-        error = Errors::ERROR_SERVER_PROCEDURE_IS_METHOD;
+        error = ExceptionCode::ERROR_SERVER_PROCEDURE_IS_METHOD;
       } else if (!proc.ValdiateParameters(request[KEY_REQUEST_PARAMETERS])) {
-        error = Errors::ERROR_RPC_INVALID_PARAMS;
+        error = ExceptionCode::ERROR_RPC_INVALID_PARAMS;
       }
     } else {
-      error = Errors::ERROR_RPC_METHOD_NOT_FOUND;
+      error = ExceptionCode::ERROR_RPC_METHOD_NOT_FOUND;
     }
   }
   return error;

@@ -1,20 +1,11 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    abstractprotocolhandler.h
- * @date    10/23/2014
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
-#ifndef JSONRPC_CPP_ABSTRACTPROTOCOLHANDLER_H
-#define JSONRPC_CPP_ABSTRACTPROTOCOLHANDLER_H
+#pragma once
 
 #include "iprocedureinvokationhandler.h"
+#include "procedure.h"
 #include "iclientconnectionhandler.h"
+
 #include <map>
 #include <string>
-#include <jsonrpccpp/common/procedure.h>
 
 #define KEY_REQUEST_METHODNAME  "method"
 #define KEY_REQUEST_ID          "id"
@@ -50,5 +41,3 @@ namespace jsonrpc {
     };
 
 } // namespace jsonrpc
-
-#endif // JSONRPC_CPP_ABSTRACTPROTOCOLHANDLER_H

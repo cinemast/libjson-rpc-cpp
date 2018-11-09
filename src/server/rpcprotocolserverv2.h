@@ -1,20 +1,10 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    rpcprotocolserverv2.h
- * @date    31.12.2012
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
-#ifndef JSONRPC_CPP_RPCPROTOCOLSERVERV2_H_
-#define JSONRPC_CPP_RPCPROTOCOLSERVERV2_H_
+#pragma once
 
 #include <string>
 #include <vector>
 #include <map>
 
-#include <jsonrpccpp/common/exception.h>
+#include "../exception.h"
 #include "abstractprotocolhandler.h"
 
 
@@ -41,4 +31,3 @@ namespace jsonrpc
     };
 
 } /* namespace jsonrpc */
-#endif /* JSONRPC_CPP_RPCPROTOCOLSERVERV2_H_ */

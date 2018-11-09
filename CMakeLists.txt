@@ -44,6 +44,10 @@ if (JSONRPC_CLIENT)
   add_subdirectory(src/client)
 endif()
 
+if (JSONRPC_SERVER)
+  add_subdirectory(src/server)
+endif()
+
 add_subdirectory(src/connector)
 
 if(CONNECTOR_MICROHTTPD)

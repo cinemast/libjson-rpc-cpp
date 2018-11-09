@@ -1,14 +1,5 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    rpcprotocolserver12.cpp
- * @date    10/25/2014
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
 #include "rpcprotocolserver12.h"
-#include <jsonrpccpp/common/jsonparser.h>
+#include "../jsonparser.h"
 
 using namespace jsonrpc;
 
@@ -31,8 +22,8 @@ void RpcProtocolServer12::HandleRequest(const std::string &request,
     this->GetHandler(req).HandleJsonRequest(req, resp);
   } else {
     this->GetHandler(req).WrapError(
-        Json::nullValue, Errors::ERROR_RPC_JSON_PARSE_ERROR,
-        Errors::GetErrorMessage(Errors::ERROR_RPC_JSON_PARSE_ERROR), resp);
+        Json::nullValue, ExceptionCode::ERROR_RPC_JSON_PARSE_ERROR,
+        Errors::GetErrorMessage(ExceptionCode::ERROR_RPC_JSON_PARSE_ERROR), resp);
   }
   if (resp != Json::nullValue)
     retValue = w.write(resp);
