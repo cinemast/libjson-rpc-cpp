@@ -1,5 +1,5 @@
 find_package(CURL REQUIRED)
-
+include_directories(${CURL_INCLUDE_DIRS})
 add_library(jsonrpccpp-connector-curl curlclient.h curlclient.cpp)
 target_link_libraries(jsonrpccpp-connector-curl ${CURL_LIBRARIES})
 
@@ -13,7 +13,7 @@ install(TARGETS jsonrpccpp-connector-curl
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/jsonrpccpp/connector/http
+  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/jsonrpccpp/connector
 )
 
 if(COMPILE_TESTS)

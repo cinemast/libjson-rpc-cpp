@@ -8,7 +8,7 @@
  ************************************************************************/
 
 #include "rpcprotocolclient.h"
-#include <jsonrpccpp/common/jsonparser.h>
+#include "../jsonparser.h"
 
 using namespace jsonrpc;
 
@@ -45,7 +45,7 @@ void RpcProtocolClient::HandleResponse(const std::string &response,
   if (reader.parse(response, value)) {
     this->HandleResponse(value, result);
   } else {
-    throw JsonRpcException(Errors::ERROR_RPC_JSON_PARSE_ERROR, " " + response);
+    throw JsonRpcException(ExceptionCode::ERROR_INVALID_JSON, " " + response);
   }
 }
 
@@ -58,7 +58,7 @@ Json::Value RpcProtocolClient::HandleResponse(const Json::Value &value,
       result = value[KEY_RESULT];
     }
   } else {
-    throw JsonRpcException(Errors::ERROR_CLIENT_INVALID_RESPONSE,
+    throw JsonRpcException(ExceptionCode::ERROR_CLIENT_INVALID_RESPONSE,
                            " " + value.toStyledString());
   }
   return value[KEY_ID];
@@ -90,7 +90,7 @@ void RpcProtocolClient::throwErrorException(const Json::Value &response) {
                              response[KEY_ERROR][KEY_ERROR_MESSAGE].asString());
     }
   } else {
-    throw JsonRpcException(response[KEY_ERROR][KEY_ERROR_CODE].asInt());
+    throw JsonRpcException(response[KEY_ERROR][KEY_ERROR_CODE].asInt(), "");
   }
 }
 

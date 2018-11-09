@@ -1,19 +1,10 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    client.h
- * @date    03.01.2013
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
+#pragma once
 
-#ifndef JSONRPC_CPP_CLIENT_H_
-#define JSONRPC_CPP_CLIENT_H_
-
-#include "iclientconnector.h"
+#include "../jsonparser.h"
+#include "../connector/iclientconnector.h"
 #include "batchcall.h"
 #include "batchresponse.h"
-#include <jsonrpccpp/common/jsonparser.h>
+
 
 #include <vector>
 #include <map>
@@ -45,4 +36,3 @@ namespace jsonrpc
     };
 
 } /* namespace jsonrpc */
-#endif /* JSONRPC_CPP_CLIENT_H_ */

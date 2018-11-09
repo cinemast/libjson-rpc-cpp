@@ -23,19 +23,19 @@ void Client::CallMethod(const std::string &name, const Json::Value &parameter,
                         Json::Value &result) {
   std::string request, response;
   protocol->BuildRequest(name, parameter, request, false);
-  connector.SendRPCMessage(request, response);
+  response = connector.SendRPCMessage(request);
   protocol->HandleResponse(response, result);
 }
 
 void Client::CallProcedures(const BatchCall &calls, BatchResponse &result) {
   std::string request, response;
   request = calls.toString();
-  connector.SendRPCMessage(request, response);
+  response = connector.SendRPCMessage(request);
   Json::Reader reader;
   Json::Value tmpresult;
 
   if (!reader.parse(response, tmpresult) || !tmpresult.isArray()) {
-    throw JsonRpcException(Errors::ERROR_CLIENT_INVALID_RESPONSE,
+    throw JsonRpcException(ExceptionCode::ERROR_CLIENT_INVALID_RESPONSE,
                            "Array expected.");
   }
 
@@ -53,7 +53,7 @@ void Client::CallProcedures(const BatchCall &calls, BatchResponse &result) {
         result.addResponse(id, tmpresult[i]["error"], true);
       }
     } else
-      throw JsonRpcException(Errors::ERROR_CLIENT_INVALID_RESPONSE,
+      throw JsonRpcException(ExceptionCode::ERROR_CLIENT_INVALID_RESPONSE,
                              "Object in Array expected.");
   }
 }
@@ -75,5 +75,5 @@ void Client::CallNotification(const std::string &name,
                               const Json::Value &parameter) {
   std::string request, response;
   protocol->BuildRequest(name, parameter, request, true);
-  connector.SendRPCMessage(request, response);
+  response = connector.SendRPCMessage(request);
 }

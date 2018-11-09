@@ -10,8 +10,8 @@
 #ifndef RESPONSEHANDLER_H
 #define RESPONSEHANDLER_H
 
-#include <jsonrpccpp/common/exception.h>
-#include <jsonrpccpp/common/jsonparser.h>
+#include "../exception.h"
+#include "../jsonparser.h"
 #include <string>
 #include "client.h"
 

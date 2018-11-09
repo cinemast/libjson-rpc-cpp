@@ -1,16 +1,6 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    batchcall.h
- * @date    15.10.2013
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
+#pragma once
 
-#ifndef JSONRPC_CPP_BATCHCALL_H
-#define JSONRPC_CPP_BATCHCALL_H
-
-#include <jsonrpccpp/common/jsonparser.h>
+#include "../jsonparser.h"
 
 namespace jsonrpc
 {
@@ -34,5 +24,3 @@ namespace jsonrpc
             int id;
     };
 }
-
-#endif // JSONRPC_CPP_BATCHCALL_H

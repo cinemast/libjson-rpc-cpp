@@ -1,17 +1,7 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    batchresponse.h
- * @date    10/9/2014
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
-#ifndef JSONRPC_BATCHRESPONSE_H
-#define JSONRPC_BATCHRESPONSE_H
+#pragma once
 
 #include <map>
-#include <jsonrpccpp/common/jsonparser.h>
+#include "../jsonparser.h"
 
 namespace jsonrpc {
 
@@ -66,5 +56,3 @@ namespace jsonrpc {
     };
 
 } // namespace jsonrpc
-
-#endif // JSONRPC_BATCHRESPONSE_H

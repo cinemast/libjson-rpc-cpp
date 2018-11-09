@@ -39,6 +39,10 @@ if(COMPILE_TESTS)
   add_subdirectory(src/test)
 endif()
 
+if (JSONRPC_CLIENT)
+  add_subdirectory(src/client)
+endif()
+
 add_subdirectory(src/connector)
 
 if(CONNECTOR_MICROHTTPD)
