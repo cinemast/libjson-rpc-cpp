@@ -1,39 +1,28 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    abstractserver.h
- * @date    30.12.2012
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
-#ifndef JSONRPC_CPP_ABSTRACTSERVER_H_
-#define JSONRPC_CPP_ABSTRACTSERVER_H_
+#pragma once
 
 #include <map>
 #include <string>
 #include <vector>
-#include <jsonrpccpp/common/procedure.h>
-#include "abstractserverconnector.h"
+#include "../connector/abstractserverconnector.h"
+#include "../connector/iclientconnectionhandler.h"
+#include "procedure.h"
+#include "abstractprotocolhandler.h"
 #include "iprocedureinvokationhandler.h"
-#include "iclientconnectionhandler.h"
 #include "requesthandlerfactory.h"
 
 namespace jsonrpc
 {
 
     template<class S>
-    class AbstractServer : public IProcedureInvokationHandler
+    class AbstractServer : public IProcedureInvokationHandler, public IClientConnectionHandler
     {
         public:
             typedef void(S::*methodPointer_t)       (const Json::Value &parameter, Json::Value &result);
             typedef void(S::*notificationPointer_t) (const Json::Value &parameter);
 
-            AbstractServer(AbstractServerConnector &connector, serverVersion_t type = JSONRPC_SERVER_V2) :
-                connection(connector)
+            AbstractServer(serverVersion_t type = JSONRPC_SERVER_V2)
             {
                 this->handler = RequestHandlerFactory::createProtocolHandler(type, *this);
-                connector.SetHandler(this->handler);
             }
 
             virtual ~AbstractServer()
@@ -41,14 +30,8 @@ namespace jsonrpc
                 delete this->handler;
             }
 
-            bool StartListening()
-            {
-                return connection.StartListening();
-            }
-
-            bool StopListening()
-            {
-                return connection.StopListening();
+            virtual bool HandleRequest(const std::string& request, std::string& response) {
+                return this->handler->HandleRequest(request, response);
             }
 
             virtual void HandleMethodCall(Procedure &proc, const Json::Value& input, Json::Value& output)
@@ -87,8 +70,7 @@ namespace jsonrpc
             }
 
         private:
-            AbstractServerConnector                         &connection;
-            IProtocolHandler                                *handler;
+            AbstractProtocolHandler                         *handler;
             std::map<std::string, methodPointer_t>          methods;
             std::map<std::string, notificationPointer_t>    notifications;
 
@@ -103,4 +85,3 @@ namespace jsonrpc
     };
 
 } /* namespace jsonrpc */
-#endif /* JSONRPC_CPP_ABSTRACTSERVER_H_ */

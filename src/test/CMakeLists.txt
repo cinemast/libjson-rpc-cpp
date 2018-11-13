@@ -21,6 +21,10 @@ if (JSONRPC_CLIENT)
   target_link_libraries(jsonrpccpp-unittest PRIVATE jsonrpccpp-client)
 endif()
 
+if (JSONRPC_SERVER)
+  target_link_libraries(jsonrpccpp-unittest PRIVATE jsonrpccpp-server)
+endif()
+
 if(${CONNECTOR_MICROHTTPD} OR ${CONNECTOR_CURL})
   find_package(CURL REQUIRED)
   include_directories(${MHD_INCLUDE_DIR})

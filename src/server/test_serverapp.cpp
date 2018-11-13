@@ -1,20 +1,11 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    testserver.cpp
- * @date    08.03.2013
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
-#include "testserver.h"
+#include "test_serverapp.h"
 #include <iostream>
 
 using namespace std;
 using namespace jsonrpc;
 
-TestServer::TestServer(AbstractServerConnector &connector, serverVersion_t type)
-    : AbstractServer<TestServer>(connector, type), cnt(-1) {
+TestServer::TestServer(serverVersion_t type)
+    : AbstractServer<TestServer>(type), cnt(-1) {
   this->bindAndAddMethod(Procedure("sayHello", PARAMS_BY_NAME, JSON_STRING,
                                    "name", JSON_STRING, NULL),
                          &TestServer::sayHello);

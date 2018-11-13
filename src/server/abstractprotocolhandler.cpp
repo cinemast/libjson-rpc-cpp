@@ -79,7 +79,7 @@ ExceptionCode AbstractProtocolHandler::ValidateRequest(const Json::Value &reques
   return error;
 }
 
-std::string GetErrorMessage(ExceptionCode code) {
+std::string AbstractProtocolHandler::GetErrorMessage(ExceptionCode code) {
   switch(code) {
     case ExceptionCode::ERROR_SERVER_PROCEDURE_IS_NOTIFICATION: 
       return "Invoked procedure is a notification, not a method";

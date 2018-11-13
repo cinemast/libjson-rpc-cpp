@@ -7,8 +7,8 @@
  * @license See attached LICENSE.txt
  ************************************************************************/
 
-#include "mockserverconnector.h"
-#include "testserver.h"
+#include "test_mockserverconnector.h"
+#include "test_serverapp.h"
 #include <catch.hpp>
 
 #define TEST_MODULE "[server]"
@@ -21,14 +21,14 @@ struct F {
   MockServerConnector c;
   TestServer server;
 
-  F() : server(c) {}
+  F() : c({server}) { }
 };
 
 struct F1 {
   MockServerConnector c;
   TestServer server;
 
-  F1() : server(c, JSONRPC_SERVER_V1) {}
+  F1() : server(JSONRPC_SERVER_V1), c({server}) {}
 };
 } // namespace testserver
 using namespace testserver;
@@ -346,8 +346,8 @@ TEST_CASE_METHOD(F1, "test_server_v1_method_error", TEST_MODULE) {
 }
 
 TEST_CASE("test_server_hybrid", TEST_MODULE) {
-  MockServerConnector c;
-  TestServer server(c, JSONRPC_SERVER_V1V2);
+  TestServer server(JSONRPC_SERVER_V1V2);
+  MockServerConnector c({server});
 
   c.SetRequest("{\"id\": 1, \"method\": \"sub\",\"params\":[5,7]}}");
   CHECK(c.GetJsonResponse()["result"].asInt() == -2);
@@ -382,8 +382,9 @@ TEST_CASE("test_server_hybrid", TEST_MODULE) {
 }
 
 TEST_CASE("test_server_abstractserver", TEST_MODULE) {
-  MockServerConnector c;
-  TestServer server(c, JSONRPC_SERVER_V1V2);
+  
+  TestServer server(JSONRPC_SERVER_V1V2);
+  MockServerConnector c({server});
 
   CHECK(server.bindAndAddNotification(Procedure("testMethod", PARAMS_BY_NAME,
                                                 JSON_STRING, "name",
@@ -411,6 +412,4 @@ TEST_CASE("test_server_abstractserver", TEST_MODULE) {
                                                 JSON_INTEGER, NULL),
                                       &TestServer::initCounter) == false);
 
-  CHECK(server.StartListening() == true);
-  CHECK(server.StopListening() == true);
 }

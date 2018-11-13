@@ -7,12 +7,12 @@
  * @license See attached LICENSE.txt
  ************************************************************************/
 
-#include "mockserverconnector.h"
+#include "test_mockserverconnector.h"
 
 using namespace jsonrpc;
 using namespace std;
 
-MockServerConnector::MockServerConnector() {}
+MockServerConnector::MockServerConnector(ConnectionHandlers handlers) : AbstractServerConnector(handlers) {}
 
 bool MockServerConnector::StartListening() { return true; }
 
@@ -20,8 +20,7 @@ bool MockServerConnector::StopListening() { return true; }
 
 bool MockServerConnector::SetRequest(const string &request) {
   this->request = request;
-  this->response = "";
-  this->ProcessRequest(request, this->response);
+  this->response = this->ProcessRequest(request);
   return true;
 }
 

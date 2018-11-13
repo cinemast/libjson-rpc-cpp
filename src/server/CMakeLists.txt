@@ -12,7 +12,7 @@ add_library(jsonrpccpp-server
  target_link_libraries(jsonrpccpp-server PRIVATE jsoncpp_lib)
 
  set_target_properties(jsonrpccpp-server PROPERTIES
-  PUBLIC_HEADER ""
+  PUBLIC_HEADER "rpcprotocolserverv1.h rpcprotocolserverv2.h rpcprotocolserver12.h procedure.h abstractserver.h abstractprotocolhandler.h"
   SOVERSION ${SO_VERSION}
   VERSION ${VERSION_STRING}
 )
@@ -29,10 +29,12 @@ install(TARGETS jsonrpccpp-server
   PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/jsonrpccpp/server
 )
 
-# if (COMPILE_TESTS)
-#     target_sources(jsonrpccpp-unittest PRIVATE 
-#         ${CMAKE_CURRENT_SOURCE_DIR}/test_client.cpp
-#         ${CMAKE_CURRENT_SOURCE_DIR}/mockclientconnector.cpp
-#     )
-#     add_test(server ${BMAKE_BINARY_DIR}/jsonrpccpp-unittest "[server]" --durations yes)
-# endif()
+if (COMPILE_TESTS)
+    target_sources(jsonrpccpp-unittest PRIVATE 
+         ${CMAKE_CURRENT_SOURCE_DIR}/test_server.cpp
+         ${CMAKE_CURRENT_SOURCE_DIR}/test_mockserverconnector.cpp
+         ${CMAKE_CURRENT_SOURCE_DIR}/test_mockclientconnectionhandler.cpp
+         ${CMAKE_CURRENT_SOURCE_DIR}/test_serverapp.cpp
+     )
+     add_test(server ${BMAKE_BINARY_DIR}/jsonrpccpp-unittest "[server]" --durations yes)
+endif()
