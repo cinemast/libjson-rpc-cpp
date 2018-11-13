@@ -7,6 +7,7 @@
 
 namespace jsonrpc {
   enum ExceptionCode { 
+    NONE = 0,
     ERROR_CLIENT_INVALID_RESPONSE = -32001, 
     ERROR_CLIENT_CONNECTOR = -32003, 
     ERROR_INVALID_JSON = -32700,
@@ -32,15 +33,15 @@ namespace jsonrpc {
       this->message = str.str();
     }
 
-    int GetCode() { return code; }
-    std::string GetMessage() { return this->message; }
-    Json::Value& GetData() { return data; }
+    int GetCode() const { return code; }
+    const std::string GetMessage() const { return this->message; }
+    const Json::Value GetData() const { return data; }
 
     virtual const char* what() const throw() { return message.c_str(); }
 
    private:
     int code;
     std::string message;
-    Json::Value data;
+    const Json::Value data;
   };
 }

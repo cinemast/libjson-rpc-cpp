@@ -1,8 +1,9 @@
 #pragma once
 
+#include "../connector/iclientconnectionhandler.h"
+#include "../exception.h"
 #include "iprocedureinvokationhandler.h"
 #include "procedure.h"
-#include "iclientconnectionhandler.h"
 
 #include <map>
 #include <string>
@@ -15,14 +16,13 @@
 
 namespace jsonrpc {
 
-    class AbstractProtocolHandler : public IProtocolHandler
+    class AbstractProtocolHandler : public IClientConnectionHandler
     {
         public:
             AbstractProtocolHandler(IProcedureInvokationHandler &handler);
             virtual ~AbstractProtocolHandler();
 
-            void HandleRequest(const std::string& request, std::string& retValue);
-
+            virtual bool HandleRequest(const std::string& request, std::string& retValue);
             virtual void AddProcedure(const Procedure& procedure);
 
             virtual void HandleJsonRequest(const Json::Value& request, Json::Value& response) = 0;
@@ -36,8 +36,9 @@ namespace jsonrpc {
             std::map<std::string, Procedure> procedures;
 
             void ProcessRequest(const Json::Value &request, Json::Value &retValue);
-            int ValidateRequest(const Json::Value &val);
+            ExceptionCode ValidateRequest(const Json::Value &request);
 
+            static std::string GetErrorMessage(ExceptionCode code);
     };
 
 } // namespace jsonrpc

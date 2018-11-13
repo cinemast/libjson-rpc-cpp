@@ -17,8 +17,8 @@ void RpcProtocolServerV2::HandleJsonRequest(const Json::Value &req,
   else if (req.isObject()) {
     this->HandleSingleRequest(req, response);
   } else {
-    this->WrapError(Json::nullValue, Errors::ERROR_RPC_INVALID_REQUEST,
-                    Errors::GetErrorMessage(Errors::ERROR_RPC_INVALID_REQUEST),
+    this->WrapError(Json::nullValue, ExceptionCode::ERROR_SERVER_INVALID_REQUEST,
+                    "Invalid JSON-RPC request, expected object",
                     response);
   }
 }
@@ -32,14 +32,14 @@ void RpcProtocolServerV2::HandleSingleRequest(const Json::Value &req,
       this->WrapException(req, exc, response);
     }
   } else {
-    this->WrapError(req, error, Errors::GetErrorMessage(error), response);
+    this->WrapError(req, error, "Invalid JSON-RPC request", response);
   }
 }
 void RpcProtocolServerV2::HandleBatchRequest(const Json::Value &req,
                                              Json::Value &response) {
   if (req.size() == 0)
-    this->WrapError(Json::nullValue, Errors::ERROR_RPC_INVALID_REQUEST,
-                    Errors::GetErrorMessage(Errors::ERROR_RPC_INVALID_REQUEST),
+    this->WrapError(Json::nullValue, ExceptionCode::ERROR_SERVER_INVALID_REQUEST,
+                    "Invalid JSON-RPC batch request, expected at least one object in batch",
                     response);
   else {
     for (unsigned int i = 0; i < req.size(); i++) {
@@ -96,9 +96,7 @@ void RpcProtocolServerV2::WrapError(const Json::Value &request, int code,
   }
 }
 
-void RpcProtocolServerV2::WrapException(const Json::Value &request,
-                                        const JsonRpcException &exception,
-                                        Json::Value &result) {
+void RpcProtocolServerV2::WrapException(const Json::Value &request, const JsonRpcException exception, Json::Value &result) {
   this->WrapError(request, exception.GetCode(), exception.GetMessage(), result);
   result["error"]["data"] = exception.GetData();
 }

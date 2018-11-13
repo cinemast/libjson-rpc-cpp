@@ -3,36 +3,39 @@
 
 using namespace jsonrpc;
 
-RpcProtocolServer12::RpcProtocolServer12(IProcedureInvokationHandler &handler)
-    : rpc1(handler), rpc2(handler) {}
+RpcProtocolServer12::RpcProtocolServer12(IProcedureInvokationHandler &handler) : AbstractProtocolHandler(handler), rpc1(handler), rpc2(handler) {}
+
+RpcProtocolServer12::~RpcProtocolServer12() {}
 
 void RpcProtocolServer12::AddProcedure(const Procedure &procedure) {
   this->rpc1.AddProcedure(procedure);
   this->rpc2.AddProcedure(procedure);
 }
 
-void RpcProtocolServer12::HandleRequest(const std::string &request,
-                                        std::string &retValue) {
-  Json::Reader reader;
-  Json::Value req;
-  Json::Value resp;
-  Json::FastWriter w;
-
-  if (reader.parse(request, req, false)) {
-    this->GetHandler(req).HandleJsonRequest(req, resp);
-  } else {
-    this->GetHandler(req).WrapError(
-        Json::nullValue, ExceptionCode::ERROR_RPC_JSON_PARSE_ERROR,
-        Errors::GetErrorMessage(ExceptionCode::ERROR_RPC_JSON_PARSE_ERROR), resp);
-  }
-  if (resp != Json::nullValue)
-    retValue = w.write(resp);
+bool RpcProtocolServer12::ValidateRequestFields(const Json::Value &request) {
+  return this->GetHandler(request).ValidateRequestFields(request);
 }
 
-AbstractProtocolHandler &
-RpcProtocolServer12::GetHandler(const Json::Value &request) {
+void RpcProtocolServer12::HandleJsonRequest(const Json::Value &request, Json::Value &response) {
+  this->GetHandler(request).HandleJsonRequest(request, response);
+}
+
+void RpcProtocolServer12::WrapResult(const Json::Value& request, Json::Value& response, Json::Value& retValue) {
+  this->GetHandler(request).WrapResult(request, response, retValue);
+}
+
+void RpcProtocolServer12::WrapError(const Json::Value& request, int code, const std::string &message, Json::Value& result) {
+  this->GetHandler(request).WrapError(request, code, message, result);
+}
+            
+procedure_t RpcProtocolServer12::GetRequestType(const Json::Value& request) {
+  return this->GetHandler(request).GetRequestType(request);
+}
+
+AbstractProtocolHandler & RpcProtocolServer12::GetHandler(const Json::Value &request) {
   if (request.isArray() || (request.isObject() && request.isMember("jsonrpc") &&
-                            request["jsonrpc"].asString() == "2.0"))
+                            request["jsonrpc"].asString() == "2.0")) {
     return rpc2;
+  }
   return rpc1;
 }

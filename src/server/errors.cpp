@@ -1,31 +1,13 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    errors.cpp
- * @date    31.12.2012
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
 #include "errors.h"
-#include "exception.h"
+#include "../exception.h"
 
 using namespace jsonrpc;
 
 std::map<int, std::string> Errors::possibleErrors;
 Errors::_init Errors::_initializer;
 
-const int Errors::ERROR_RPC_JSON_PARSE_ERROR = -32700;
 
-const int Errors::ERROR_SERVER_PROCEDURE_IS_METHOD = -32604;
-const int Errors::ERROR_SERVER_PROCEDURE_IS_NOTIFICATION = -32605;
-const int Errors::ERROR_SERVER_PROCEDURE_POINTER_IS_NULL = -32606;
-const int Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_NOT_FOUND = -32000;
-const int Errors::ERROR_SERVER_CONNECTOR = -32002;
-const int Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX = -32007;
 
-const int Errors::ERROR_CLIENT_CONNECTOR = -32003;
-const int Errors::ERROR_CLIENT_INVALID_RESPONSE = -32001;
 
 Errors::_init::_init() {
   // Official Errors
@@ -65,4 +47,8 @@ std::string Errors::GetErrorMessage(int errorCode) {
     return "";
   }
   return possibleErrors[errorCode];
+}
+
+std::string Errors::GetErrorMessage(ExceptionCode code) {
+    return "";
 }

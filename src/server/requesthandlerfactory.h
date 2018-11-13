@@ -1,17 +1,7 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    requesthandlerfactory.h
- * @date    10/23/2014
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
-#ifndef JSONRPC_REQUESTHANDLERFACTORY_H
-#define JSONRPC_REQUESTHANDLERFACTORY_H
+#pragma once
 
 #include "iprocedureinvokationhandler.h"
-#include "iclientconnectionhandler.h"
+#include "abstractprotocolhandler.h"
 
 namespace jsonrpc {
 
@@ -20,9 +10,7 @@ namespace jsonrpc {
     class RequestHandlerFactory
     {
         public:
-            static IProtocolHandler* createProtocolHandler(serverVersion_t type, IProcedureInvokationHandler& handler);
+            static AbstractProtocolHandler* createProtocolHandler(serverVersion_t type, IProcedureInvokationHandler& handler);
     };
 
 } // namespace jsonrpc
-
-#endif // JSONRPC_REQUESTHANDLERFACTORY_H

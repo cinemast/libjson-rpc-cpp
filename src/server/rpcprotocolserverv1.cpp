@@ -9,7 +9,7 @@ RpcProtocolServerV1::RpcProtocolServerV1(IProcedureInvokationHandler &handler)
 void RpcProtocolServerV1::HandleJsonRequest(const Json::Value &req,
                                             Json::Value &response) {
   if (req.isObject()) {
-    int error = this->ValidateRequest(req);
+    ExceptionCode error = this->ValidateRequest(req);
     if (error == 0) {
       try {
         this->ProcessRequest(req, response);
@@ -17,11 +17,11 @@ void RpcProtocolServerV1::HandleJsonRequest(const Json::Value &req,
         this->WrapException(req, exc, response);
       }
     } else {
-      this->WrapError(req, error, Errors::GetErrorMessage(error), response);
+      this->WrapError(req, error, this->GetErrorMessage(error), response);
     }
   } else {
-    this->WrapError(Json::nullValue, Errors::ERROR_RPC_INVALID_REQUEST,
-                    Errors::GetErrorMessage(Errors::ERROR_RPC_INVALID_REQUEST),
+    this->WrapError(Json::nullValue, ExceptionCode::ERROR_SERVER_INVALID_REQUEST,
+                    "Invalid JSON-RPC request, expected object",
                     response);
   }
 }

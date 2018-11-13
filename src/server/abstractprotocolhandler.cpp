@@ -17,7 +17,7 @@ void AbstractProtocolHandler::AddProcedure(const Procedure &procedure) {
   this->procedures[procedure.GetProcedureName()] = procedure;
 }
 
-void AbstractProtocolHandler::HandleRequest(const std::string &request,
+bool AbstractProtocolHandler::HandleRequest(const std::string &request,
                                             std::string &retValue) {
   Json::Reader reader;
   Json::Value req;
@@ -34,6 +34,8 @@ void AbstractProtocolHandler::HandleRequest(const std::string &request,
 
   if (resp != Json::nullValue)
     retValue = w.write(resp);
+
+  return true;
 }
 
 void AbstractProtocolHandler::ProcessRequest(const Json::Value &request,
@@ -51,8 +53,8 @@ void AbstractProtocolHandler::ProcessRequest(const Json::Value &request,
   }
 }
 
-int AbstractProtocolHandler::ValidateRequest(const Json::Value &request) {
-  int error = 0;
+ExceptionCode AbstractProtocolHandler::ValidateRequest(const Json::Value &request) {
+  ExceptionCode error = ExceptionCode::NONE;
   Procedure proc;
   if (!this->ValidateRequestFields(request)) {
     error = ExceptionCode::ERROR_SERVER_INVALID_REQUEST;
@@ -75,4 +77,19 @@ int AbstractProtocolHandler::ValidateRequest(const Json::Value &request) {
     }
   }
   return error;
+}
+
+std::string GetErrorMessage(ExceptionCode code) {
+  switch(code) {
+    case ExceptionCode::ERROR_SERVER_PROCEDURE_IS_NOTIFICATION: 
+      return "Invoked procedure is a notification, not a method";
+    case ExceptionCode::ERROR_SERVER_PROCEDURE_IS_METHOD:
+      return "Invoked procedure is a method, not a notification";
+    case ExceptionCode::ERROR_RPC_INVALID_PARAMS:
+      return "Invalid parameter (invalid name and/or type) detected";
+    case ExceptionCode::ERROR_RPC_METHOD_NOT_FOUND:
+      return "Invoked procedure not registerd";
+    default:
+      return "";
+  }
 }

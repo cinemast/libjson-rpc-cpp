@@ -1,14 +1,4 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    rpcprotocolserver12.h
- * @date    10/25/2014
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
-#ifndef JSONRPC_RPCPROTOCOLSERVER12_H
-#define JSONRPC_RPCPROTOCOLSERVER12_H
+#pragma once
 
 #include "abstractprotocolhandler.h"
 #include "rpcprotocolserverv1.h"
@@ -16,13 +6,19 @@
 
 namespace jsonrpc {
 
-    class RpcProtocolServer12 : public IProtocolHandler
+    class RpcProtocolServer12 : public AbstractProtocolHandler
     {
         public:
             RpcProtocolServer12(IProcedureInvokationHandler &handler);
+            virtual ~RpcProtocolServer12();
+            
+            void AddProcedure(const Procedure &procedure);
 
-            void AddProcedure(const Procedure& procedure);
-            void HandleRequest(const std::string& request, std::string& retValue);
+            bool ValidateRequestFields(const Json::Value &request);
+            void HandleJsonRequest(const Json::Value &request, Json::Value &response);
+            void WrapResult(const Json::Value& request, Json::Value& response, Json::Value& retValue);
+            void WrapError(const Json::Value& request, int code, const std::string &message, Json::Value& result);
+            procedure_t GetRequestType(const Json::Value& request);
 
         private:
             RpcProtocolServerV1 rpc1;
@@ -32,5 +28,3 @@ namespace jsonrpc {
     };
 
 } // namespace jsonrpc
-
-#endif // JSONRPC_RPCPROTOCOLSERVER12_H
