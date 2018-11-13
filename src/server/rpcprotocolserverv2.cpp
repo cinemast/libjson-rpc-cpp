@@ -1,6 +1,5 @@
 #include "rpcprotocolserverv2.h"
 #include "../exception.h"
-#include <iostream>
 
 using namespace std;
 using namespace jsonrpc;
@@ -96,7 +95,7 @@ void RpcProtocolServerV2::WrapError(const Json::Value &request, int code,
   }
 }
 
-void RpcProtocolServerV2::WrapException(const Json::Value &request, const JsonRpcException exception, Json::Value &result) {
+void RpcProtocolServerV2::WrapException(const Json::Value &request, const JsonRpcException &exception, Json::Value &result) {
   this->WrapError(request, exception.GetCode(), exception.GetMessage(), result);
   result["error"]["data"] = exception.GetData();
 }

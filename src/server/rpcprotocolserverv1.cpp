@@ -53,7 +53,6 @@ void RpcProtocolServerV1::WrapError(const Json::Value &request, int code,
                                     Json::Value &result) {
   result["error"]["code"] = code;
   result["error"]["message"] = message;
-  result["result"] = Json::nullValue;
   if (request.isObject() && request.isMember("id")) {
     result["id"] = request["id"];
   } else {

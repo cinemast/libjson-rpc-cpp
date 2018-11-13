@@ -1,14 +1,6 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    test_server.cpp
- * @date    28.09.2013
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
 #include "test_mockserverconnector.h"
 #include "test_serverapp.h"
+#include <iostream>
 #include <catch.hpp>
 
 #define TEST_MODULE "[server]"
@@ -181,8 +173,9 @@ TEST_CASE_METHOD(F, "test_server_v2_method_error", TEST_MODULE) {
   // userspace exception
   c.SetRequest(
       "{\"jsonrpc\":\"2.0\", \"id\": 1, \"method\": \"exceptionMethod\"}");
-  CHECK(c.GetJsonResponse()["error"]["code"] == -32099);
-  CHECK(c.GetJsonResponse()["error"]["message"] == "User exception");
+
+  CHECK(c.GetJsonResponse()["error"]["code"].asInt() == -32099);
+  CHECK(c.GetJsonResponse()["error"]["message"] == "JsonRpcException -32099: User exception");
   CHECK(c.GetJsonResponse()["error"]["data"][0] == 33);
   CHECK(c.GetJsonResponse().isMember("result") == false);
 }
@@ -341,7 +334,7 @@ TEST_CASE_METHOD(F1, "test_server_v1_method_error", TEST_MODULE) {
   // userspace exception
   c.SetRequest("{\"id\": 1, \"method\": \"exceptionMethod\",\"params\":null}");
   CHECK(c.GetJsonResponse()["error"]["code"] == -32099);
-  CHECK(c.GetJsonResponse()["error"]["message"] == "User exception");
+  CHECK(c.GetJsonResponse()["error"]["message"] == "JsonRpcException -32099: User exception");
   CHECK(c.GetJsonResponse()["result"] == Json::nullValue);
 }
 
@@ -377,6 +370,7 @@ TEST_CASE("test_server_hybrid", TEST_MODULE) {
   CHECK(c.GetJsonResponse().isMember("result") == false);
 
   c.SetRequest("{\"jsonrpc\":\"2.0\", \"params\":{\"value\": 33");
+  cout << c.GetResponse() << endl;
   CHECK(c.GetJsonResponse()["error"]["code"] == -32700);
   CHECK(c.GetJsonResponse().isMember("result") == false);
 }

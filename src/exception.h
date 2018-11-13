@@ -27,7 +27,7 @@ namespace jsonrpc {
       this->message = str.str();
     }
 
-    JsonRpcException(int code, const std::string& message, const Json::Value &data) {
+    JsonRpcException(int code, const std::string& message, const Json::Value &data) : code(code), data(data) {
       std::stringstream str;
       str << "JsonRpcException " << code << ": " << message;
       this->message = str.str();
