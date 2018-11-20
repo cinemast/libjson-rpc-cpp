@@ -36,5 +36,5 @@ if (COMPILE_TESTS)
          ${CMAKE_CURRENT_SOURCE_DIR}/test_mockclientconnectionhandler.cpp
          ${CMAKE_CURRENT_SOURCE_DIR}/test_serverapp.cpp
      )
-     add_test(server ${BMAKE_BINARY_DIR}/jsonrpccpp-unittest "[server]" --durations yes)
+     add_test(server ${CMAKE_BINARY_DIR}/jsonrpccpp-unittest "[server]" --durations yes)
 endif()
