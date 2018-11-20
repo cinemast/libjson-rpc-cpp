@@ -1,12 +1,3 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    testhttpserver.cpp
- * @date    11/16/2014
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
 #include "testhttpserver.h"
 
 using namespace jsonrpc;

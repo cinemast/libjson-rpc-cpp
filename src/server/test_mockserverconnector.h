@@ -1,16 +1,13 @@
 #pragma once
 
 #include "../jsonparser.h"
-#include "../connector/abstractserverconnector.h"
+#include "../connector/iclientconnectionhandler.h"
 
 namespace jsonrpc {
 
-class MockServerConnector : public AbstractServerConnector {
+class MockServerConnector {
 public:
-  MockServerConnector(ConnectionHandlers handlers);
-
-  virtual bool StartListening();
-  virtual bool StopListening();
+  MockServerConnector(IClientConnectionHandler& handler);
 
   bool SetRequest(const std::string &request);
   Json::Value GetJsonRequest();
@@ -19,6 +16,7 @@ public:
   Json::Value GetJsonResponse();
 
 private:
+  IClientConnectionHandler& handler;
   std::string request;
   std::string response;
 };

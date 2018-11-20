@@ -17,8 +17,7 @@ void AbstractProtocolHandler::AddProcedure(const Procedure &procedure) {
   this->procedures[procedure.GetProcedureName()] = procedure;
 }
 
-bool AbstractProtocolHandler::HandleRequest(const std::string &request,
-                                            std::string &retValue) {
+void AbstractProtocolHandler::HandleRequest(const std::string &request, std::string &retValue) {
   Json::Reader reader;
   Json::Value req;
   Json::Value resp;
@@ -31,11 +30,8 @@ bool AbstractProtocolHandler::HandleRequest(const std::string &request,
                     "JSON_PARSE_ERROR: The JSON-Object is not JSON-Valid",
                     resp);
   }
-
   if (resp != Json::nullValue)
     retValue = w.write(resp);
-
-  return true;
 }
 
 void AbstractProtocolHandler::ProcessRequest(const Json::Value &request,

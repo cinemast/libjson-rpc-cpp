@@ -22,7 +22,7 @@ namespace jsonrpc {
             AbstractProtocolHandler(IProcedureInvokationHandler &handler);
             virtual ~AbstractProtocolHandler();
 
-            virtual bool HandleRequest(const std::string& request, std::string& retValue);
+            virtual void HandleRequest(const std::string& request, std::string& retValue);
             virtual void AddProcedure(const Procedure& procedure);
 
             virtual void HandleJsonRequest(const Json::Value& request, Json::Value& response) = 0;

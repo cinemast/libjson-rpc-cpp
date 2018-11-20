@@ -1,9 +1,9 @@
 #pragma once
 
+#include "../iclientconnectionhandler.h"
 #include <microhttpd.h>
 #include <map>
 #include <sstream>
-#include "../abstractserverconnector.h"
 
 namespace jsonrpc {
   class MicroHttpServer;
@@ -22,13 +22,13 @@ namespace jsonrpc {
    * class will always send HTTP-Status 200, even though an JSON-RPC Error might
    * have occurred. Please always check for the JSON-RPC error field.
    */
-  class MicroHttpServer : public AbstractServerConnector {
+  class MicroHttpServer {
    public:
     /**
      * @brief MicroHttpServer, constructor for the included libmicrohttpd based HttpServer
      * @param port on which the server is listening
      */
-    MicroHttpServer(int port, ConnectionHandlers handlers);
+    MicroHttpServer(int port, IClientConnectionHandler& handler);
     virtual ~MicroHttpServer();
 
     /**
@@ -47,6 +47,7 @@ namespace jsonrpc {
     virtual bool SendOptionsResponse(struct mhd_coninfo *client_connection);
 
    private:
+   IClientConnectionHandler& handler;
     int port;
     bool running;
     bool enableTLS;

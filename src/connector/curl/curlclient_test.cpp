@@ -18,7 +18,7 @@ struct F {
   MicroHttpServer server;
   CurlClient client;
 
-  F() : server(TEST_PORT, {handler}), client(CLIENT_URL, 1000, false) {
+  F() : server(TEST_PORT, handler), client(CLIENT_URL, 1000, false) {
     handler.response = "mockresponse";
     REQUIRE(server.StartListening() == true);
   }
@@ -26,7 +26,7 @@ struct F {
 
 class FailingHttpServer : public MicroHttpServer {
  public:
-  FailingHttpServer(int port, ConnectionHandlers handlers) : MicroHttpServer(port, handlers) {}
+  FailingHttpServer(int port, IClientConnectionHandler& handler) : MicroHttpServer(port, handler) {}
 
  protected:
   virtual bool SendResponse(const std::string &response, struct mhd_coninfo *client_connection) {

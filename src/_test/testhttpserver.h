@@ -10,13 +10,12 @@
 #ifndef JSONRPC_TESTHTTPSERVER_H
 #define JSONRPC_TESTHTTPSERVER_H
 
-#include <jsonrpccpp/server/abstractserverconnector.h>
 #include <jsonrpccpp/server/connectors/httpserver.h>
 #include <map>
 
 namespace jsonrpc {
 
-    class TestHttpServer : public AbstractServerConnector
+    class TestHttpServer : public IClientConnectionHandler
     {
         public:
             TestHttpServer(int port);

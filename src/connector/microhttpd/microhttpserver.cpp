@@ -22,8 +22,8 @@ std::string GetFileContent(const string &filename) {
   return target;
 }
 
-MicroHttpServer::MicroHttpServer(int port, ConnectionHandlers handlers)
-    : AbstractServerConnector(handlers),
+MicroHttpServer::MicroHttpServer(int port, IClientConnectionHandler& handler)
+    : handler(handler),
       port(port),
       running(false),
       enableTLS(false),
@@ -124,7 +124,8 @@ int MicroHttpServer::callback(void *cls, MHD_Connection *connection, const char 
       *upload_data_size = 0;
       return MHD_YES;
     } else {
-      string response = client_connection->server->ProcessRequest(client_connection->request.str());
+      string response;
+      client_connection->server->handler.HandleRequest(client_connection->request.str(), response);
       client_connection->code = MHD_HTTP_OK;
       client_connection->server->SendResponse(response, client_connection);
     }

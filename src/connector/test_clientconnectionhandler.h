@@ -10,11 +10,10 @@ class TestClienctConnectionHandler : public jsonrpc::IClientConnectionHandler {
   TestClienctConnectionHandler(const std::string& response, bool success = true)
       : response(response), request(""), success(success), timeout(0) {}
 
-  virtual bool HandleRequest(const std::string& request, std::string& response) {
+  virtual void HandleRequest(const std::string& request, std::string& response) {
     std::this_thread::sleep_for(std::chrono::microseconds(timeout * 1000));
     this->request = request;
     response = this->response;
-    return success;
   }
 
   std::string response;

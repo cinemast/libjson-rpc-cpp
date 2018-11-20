@@ -3,7 +3,6 @@
 #include <map>
 #include <string>
 #include <vector>
-#include "../connector/abstractserverconnector.h"
 #include "../connector/iclientconnectionhandler.h"
 #include "procedure.h"
 #include "abstractprotocolhandler.h"
@@ -30,7 +29,7 @@ namespace jsonrpc
                 delete this->handler;
             }
 
-            virtual bool HandleRequest(const std::string& request, std::string& response) {
+            virtual void HandleRequest(const std::string& request, std::string& response) {
                 return this->handler->HandleRequest(request, response);
             }
 

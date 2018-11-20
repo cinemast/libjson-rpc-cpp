@@ -1,26 +1,14 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    mockserverconnector.cpp
- * @date    10/10/2014
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
 #include "test_mockserverconnector.h"
 
 using namespace jsonrpc;
 using namespace std;
 
-MockServerConnector::MockServerConnector(ConnectionHandlers handlers) : AbstractServerConnector(handlers) {}
-
-bool MockServerConnector::StartListening() { return true; }
-
-bool MockServerConnector::StopListening() { return true; }
+MockServerConnector::MockServerConnector(IClientConnectionHandler& handler) : handler(handler) {}
 
 bool MockServerConnector::SetRequest(const string &request) {
   this->request = request;
-  this->response = this->ProcessRequest(request);
+  this->response = "";
+  this->handler.HandleRequest(request, response);
   return true;
 }
 
