@@ -1,32 +1,25 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    test_connector_http.cpp
- * @date    28.09.2013
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
-#ifdef STUBGEN_TESTING
 #include <catch.hpp>
-
-#include <jsonrpccpp/common/specificationparser.h>
-#include <stubgenerator/client/cppclientstubgenerator.h>
-#include <stubgenerator/client/jsclientstubgenerator.h>
-#include <stubgenerator/client/pyclientstubgenerator.h>
-#include <stubgenerator/helper/cpphelper.h>
-#include <stubgenerator/server/cppserverstubgenerator.h>
-#include <stubgenerator/stubgeneratorfactory.h>
-
+#include <cstdio>
 #include <sstream>
+
+#include "../specificationparser.h"
+#include "../client/cppclientstubgenerator.h"
+#include "../client/jsclientstubgenerator.h"
+#include "../client/pyclientstubgenerator.h"
+#include "../helper/cpphelper.h"
+#include "../server/cppserverstubgenerator.h"
+#include "../stubgeneratorfactory.h"
+
+
+#define TEST_MODULE "[stubgenerator]"
 
 using namespace jsonrpc;
 using namespace std;
 
 namespace teststubgen {
 struct F {
-  FILE *stdout;
-  FILE *stderr;
+  FILE* stdout;
+  FILE* stderr;
   vector<StubGenerator *> stubgens;
   vector<Procedure> procedures;
   F() {
@@ -42,8 +35,6 @@ struct F {
 } // namespace teststubgen
 
 using namespace teststubgen;
-
-#define TEST_MODULE "[stubgenerator]"
 
 TEST_CASE("test stubgen cppclient", TEST_MODULE) {
   stringstream stream;
@@ -268,5 +259,3 @@ TEST_CASE_METHOD(F, "test_stubgen_factory_fileoverride", TEST_MODULE) {
   CHECK(procedures.size() == 8);
   StubGeneratorFactory::deleteStubGenerators(stubgens);
 }
-
-#endif
