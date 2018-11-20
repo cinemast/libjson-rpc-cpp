@@ -23,6 +23,7 @@ option(JSONRPC_SERVER "jsonrpc server" ON)
 option(JSONRPC_CLIENT "jsonrpc client" ON)
 option(CONNECTOR_MICROHTTPD "libmicrohttpd based server connector" ON)
 option(CONNECTOR_CURL "libcurl based client connector" ON)
+option(STUBGENERATOR "stubgenerator for genearting client and server stubs" ON)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
@@ -33,6 +34,8 @@ if (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang" OR ${CMAKE_CXX_COMPILER_ID} MATCHES
 elseif (${CMAKE_CXX_COMPILER_ID} MATCHES "MSVC")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
 endif()
+
+add_subdirectory(src)
 
 if(COMPILE_TESTS)
   enable_testing()
@@ -56,4 +59,9 @@ endif()
 
 if(CONNECTOR_CURL)
   add_subdirectory(src/connector/curl)
+endif()
+
+
+if(STUBGENERATOR)
+  add_subdirectory(src/stubgenerator)
 endif()

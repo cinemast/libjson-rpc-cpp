@@ -1,16 +1,8 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    specificationparser.cpp
- * @date    12.03.2013
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
-#include "specificationparser.h"
 #include <fstream>
 #include <iomanip>
-#include <jsonrpccpp/common/jsonparser.h>
+#include "../jsonparser.h"
+#include "../exception.h"
+#include "specificationparser.h"
 
 using namespace std;
 using namespace jsonrpc;
@@ -27,12 +19,12 @@ SpecificationParser::GetProceduresFromString(const string &content) {
   Json::Reader reader;
   Json::Value val;
   if (!reader.parse(content, val)) {
-    throw JsonRpcException(Errors::ERROR_RPC_JSON_PARSE_ERROR,
+    throw JsonRpcException(ExceptionCode::ERROR_INVALID_JSON,
                            " specification file contains syntax errors");
   }
 
   if (!val.isArray()) {
-    throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,
+    throw JsonRpcException(ExceptionCode::ERROR_INVALID_JSON,
                            " top level json value is not an array");
   }
 
@@ -43,7 +35,7 @@ SpecificationParser::GetProceduresFromString(const string &content) {
     GetProcedure(val[i], proc);
     if (procnames.find(proc.GetProcedureName()) != procnames.end()) {
       throw JsonRpcException(
-          Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,
+          ExceptionCode::ERROR_INVALID_JSON,
           "Procedurename not unique: " + proc.GetProcedureName());
     }
     procnames[proc.GetProcedureName()] = proc;
@@ -73,13 +65,13 @@ void SpecificationParser::GetProcedure(Json::Value &signature,
         }
       } else {
         throw JsonRpcException(
-            Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,
+            ExceptionCode::ERROR_INVALID_JSON,
             "Invalid signature types in fileds: " + signature.toStyledString());
       }
     }
   } else {
     throw JsonRpcException(
-        Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,
+        ExceptionCode::ERROR_INVALID_JSON,
         "procedure declaration does not contain name or parameters: " +
             signature.toStyledString());
   }
@@ -94,7 +86,7 @@ void SpecificationParser::GetFileContent(const std::string &filename,
                   (std::istreambuf_iterator<char>()));
   } else {
     throw JsonRpcException(
-        Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_NOT_FOUND, filename);
+        ExceptionCode::ERROR_INVALID_JSON, filename);
   }
 }
 jsontype_t SpecificationParser::toJsonType(Json::Value &val) {
@@ -120,7 +112,7 @@ jsontype_t SpecificationParser::toJsonType(Json::Value &val) {
     result = JSON_OBJECT;
     break;
   default:
-    throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,
+    throw JsonRpcException(ExceptionCode::ERROR_INVALID_JSON,
                            "Unknown parameter type: " + val.toStyledString());
   }
   return result;

@@ -1,14 +1,4 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    stubgeneratorfactory.h
- * @date    11/19/2014
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
-#ifndef JSONRPC_CPP_STUBGENERATORFACTORY_H
-#define JSONRPC_CPP_STUBGENERATORFACTORY_H
+#pragma once
 
 #include <vector>
 #include "stubgenerator.h"
@@ -23,5 +13,3 @@ namespace jsonrpc {
     };
 
 } // namespace jsonrpc
-
-#endif // JSONRPC_CPP_STUBGENERATORFACTORY_H

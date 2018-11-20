@@ -1,15 +1,6 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    stubgenerator.cpp
- * @date    01.05.2013
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
 #include <algorithm>
 #include <fstream>
-#include <jsonrpccpp/common/specificationparser.h>
+
 
 #include <argtable2.h>
 
@@ -19,6 +10,7 @@
 #include "helper/cpphelper.h"
 #include "server/cppserverstubgenerator.h"
 #include "stubgenerator.h"
+#include "specificationparser.h"
 
 using namespace std;
 using namespace jsonrpc;

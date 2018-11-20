@@ -1,17 +1,9 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    CPPServerStubGenerator.cpp
- * @date    01.05.2013
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
+#pragma once
 
 #include "cppserverstubgenerator.h"
 #include "../helper/cpphelper.h"
 
 #include <algorithm>
-#include <jsonrpccpp/common/specificationwriter.h>
 #include <sstream>
 
 #define TEMPLATE_CPPSERVER_METHODBINDING                                       \

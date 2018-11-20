@@ -1,17 +1,7 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    specificationparser.h
- * @date    12.03.2013
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
-#ifndef JSONRPC_CPP_SPECIFICATIONPARSER_H
-#define JSONRPC_CPP_SPECIFICATIONPARSER_H
+#pragma once
 
 #include "procedure.h"
-#include "exception.h"
+#include "../exception.h"
 
 namespace jsonrpc {
 
@@ -35,4 +25,3 @@ namespace jsonrpc {
 
     };
 }
-#endif // JSONRPC_CPP_SPECIFICATIONPARSER_H

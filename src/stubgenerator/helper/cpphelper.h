@@ -1,18 +1,8 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    cpphelper.h
- * @date    29.09.2013
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
-#ifndef JSONRPC_CPP_CPPHELPER_H
-#define JSONRPC_CPP_CPPHELPER_H
+#pragma once
 
 #include <string>
 #include <vector>
-#include <jsonrpccpp/common/procedure.h>
+#include "../procedure.h"
 #include "../codegenerator.h"
 
 namespace jsonrpc
@@ -41,5 +31,3 @@ namespace jsonrpc
 
     };
 }
-
-#endif // JSONRPC_CPP_CPPSTUBGENERATOR_H

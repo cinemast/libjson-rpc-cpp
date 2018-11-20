@@ -1,14 +1,4 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    servertemplate.h
- * @date    01.05.2013
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
-#ifndef JSONRPC_CPP_SERVERTEMPLATE_H
-#define JSONRPC_CPP_SERVERTEMPLATE_H
+#pragma once
 
 #define TEMPLATE_SERVER_STUB "\
 /**\n\

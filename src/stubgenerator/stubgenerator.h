@@ -1,17 +1,7 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    stubgenerator.h
- * @date    01.05.2013
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
-#ifndef JSONRPC_CPP_STUBGENERATOR_H
-#define JSONRPC_CPP_STUBGENERATOR_H
+#pragma once
 
 #include <string>
-#include <jsonrpccpp/common/procedure.h>
+#include "procedure.h"
 
 #include "codegenerator.h"
 
@@ -36,6 +26,3 @@ namespace jsonrpc
             std::vector<Procedure>  &procedures;
     };
 }
-
-
-#endif // JSONRPC_CPP_STUBGENERATOR_H
