@@ -1,9 +1,6 @@
 #include <algorithm>
 #include <fstream>
 
-
-#include <argtable2.h>
-
 #include "client/cppclientstubgenerator.h"
 #include "client/jsclientstubgenerator.h"
 #include "client/pyclientstubgenerator.h"
@@ -14,11 +11,7 @@
 
 using namespace std;
 using namespace jsonrpc;
-
-#define EXIT_ERROR(X)                                                          \
-  cerr << X << endl;                                                           \
-  arg_freetable(argtable, sizeof(argtable) / sizeof(argtable[0]));             \
-  return 1;
+using namespace stubgenerator;
 
 StubGenerator::StubGenerator(const string &stubname,
                              std::vector<Procedure> &procedures,

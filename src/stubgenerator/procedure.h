@@ -6,10 +6,10 @@
 #include "../jsonparser.h"
 #include "../specification.h"
 
-namespace jsonrpc
+namespace stubgenerator
 {
-    typedef std::map<std::string, jsontype_t> parameterNameList_t;
-    typedef std::vector<jsontype_t> parameterPositionList_t;
+    typedef std::map<std::string, jsonrpc::jsontype_t> parameterNameList_t;
+    typedef std::vector<jsonrpc::jsontype_t> parameterPositionList_t;
 
     typedef enum {PARAMS_BY_NAME, PARAMS_BY_POSITION} parameterDeclaration_t;
 
@@ -20,16 +20,16 @@ namespace jsonrpc
 
             //Various get methods.
             const parameterNameList_t&      GetParameters               () const;
-            procedure_t                     GetProcedureType            () const;
+			jsonrpc::procedure_t            GetProcedureType            () const;
             const std::string&              GetProcedureName            () const;
-            jsontype_t                      GetReturnType               () const;
+			jsonrpc::jsontype_t             GetReturnType               () const;
             parameterDeclaration_t          GetParameterDeclarationType () const;
 
-            void                            SetProcedureType            (procedure_t type);
-            void                            SetReturnType               (jsontype_t type);
+            void                            SetProcedureType            (jsonrpc::procedure_t type);
+            void                            SetReturnType               (jsonrpc::jsontype_t type);
             void                            SetParameterDeclarationType (parameterDeclaration_t type);
 
-            void AddParameter(const std::string& name, jsontype_t type);
+            void AddParameter(const std::string& name, jsonrpc::jsontype_t type);
 
             std::string ToString();
 
@@ -55,18 +55,19 @@ namespace jsonrpc
             /**
              * @brief defines whether the procedure is a method or a notification
              */
-            procedure_t                 procedureType;
+			jsonrpc::procedure_t                 procedureType;
 
             /**
              * @brief this field is only valid if procedure is of type method (not notification).
              */
-            jsontype_t                  returntype;
+			jsonrpc::jsontype_t                  returntype;
 
             /**
              * @brief paramDeclaration this field defines if procedure uses named or positional parameters.
              */
             parameterDeclaration_t      paramDeclaration;
 
-            bool ValidateSingleParameter        (jsontype_t expectedType, const Json::Value &value) const;
+            bool ValidateSingleParameter        (jsonrpc::jsontype_t expectedType, const Json::Value &value) const;
     };
+
 } /* namespace jsonrpc */

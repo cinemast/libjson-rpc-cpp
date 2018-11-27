@@ -1,19 +1,9 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    serverstubgenerator.h
- * @date    01.05.2013
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
-#ifndef JSONRPC_CPP_SERVERSTUBGENERATOR_H
-#define JSONRPC_CPP_SERVERSTUBGENERATOR_H
+#pragma once
 
 #include "../stubgenerator.h"
 #include "../codegenerator.h"
 
-namespace jsonrpc
+namespace stubgenerator
 {
     class CPPServerStubGenerator : public StubGenerator
     {
@@ -30,5 +20,3 @@ namespace jsonrpc
             void generateParameterMapping(const Procedure &proc);
     };
 }
-
-#endif // JSONRPC_CPP_SERVERSTUBGENERATOR_H

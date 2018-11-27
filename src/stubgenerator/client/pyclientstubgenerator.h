@@ -1,9 +1,8 @@
-#ifndef PYTHON_CLIENT_STUB_GENERATOR_H
-#define PYTHON_CLIENT_STUB_GENERATOR_H
+#pragma once
 
 #include "../stubgenerator.h"
 
-namespace jsonrpc
+namespace stubgenerator
 {
     /**
      * The stub client this class generates requires jsonrpc_pyclient
@@ -28,4 +27,3 @@ namespace jsonrpc
             static std::string normalizeString(const std::string &text);
     };
 }
-#endif // PYTHON_CLIENT_STUB_GENERATOR_H

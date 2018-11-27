@@ -1,21 +1,11 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    codegenerator.h
- * @date    3/21/2014
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
-#ifndef JSONRPC_CPP_CODEGENERATOR_H
-#define JSONRPC_CPP_CODEGENERATOR_H
+#pragma once
 
 #include <string>
 #include <ostream>
 #include <fstream>
 #include <sstream>
 
-namespace jsonrpc
+namespace stubgenerator
 {
     class CodeGenerator
     {
@@ -40,5 +30,3 @@ namespace jsonrpc
             bool atBeginning;
     };
 }
-
-#endif // JSONRPC_CPP_CODEGENERATOR_H

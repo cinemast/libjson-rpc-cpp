@@ -1,17 +1,9 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    jsclientstubgenerator.cpp
- * @date    10/22/2014
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
 #include "jsclientstubgenerator.h"
 #include <algorithm>
 
-using namespace jsonrpc;
 using namespace std;
+using namespace jsonrpc;
+using namespace stubgenerator;
 
 #define TEMPLATE_JS_PROLOG                                                     \
   "function <class>(url) {\n\

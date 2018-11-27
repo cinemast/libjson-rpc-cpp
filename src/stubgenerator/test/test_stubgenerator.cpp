@@ -8,33 +8,13 @@
 #include "../client/pyclientstubgenerator.h"
 #include "../helper/cpphelper.h"
 #include "../server/cppserverstubgenerator.h"
-#include "../stubgeneratorfactory.h"
-
+#include "../app.h"
 
 #define TEST_MODULE "[stubgenerator]"
 
-using namespace jsonrpc;
 using namespace std;
-
-namespace teststubgen {
-struct F {
-  FILE* stdout;
-  FILE* stderr;
-  vector<StubGenerator *> stubgens;
-  vector<Procedure> procedures;
-  F() {
-    stdout = fopen("stdout.txt", "w");
-    stderr = fopen("stderr.txt", "w");
-  }
-
-  ~F() {
-    fclose(stdout);
-    fclose(stderr);
-  }
-};
-} // namespace teststubgen
-
-using namespace teststubgen;
+using namespace jsonrpc;
+using namespace stubgenerator;
 
 TEST_CASE("test stubgen cppclient", TEST_MODULE) {
   stringstream stream;
@@ -178,14 +158,16 @@ TEST_CASE("test_stubgen_indentation", TEST_MODULE) {
   CHECK(stream2.str() == "\tabc");
 }
 
-TEST_CASE_METHOD(F, "test_stubgen_factory_help", TEST_MODULE) {
-  const char *argv[2] = {"jsonrpcstub", "-h"};
-  CHECK(StubGeneratorFactory::createStubGenerators(
-            2, (char **)argv, procedures, stubgens, stdout, stderr) == true);
-  CHECK(stubgens.empty() == true);
-  CHECK(procedures.empty() == true);
+TEST_CASE("test_stubgen_factory_help", TEST_MODULE) {
+  char *argv[2] = {"jsonrpcstub", "-h"};
+  App app;
+  CHECK(app.runStubGenerator(2, argv) == 0);
+  CHECK(app.stubgens.empty() == true);
+  CHECK(app.procedures.empty() == true);
 }
 
+
+/*
 TEST_CASE_METHOD(F, "test_stubgen_factory_version", TEST_MODULE) {
   const char *argv[2] = {"jsonrpcstub", "--version"};
 
@@ -258,4 +240,4 @@ TEST_CASE_METHOD(F, "test_stubgen_factory_fileoverride", TEST_MODULE) {
   CHECK(stubgens.size() == 3);
   CHECK(procedures.size() == 8);
   StubGeneratorFactory::deleteStubGenerators(stubgens);
-}
+}*/

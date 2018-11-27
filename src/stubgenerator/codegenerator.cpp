@@ -1,16 +1,7 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    codegenerator.cpp
- * @date    3/21/2014
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
 #include "codegenerator.h"
 
-using namespace jsonrpc;
 using namespace std;
+using namespace stubgenerator;
 
 CodeGenerator::CodeGenerator(const ::string &filename)
     : indentation(0), atBeginning(true) {

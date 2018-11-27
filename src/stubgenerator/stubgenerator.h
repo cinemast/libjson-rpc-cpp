@@ -5,7 +5,7 @@
 
 #include "codegenerator.h"
 
-namespace jsonrpc
+namespace stubgenerator
 {
     class StubGenerator : public CodeGenerator
     {

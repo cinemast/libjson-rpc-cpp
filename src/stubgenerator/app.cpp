@@ -13,8 +13,9 @@
 
 using namespace std;
 using namespace jsonrpc;
+using namespace stubgenerator;
 
-int runStubGenerator(int argc, char **argv) {
+int App::runStubGenerator(int argc, char **argv) {
 
   CLI::App app{"stubgenerator for libjson-rpc-cpp based applications", "jsonrpcstub"};
   bool versionFlag;
@@ -41,7 +42,6 @@ int runStubGenerator(int argc, char **argv) {
   app.add_option("--py-client-file", pythonClientPath, "filename for the Python client stub");
   CLI11_PARSE(app, argc, argv);
 
-  vector<Procedure> procedures;
   try {
     procedures = SpecificationParser::GetProceduresFromFile(filePath);
 

@@ -37,6 +37,7 @@
 
 using namespace std;
 using namespace jsonrpc;
+using namespace stubgenerator;
 
 CPPServerStubGenerator::CPPServerStubGenerator(const std::string &stubname,
                                                vector<Procedure> &procedures,

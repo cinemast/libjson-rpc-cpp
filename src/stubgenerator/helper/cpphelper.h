@@ -5,20 +5,20 @@
 #include "../procedure.h"
 #include "../codegenerator.h"
 
-namespace jsonrpc
+namespace stubgenerator
 {
     class CPPHelper
     {
         public:
             static std::string normalizeString  (const std::string &text);
-            static std::string toCppType        (jsontype_t type, bool isConst = false, bool isReference = false);
-            static std::string toCppConversion  (jsontype_t);
-            static std::string isCppConversion(jsontype_t);
-            static std::string toString         (jsontype_t type);
+            static std::string toCppType        (jsonrpc::jsontype_t type, bool isConst = false, bool isReference = false);
+            static std::string toCppConversion  (jsonrpc::jsontype_t);
+            static std::string isCppConversion(jsonrpc::jsontype_t);
+            static std::string toString         (jsonrpc::jsontype_t type);
             static std::string generateParameterDeclarationList(Procedure& proc);
 
-            static std::string toCppReturntype  (jsontype_t type);
-            static std::string toCppParamType   (jsontype_t type);
+            static std::string toCppReturntype  (jsonrpc::jsontype_t type);
+            static std::string toCppParamType   (jsonrpc::jsontype_t type);
 
             static std::string class2Filename(const std::string &classname);
             static std::vector<std::string> splitPackages(const std::string &classname);

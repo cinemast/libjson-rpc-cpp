@@ -1,12 +1,3 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    cpphelper.cpp
- * @date    29.09.2013
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
 #include "cpphelper.h"
 #include "../stubgenerator.h"
 #include <algorithm>
@@ -14,6 +5,7 @@
 
 using namespace std;
 using namespace jsonrpc;
+using namespace stubgenerator;
 
 #define TEMPLATE_CPPSERVER_GUARD1 "#ifndef JSONRPC_CPP_STUB_<STUBNAME>_H_"
 #define TEMPLATE_CPPSERVER_GUARD2 "#define JSONRPC_CPP_STUB_<STUBNAME>_H_"

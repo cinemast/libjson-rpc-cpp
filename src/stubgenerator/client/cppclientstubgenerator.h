@@ -1,19 +1,9 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    clientstubgenerator.h
- * @date    01.05.2013
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
-#ifndef JSONRPC_CPP_CLIENTSTUBGENERATOR_H
-#define JSONRPC_CPP_CLIENTSTUBGENERATOR_H
+#pragma once
 
 #include "../stubgenerator.h"
 #include "../codegenerator.h"
 
-namespace jsonrpc
+namespace stubgenerator
 {
     class CPPClientStubGenerator : public StubGenerator
     {
@@ -30,4 +20,4 @@ namespace jsonrpc
             void generateProcCall(Procedure &proc);
     };
 }
-#endif // JSONRPC_CPP_CLIENTSTUBGENERATOR_H
+

@@ -6,6 +6,7 @@
 
 using namespace std;
 using namespace jsonrpc;
+using namespace stubgenerator;
 
 vector<Procedure>
 SpecificationParser::GetProceduresFromFile(const string &filename) {

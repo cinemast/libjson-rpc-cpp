@@ -18,6 +18,7 @@
 
 using namespace std;
 using namespace jsonrpc;
+using namespace stubgenerator;
 
 PythonClientStubGenerator::PythonClientStubGenerator(
     const string &stubname, std::vector<Procedure> &procedures,

@@ -6,6 +6,7 @@
 
 using namespace std;
 using namespace jsonrpc;
+using namespace stubgenerator;
 
 Procedure::Procedure(const std::string &name)
     : procedureName(name) {}

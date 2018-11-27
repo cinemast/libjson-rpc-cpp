@@ -25,16 +25,16 @@ install(TARGETS jsonrpcstub jsonrpcstub
     RUNTIME DESTINATION  ${CMAKE_INSTALL_BINDIR}
 )
 
-#if(COMPILE_TESTS)
-#    target_sources(jsonrpccpp-unittest PRIVATE
- #       ${jsonrpcstub_source}
-  #      ${CMAKE_CURRENT_SOURCE_DIR}/test/test_stubgenerator.cpp
-   # )
-    #file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/testspec1.json DESTINATION ${PROJECT_BINARY_DIR})
-    #file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/testspec2.json DESTINATION ${PROJECT_BINARY_DIR})
-    #file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/testspec3.json DESTINATION ${PROJECT_BINARY_DIR})
-    #file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/testspec4.json DESTINATION ${PROJECT_BINARY_DIR})
-    #file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/testspec5.json DESTINATION ${PROJECT_BINARY_DIR})
-    #file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/testspec6.json DESTINATION ${PROJECT_BINARY_DIR})
-    #add_test(server ${CMAKE_BINARY_DIR}/jsonrpccpp-unittest "[stubgenerator]" --durations yes)
-#endif()
+if(COMPILE_TESTS)
+    target_sources(jsonrpccpp-unittest PRIVATE
+        ${jsonrpcstub_source}
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/test_stubgenerator.cpp
+    )
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/testspec1.json DESTINATION ${PROJECT_BINARY_DIR})
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/testspec2.json DESTINATION ${PROJECT_BINARY_DIR})
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/testspec3.json DESTINATION ${PROJECT_BINARY_DIR})
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/testspec4.json DESTINATION ${PROJECT_BINARY_DIR})
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/testspec5.json DESTINATION ${PROJECT_BINARY_DIR})
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/testspec6.json DESTINATION ${PROJECT_BINARY_DIR})
+    add_test(server ${CMAKE_BINARY_DIR}/jsonrpccpp-unittest "[stubgenerator]" --durations yes)
+endif()

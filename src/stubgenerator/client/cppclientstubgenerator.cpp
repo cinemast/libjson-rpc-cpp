@@ -1,12 +1,3 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    CPPClientStubGenerator.cpp
- * @date    01.05.2013
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
 #include "cppclientstubgenerator.h"
 #include "../helper/cpphelper.h"
 
@@ -30,6 +21,7 @@
 
 using namespace std;
 using namespace jsonrpc;
+using namespace stubgenerator;
 
 CPPClientStubGenerator::CPPClientStubGenerator(
     const string &stubname, std::vector<Procedure> &procedures,
