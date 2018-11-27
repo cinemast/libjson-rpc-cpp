@@ -29,24 +29,22 @@ SpecificationParser::GetProceduresFromString(const string &content) {
   }
 
   vector<Procedure> result;
-  map<string, Procedure> procnames;
+  map<string, int> procnames;
   for (unsigned int i = 0; i < val.size(); i++) {
-    Procedure proc;
-    GetProcedure(val[i], proc);
+    Procedure proc = GetProcedure(val[i]);
     if (procnames.find(proc.GetProcedureName()) != procnames.end()) {
       throw JsonRpcException(
           ExceptionCode::ERROR_INVALID_JSON,
           "Procedurename not unique: " + proc.GetProcedureName());
     }
-    procnames[proc.GetProcedureName()] = proc;
+    procnames[proc.GetProcedureName()] = 1;
     result.push_back(proc);
   }
   return result;
 }
-void SpecificationParser::GetProcedure(Json::Value &signature,
-                                       Procedure &result) {
+Procedure SpecificationParser::GetProcedure(Json::Value &signature) {
   if (signature.isObject() && GetProcedureName(signature) != "") {
-    result.SetProcedureName(GetProcedureName(signature));
+    Procedure result(GetProcedureName(signature));
     if (signature.isMember(KEY_SPEC_RETURN_TYPE)) {
       result.SetProcedureType(RPC_METHOD);
       result.SetReturnType(toJsonType(signature[KEY_SPEC_RETURN_TYPE]));
@@ -63,6 +61,7 @@ void SpecificationParser::GetProcedure(Json::Value &signature,
           result.SetParameterDeclarationType(PARAMS_BY_NAME);
           GetNamedParameters(signature, result);
         }
+        return result;
       } else {
         throw JsonRpcException(
             ExceptionCode::ERROR_INVALID_JSON,

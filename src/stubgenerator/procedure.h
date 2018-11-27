@@ -16,35 +16,7 @@ namespace jsonrpc
     class Procedure
     {
         public:
-
-            Procedure();
-
-            /**
-             * @brief Constructor for notificaiton with parameters as va_list. The last parameter must be NULL.
-             * If no parameters are passed, parameters either do not exist, or cannot be checked for type compliance by the library.
-             * @param name
-             */
-            Procedure(const std::string& name, parameterDeclaration_t paramType, ...);
-
-            /**
-             * @brief Constructor for method with parameters as va_list. The last parameter must be NULL.
-             * If no parameters are passed, parameters either do not exist, or cannot be checked for type compliance by the library.
-             * @param name
-             * @param returntype
-             */
-            Procedure(const std::string& name, parameterDeclaration_t paramType, jsontype_t returntype, ...);
-
-
-            /**
-             * This method is validating the incoming parameters for each procedure.
-             * @param parameters - should contain the parameter-object of an valid json-rpc 2.0 request
-             * @see http://groups.google.com/group/json-rpc/web/json-rpc-2-0
-             * @return true on successful validation false otherwise.
-             *
-             * If the valid parameters are of Type JSON_ARRAY or JSON_OBJECT, they can only be checked for name and not for their structure.
-             */
-            bool ValdiateParameters(const Json::Value &parameters) const;
-
+            Procedure(const std::string& name);
 
             //Various get methods.
             const parameterNameList_t&      GetParameters               () const;
@@ -53,22 +25,14 @@ namespace jsonrpc
             jsontype_t                      GetReturnType               () const;
             parameterDeclaration_t          GetParameterDeclarationType () const;
 
-            //Various set methods.
-            void                            SetProcedureName            (const std::string &name);
             void                            SetProcedureType            (procedure_t type);
             void                            SetReturnType               (jsontype_t type);
             void                            SetParameterDeclarationType (parameterDeclaration_t type);
 
-
-            /**
-             * @brief AddParameter
-             * @param name describes the name of the parameter. In case of an positional parameters, this value can be anything.
-             * @param type describes the defined type for this parameter.
-             */
             void AddParameter(const std::string& name, jsontype_t type);
 
-            bool ValidateNamedParameters        (const Json::Value &parameters) const;
-            bool ValidatePositionalParameters   (const Json::Value &parameters) const;
+            std::string ToString();
+
 
         private:
 

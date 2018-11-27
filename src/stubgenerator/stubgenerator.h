@@ -7,8 +7,6 @@
 
 namespace jsonrpc
 {
-    enum connectiontype_t {CONNECTION_HTTP};
-
     class StubGenerator : public CodeGenerator
     {
         public:

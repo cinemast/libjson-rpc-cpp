@@ -14,7 +14,7 @@ namespace jsonrpc {
             static void         GetFileContent  (const std::string& filename, std::string& target);
 
         private:
-            static void         GetProcedure    (Json::Value& val, Procedure &target);
+            static Procedure    GetProcedure    (Json::Value& val);
             static void         GetMethod       (Json::Value& val, Procedure &target);
             static void         GetNotification (Json::Value& val, Procedure &target);
             static jsontype_t   toJsonType      (Json::Value& val);

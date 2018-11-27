@@ -27,9 +27,6 @@ endif()
 
 if (STUBGENERATOR)
   include_directories(${CMAKE_BINARY_DIR})
-  set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/src/stubgenerator)
-  find_package(argtable REQUIRED)
-  target_link_libraries(jsonrpccpp-unittest PRIVATE ${ARGTABLE_LIBRARIES})
 endif()
 
 if(${CONNECTOR_MICROHTTPD} OR ${CONNECTOR_CURL})

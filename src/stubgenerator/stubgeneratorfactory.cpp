@@ -5,6 +5,7 @@
 #include "helper/cpphelper.h"
 #include "server/cppserverstubgenerator.h"
 #include <argtable2.h>
+#include <cli/cli.hpp>
 #include <iostream>
 #include "specificationparser.h"
 #include "version.h"
@@ -14,7 +15,7 @@ using namespace std;
 
 bool StubGeneratorFactory::createStubGenerators(
     int argc, char **argv, vector<Procedure> &procedures,
-    vector<StubGenerator *> &stubgenerators, FILE *_stdout, FILE *_stderr) {
+    vector<StubGenerator *> &stubgenerators, ostream& _stdout, ostream& _stderr) {
   struct arg_file *inputfile =
       arg_file0(NULL, NULL, "<specfile>", "path of input specification file");
   struct arg_lit *help = arg_lit0("h", "help", "print this help and exit");
