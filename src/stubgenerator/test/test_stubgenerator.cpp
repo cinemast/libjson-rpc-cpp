@@ -10,8 +10,6 @@
 #include "../server/cppserverstubgenerator.h"
 #include "../app.h"
 
-#define TEST_MODULE "[stubgenerator]"
-
 using namespace std;
 using namespace jsonrpc;
 using namespace stubgenerator;

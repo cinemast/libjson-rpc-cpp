@@ -28,7 +28,8 @@ install(TARGETS jsonrpcstub jsonrpcstub
 if(COMPILE_TESTS)
     target_sources(jsonrpccpp-unittest PRIVATE
         ${jsonrpcstub_source}
-        ${CMAKE_CURRENT_SOURCE_DIR}/test/test_stubgenerator.cpp
+        #${CMAKE_CURRENT_SOURCE_DIR}/test/test_stubgenerator.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/test/specificationparser_test.cpp
     )
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/testspec1.json DESTINATION ${PROJECT_BINARY_DIR})
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/testspec2.json DESTINATION ${PROJECT_BINARY_DIR})

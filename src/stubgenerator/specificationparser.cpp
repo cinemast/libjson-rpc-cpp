@@ -44,40 +44,34 @@ SpecificationParser::GetProceduresFromString(const string &content) {
   return result;
 }
 Procedure SpecificationParser::GetProcedure(Json::Value &signature) {
-  if (signature.isObject() && GetProcedureName(signature) != "") {
-    Procedure result(GetProcedureName(signature));
-    if (signature.isMember(KEY_SPEC_RETURN_TYPE)) {
-      result.SetProcedureType(RPC_METHOD);
-      result.SetReturnType(toJsonType(signature[KEY_SPEC_RETURN_TYPE]));
-    } else {
-      result.SetProcedureType(RPC_NOTIFICATION);
-    }
-    if (signature.isMember(KEY_SPEC_PROCEDURE_PARAMETERS)) {
-      if (signature[KEY_SPEC_PROCEDURE_PARAMETERS].isObject() ||
-          signature[KEY_SPEC_PROCEDURE_PARAMETERS].isArray()) {
-        if (signature[KEY_SPEC_PROCEDURE_PARAMETERS].isArray()) {
-          result.SetParameterDeclarationType(PARAMS_BY_POSITION);
-          GetPositionalParameters(signature, result);
-        } else if (signature[KEY_SPEC_PROCEDURE_PARAMETERS].isObject()) {
-          result.SetParameterDeclarationType(PARAMS_BY_NAME);
-          GetNamedParameters(signature, result);
-        }
-        return result;
-      } else {
-        throw JsonRpcException(
-            ExceptionCode::ERROR_INVALID_JSON,
-            "Invalid signature types in fileds: " + signature.toStyledString());
-      }
-    }
-  } else {
-    throw JsonRpcException(
-        ExceptionCode::ERROR_INVALID_JSON,
-        "procedure declaration does not contain name or parameters: " +
-            signature.toStyledString());
+  if(!signature.isMember("name") || signature["name"].isString()) {
+    throw JsonRpcException(ExceptionCode::ERROR_INVALID_JSON, "method name is missing for: " + signature.toStyledString());
   }
+
+  Procedure result(signature["name"].asString());
+
+  if (signature.isMember("returns")) {
+    result.SetProcedureType(RPC_METHOD);
+    result.SetReturnType(toJsonType(signature["returns"]));
+  } else {
+    result.SetProcedureType(RPC_NOTIFICATION);
+  }
+
+  if (signature.isMember("params")) {
+     if (signature["params"].isObject()) {
+       result.SetParameterDeclarationType(PARAMS_BY_NAME);
+       GetNamedParameters(signature, result);
+     } else if (signature["params"].isArray()) {
+        result.SetParameterDeclarationType(PARAMS_BY_POSITION);
+        GetPositionalParameters(signature, result);
+     } else {
+       throw JsonRpcException(ExceptionCode::ERROR_INVALID_JSON, "parms field is neither array nor object: " + signature.toStyledString());
+     }
+  }
+  return result;
 }
-void SpecificationParser::GetFileContent(const std::string &filename,
-                                         std::string &target) {
+
+void SpecificationParser::GetFileContent(const std::string &filename, std::string &target) {
   ifstream config(filename.c_str());
 
   if (config) {
@@ -112,40 +106,23 @@ jsontype_t SpecificationParser::toJsonType(Json::Value &val) {
     result = JSON_OBJECT;
     break;
   default:
-    throw JsonRpcException(ExceptionCode::ERROR_INVALID_JSON,
-                           "Unknown parameter type: " + val.toStyledString());
+    throw JsonRpcException(ExceptionCode::ERROR_INVALID_JSON, "Unknown parameter type: " + val.toStyledString());
   }
   return result;
 }
-void SpecificationParser::GetPositionalParameters(Json::Value &val,
-                                                  Procedure &result) {
+
+void SpecificationParser::GetPositionalParameters(Json::Value &val, Procedure &result) {
   // Positional parameters
-  for (unsigned int i = 0; i < val[KEY_SPEC_PROCEDURE_PARAMETERS].size(); i++) {
+  for (unsigned int i = 0; i < val["params"].size(); i++) {
     stringstream paramname;
     paramname << "param" << std::setfill('0') << std::setw(2) << (i + 1);
-    result.AddParameter(paramname.str(),
-                        toJsonType(val[KEY_SPEC_PROCEDURE_PARAMETERS][i]));
+    result.AddParameter(paramname.str(), toJsonType(val["params"][i]));
   }
 }
-void SpecificationParser::GetNamedParameters(Json::Value &val,
-                                             Procedure &result) {
-  vector<string> parameters =
-      val[KEY_SPEC_PROCEDURE_PARAMETERS].getMemberNames();
+
+void SpecificationParser::GetNamedParameters(Json::Value &val, Procedure &result) {
+  vector<string> parameters = val["params"].getMemberNames();
   for (unsigned int i = 0; i < parameters.size(); ++i) {
-    result.AddParameter(
-        parameters.at(i),
-        toJsonType(val[KEY_SPEC_PROCEDURE_PARAMETERS][parameters.at(i)]));
+    result.AddParameter(parameters.at(i), toJsonType(val["params"][parameters.at(i)]));
   }
-}
-
-string SpecificationParser::GetProcedureName(Json::Value &signature) {
-  if (signature[KEY_SPEC_PROCEDURE_NAME].isString())
-    return signature[KEY_SPEC_PROCEDURE_NAME].asString();
-
-  if (signature[KEY_SPEC_PROCEDURE_METHOD].isString())
-    return signature[KEY_SPEC_PROCEDURE_METHOD].asString();
-
-  if (signature[KEY_SPEC_PROCEDURE_NOTIFICATION].isString())
-    return signature[KEY_SPEC_PROCEDURE_NOTIFICATION].asString();
-  return "";
 }
