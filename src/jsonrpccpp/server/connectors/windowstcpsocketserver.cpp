@@ -181,7 +181,9 @@ DWORD WINAPI WindowsTcpSocketServer::GenerateResponse(LPVOID lp_data) {
       request.append(buffer, nbytes);
     }
   } while (request.find(DELIMITER_CHAR) == string::npos);
-  instance->OnRequest(request, reinterpret_cast<void *>(connection_fd));
+  std::string response;
+  instance->ProcessRequest(request, response);
+  instance->SendResponse(response, reinterpret_cast<void *>(connection_fd));
   CloseHandle(GetCurrentThread());
   return 0; // DO NOT USE ExitThread function here! ExitThread does not call
             // destructors for allocated objects and therefore it would lead to
