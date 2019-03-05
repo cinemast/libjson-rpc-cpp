@@ -9,6 +9,7 @@
 
 #include "httpserver.h"
 #include <cstdlib>
+#include <cstring>
 #include <sstream>
 #include <iostream>
 #include <jsonrpccpp/common/specificationparser.h>
@@ -37,6 +38,41 @@ HttpServer::HttpServer(int port, const std::string &sslcert, const std::string &
 {
 }
 
+HttpServer::~HttpServer() {
+  if (bind_address != nullptr)
+    freeaddrinfo(bind_address);
+}
+
+bool HttpServer::SetBindAddress(const std::string& addr) {
+  if (bind_address != nullptr) {
+    freeaddrinfo(bind_address);
+    bind_address = nullptr;
+  }
+
+  std::ostringstream port_str;
+  port_str << port;
+
+  const char* addr_cstr = nullptr;
+  if (!addr.empty())
+    addr_cstr = addr.c_str();
+
+  struct addrinfo hints;
+  std::memset(&hints, 0, sizeof(hints));
+  hints.ai_flags = AI_PASSIVE;
+
+  return getaddrinfo(addr_cstr, port_str.str().c_str(), &hints, &bind_address) == 0;
+}
+
+IClientConnectionHandler *HttpServer::GetHandler(const std::string &url) {
+  if (AbstractServerConnector::GetHandler() != NULL)
+    return AbstractServerConnector::GetHandler();
+  map<string, IClientConnectionHandler *>::iterator it =
+      this->urlhandler.find(url);
+  if (it != this->urlhandler.end())
+    return it->second;
+  return NULL;
+}
+
 IClientConnectionHandler *HttpServer::GetHandler(const std::string &url)
 {
     if (AbstractServerConnector::GetHandler() != NULL)
@@ -51,13 +87,20 @@ bool HttpServer::StartListening()
 {
     if(!this->running)
     {
+        // If no bind address has been set explicitly, specify one that listens
+        // on all interfaces now.
+        if (bind_address == nullptr && !SetBindAddress(""))
+          return false;
+
         if (this->path_sslcert != "" && this->path_sslkey != "")
         {
             try {
                 SpecificationParser::GetFileContent(this->path_sslcert, this->sslcert);
                 SpecificationParser::GetFileContent(this->path_sslkey, this->sslkey);
 
-                this->daemon = MHD_start_daemon(MHD_USE_SSL | MHD_USE_SELECT_INTERNALLY, this->port, NULL, NULL, HttpServer::callback, this, MHD_OPTION_HTTPS_MEM_KEY, this->sslkey.c_str(), MHD_OPTION_HTTPS_MEM_CERT, this->sslcert.c_str(), MHD_OPTION_THREAD_POOL_SIZE, this->threads, MHD_OPTION_END);
+                this->daemon = MHD_start_daemon(MHD_USE_SSL | MHD_USE_SELECT_INTERNALLY, this->port, NULL, NULL, HttpServer::callback, this, MHD_OPTION_HTTPS_MEM_KEY, this->sslkey.c_str(), MHD_OPTION_HTTPS_MEM_CERT, this->sslcert.c_str(), MHD_OPTION_THREAD_POOL_SIZE, this->threads,
+                                                MHD_OPTION_SOCK_ADDR, bind_address->ai_addr,
+                                                MHD_OPTION_END);
             }
             catch (JsonRpcException& ex)
             {
@@ -66,11 +109,12 @@ bool HttpServer::StartListening()
         }
         else
         {
-            this->daemon = MHD_start_daemon(MHD_USE_SELECT_INTERNALLY, this->port, NULL, NULL, HttpServer::callback, this,   MHD_OPTION_THREAD_POOL_SIZE, this->threads, MHD_OPTION_END);
+            this->daemon = MHD_start_daemon(MHD_USE_SELECT_INTERNALLY, this->port, NULL, NULL, HttpServer::callback, this,   MHD_OPTION_THREAD_POOL_SIZE, this->threads,
+                                            MHD_OPTION_SOCK_ADDR, bind_address->ai_addr,
+                                            MHD_OPTION_END);
         }
         if (this->daemon != NULL)
             this->running = true;
-
     }
     return this->running;
 }
