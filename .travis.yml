@@ -8,7 +8,7 @@ before_install:
     then
      brew update
      brew install jsoncpp argtable curl hiredis redis
-     brew install libmicrohttpd --with-ssl
+     brew install libmicrohttpd
     fi
 
 matrix:
