@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+### Added
+- The `HttpServer` connector now has a `SetBindAddress` method, which can
+  be used to bind to a specific address rather than listen on all
+  interfaces of the machine (#259)
+
 ## [v1.1.1] - 2018-10-31
 
 ### Fixed

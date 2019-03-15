@@ -21,21 +21,33 @@ using namespace jsonrpc;
 using namespace std;
 
 #define TEST_PORT 8383
-#define CLIENT_URL "http://localhost:8383"
+#define CLIENT_URL "http://127.0.0.1:8383"
+
+/* When the server is listening on all interfaces, then also this alternate
+   URL should be fine to connect to it.  When it is bound specifically to
+   127.0.0.1, though, then this should not work.  */
+#define ALTERNATE_CLIENT_URL "http://127.0.0.2:8383"
 
 #define TEST_MODULE "[connector_http]"
 
 namespace testhttpserver {
-struct F {
+struct ServerFixture {
   HttpServer server;
-  HttpClient client;
   MockClientConnectionHandler handler;
 
-  F() : server(TEST_PORT), client(CLIENT_URL) {
+  ServerFixture() : server(TEST_PORT) {
     server.SetHandler(&handler);
+  }
+
+  ~ServerFixture() { server.StopListening(); }
+};
+
+struct F : public ServerFixture {
+  HttpClient client;
+
+  F() : client(CLIENT_URL) {
     server.StartListening();
   }
-  ~F() { server.StopListening(); }
 };
 
 bool check_exception1(JsonRpcException const &ex) {
@@ -61,6 +73,35 @@ TEST_CASE("test_http_client_error", TEST_MODULE) {
   HttpClient client("http://someinvalidurl/asdf");
   string result;
   CHECK_EXCEPTION_TYPE(client.SendRPCMessage("asdfasfwer", result),
+                       JsonRpcException, check_exception1);
+}
+
+TEST_CASE_METHOD(ServerFixture, "test_http_client_bind_globally", TEST_MODULE) {
+  CHECK(server.StartListening());
+
+  HttpClient client(ALTERNATE_CLIENT_URL);
+  handler.response = "exampleresponse";
+  std::string result;
+  client.SendRPCMessage("examplerequest", result);
+
+  CHECK(handler.request == "examplerequest");
+  CHECK(result == "exampleresponse");
+}
+
+TEST_CASE_METHOD(ServerFixture, "test_http_client_bind_address", TEST_MODULE) {
+  server.SetBindAddress("127.0.0.1");
+  CHECK(server.StartListening());
+
+  HttpClient client1(CLIENT_URL);
+  handler.response = "exampleresponse";
+  std::string result;
+  client1.SendRPCMessage("examplerequest", result);
+
+  CHECK(handler.request == "examplerequest");
+  CHECK(result == "exampleresponse");
+
+  HttpClient client2(ALTERNATE_CLIENT_URL);
+  CHECK_EXCEPTION_TYPE(client2.SendRPCMessage("examplerequest", result),
                        JsonRpcException, check_exception1);
 }
 
