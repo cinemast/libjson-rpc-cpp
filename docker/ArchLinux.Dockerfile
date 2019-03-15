@@ -1,4 +1,4 @@
-FROM base/archlinux:latest
+FROM archlinux/base:latest
 MAINTAINER Peter Spiess-Knafl <dev@spiessknafl.at>
 ENV OS=arch
 RUN pacman -Sy --noconfirm \
