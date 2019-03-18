@@ -87,7 +87,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Invalid pointer handling in HTTP-Server
 
 ### Added
-- HttpServer can now be configured to listen localhost only
 - TCP Server + Client connectors
 
 ## Changed
