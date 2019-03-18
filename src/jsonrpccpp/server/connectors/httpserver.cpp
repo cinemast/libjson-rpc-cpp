@@ -42,7 +42,7 @@ bool HttpServer::SetBindAddress(const std::string &addr) {
   if (addr == "")
     bind_address.sin_addr.s_addr = htonl(INADDR_ANY);
   else
-    inet_aton("127.0.0.1", (struct in_addr *)&bind_address.sin_addr.s_addr);
+    inet_aton(addr.c_str(), (struct in_addr *)&bind_address.sin_addr.s_addr);
   return true;
 }
 
