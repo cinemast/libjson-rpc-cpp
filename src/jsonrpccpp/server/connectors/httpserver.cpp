@@ -32,29 +32,18 @@ HttpServer::HttpServer(int port, const std::string &sslcert,
     : AbstractServerConnector(), port(port), threads(threads), running(false),
       path_sslcert(sslcert), path_sslkey(sslkey), daemon(NULL) {}
 
-HttpServer::~HttpServer() {
-  if (bind_address != nullptr)
-    freeaddrinfo(bind_address);
-}
+HttpServer::~HttpServer() {}
 
-bool HttpServer::SetBindAddress(const std::string& addr) {
-  if (bind_address != nullptr) {
-    freeaddrinfo(bind_address);
-    bind_address = nullptr;
-  }
+bool HttpServer::SetBindAddress(const std::string &addr) {
 
-  std::ostringstream port_str;
-  port_str << port;
+  bind_address.sin_family = AF_INET;
+  bind_address.sin_port = htons(this->port);
 
-  const char* addr_cstr = nullptr;
-  if (!addr.empty())
-    addr_cstr = addr.c_str();
-
-  struct addrinfo hints;
-  std::memset(&hints, 0, sizeof(hints));
-  hints.ai_flags = AI_PASSIVE;
-
-  return getaddrinfo(addr_cstr, port_str.str().c_str(), &hints, &bind_address) == 0;
+  if (addr == "")
+    bind_address.sin_addr.s_addr = htonl(INADDR_ANY);
+  else
+    inet_aton("127.0.0.1", (struct in_addr *)&bind_address.sin_addr.s_addr);
+  return true;
 }
 
 IClientConnectionHandler *HttpServer::GetHandler(const std::string &url) {
@@ -75,10 +64,7 @@ bool HttpServer::StartListening() {
         (MHD_is_feature_supported(MHD_FEATURE_POLL) == MHD_YES);
     unsigned int mhd_flags;
 
-    // If no bind address has been set explicitly, specify one that listens
-    // on all interfaces now.
-    if (bind_address == nullptr && !SetBindAddress(""))
-      return false;
+    SetBindAddress("");
 
     if (has_epoll)
 // In MHD version 0.9.44 the flag is renamed to
@@ -101,17 +87,15 @@ bool HttpServer::StartListening() {
             HttpServer::callback, this, MHD_OPTION_HTTPS_MEM_KEY,
             this->sslkey.c_str(), MHD_OPTION_HTTPS_MEM_CERT,
             this->sslcert.c_str(), MHD_OPTION_THREAD_POOL_SIZE, this->threads,
-            MHD_OPTION_SOCK_ADDR, bind_address->ai_addr,
-            MHD_OPTION_END);
+            MHD_OPTION_SOCK_ADDR, &bind_address, MHD_OPTION_END);
       } catch (JsonRpcException &ex) {
         return false;
       }
     } else {
       this->daemon = MHD_start_daemon(
           mhd_flags, this->port, NULL, NULL, HttpServer::callback, this,
-          MHD_OPTION_THREAD_POOL_SIZE, this->threads,
-          MHD_OPTION_SOCK_ADDR, bind_address->ai_addr,
-          MHD_OPTION_END);
+          MHD_OPTION_THREAD_POOL_SIZE, this->threads, MHD_OPTION_SOCK_ADDR,
+          &bind_address, MHD_OPTION_END);
     }
     if (this->daemon != NULL)
       this->running = true;

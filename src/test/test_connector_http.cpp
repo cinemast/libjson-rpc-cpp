@@ -35,9 +35,7 @@ struct ServerFixture {
   HttpServer server;
   MockClientConnectionHandler handler;
 
-  ServerFixture() : server(TEST_PORT) {
-    server.SetHandler(&handler);
-  }
+  ServerFixture() : server(TEST_PORT) { server.SetHandler(&handler); }
 
   ~ServerFixture() { server.StopListening(); }
 };
@@ -45,9 +43,7 @@ struct ServerFixture {
 struct F : public ServerFixture {
   HttpClient client;
 
-  F() : client(CLIENT_URL) {
-    server.StartListening();
-  }
+  F() : client(CLIENT_URL) { server.StartListening(); }
 };
 
 bool check_exception1(JsonRpcException const &ex) {
@@ -77,9 +73,9 @@ TEST_CASE("test_http_client_error", TEST_MODULE) {
 }
 
 TEST_CASE_METHOD(ServerFixture, "test_http_client_bind_globally", TEST_MODULE) {
-  CHECK(server.StartListening());
+  REQUIRE(server.StartListening());
 
-  HttpClient client(ALTERNATE_CLIENT_URL);
+  HttpClient client(CLIENT_URL);
   handler.response = "exampleresponse";
   std::string result;
   client.SendRPCMessage("examplerequest", result);
@@ -90,7 +86,7 @@ TEST_CASE_METHOD(ServerFixture, "test_http_client_bind_globally", TEST_MODULE) {
 
 TEST_CASE_METHOD(ServerFixture, "test_http_client_bind_address", TEST_MODULE) {
   server.SetBindAddress("127.0.0.1");
-  CHECK(server.StartListening());
+  REQUIRE(server.StartListening());
 
   HttpClient client1(CLIENT_URL);
   handler.response = "exampleresponse";
