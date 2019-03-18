@@ -76,7 +76,6 @@ private:
   int port;
   int threads;
   bool running;
-  struct sockaddr_in bind_address;
   std::string path_sslcert;
   std::string path_sslkey;
   std::string sslcert;

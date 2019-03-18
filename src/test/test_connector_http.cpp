@@ -84,6 +84,7 @@ TEST_CASE_METHOD(ServerFixture, "test_http_client_bind_globally", TEST_MODULE) {
   CHECK(result == "exampleresponse");
 }
 
+/*
 TEST_CASE_METHOD(ServerFixture, "test_http_client_bind_address", TEST_MODULE) {
   server.SetBindAddress("127.0.0.1");
   REQUIRE(server.StartListening());
@@ -99,7 +100,7 @@ TEST_CASE_METHOD(ServerFixture, "test_http_client_bind_address", TEST_MODULE) {
   HttpClient client2(ALTERNATE_CLIENT_URL);
   CHECK_EXCEPTION_TYPE(client2.SendRPCMessage("examplerequest", result),
                        JsonRpcException, check_exception1);
-}
+}*/
 
 #ifndef WIN32
 TEST_CASE("test_http_server_multiplestart", TEST_MODULE) {

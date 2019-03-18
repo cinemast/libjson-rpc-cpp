@@ -34,18 +34,6 @@ HttpServer::HttpServer(int port, const std::string &sslcert,
 
 HttpServer::~HttpServer() {}
 
-bool HttpServer::SetBindAddress(const std::string &addr) {
-
-  bind_address.sin_family = AF_INET;
-  bind_address.sin_port = htons(this->port);
-
-  if (addr == "")
-    bind_address.sin_addr.s_addr = htonl(INADDR_ANY);
-  else
-    inet_aton(addr.c_str(), (struct in_addr *)&bind_address.sin_addr.s_addr);
-  return true;
-}
-
 IClientConnectionHandler *HttpServer::GetHandler(const std::string &url) {
   if (AbstractServerConnector::GetHandler() != NULL)
     return AbstractServerConnector::GetHandler();
@@ -63,8 +51,6 @@ bool HttpServer::StartListening() {
     const bool has_poll =
         (MHD_is_feature_supported(MHD_FEATURE_POLL) == MHD_YES);
     unsigned int mhd_flags;
-
-    SetBindAddress("");
 
     if (has_epoll)
 // In MHD version 0.9.44 the flag is renamed to
@@ -87,15 +73,14 @@ bool HttpServer::StartListening() {
             HttpServer::callback, this, MHD_OPTION_HTTPS_MEM_KEY,
             this->sslkey.c_str(), MHD_OPTION_HTTPS_MEM_CERT,
             this->sslcert.c_str(), MHD_OPTION_THREAD_POOL_SIZE, this->threads,
-            MHD_OPTION_SOCK_ADDR, &bind_address, MHD_OPTION_END);
+            MHD_OPTION_END);
       } catch (JsonRpcException &ex) {
         return false;
       }
     } else {
       this->daemon = MHD_start_daemon(
           mhd_flags, this->port, NULL, NULL, HttpServer::callback, this,
-          MHD_OPTION_THREAD_POOL_SIZE, this->threads, MHD_OPTION_SOCK_ADDR,
-          &bind_address, MHD_OPTION_END);
+          MHD_OPTION_THREAD_POOL_SIZE, this->threads, MHD_OPTION_END);
     }
     if (this->daemon != NULL)
       this->running = true;
