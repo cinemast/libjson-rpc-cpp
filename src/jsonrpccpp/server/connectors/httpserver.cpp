@@ -63,16 +63,6 @@ bool HttpServer::SetBindAddress(const std::string& addr) {
   return getaddrinfo(addr_cstr, port_str.str().c_str(), &hints, &bind_address) == 0;
 }
 
-IClientConnectionHandler *HttpServer::GetHandler(const std::string &url) {
-  if (AbstractServerConnector::GetHandler() != NULL)
-    return AbstractServerConnector::GetHandler();
-  map<string, IClientConnectionHandler *>::iterator it =
-      this->urlhandler.find(url);
-  if (it != this->urlhandler.end())
-    return it->second;
-  return NULL;
-}
-
 IClientConnectionHandler *HttpServer::GetHandler(const std::string &url)
 {
     if (AbstractServerConnector::GetHandler() != NULL)

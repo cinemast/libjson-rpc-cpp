@@ -161,6 +161,26 @@ endif()
 
 set(ALL_LIBS)
 
+macro(get_WIN32_WINNT version)
+   if (WIN32 AND CMAKE_SYSTEM_VERSION)
+       set(ver ${CMAKE_SYSTEM_VERSION})
+       string(REPLACE "." "" ver ${ver})
+       string(REGEX REPLACE "([0-9])" "0\\1" ver ${ver})
+
+       set(${version} "0x${ver}")
+   endif()
+endmacro()
+
+
+if(WIN32)
+   get_WIN32_WINNT(ver)
+   add_definitions(-DWIN32)
+   add_definitions(-D_WIN32_WINNT=${ver})
+endif(WIN32)
+
+target_link_libraries(jsonrpcserver ws2_32)
+
+
 if (BUILD_SHARED_LIBS OR NOT BUILD_STATIC_LIBS)
 	list(APPEND ALL_LIBS jsonrpccommon jsonrpcclient jsonrpcserver)
 endif()
