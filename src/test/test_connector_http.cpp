@@ -76,6 +76,7 @@ TEST_CASE("test_http_client_error", TEST_MODULE) {
                        JsonRpcException, check_exception1);
 }
 
+#ifndef __APPLE__
 TEST_CASE_METHOD(ServerFixture, "test_http_client_bind_globally", TEST_MODULE) {
   CHECK(server.StartListening());
 
@@ -87,6 +88,7 @@ TEST_CASE_METHOD(ServerFixture, "test_http_client_bind_globally", TEST_MODULE) {
   CHECK(handler.request == "examplerequest");
   CHECK(result == "exampleresponse");
 }
+#endif 
 
 TEST_CASE_METHOD(ServerFixture, "test_http_client_bind_address", TEST_MODULE) {
   CHECK(server.BindLocalhost().StartListening());
