@@ -42,9 +42,14 @@ void RpcProtocolClient::HandleResponse(const std::string &response,
                                        Json::Value &result) {
   Json::Reader reader;
   Json::Value value;
-  if (reader.parse(response, value)) {
-    this->HandleResponse(value, result);
-  } else {
+
+  try {
+    if (reader.parse(response, value)) {
+      this->HandleResponse(value, result);
+    } else {
+      throw JsonRpcException(Errors::ERROR_RPC_JSON_PARSE_ERROR, " " + response);
+    }
+  } catch (Json::Exception& e) {
     throw JsonRpcException(Errors::ERROR_RPC_JSON_PARSE_ERROR, " " + response);
   }
 }
