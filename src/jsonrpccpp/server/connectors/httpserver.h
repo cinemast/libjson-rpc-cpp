@@ -54,15 +54,8 @@ public:
 
   ~HttpServer();
 
-  /**
-   * Sets the address at which the server will bind when started.
-   * By default, the server listens at all interfaces.  If this
-   * method is called with a non-empty string before starting the
-   * server, then it will only bind to the specified address.
-   * This method returns true on success and false if the given
-   * address could not be set as bind address.
-   */
-  bool SetBindAddress(const std::string &addr);
+  //Bind to localhost only, deactivates TLS settings
+  HttpServer& BindLocalhost();
 
   virtual bool StartListening();
   virtual bool StopListening();
@@ -82,8 +75,9 @@ private:
   std::string sslkey;
 
   struct MHD_Daemon *daemon;
-
+  bool bindlocalhost;
   std::map<std::string, IClientConnectionHandler *> urlhandler;
+  struct sockaddr_in loopback_addr;
 
   static int callback(void *cls, struct MHD_Connection *connection,
                       const char *url, const char *method, const char *version,
