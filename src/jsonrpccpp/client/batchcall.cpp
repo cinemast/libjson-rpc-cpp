@@ -37,11 +37,12 @@ int BatchCall::addCall(const string &methodname, const Json::Value &params,
 string BatchCall::toString(bool fast) const {
   string result;
   if (fast) {
-    Json::FastWriter writer;
-    result = writer.write(this->result);
+    Json::StreamWriterBuilder wbuilder;
+    wbuilder["indentation"] = "";
+    result = Json::writeString(wbuilder,this->result);
   } else {
-    Json::StyledWriter writer;
-    result = writer.write(this->result);
+    Json::StreamWriterBuilder wbuilder;
+    result = Json::writeString(wbuilder, this->result);
   }
   return result;
 }

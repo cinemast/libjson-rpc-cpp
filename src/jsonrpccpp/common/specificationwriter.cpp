@@ -28,8 +28,9 @@ SpecificationWriter::toJsonValue(const vector<Procedure> &procedures) {
   return result;
 }
 std::string SpecificationWriter::toString(const vector<Procedure> &procedures) {
-  Json::StyledWriter wr;
-  return wr.write(toJsonValue(procedures));
+  Json::StreamWriterBuilder wb;
+  wb["indentation"] = "  ";
+  return Json::writeString(wb, toJsonValue(procedures));
 }
 bool SpecificationWriter::toFile(const std::string &filename,
                                  const vector<Procedure> &procedures) {

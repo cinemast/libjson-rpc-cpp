@@ -30,12 +30,11 @@ void RpcProtocolClient::BuildRequest(const std::string &method,
                                      const Json::Value &parameter,
                                      std::string &result, bool isNotification) {
   Json::Value request;
-  Json::FastWriter writer;
+  Json::StreamWriterBuilder wbuilder;
+  wbuilder["indentation"] = "";
   this->BuildRequest(1, method, parameter, request, isNotification);
-  if (omitEndingLineFeed) {
-    writer.omitEndingLineFeed();
-  }
-  result = writer.write(request);
+
+  result = Json::writeString(wbuilder, request);
 }
 
 void RpcProtocolClient::HandleResponse(const std::string &response,

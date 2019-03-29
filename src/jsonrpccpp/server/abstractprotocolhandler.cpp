@@ -31,7 +31,8 @@ void AbstractProtocolHandler::HandleRequest(const std::string &request,
   Json::Reader reader;
   Json::Value req;
   Json::Value resp;
-  Json::FastWriter w;
+  Json::StreamWriterBuilder wbuilder;
+  wbuilder["indentation"] = "";
 
   try {
     if (reader.parse(request, req, false)) {
@@ -48,7 +49,7 @@ void AbstractProtocolHandler::HandleRequest(const std::string &request,
   }
 
   if (resp != Json::nullValue)
-    retValue = w.write(resp);
+    retValue = Json::writeString(wbuilder,resp);
 }
 
 void AbstractProtocolHandler::ProcessRequest(const Json::Value &request,
