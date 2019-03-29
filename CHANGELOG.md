@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## Unreleased
 
 ### Added
-- The `HttpServer` connector now has a `SetBindAddress` method, which can
-  be used to bind to a specific address rather than listen on all
-  interfaces of the machine (#259)
+- The `HttpServer` connector now has a `BindLocalhost` method (#261)
+
+### Fixed
+- Don't precompress and honor GnuInstallDir for manpage of jsonrpcstub (#252)
+- Arch Linux CI build (base image changed)
+- brew CI build (no longer has `--ssl` flag for libmicrohttpd)
+- Catching `Jsoncpp::Exception` for `.parse()` invocations
+- Compile issue when building static only (#263)
+- Update catch2 to 2.7.0 and fix include path (#251)
+- Removed deprecated jsoncpp invocations
+
 
 ## [v1.1.1] - 2018-10-31
 
