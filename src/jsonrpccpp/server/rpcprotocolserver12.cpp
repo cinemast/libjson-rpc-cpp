@@ -25,17 +25,25 @@ void RpcProtocolServer12::HandleRequest(const std::string &request,
   Json::Reader reader;
   Json::Value req;
   Json::Value resp;
-  Json::FastWriter w;
+  Json::StreamWriterBuilder wbuilder;
+  wbuilder["indentation"] = "";
 
-  if (reader.parse(request, req, false)) {
-    this->GetHandler(req).HandleJsonRequest(req, resp);
-  } else {
+  try {
+    if (reader.parse(request, req, false)) {
+      this->GetHandler(req).HandleJsonRequest(req, resp);
+    } else {
+      this->GetHandler(req).WrapError(
+          Json::nullValue, Errors::ERROR_RPC_JSON_PARSE_ERROR,
+          Errors::GetErrorMessage(Errors::ERROR_RPC_JSON_PARSE_ERROR), resp);
+    }
+  } catch (const Json::Exception &e) {
     this->GetHandler(req).WrapError(
         Json::nullValue, Errors::ERROR_RPC_JSON_PARSE_ERROR,
         Errors::GetErrorMessage(Errors::ERROR_RPC_JSON_PARSE_ERROR), resp);
   }
+
   if (resp != Json::nullValue)
-    retValue = w.write(resp);
+    retValue = Json::writeString(wbuilder, resp);
 }
 
 AbstractProtocolHandler &

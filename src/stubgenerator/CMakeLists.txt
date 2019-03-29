@@ -33,7 +33,7 @@ set_target_properties(${ALL_LIBS} PROPERTIES VERSION "${VERSION_STRING}" SOVERSI
 
 add_executable(jsonrpcstub main.cpp)
 if (BUILD_STATIC_LIBS AND NOT BUILD_SHARED_LIBS)
-        target_link_libraries(jsonrpcstub jsonrpccommonStatic libjsonrpcstubStatic )
+        target_link_libraries(jsonrpcstub common libjsonrpcstubStatic )
 else()
         target_link_libraries(jsonrpcstub jsonrpccommon libjsonrpcstub )
 endif()

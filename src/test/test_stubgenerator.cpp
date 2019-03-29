@@ -8,7 +8,7 @@
  ************************************************************************/
 
 #ifdef STUBGEN_TESTING
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 
 #include <jsonrpccpp/common/specificationparser.h>
 #include <stubgenerator/client/cppclientstubgenerator.h>

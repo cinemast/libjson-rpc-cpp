@@ -5,8 +5,8 @@ include(ExternalProject)
 ExternalProject_Add(
     catch
     PREFIX ${CMAKE_BINARY_DIR}/catch
-    URL https://github.com/catchorg/Catch2/archive/v2.0.1.tar.gz
-    URL_HASH SHA1=5c191a031edebd0525640ed2f38cbf64bacb1803
+    URL https://github.com/catchorg/Catch2/archive/v2.7.0.tar.gz
+    URL_HASH SHA1=6df37d5b64a71b840a6a9d8c79c3705aa8a3f56e
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND ""

@@ -9,7 +9,7 @@
 
 #ifdef TCPSOCKET_TESTING
 #include "mockclientconnectionhandler.h"
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 #include <jsonrpccpp/client/connectors/tcpsocketclient.h>
 #include <jsonrpccpp/server/connectors/tcpsocketserver.h>
 
@@ -25,7 +25,7 @@ using namespace std;
 #define TEST_MODULE "[connector_tcpsocket]"
 
 #define IP "127.0.0.1"
-#define PORT 50000
+#define PORT 50012
 
 namespace testtcpsocketserver {
 struct F {

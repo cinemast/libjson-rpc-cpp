@@ -4,8 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [v1.1.1] - 2018-10-31
+## [v1.2.0] - 2019-03-29
+### Added
+- The `HttpServer` connector now has a `BindLocalhost` method (#261)
 
+### Fixed
+- Don't precompress and honor GnuInstallDir for manpage of jsonrpcstub (#252)
+- Arch Linux CI build (base image changed)
+- brew CI build (no longer has `--ssl` flag for libmicrohttpd)
+- Catching `Jsoncpp::Exception` for `.parse()` invocations
+- Compile issue when building static only (#263)
+- Update catch2 to 2.7.0 and fix include path (#251)
+- Removed deprecated jsoncpp invocations
+
+
+## [v1.1.1] - 2018-10-31
 ### Fixed
 - Build issue on RHEL7 (#244, #246)
 - Build with empty install prefix (#226)
@@ -80,7 +93,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Invalid pointer handling in HTTP-Server
 
 ### Added
-- HttpServer can now be configured to listen localhost only
 - TCP Server + Client connectors
 
 ## Changed

@@ -3,6 +3,7 @@
 profile
 
 # xcode noise
+build2/*
 build/*
 *.mode1
 *.mode1v3

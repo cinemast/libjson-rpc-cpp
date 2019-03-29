@@ -34,10 +34,14 @@ void Client::CallProcedures(const BatchCall &calls, BatchResponse &result) {
   Json::Reader reader;
   Json::Value tmpresult;
 
-  if (!reader.parse(response, tmpresult) || !tmpresult.isArray()) {
-    throw JsonRpcException(Errors::ERROR_CLIENT_INVALID_RESPONSE,
-                           "Array expected.");
+  try {
+    if (!reader.parse(response, tmpresult) || !tmpresult.isArray()) {
+      throw JsonRpcException(Errors::ERROR_CLIENT_INVALID_RESPONSE, "Array expected.");
+    }
+  } catch (const Json::Exception& e) {
+    throw JsonRpcException(Errors::ERROR_RPC_JSON_PARSE_ERROR, Errors::GetErrorMessage(Errors::ERROR_RPC_JSON_PARSE_ERROR), response);
   }
+  
 
   for (unsigned int i = 0; i < tmpresult.size(); i++) {
     if (tmpresult[i].isObject()) {

@@ -9,7 +9,7 @@
 
 #include "mockserverconnector.h"
 #include "testserver.h"
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 
 #define TEST_MODULE "[server]"
 

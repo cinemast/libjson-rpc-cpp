@@ -33,18 +33,22 @@ set(client_connector_libs   "")
 set(server_connector_source "")
 set(server_connector_header "")
 set(server_connector_libs   "")
+set(SERVER_LIBS "")
+set(CLIENT_LIBS "")
 
 # setup sources for http connectors
 if (HTTP_CLIENT)
 	list(APPEND client_connector_header "client/connectors/httpclient.h")
 	list(APPEND client_connector_source "client/connectors/httpclient.cpp")
-	list(APPEND client_connector_libs ${CURL_LIBRARIES})
+    list(APPEND client_connector_libs ${CURL_LIBRARIES})
+    set(CLIENT_LIBS "${CLIENT_LIBS} -lcurl")
 endif()
 
 if (HTTP_SERVER)
 	list(APPEND server_connector_header "server/connectors/httpserver.h")
 	list(APPEND server_connector_source "server/connectors/httpserver.cpp")
-	list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT} ${MHD_LIBRARIES})
+    list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT} ${MHD_LIBRARIES})
+    set(SERVER_LIBS "${SERVER_LIBS} -lmicrohttpd")
 endif()
 
 # setup sources for redis connectors
@@ -53,12 +57,14 @@ if (REDIS_CLIENT)
     list(APPEND client_connector_source "client/connectors/redisclient.cpp")
     list(APPEND client_connector_libs ${HIREDIS_LIBRARIES})
     include_directories(${HIREDIS_INCLUDE_DIRS})
+    set(CLIENT_LIBS "${CLIENT_LIBS} -lhiredis")
 endif()
 
 if (REDIS_SERVER)
     list(APPEND server_connector_header "server/connectors/redisserver.h")
     list(APPEND server_connector_source "server/connectors/redisserver.cpp")
     list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT} ${HIREDIS_LIBRARIES})
+    set(SERVER_LIBS "${SERVER_LIBS} -lhiredis")
 endif()
 
 # setup sources for unix domain socket connectors

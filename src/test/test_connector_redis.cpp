@@ -8,7 +8,7 @@
  ************************************************************************/
 
 #ifdef REDIS_TESTING
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 #include <jsonrpccpp/client/connectors/redisclient.h>
 #include <jsonrpccpp/server/connectors/redisserver.h>
 

@@ -9,7 +9,7 @@
 
 #ifdef FILEDESCRIPTOR_TESTING
 #include "mockclientconnectionhandler.h"
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 #include <jsonrpccpp/client/connectors/filedescriptorclient.h>
 #include <jsonrpccpp/common/sharedconstants.h>
 #include <jsonrpccpp/server/connectors/filedescriptorserver.h>

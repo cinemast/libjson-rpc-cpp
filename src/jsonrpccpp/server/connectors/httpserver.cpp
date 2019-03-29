@@ -9,6 +9,7 @@
 
 #include "httpserver.h"
 #include <cstdlib>
+#include <cstring>
 #include <iostream>
 #include <jsonrpccpp/common/specificationparser.h>
 #include <sstream>
@@ -29,7 +30,9 @@ struct mhd_coninfo {
 HttpServer::HttpServer(int port, const std::string &sslcert,
                        const std::string &sslkey, int threads)
     : AbstractServerConnector(), port(port), threads(threads), running(false),
-      path_sslcert(sslcert), path_sslkey(sslkey), daemon(NULL) {}
+      path_sslcert(sslcert), path_sslkey(sslkey), daemon(NULL), bindlocalhost(false) {}
+
+HttpServer::~HttpServer() {}
 
 IClientConnectionHandler *HttpServer::GetHandler(const std::string &url) {
   if (AbstractServerConnector::GetHandler() != NULL)
@@ -41,6 +44,11 @@ IClientConnectionHandler *HttpServer::GetHandler(const std::string &url) {
   return NULL;
 }
 
+HttpServer& HttpServer::BindLocalhost() {
+  this->bindlocalhost = true;
+  return *this;
+}
+
 bool HttpServer::StartListening() {
   if (!this->running) {
     const bool has_epoll =
@@ -48,6 +56,7 @@ bool HttpServer::StartListening() {
     const bool has_poll =
         (MHD_is_feature_supported(MHD_FEATURE_POLL) == MHD_YES);
     unsigned int mhd_flags;
+
     if (has_epoll)
 // In MHD version 0.9.44 the flag is renamed to
 // MHD_USE_EPOLL_INTERNALLY_LINUX_ONLY. In later versions both
@@ -59,7 +68,18 @@ bool HttpServer::StartListening() {
 #endif
     else if (has_poll)
       mhd_flags = MHD_USE_POLL_INTERNALLY;
-    if (this->path_sslcert != "" && this->path_sslkey != "") {
+
+    if (this->bindlocalhost) {
+      memset(&this->loopback_addr, 0, sizeof(this->loopback_addr));
+      loopback_addr.sin_family = AF_INET;
+      loopback_addr.sin_port = htons(this->port);
+      loopback_addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+
+      this->daemon = MHD_start_daemon(
+            mhd_flags, this->port, NULL, NULL, HttpServer::callback, this,
+            MHD_OPTION_THREAD_POOL_SIZE, this->threads, MHD_OPTION_SOCK_ADDR, (struct sockaddr *)(&(this->loopback_addr)), MHD_OPTION_END);
+
+    } else if (this->path_sslcert != "" && this->path_sslkey != "") {
       try {
         SpecificationParser::GetFileContent(this->path_sslcert, this->sslcert);
         SpecificationParser::GetFileContent(this->path_sslkey, this->sslkey);
