@@ -8,7 +8,7 @@
  ************************************************************************/
 
 #ifdef HTTP_TESTING
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 #include <curl/curl.h>
 #include <jsonrpccpp/client/connectors/httpclient.h>
 #include <jsonrpccpp/server/connectors/httpserver.h>

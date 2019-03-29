@@ -9,7 +9,7 @@
 
 #ifdef UNIXDOMAINSOCKET_TESTING
 #include "mockclientconnectionhandler.h"
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 #include <jsonrpccpp/client/connectors/unixdomainsocketclient.h>
 #include <jsonrpccpp/server/connectors/unixdomainsocketserver.h>
 

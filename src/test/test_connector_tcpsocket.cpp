@@ -9,7 +9,7 @@
 
 #ifdef TCPSOCKET_TESTING
 #include "mockclientconnectionhandler.h"
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 #include <jsonrpccpp/client/connectors/tcpsocketclient.h>
 #include <jsonrpccpp/server/connectors/tcpsocketserver.h>
 

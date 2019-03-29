@@ -8,7 +8,7 @@
  ************************************************************************/
 
 #include "checkexception.h"
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 #include <jsonrpccpp/common/exception.h>
 #include <jsonrpccpp/common/procedure.h>
 #include <jsonrpccpp/common/specificationparser.h>
