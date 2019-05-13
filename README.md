@@ -1,3 +1,5 @@
+**I am currently working on a new C++17 implementation -> [json-rpc-cxx](https://github.com/jsonrpcx/json-rpc-cxx). It is still a work in progress, but early feedback is very welcome.**
+
 Master [![Build Status](https://travis-ci.org/cinemast/libjson-rpc-cpp.png?branch=master)](https://travis-ci.org/cinemast/libjson-rpc-cpp) [![codecov](https://codecov.io/gh/cinemast/libjson-rpc-cpp/branch/master/graph/badge.svg)](https://codecov.io/gh/cinemast/libjson-rpc-cpp)
 Develop [![Build Status](https://travis-ci.org/cinemast/libjson-rpc-cpp.png?branch=develop)](https://travis-ci.org/cinemast/libjson-rpc-cpp) [![codecov](https://codecov.io/gh/cinemast/libjson-rpc-cpp/branch/develop/graph/badge.svg)](https://codecov.io/gh/cinemast/libjson-rpc-cpp) |
 [![Coverity Status](https://scan.coverity.com/projects/3169/badge.svg?flat=1)](https://scan.coverity.com/projects/3169)
