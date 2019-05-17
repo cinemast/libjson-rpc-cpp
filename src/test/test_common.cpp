@@ -55,7 +55,8 @@ TEST_CASE("test_procedure_parametervalidation", TEST_MODULE) {
 
   Procedure proc2("someprocedure", PARAMS_BY_NAME, JSON_BOOLEAN, "bool",
                   JSON_BOOLEAN, "object", JSON_OBJECT, "array", JSON_ARRAY,
-                  "real", JSON_REAL, "int", JSON_INTEGER, NULL);
+                  "real", JSON_REAL, "int", JSON_INTEGER,
+                  "numeric", JSON_NUMERIC, NULL);
   Json::Value param4;
   Json::Value array;
   array.append(0);
@@ -64,6 +65,7 @@ TEST_CASE("test_procedure_parametervalidation", TEST_MODULE) {
   param4["array"] = array;
   param4["real"] = 0.332;
   param4["int"] = 3;
+  param4["numeric"] = 7;
 
   CHECK(proc2.ValidateNamedParameters(param4) == true);
 
@@ -85,6 +87,13 @@ TEST_CASE("test_procedure_parametervalidation", TEST_MODULE) {
 
   param4["int"] = "String";
   CHECK(proc2.ValidateNamedParameters(param4) == false);
+  param4["int"] = 3;
+
+  param4["numeric"] = "String";
+  CHECK(proc2.ValidateNamedParameters(param4) == false);
+
+  param4["numeric"] = 8.657;
+  CHECK(proc2.ValidateNamedParameters(param4) == true);
 }
 
 TEST_CASE("test_exception", TEST_MODULE) {

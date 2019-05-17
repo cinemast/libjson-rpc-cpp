@@ -54,6 +54,9 @@ Json::Value SpecificationWriter::toJsonLiteral(jsontype_t type) {
   case JSON_REAL:
     literal = 1.0;
     break;
+  case JSON_NUMERIC:
+    literal = 1.0;
+    break;
   case JSON_ARRAY:
     literal = Json::arrayValue;
     break;

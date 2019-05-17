@@ -142,6 +142,10 @@ bool Procedure::ValidateSingleParameter(jsontype_t expectedType,
     if (!value.isDouble())
       ok = false;
     break;
+  case JSON_NUMERIC:
+    if (!value.isNumeric())
+      ok = false;
+    break;
   case JSON_OBJECT:
     if (!value.isObject())
       ok = false;
