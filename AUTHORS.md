@@ -75,3 +75,6 @@ Michał Górny <mgorny@gentoo.org>
 
 Trevor Vannoy <trevor.vannoy@flukecal.com>
 + fixed tcp socket client compile issues
+
+Ranganathan Balakrishnan <rangatce@gmail.com>
++ add JSON NUMERIC data type to accept both real and integer values
