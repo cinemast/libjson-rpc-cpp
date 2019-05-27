@@ -32,6 +32,9 @@ string CPPHelper::toCppType(jsontype_t type, bool isConst, bool isReference) {
   case JSON_REAL:
     result = "double";
     break;
+  case JSON_NUMERIC:
+    result = "double";
+    break;
   case JSON_STRING:
     result = "std::string";
     break;
@@ -59,6 +62,9 @@ string CPPHelper::toCppConversion(jsontype_t type) {
   case JSON_REAL:
     result = ".asDouble()";
     break;
+  case JSON_NUMERIC:
+    result = ".asDouble()";
+    break;
   case JSON_STRING:
     result = ".asString()";
     break;
@@ -79,6 +85,9 @@ string CPPHelper::toString(jsontype_t type) {
     break;
   case JSON_REAL:
     result = "jsonrpc::JSON_REAL";
+    break;
+  case JSON_NUMERIC:
+    result = "jsonrpc::JSON_NUMERIC";
     break;
   case JSON_STRING:
     result = "jsonrpc::JSON_STRING";
@@ -204,6 +213,9 @@ string CPPHelper::isCppConversion(jsontype_t type) {
     break;
   case JSON_REAL:
     result = ".isDouble()";
+    break;
+  case JSON_NUMERIC:
+    result = ".isNumeric()";
     break;
   case JSON_STRING:
     result = ".isString()";
