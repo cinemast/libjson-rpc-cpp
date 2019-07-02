@@ -32,6 +32,13 @@ if (${HTTP_SERVER})
     message(STATUS "MHD lib   : ${MHD_LIBRARIES}")
 endif()
 
+if(${BEAST_HTTP_CLIENT} OR ${BEAST_HTTP_SERVER})
+    find_package(Boost COMPONENTS system REQUIRED) # Only system since beast is a header only library
+    find_package(Threads)
+    message(STATUS "Boost header: ${Boost_INCLUDE_DIRS}")
+    message(STATUS "Boost lib   : ${Boost_LIBRARIES}")
+endif()
+
 if (${REDIS_SERVER} OR ${REDIS_CLIENT})
     find_package(Hiredis REQUIRED)
     message(STATUS "Hiredis header: ${HIREDIS_INCLUDE_DIRS}")

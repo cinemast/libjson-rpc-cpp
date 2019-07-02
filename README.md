@@ -16,6 +16,7 @@ It is fully JSON-RPC [2.0 & 1.0 compatible](http://www.jsonrpc.org/specification
 - Full JSON-RPC 2.0 & partial JSON-RPC 1.0 client and server Support.
 - jsonrpcstub - a tool that generates stub-classes for your JSON-RPC client and server applications.
 - Ready to use HTTP + TCP server and client to provide simple interfaces for your JSON-RPC application.
+- You can use instead the built-in boost::beast HTTP server/client if you already use boost in your application.
 - Cross platform build support for Linux and OS X.
 - Super liberal [MIT-License](http://en.wikipedia.org/wiki/MIT_License).
 
@@ -82,6 +83,7 @@ Install the dependencies
 - [libargtable](http://argtable.sourceforge.net/)
 - [cmake](http://www.cmake.org/)
 - [libhiredis](https://redislabs.com/lp/hiredis/)
+- [boost::beast](https://www.boost.org/doc/libs/release/libs/beast/)
 - [catch](https://github.com/catchorg/Catch2)
 
 **UNIX**
@@ -124,6 +126,8 @@ Default configuration should be fine for most systems, but here are available co
 - `-DFILE_DESCRIPTOR_CLIENT=NO` disable the file descriptor client connector.
 - `-DTCP_SOCKET_SERVER=NO` disable the tcp socket server connector.
 - `-DTCP_SOCKET_CLIENT=NO` disable the tcp socket client connector.
+- `-DBEAST_HTTP_SERVER=YES` enable the boost::beast server connector.
+- `-DBEAST_HTTP_CLIENT=YES` enable the boost::beast client connector.
 
 Using the framework
 ===================

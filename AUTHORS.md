@@ -42,6 +42,9 @@ Jean-Daniel Michaud <jean.daniel,michaud@gmail.com>
 Jacques Software <software@jacques.com.au>
 + added support for redis connector
 
+Javier Gutierrez (github: mr-j0nes)
++ added http boost/beast server/client support
+
 Bugfixes (chronological order)
 ==============================
 

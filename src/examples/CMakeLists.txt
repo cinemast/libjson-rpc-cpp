@@ -68,6 +68,16 @@ if(HTTP_CLIENT)
     target_link_libraries(simpleclientsample jsonrpcclient)
 endif()
 
+if(BEAST_HTTP_SERVER)
+    add_executable(beasthttpserversample beasthttpserver.cpp)
+    target_link_libraries(beasthttpserversample jsonrpcserver)
+endif()
+
+if(BEAST_HTTP_CLIENT)
+    add_executable(beasthttpclientsample beasthttpclient.cpp)
+    target_link_libraries(beasthttpclientsample jsonrpcclient -pthread)
+endif()
+
 if(REDIS_SERVER)
     add_executable(redisserversample redisserver.cpp)
     target_link_libraries(redisserversample jsonrpcserver)

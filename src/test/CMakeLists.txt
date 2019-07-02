@@ -32,6 +32,10 @@ else()
     list(REMOVE_ITEM test_source "${CMAKE_CURRENT_SOURCE_DIR}/testhttpserver.cpp")
 endif()
 
+if(BEAST_HTTP_CLIENT AND BEAST_HTTP_SERVER)
+    add_definitions(-DBEAST_HTTP_TESTING)
+endif()
+
 if(REDIS_CLIENT AND REDIS_SERVER)
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/redis.conf DESTINATION ${CMAKE_BINARY_DIR})
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/redis.conf DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
@@ -98,6 +102,10 @@ endif()
 
 if (TCP_SOCKET_CLIENT AND TCP_SOCKET_SERVER)
     add_test(NAME connector_tcpsocket WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite "[connector_tcpsocket]")
+endif()
+
+if (BEAST_HTTP_CLIENT AND BEAST_HTTP_SERVER)
+    add_test(NAME connector_beasthttp WORKING_DIRECTORY ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_testsuite "[connector_beasthttp]")
 endif()
 
 if(COMPILE_STUBGEN)

@@ -47,8 +47,21 @@ endif()
 if (HTTP_SERVER)
 	list(APPEND server_connector_header "server/connectors/httpserver.h")
 	list(APPEND server_connector_source "server/connectors/httpserver.cpp")
-    list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT} ${MHD_LIBRARIES})
+	list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT} ${MHD_LIBRARIES})
     set(SERVER_LIBS "${SERVER_LIBS} -lmicrohttpd")
+endif()
+
+# setup sources for beast http connectors
+if (BEAST_HTTP_CLIENT)
+	list(APPEND client_connector_header "client/connectors/beasthttpclient.h")
+	list(APPEND client_connector_source "client/connectors/beasthttpclient.cpp")
+    list(APPEND client_connector_libs ${BOOST_BEAST_LIBRARIES})
+endif()
+
+if (BEAST_HTTP_SERVER)
+	list(APPEND server_connector_header "server/connectors/beasthttpserver.h")
+	list(APPEND server_connector_source "server/connectors/beasthttpserver.cpp")
+	list(APPEND server_connector_libs ${CMAKE_THREAD_LIBS_INIT} ${BOOST_BEAST_LIBRARIES})
 endif()
 
 # setup sources for redis connectors
