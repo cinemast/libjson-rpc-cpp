@@ -18,7 +18,7 @@ using namespace jsonrpc;
 using namespace std;
 
 
-beast::session::session(BeastHttpServer* server, boost::asio::ip::tcp::socket socket)
+beast::serverSession::serverSession(BeastHttpServer* server, boost::asio::ip::tcp::socket socket)
     : server_(server)
     , socket_(std::move(socket))
     , strand_(socket_.get_executor())
@@ -26,12 +26,12 @@ beast::session::session(BeastHttpServer* server, boost::asio::ip::tcp::socket so
 { }
 
 // Start the asynchronous operation
-void beast::session::run()
+void beast::serverSession::run()
 {
     do_read();
 }
 
-void beast::session::do_read()
+void beast::serverSession::do_read()
 {
     // Make the request empty before reading,
     // otherwise the operation behavior is undefined.
@@ -42,13 +42,13 @@ void beast::session::do_read()
         boost::asio::bind_executor(
             strand_,
             std::bind(
-                &session::on_read,
+                &serverSession::on_read,
                 shared_from_this(),
                 std::placeholders::_1,
                 std::placeholders::_2)));
 }
 
-void beast::session::on_read(
+void beast::serverSession::on_read(
     boost::beast::error_code ec,
     std::size_t bytes_transferred)
 {
@@ -65,7 +65,7 @@ void beast::session::on_read(
     handle_request(std::move(req_), lambda_);
 }
 
-void beast::session::on_write(
+void beast::serverSession::on_write(
     boost::beast::error_code ec,
     std::size_t bytes_transferred,
     bool close)
@@ -89,7 +89,7 @@ void beast::session::on_write(
     do_read();
 }
 
-void beast::session::do_close()
+void beast::serverSession::do_close()
 {
     // Send a TCP shutdown
     boost::beast::error_code ec;
@@ -98,9 +98,9 @@ void beast::session::do_close()
     // At this point the connection is closed gracefully
 }
 
-void beast::session::handle_request(
+void beast::serverSession::handle_request(
     boost::beast::http::request<boost::beast::http::string_body> req,
-    beast::session::send_lambda& send)
+    beast::serverSession::send_lambda& send)
 {
     // Returns a bad request response
     auto const bad_request =
@@ -248,7 +248,7 @@ void beast::listener::on_accept(boost::beast::error_code ec)
     else
     {
         // Create the session and run it
-        std::make_shared<session>(server_,
+        std::make_shared<serverSession>(server_,
             std::move(socket_))->run();
     }
 

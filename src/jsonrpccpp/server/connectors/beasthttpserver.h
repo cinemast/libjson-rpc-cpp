@@ -53,16 +53,16 @@ namespace beast
 {
 
     // Handles an HTTP server connection
-    class session : public std::enable_shared_from_this<session>
+    class serverSession : public std::enable_shared_from_this<serverSession>
     {
         // This is the C++11 equivalent of a generic lambda.
         // The function object is used to send an HTTP message.
         struct send_lambda
         {
-            session& self_;
+            serverSession& self_;
 
             explicit
-                send_lambda(session& self)
+                send_lambda(serverSession& self)
                 : self_(self)
                 {
                 }
@@ -88,7 +88,7 @@ namespace beast
                             boost::asio::bind_executor(
                                 self_.strand_,
                                 std::bind(
-                                    &session::on_write,
+                                    &serverSession::on_write,
                                     self_.shared_from_this(),
                                     std::placeholders::_1,
                                     std::placeholders::_2,
@@ -107,7 +107,7 @@ namespace beast
 
     public:
         // Take ownership of the socket
-        explicit session(BeastHttpServer* server, boost::asio::ip::tcp::socket socket);
+        explicit serverSession(BeastHttpServer* server, boost::asio::ip::tcp::socket socket);
 
         // Start the asynchronous operation
         void run();

@@ -28,7 +28,7 @@ namespace beast {
 /**
  * @brief Boost::Beast asynchrounous HTTP client.
  */
-class session : public std::enable_shared_from_this<session>
+class clientSession : public std::enable_shared_from_this<clientSession>
 {
     boost::asio::ip::tcp::resolver                                      resolver_;
     boost::asio::ip::tcp::socket                                        socket_;
@@ -42,7 +42,7 @@ class session : public std::enable_shared_from_this<session>
     bool                                                                debug_              {false};
 
 public:
-    explicit session(boost::asio::io_context& ioc, long timeout,
+    explicit clientSession(boost::asio::io_context& ioc, long timeout,
             std::function<void(const std::string&, uint16_t statusCode)> callback);
 
     void on_timer(boost::beast::error_code ec);
@@ -82,7 +82,7 @@ private:
   std::string                           result_;
   uint16_t                              port_;
   uint16_t                              statusCode_;
-  std::shared_ptr<beast::session>       beastSession_;
+  std::shared_ptr<beast::clientSession> beastSession_;
 
   /**
    * @brief timeout for http request in milliseconds

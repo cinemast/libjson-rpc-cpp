@@ -17,7 +17,7 @@
 using namespace jsonrpc;
 
 
-beast::session::session(boost::asio::io_context& ioc, long timeout,
+beast::clientSession::clientSession(boost::asio::io_context& ioc, long timeout,
         std::function<void(const std::string&, uint16_t)> callback)
     : resolver_(ioc)
     , socket_(ioc)
@@ -27,7 +27,7 @@ beast::session::session(boost::asio::io_context& ioc, long timeout,
 {}
 
 //
-void beast::session::on_timer(boost::beast::error_code ec)
+void beast::clientSession::on_timer(boost::beast::error_code ec)
 {
     if(ec && ec != boost::asio::error::operation_aborted)
     {
@@ -45,14 +45,14 @@ void beast::session::on_timer(boost::beast::error_code ec)
     // Wait on the timer
     timer_.async_wait(
                 std::bind(
-                    &beast::session::on_timer, // Executed always when "timer_.execute_after()"
+                    &beast::clientSession::on_timer, // Executed always when "timer_.execute_after()"
                     shared_from_this(),
                     std::placeholders::_1));
 
 }
 
 // Start the asynchronous operation
-void beast::session::run( const std::string& host, uint16_t port, const std::string& message)
+void beast::clientSession::run( const std::string& host, uint16_t port, const std::string& message)
 {
     // Run the timer. The timer is operated
     // continuously, this simplifies the code.
@@ -78,13 +78,13 @@ void beast::session::run( const std::string& host, uint16_t port, const std::str
         host,
         std::to_string(port),
         std::bind(
-            &session::on_resolve,
+            &clientSession::on_resolve,
             shared_from_this(),
             std::placeholders::_1,
             std::placeholders::_2));
 }
 
-void beast::session::on_resolve(
+void beast::clientSession::on_resolve(
     boost::beast::error_code ec,
     boost::asio::ip::tcp::resolver::results_type results)
 {
@@ -103,12 +103,12 @@ void beast::session::on_resolve(
         results.begin(),
         results.end(),
         std::bind(
-            &session::on_connect,
+            &clientSession::on_connect,
             shared_from_this(),
             std::placeholders::_1));
 }
 
-void beast::session::on_connect(boost::beast::error_code ec)
+void beast::clientSession::on_connect(boost::beast::error_code ec)
 {
     if(ec)
     {
@@ -126,13 +126,13 @@ void beast::session::on_connect(boost::beast::error_code ec)
     // Send the HTTP request to the remote host
     boost::beast::http::async_write(socket_, req_,
         std::bind(
-            &session::on_write,
+            &clientSession::on_write,
             shared_from_this(),
             std::placeholders::_1,
             std::placeholders::_2));
 }
 
-void beast::session::on_write(
+void beast::clientSession::on_write(
     boost::beast::error_code ec,
     std::size_t bytes_transferred)
 {
@@ -150,13 +150,13 @@ void beast::session::on_write(
     // Receive the HTTP response
     boost::beast::http::async_read(socket_, buffer_, res_,
         std::bind(
-            &session::on_read,
+            &clientSession::on_read,
             shared_from_this(),
             std::placeholders::_1,
             std::placeholders::_2));
 }
 
-void beast::session::on_read(
+void beast::clientSession::on_read(
     boost::beast::error_code ec,
     std::size_t bytes_transferred)
 {
@@ -186,7 +186,7 @@ void beast::session::on_read(
     timer_.expires_after(std::chrono::milliseconds(0)); // releases the timer
 }
 
-void beast::session::setDebug(bool flag)
+void beast::clientSession::setDebug(bool flag)
 {
     debug_ = flag;
 }
@@ -214,7 +214,7 @@ void BeastHttpClient::SendRPCMessage(const std::string &message,
     boost::asio::io_context ioc;
 
     // Launch the asynchronous operation
-    beastSession_ = std::make_shared<beast::session>(ioc, timeout_,
+    beastSession_ = std::make_shared<beast::clientSession>(ioc, timeout_,
             std::bind(&BeastHttpClient::ReceiveRPCMessage, this, std::placeholders::_1, std::placeholders::_2));
 
     beastSession_->setDebug(false);
