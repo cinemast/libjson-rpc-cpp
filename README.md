@@ -189,6 +189,8 @@ g++ main.cpp -ljsoncpp -lcurl -ljsonrpccpp-common -ljsonrpccpp-client -o samplec
 
 Please take a look at [CONTRIBUTING.md](CONTRIBUTING.md)
 
+You can also donate via [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CJV4LY486L838&source=url)
+
 ## Changelogs
 
 Changelogs can be found [here](CHANGELOG.md).
