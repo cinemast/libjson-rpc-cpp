@@ -4,8 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
-
+## [v1.2.0] - 2019-03-29
 ### Added
 - The `HttpServer` connector now has a `BindLocalhost` method (#261)
 
@@ -20,7 +19,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ## [v1.1.1] - 2018-10-31
-
 ### Fixed
 - Build issue on RHEL7 (#244, #246)
 - Build with empty install prefix (#226)
