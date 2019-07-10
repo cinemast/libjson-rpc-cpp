@@ -137,7 +137,7 @@ include_directories(${MHD_INCLUDE_DIRS})
 # setup shared common library
 if (BUILD_SHARED_LIBS)
 	add_library(jsonrpccommon SHARED ${jsonrpc_source_common} ${jsonrpc_header} ${jsonrpc_helper_source_common})
-	target_link_libraries(jsonrpccommon jsoncpp_lib_static)
+	target_link_libraries(jsonrpccommon ${JSONCPP_LIBRARY})
 	set_target_properties(jsonrpccommon PROPERTIES OUTPUT_NAME jsonrpccpp-common)
 endif()
 
