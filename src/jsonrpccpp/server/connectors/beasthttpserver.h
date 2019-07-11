@@ -31,17 +31,7 @@
 #include <thread>
 #include <vector>
 
-
-#if defined(_WIN32) && !defined(__CYGWIN__)
-#include <ws2tcpip.h>
-#else
-#include <unistd.h>
-#include <sys/time.h>
-#include <sys/socket.h>
-#endif
-
 #include <map>
-#include <microhttpd.h>
 #include "../abstractserverconnector.h"
 
 namespace jsonrpc
