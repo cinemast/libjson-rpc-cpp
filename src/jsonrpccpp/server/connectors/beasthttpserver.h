@@ -14,11 +14,14 @@
 #include <stdint.h>
 #include <sys/types.h>
 
+#include <boost/version.hpp>
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
 #include <boost/beast/version.hpp>
-#include <boost/asio/bind_executor.hpp>
-#include <boost/asio/ip/tcp.hpp>
+#if BOOST_VERSION < 107000
+#   include <boost/asio/bind_executor.hpp>
+#   include <boost/asio/ip/tcp.hpp>
+#endif
 #include <boost/asio/strand.hpp>
 #include <boost/config.hpp>
 
@@ -73,6 +76,7 @@ namespace beast
 
                     // Write the response
                     boost::beast::http::async_write(
+#if BOOST_VERSION < 107000
                             self_.socket_,
                             *sp,
                             boost::asio::bind_executor(
@@ -82,14 +86,27 @@ namespace beast
                                     self_.shared_from_this(),
                                     std::placeholders::_1,
                                     std::placeholders::_2,
-                                    sp->need_eof())));
+                                    sp->need_eof()))
+#else
+                            self_.stream_,
+                            *sp,
+                            boost::beast::bind_front_handler(
+                                &serverSession::on_write,
+                                self_.shared_from_this(),
+                                sp->need_eof())
+#endif
+                            );
                 }
         };
 
         BeastHttpServer*                                                server_;
+#if BOOST_VERSION < 107000
         boost::asio::ip::tcp::socket                                    socket_;
         boost::asio::strand<
             boost::asio::io_context::executor_type>                     strand_;
+#else
+        boost::beast::tcp_stream                                        stream_;
+#endif
         boost::beast::flat_buffer                                       buffer_;
         boost::beast::http::request<boost::beast::http::string_body>    req_;
         std::shared_ptr<void>                                           res_;
@@ -97,7 +114,7 @@ namespace beast
 
     public:
         // Take ownership of the socket
-        explicit serverSession(BeastHttpServer* server, boost::asio::ip::tcp::socket socket);
+        explicit serverSession(BeastHttpServer* server, boost::asio::ip::tcp::socket&& socket);
 
         // Start the asynchronous operation
         void run();
@@ -108,10 +125,17 @@ namespace beast
                     boost::beast::error_code ec,
                     std::size_t bytes_transferred);
 
+#if BOOST_VERSION < 107000
         void on_write(
                     boost::beast::error_code ec,
                     std::size_t bytes_transferred,
                     bool close);
+#else
+        void on_write(
+                bool close,
+                    boost::beast::error_code ec,
+                    std::size_t bytes_transferred);
+#endif
 
         void do_close();
 
@@ -120,8 +144,8 @@ namespace beast
         // contents of the request, so the interface requires the
         // caller to pass a generic lambda for receiving the response.
         void handle_request(
-                boost::beast::http::request<boost::beast::http::string_body> req,
-                send_lambda& send);
+                boost::beast::http::request<boost::beast::http::string_body>&& req,
+                send_lambda send);
 
     };
 
@@ -131,7 +155,11 @@ namespace beast
     {
         BeastHttpServer*                                server_;
         boost::asio::ip::tcp::acceptor                  acceptor_;
+#if BOOST_VERSION < 107000
         boost::asio::ip::tcp::socket                    socket_;
+#else
+        boost::asio::io_context&                        ioc_;
+#endif
 
     public:
         listener(
@@ -147,7 +175,12 @@ namespace beast
 
         void do_accept();
 
-        void on_accept(boost::beast::error_code ec);
+        void on_accept(boost::beast::error_code ec
+#if BOOST_VERSION < 107000
+#else
+                , boost::asio::ip::tcp::socket socket
+#endif
+                );
     };
 
 } /* namespace beast */

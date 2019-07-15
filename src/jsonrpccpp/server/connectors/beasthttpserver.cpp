@@ -18,10 +18,14 @@ using namespace jsonrpc;
 using namespace std;
 
 
-beast::serverSession::serverSession(BeastHttpServer* server, boost::asio::ip::tcp::socket socket)
+beast::serverSession::serverSession(BeastHttpServer* server, boost::asio::ip::tcp::socket&& socket)
     : server_(server)
+#if BOOST_VERSION < 107000
     , socket_(std::move(socket))
     , strand_(socket_.get_executor())
+#else
+    , stream_(std::move(socket))
+#endif
     , lambda_(*this)
 { }
 
@@ -38,14 +42,23 @@ void beast::serverSession::do_read()
     req_ = {};
 
     // Read a request
-    boost::beast::http::async_read(socket_, buffer_, req_,
-        boost::asio::bind_executor(
-            strand_,
-            std::bind(
+    boost::beast::http::async_read(
+#if BOOST_VERSION < 107000
+            socket_, buffer_, req_,
+            boost::asio::bind_executor(
+                strand_,
+                std::bind(
+                    &serverSession::on_read,
+                    shared_from_this(),
+                    std::placeholders::_1,
+                    std::placeholders::_2))
+#else
+            stream_, buffer_, req_,
+            boost::beast::bind_front_handler(
                 &serverSession::on_read,
-                shared_from_this(),
-                std::placeholders::_1,
-                std::placeholders::_2)));
+                shared_from_this())
+#endif
+            );
 }
 
 void beast::serverSession::on_read(
@@ -65,10 +78,17 @@ void beast::serverSession::on_read(
     handle_request(std::move(req_), lambda_);
 }
 
+#if BOOST_VERSION < 107000
 void beast::serverSession::on_write(
     boost::beast::error_code ec,
     std::size_t bytes_transferred,
     bool close)
+#else
+void beast::serverSession::on_write(
+    bool close,
+    boost::beast::error_code ec,
+    std::size_t bytes_transferred)
+#endif
 {
     boost::ignore_unused(bytes_transferred);
 
@@ -93,14 +113,18 @@ void beast::serverSession::do_close()
 {
     // Send a TCP shutdown
     boost::beast::error_code ec;
+#if BOOST_VERSION < 107000
     socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_send, ec);
+#else
+    stream_.socket().shutdown(boost::asio::ip::tcp::socket::shutdown_send, ec);
+#endif
 
     // At this point the connection is closed gracefully
 }
 
 void beast::serverSession::handle_request(
-    boost::beast::http::request<boost::beast::http::string_body> req,
-    beast::serverSession::send_lambda& send)
+    boost::beast::http::request<boost::beast::http::string_body>&& req,
+    beast::serverSession::send_lambda send)
 {
     // Returns a bad request response
     auto const bad_request =
@@ -110,7 +134,7 @@ void beast::serverSession::handle_request(
         res.set(boost::beast::http::field::server, BOOST_BEAST_VERSION_STRING);
         res.set(boost::beast::http::field::content_type, "text/html");
         res.keep_alive(req.keep_alive());
-        res.body() = why.to_string();
+        res.body() = std::string(why);
         res.prepare_payload();
         return res;
     };
@@ -123,7 +147,7 @@ void beast::serverSession::handle_request(
         res.set(boost::beast::http::field::server, BOOST_BEAST_VERSION_STRING);
         res.set(boost::beast::http::field::content_type, "text/html");
         res.keep_alive(req.keep_alive());
-        res.body() = why.to_string();
+        res.body() = std::string(why);
         res.prepare_payload();
         return res;
     };
@@ -136,16 +160,20 @@ void beast::serverSession::handle_request(
         res.set(boost::beast::http::field::server, BOOST_BEAST_VERSION_STRING);
         res.set(boost::beast::http::field::content_type, "text/html");
         res.keep_alive(req.keep_alive());
-        res.body() = "An error occurred: '" + what.to_string() + "'";
+        res.body() = "An error occurred: '" + std::string(what) + "'";
         res.prepare_payload();
         return res;
     };
 
     // Make sure we can handle the method
     if( req.method() == boost::beast::http::verb::get)
-        return send(method_not_allowed("Unknown HTTP-method"));
+        return send(
+                method_not_allowed("Unknown HTTP-method")
+                );
     else if( req.method() != boost::beast::http::verb::post)
-        return send(bad_request("Unknown HTTP-method"));
+        return send(
+                bad_request("Unknown HTTP-method")
+                );
 
 
 
@@ -182,8 +210,13 @@ beast::listener::listener(
     boost::asio::io_context& ioc,
     boost::asio::ip::tcp::endpoint endpoint)
     : server_(server)
+#if BOOST_VERSION < 107000
     , acceptor_(ioc)
     , socket_(ioc)
+#else
+    , ioc_(ioc)
+    , acceptor_(boost::asio::make_strand(ioc))
+#endif
 {
     boost::beast::error_code ec;
 
@@ -224,22 +257,38 @@ beast::listener::listener(
 // Start accepting incoming connections
 void beast::listener::run()
 {
+#if BOOST_VERSION < 107000
     if(! acceptor_.is_open())
         return;
+#else
+#endif
     do_accept();
 }
 
 void beast::listener::do_accept()
 {
     acceptor_.async_accept(
-        socket_,
-        std::bind(
-            &listener::on_accept,
-            shared_from_this(),
-            std::placeholders::_1));
+#if BOOST_VERSION < 107000
+            socket_,
+            std::bind(
+                &listener::on_accept,
+                shared_from_this(),
+                std::placeholders::_1)
+#else
+            boost::asio::make_strand(ioc_),
+            boost::beast::bind_front_handler(
+                &listener::on_accept,
+                shared_from_this())
+#endif
+            );
 }
 
-void beast::listener::on_accept(boost::beast::error_code ec)
+void beast::listener::on_accept(boost::beast::error_code ec
+#if BOOST_VERSION < 107000
+#else
+        , boost::asio::ip::tcp::socket socket
+#endif
+        )
 {
     if(ec)
     {
@@ -249,7 +298,13 @@ void beast::listener::on_accept(boost::beast::error_code ec)
     {
         // Create the session and run it
         std::make_shared<serverSession>(server_,
-            std::move(socket_))->run();
+            std::move(
+#if BOOST_VERSION < 107000
+                socket_
+#else
+                socket
+#endif
+                ))->run();
     }
 
     // Accept another connection
