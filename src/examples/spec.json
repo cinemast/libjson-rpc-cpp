@@ -26,6 +26,13 @@
         "returns": 7.5
     },
     {
+        "name": "calculate",
+        "params": {
+            "args": {}        
+        },
+        "returns": []
+    },
+    {
         "name": "isEqual",
         "params": [
             "string1",
