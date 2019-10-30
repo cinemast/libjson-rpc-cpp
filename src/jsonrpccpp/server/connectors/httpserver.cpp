@@ -193,7 +193,11 @@ int HttpServer::callback(void *cls, MHD_Connection *connection, const char *url,
     client_connection->server->SendResponse("Not allowed HTTP Method",
                                             client_connection);
   }
-  delete client_connection;
+  
+  if (client_connection != nullptr)
+  {
+    delete client_connection;
+  }
   *con_cls = NULL;
 
   return MHD_YES;

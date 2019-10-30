@@ -1,4 +1,4 @@
-**I am currently working on a new C++17 implementation -> [json-rpc-cxx](https://github.com/jsonrpcx/json-rpc-cxx). It is still a work in progress, but early feedback is very welcome.**
+**I am currently working on a new C++17 implementation -> [json-rpc-cxx](https://github.com/jsonrpcx/json-rpc-cxx).**
 
 Master [![Build Status](https://travis-ci.org/cinemast/libjson-rpc-cpp.png?branch=master)](https://travis-ci.org/cinemast/libjson-rpc-cpp) [![codecov](https://codecov.io/gh/cinemast/libjson-rpc-cpp/branch/master/graph/badge.svg)](https://codecov.io/gh/cinemast/libjson-rpc-cpp)
 Develop [![Build Status](https://travis-ci.org/cinemast/libjson-rpc-cpp.png?branch=develop)](https://travis-ci.org/cinemast/libjson-rpc-cpp) [![codecov](https://codecov.io/gh/cinemast/libjson-rpc-cpp/branch/develop/graph/badge.svg)](https://codecov.io/gh/cinemast/libjson-rpc-cpp) |
@@ -146,16 +146,19 @@ This example will show the most simple way to create a rpc server and client. If
 ]
 ```
 
-The type of a return value or parameter is defined by the literal assigned to it. In this example you can see how to specify methods and notifications.
+The type of a return value or parameter is defined by the literal assigned to it. The generated stubs will will use the "returns" type to validate the response. In this example you can see how to specify methods and notifications.
 
 ### Step 2: Generate the stubs for client and server ###
 
 Call jsonrpcstub:
 ```sh
 jsonrpcstub spec.json --cpp-server=AbstractStubServer --cpp-client=StubClient
+mkdir -p gen
+mv abstractstubserver.h gen
+mv stubclient.ch gen
 ```
 
-This generates a serverstub and a clientstub class.
+This generates an `AbstractStubServer` and a `StubClient` class and moves them to the `gen` folder.
 
 
 ### Step 3: implement the abstract server stub ###
@@ -170,7 +173,7 @@ In the main function the concrete server is instantiated and started. That is al
 Compile the server with:
 
 ```sh
-g++ main.cpp -ljsoncpp -lmicrohttpd -ljsonrpccpp-common -ljsonrpccpp-server -o sampleserver
+g++ stubserver.cpp -ljsoncpp -lmicrohttpd -ljsonrpccpp-common -ljsonrpccpp-server -o sampleserver
 ```
 
 ### Step 4: Create the client application
@@ -182,7 +185,7 @@ See [src/examples/stubclient.cpp](src/examples/stubclient.cpp)
 Compile the client with:
 
 ```sh
-g++ main.cpp -ljsoncpp -lcurl -ljsonrpccpp-common -ljsonrpccpp-client -o sampleclient
+g++ stubclient.cpp -ljsoncpp -lcurl -ljsonrpccpp-common -ljsonrpccpp-client -o sampleclient
 ```
 
 ## Contributions
