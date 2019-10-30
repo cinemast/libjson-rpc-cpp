@@ -75,6 +75,10 @@ public:
   }
 
   virtual std::string methodWithoutParameters() { return "foo"; }
+
+  virtual Json::Value calculate(const Json::Value& args) {
+    return Json::Value(args);
+  }
 };
 
 #ifdef HTTP_TESTING
