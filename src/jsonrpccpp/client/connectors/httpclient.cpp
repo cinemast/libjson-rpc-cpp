@@ -106,7 +106,7 @@ void HttpClient::SendRPCMessage(const std::string &message,
   long http_code = 0;
   curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
 
-  if (http_code != 200) {
+  if (http_code / 100 != 2) {
     throw JsonRpcException(Errors::ERROR_RPC_INTERNAL_ERROR, result);
   }
 }
