@@ -58,6 +58,13 @@ if (TCP_SOCKET_SERVER AND TCP_SOCKET_CLIENT)
     target_link_libraries(tcpsocketserver jsonrpcserver)
 endif()
 
+if (SERIAL_PORT_SERVER AND SERIAL_PORT_CLIENT)
+    add_executable(serialportclient serialportclient.cpp)
+    target_link_libraries(serialportclient jsonrpcclient)
+    add_executable(serialportserver serialportserver.cpp)
+    target_link_libraries(serialportserver jsonrpcserver)
+endif()
+
 if(HTTP_SERVER)
     add_executable(simpleserversample simpleserver.cpp)
     target_link_libraries(simpleserversample jsonrpcserver)
