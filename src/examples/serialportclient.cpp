@@ -1,7 +1,7 @@
 /**
  * @file serialportclient.cpp
- * @date 17.07.2015
- * @author Alexandre Poirot <alexandre.poirot@legrand.fr>
+ * @date 01.11.2019
+ * @author Billy Araujo
  * @brief serialportclient.cpp
  */
 
