@@ -51,10 +51,6 @@ namespace jsonrpc
              */
             int Connect() ;
             /**
-             * @brief Connects to provided ip and port.
-             *
-             * This method tries to connect to the provided ip and port.
-             *
              * @param deviceName The device name to connect to
              * @returns A file descriptor to the successfully connected socket
              * @throw JsonRpcException Thrown when an issue is encountered while trying to connect (see message of exception for more information about what happened).
