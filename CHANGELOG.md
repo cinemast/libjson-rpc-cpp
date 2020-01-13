@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [UNRELEASED] - 2020-01-13
+## [1.3.0] - 2020-01-13
 ### Added
 - Linux SerialPort client and server connector(#286)
 - Build example for Centos 7 (#267)
