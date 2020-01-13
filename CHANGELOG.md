@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [UNRELEASED] - 2020-01-13
+### Added
+- Linux SerialPort client and server connector(#286)
+- Build example for Centos 7 (#267)
+- `Json::Value` example code (#281)
+- IPv6 Support for `HttpServer` (#275)
+
+### Fixed
+- Incorrect README sections (#280)
+- Incorrect INTERFACE_LINK_LIBRARIES (#253)
+- `HttpClient` Response Code checking (#278)
+
 ## [v1.2.0] - 2019-03-29
 ### Added
 - The `HttpServer` connector now has a `BindLocalhost` method (#261)
