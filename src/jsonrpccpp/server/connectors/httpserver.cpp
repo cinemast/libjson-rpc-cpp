@@ -55,7 +55,7 @@ bool HttpServer::StartListening() {
         (MHD_is_feature_supported(MHD_FEATURE_EPOLL) == MHD_YES);
     const bool has_poll =
         (MHD_is_feature_supported(MHD_FEATURE_POLL) == MHD_YES);
-    unsigned int mhd_flags;
+    unsigned int mhd_flags = MHD_USE_DUAL_STACK;
 
     if (has_epoll)
 // In MHD version 0.9.44 the flag is renamed to
