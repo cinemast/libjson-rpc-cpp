@@ -42,13 +42,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Missing documentation about python stubgenerator (#222)
 - Parameter to enable omitEndingLineFeed() (#213)
-- Documenation in examples about throwing serverside errors (#249)
+- Documentation in examples about throwing server side errors (#249)
 
 ### Changed
 - Updated CI images to use Ubuntu 18.04 instead of 17.04
 - Disabled FileDescriptor connectors by default
 - Removed custom FindCURL cmake module (#237)
-- Parameter handling of procedurs without params in stubgenerator
+- Parameter handling of procedures without params in stubgenerator
 
 ## [v1.1.0] - 2018-01-04
 ### Fixed
@@ -65,7 +65,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - dev/testcoverage.sh script which did not create the build directory
 - Indentation in CMakeLists.txt files
 - Positional parameters with more than 10 items
-- C++11 deprecated dynamic excpetion specifiers have been removed
+- C++11 deprecated dynamic exception specifiers have been removed
 - libmicrohttpd legacy detection for `EPOLL`
 
 ### Added
@@ -144,7 +144,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - Use CMAKE versioning in manpage.
-- Improvied include scheme of jsoncpp.
+- Improved include scheme of jsoncpp.
 
 ## [v0.4.1] - 2014-12-01
 ### Added
