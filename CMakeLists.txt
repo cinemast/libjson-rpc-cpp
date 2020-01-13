@@ -49,6 +49,8 @@ endif(UNIX)
 
 set(TCP_SOCKET_SERVER NO CACHE BOOL "Include Tcp Socket server")
 set(TCP_SOCKET_CLIENT NO CACHE BOOL "Include Tcp Socket client")
+set(SERIAL_PORT_SERVER NO CACHE BOOL "Include Serial port server")
+set(SERIAL_PORT_CLIENT NO CACHE BOOL "Include Serial port client")
 set(REDIS_SERVER YES CACHE BOOL "Include Redis server using hiredis")
 set(REDIS_CLIENT YES CACHE BOOL "Include Redis client using hiredis")
 set(HTTP_SERVER YES CACHE BOOL "Include HTTP server using libmicrohttpd")
