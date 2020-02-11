@@ -78,3 +78,7 @@ Trevor Vannoy <trevor.vannoy@flukecal.com>
 
 Ranganathan Balakrishnan <rangatce@gmail.com>
 + add JSON NUMERIC data type to accept both real and integer values
+
+Evgeny Petrov <groosha@protonmail.com>
++ added data field for error handler
++ 
