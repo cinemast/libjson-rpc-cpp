@@ -39,7 +39,7 @@ using namespace std;
                         callback_success(response.id, response.result);\n\
                     } else if (response.hasOwnProperty(\"error\")) {\n\
                         if (callback_error != null)\n\
-                            callback_error(response.error.code,response.error.message);\n\
+                            callback_error(response.error.code,response.error.message,response.error.data);\n\
                     } else {\n\
                         if (callback_error != null)\n\
                             callback_error(-32001, \"Invalid Server response: \" + response);\n\
