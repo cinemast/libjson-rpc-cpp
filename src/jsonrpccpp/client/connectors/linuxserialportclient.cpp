@@ -15,22 +15,21 @@
 #include <cstdlib>
 #include <cstring>
 #include <errno.h>
-#include <iostream>
 #include <fcntl.h>
-#include <errno.h>
-#include <unistd.h>
+#include <iostream>
 #include <termios.h>
+#include <unistd.h>
 
 using namespace jsonrpc;
 using namespace std;
 
-LinuxSerialPortClient::LinuxSerialPortClient(const std::string& deviceName)
+LinuxSerialPortClient::LinuxSerialPortClient(const std::string &deviceName)
     : deviceName(deviceName) {}
 
 LinuxSerialPortClient::~LinuxSerialPortClient() {}
 
 void LinuxSerialPortClient::SendRPCMessage(const std::string &message,
-                                          std::string &result) {
+                                           std::string &result) {
   int serial_fd = this->Connect();
 
   StreamWriter writer;
@@ -53,7 +52,6 @@ int LinuxSerialPortClient::Connect() {
   int serial_fd = open(deviceName.c_str(), O_RDWR);
 
   return serial_fd;
-
 }
 
 int LinuxSerialPortClient::Connect(const string &deviceName) {

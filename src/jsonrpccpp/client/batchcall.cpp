@@ -21,7 +21,7 @@ int BatchCall::addCall(const string &methodname, const Json::Value &params,
   call[RpcProtocolClient::KEY_PROTOCOL_VERSION] = "2.0";
   call[RpcProtocolClient::KEY_PROCEDURE_NAME] = methodname;
 
-  if(params.isNull() || params.size() > 0)
+  if (params.isNull() || !params.empty())
     call[RpcProtocolClient::KEY_PARAMETER] = params;
 
   if (!isNotification) {
@@ -39,7 +39,7 @@ string BatchCall::toString(bool fast) const {
   if (fast) {
     Json::StreamWriterBuilder wbuilder;
     wbuilder["indentation"] = "";
-    result = Json::writeString(wbuilder,this->result);
+    result = Json::writeString(wbuilder, this->result);
   } else {
     Json::StreamWriterBuilder wbuilder;
     result = Json::writeString(wbuilder, this->result);

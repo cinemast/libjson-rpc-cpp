@@ -76,8 +76,9 @@ bool StubGeneratorFactory::createStubGenerators(
   }
 
   if (version->count > 0) {
-    fprintf(_stdout, "jsonrpcstub version %d.%d.%d\n", JSONRPC_CPP_MAJOR_VERSION,
-            JSONRPC_CPP_MINOR_VERSION, JSONRPC_CPP_PATCH_VERSION);
+    fprintf(_stdout, "jsonrpcstub version %d.%d.%d\n",
+            JSONRPC_CPP_MAJOR_VERSION, JSONRPC_CPP_MINOR_VERSION,
+            JSONRPC_CPP_PATCH_VERSION);
     arg_freetable(argtable, sizeof(argtable) / sizeof(argtable[0]));
     return true;
   }
@@ -112,7 +113,8 @@ bool StubGeneratorFactory::createStubGenerators(
       else
         filename = CPPHelper::class2Filename(cppserver->sval[0]);
       if (verbose->count > 0)
-        fprintf(_stdout, "Generating C++ Serverstub to: %s\n", filename.c_str());
+        fprintf(_stdout, "Generating C++ Serverstub to: %s\n",
+                filename.c_str());
       stubgenerators.push_back(
           new CPPServerStubGenerator(cppserver->sval[0], procedures, filename));
     }
@@ -124,7 +126,8 @@ bool StubGeneratorFactory::createStubGenerators(
       else
         filename = CPPHelper::class2Filename(cppclient->sval[0]);
       if (verbose->count > 0)
-        fprintf(_stdout, "Generating C++ Clientstub to: %s\n", filename.c_str());
+        fprintf(_stdout, "Generating C++ Clientstub to: %s\n",
+                filename.c_str());
       stubgenerators.push_back(
           new CPPClientStubGenerator(cppclient->sval[0], procedures, filename));
     }

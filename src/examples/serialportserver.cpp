@@ -17,7 +17,8 @@ using namespace std;
 
 class SampleServer : public AbstractServer<SampleServer> {
 public:
-  SampleServer(LinuxSerialPortServer &server) : AbstractServer<SampleServer>(server) {
+  SampleServer(LinuxSerialPortServer &server)
+      : AbstractServer<SampleServer>(server) {
     this->bindAndAddMethod(Procedure("sayHello", PARAMS_BY_NAME, JSON_STRING,
                                      "name", JSON_STRING, NULL),
                            &SampleServer::sayHello);

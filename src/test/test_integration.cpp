@@ -26,25 +26,20 @@ using namespace std;
 
 #define TEST_MODULE "[integration]"
 
-#include<algorithm>
+#include <algorithm>
 
-char
-rand_alnum()
-{
-    char c;
-    while (!std::isalnum(c = static_cast<char>(std::rand())))
-        ;
-    return c;
+char rand_alnum() {
+  char c;
+  while (!std::isalnum(c = static_cast<char>(std::rand())))
+    ;
+  return c;
 }
 
-
-std::string
-rand_alnum_str (std::string::size_type sz)
-{
-    std::string s;
-    s.reserve  (sz);
-    generate_n (std::back_inserter(s), sz, rand_alnum);
-    return s;
+std::string rand_alnum_str(std::string::size_type sz) {
+  std::string s;
+  s.reserve(sz);
+  generate_n(std::back_inserter(s), sz, rand_alnum);
+  return s;
 }
 
 class StubServer : public AbstractStubServer {
@@ -76,7 +71,7 @@ public:
 
   virtual std::string methodWithoutParameters() { return "foo"; }
 
-  virtual Json::Value calculate(const Json::Value& args) {
+  virtual Json::Value calculate(const Json::Value &args) {
     return Json::Value(args);
   }
 };
