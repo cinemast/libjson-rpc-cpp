@@ -12,7 +12,8 @@
 
 using namespace jsonrpc;
 
-Client::Client(IClientConnector &connector, clientVersion_t version, bool omitEndingLineFeed)
+Client::Client(IClientConnector &connector, clientVersion_t version,
+               bool omitEndingLineFeed)
     : connector(connector) {
   this->protocol = new RpcProtocolClient(version, omitEndingLineFeed);
 }
@@ -36,12 +37,14 @@ void Client::CallProcedures(const BatchCall &calls, BatchResponse &result) {
 
   try {
     if (!reader.parse(response, tmpresult) || !tmpresult.isArray()) {
-      throw JsonRpcException(Errors::ERROR_CLIENT_INVALID_RESPONSE, "Array expected.");
+      throw JsonRpcException(Errors::ERROR_CLIENT_INVALID_RESPONSE,
+                             "Array expected.");
     }
-  } catch (const Json::Exception& e) {
-    throw JsonRpcException(Errors::ERROR_RPC_JSON_PARSE_ERROR, Errors::GetErrorMessage(Errors::ERROR_RPC_JSON_PARSE_ERROR), response);
+  } catch (const Json::Exception &e) {
+    throw JsonRpcException(
+        Errors::ERROR_RPC_JSON_PARSE_ERROR,
+        Errors::GetErrorMessage(Errors::ERROR_RPC_JSON_PARSE_ERROR), response);
   }
-  
 
   for (unsigned int i = 0; i < tmpresult.size(); i++) {
     if (tmpresult[i].isObject()) {

@@ -30,7 +30,8 @@ struct mhd_coninfo {
 HttpServer::HttpServer(int port, const std::string &sslcert,
                        const std::string &sslkey, int threads)
     : AbstractServerConnector(), port(port), threads(threads), running(false),
-      path_sslcert(sslcert), path_sslkey(sslkey), daemon(NULL), bindlocalhost(false) {}
+      path_sslcert(sslcert), path_sslkey(sslkey), daemon(NULL),
+      bindlocalhost(false) {}
 
 HttpServer::~HttpServer() {}
 
@@ -44,7 +45,7 @@ IClientConnectionHandler *HttpServer::GetHandler(const std::string &url) {
   return NULL;
 }
 
-HttpServer& HttpServer::BindLocalhost() {
+HttpServer &HttpServer::BindLocalhost() {
   this->bindlocalhost = true;
   return *this;
 }
@@ -76,10 +77,11 @@ bool HttpServer::StartListening() {
       loopback_addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
 
       this->daemon = MHD_start_daemon(
-            mhd_flags, this->port, NULL, NULL, HttpServer::callback, this,
-            MHD_OPTION_THREAD_POOL_SIZE, this->threads, MHD_OPTION_SOCK_ADDR, (struct sockaddr *)(&(this->loopback_addr)), MHD_OPTION_END);
+          mhd_flags, this->port, NULL, NULL, HttpServer::callback, this,
+          MHD_OPTION_THREAD_POOL_SIZE, this->threads, MHD_OPTION_SOCK_ADDR,
+          (struct sockaddr *)(&(this->loopback_addr)), MHD_OPTION_END);
 
-    } else if (this->path_sslcert != "" && this->path_sslkey != "") {
+    } else if (!this->path_sslcert.empty() && !this->path_sslkey.empty()) {
       try {
         SpecificationParser::GetFileContent(this->path_sslcert, this->sslcert);
         SpecificationParser::GetFileContent(this->path_sslkey, this->sslkey);
@@ -193,9 +195,8 @@ MHD_Result HttpServer::callback(void *cls, MHD_Connection *connection,
     client_connection->server->SendResponse("Not allowed HTTP Method",
                                             client_connection);
   }
-  
-  if (client_connection != nullptr)
-  {
+
+  if (client_connection != nullptr) {
     delete client_connection;
   }
   *con_cls = NULL;

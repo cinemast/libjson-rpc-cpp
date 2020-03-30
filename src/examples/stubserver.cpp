@@ -23,7 +23,7 @@ public:
   virtual std::string sayHello(const std::string &name);
   virtual int addNumbers(int param1, int param2);
   virtual double addNumbers2(double param1, double param2);
-  virtual Json::Value calculate(const Json::Value& args);
+  virtual Json::Value calculate(const Json::Value &args);
   virtual bool isEqual(const std::string &str1, const std::string &str2);
   virtual Json::Value buildObject(const std::string &name, int age);
   virtual std::string methodWithoutParameters();
@@ -43,7 +43,6 @@ string MyStubServer::sayHello(const string &name) {
 
 int MyStubServer::addNumbers(int param1, int param2) { return param1 + param2; }
 
-
 double MyStubServer::addNumbers2(double param1, double param2) {
   return param1 + param2;
 }
@@ -52,43 +51,36 @@ bool MyStubServer::isEqual(const string &str1, const string &str2) {
   return str1 == str2;
 }
 
-Json::Value MyStubServer::calculate(const Json::Value& args) {
+Json::Value MyStubServer::calculate(const Json::Value &args) {
   Json::Value result;
-  if((args.isMember("arg1") && args["arg1"].isInt()) &&
-    (args.isMember("arg2") && args["arg2"].isInt()) &&
-    (args.isMember("operator") && args["operator"].isString()))
-  {
+  if ((args.isMember("arg1") && args["arg1"].isInt()) &&
+      (args.isMember("arg2") && args["arg2"].isInt()) &&
+      (args.isMember("operator") && args["operator"].isString())) {
     int calculated = 0;
 
-    switch(args["operator"].asString()[0])
-    {
-      case '+':
-      {
-        calculated = args["arg1"].asInt() + args["arg2"].asInt();
-        break;
-      }
-      case '-':
-      {
-        calculated = args["arg1"].asInt() - args["arg2"].asInt();
-        break;
-      }
-      case '*':
-      {
-        calculated = args["arg1"].asInt() * args["arg2"].asInt();
-        break;
-      }
-      case '/':
-      {
-        if(args["arg2"].asInt() != 0)
-        {
-          calculated = args["arg1"].asInt() / args["arg2"].asInt();
-        }
-        break;
-      }
-      default:
-        break;
+    switch (args["operator"].asString()[0]) {
+    case '+': {
+      calculated = args["arg1"].asInt() + args["arg2"].asInt();
+      break;
     }
-  
+    case '-': {
+      calculated = args["arg1"].asInt() - args["arg2"].asInt();
+      break;
+    }
+    case '*': {
+      calculated = args["arg1"].asInt() * args["arg2"].asInt();
+      break;
+    }
+    case '/': {
+      if (args["arg2"].asInt() != 0) {
+        calculated = args["arg1"].asInt() / args["arg2"].asInt();
+      }
+      break;
+    }
+    default:
+      break;
+    }
+
     result.append(calculated);
   }
 

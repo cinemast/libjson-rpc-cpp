@@ -101,7 +101,7 @@ void CPPClientStubGenerator::generateMethod(Procedure &proc) {
 void CPPClientStubGenerator::generateAssignments(Procedure &proc) {
   string assignment;
   parameterNameList_t list = proc.GetParameters();
-  if (list.size() > 0) {
+  if (!list.empty()) {
     for (parameterNameList_t::iterator it = list.begin(); it != list.end();
          ++it) {
 

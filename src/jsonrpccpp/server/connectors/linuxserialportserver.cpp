@@ -34,19 +34,17 @@ using namespace std;
 #define READ_TIMEOUT 0.001 // Set timeout in seconds
 
 LinuxSerialPortServer::LinuxSerialPortServer(const std::string &deviceName,
-                                           size_t threads)
-    : AbstractThreadedServer(threads), deviceName(deviceName), reader(DEFAULT_BUFFER_SIZE) {}
+                                             size_t threads)
+    : AbstractThreadedServer(threads), deviceName(deviceName),
+      reader(DEFAULT_BUFFER_SIZE) {}
 
-LinuxSerialPortServer::~LinuxSerialPortServer() {
-  close(this->serial_fd);
-}
+LinuxSerialPortServer::~LinuxSerialPortServer() { close(this->serial_fd); }
 
 bool LinuxSerialPortServer::InitializeListener() {
 
   serial_fd = open(deviceName.c_str(), O_RDWR);
 
   return serial_fd >= 0;
-
 }
 
 int LinuxSerialPortServer::CheckForConnection() {
@@ -55,7 +53,6 @@ int LinuxSerialPortServer::CheckForConnection() {
   timeout.tv_usec = (suseconds_t)(READ_TIMEOUT * 1000000);
   // Wait for something to read
   return select(serial_fd + 1, &read_fds, nullptr, nullptr, &timeout);
-
 }
 
 void LinuxSerialPortServer::HandleConnection(int connection) {
@@ -66,5 +63,3 @@ void LinuxSerialPortServer::HandleConnection(int connection) {
   response.append(1, DEFAULT_DELIMITER_CHAR);
   writer.Write(response, serial_fd);
 }
-
-

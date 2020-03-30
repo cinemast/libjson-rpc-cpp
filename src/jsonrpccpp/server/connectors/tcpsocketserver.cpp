@@ -28,9 +28,7 @@ TcpSocketServer::TcpSocketServer(const std::string &ipToBind,
 #endif
 }
 
-TcpSocketServer::~TcpSocketServer() {
- delete this->realSocket;
-}
+TcpSocketServer::~TcpSocketServer() { delete this->realSocket; }
 
 bool TcpSocketServer::StartListening() {
   if (this->realSocket != NULL) {
