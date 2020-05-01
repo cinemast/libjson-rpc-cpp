@@ -65,7 +65,7 @@ public:
 
   void SetUrlHandler(const std::string &url, IClientConnectionHandler *handler);
 
-private:
+protected:
   int port;
   int threads;
   bool running;

@@ -38,7 +38,7 @@ public:
   virtual int CheckForConnection();
   virtual void HandleConnection(int connection);
 
-private:
+protected:
   int inputfd;
   int outputfd;
   StreamReader reader;

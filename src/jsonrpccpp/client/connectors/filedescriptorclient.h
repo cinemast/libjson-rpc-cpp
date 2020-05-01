@@ -22,7 +22,7 @@ namespace jsonrpc
       virtual ~FileDescriptorClient();
       virtual void SendRPCMessage(const std::string& message, std::string& result) ;
 
-    private:
+    protected:
       int inputfd;
       int outputfd;
 

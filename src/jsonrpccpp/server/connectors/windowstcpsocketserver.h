@@ -70,7 +70,7 @@ namespace jsonrpc
                          */
             bool SendResponse(const std::string& response, void* addInfo = NULL);
 
-        private:
+        protected:
             bool running;               /*!< A boolean that is used to know the listening state*/
             std::string ipToBind;       /*!< The ipv4 address on which the server should bind and listen*/
             unsigned int port;          /*!< The port on which the server should bind and listen*/

@@ -40,7 +40,7 @@ namespace jsonrpc
              */
             virtual void SendRPCMessage(const std::string& message, std::string& result) ;
 
-        private:
+        protected:
             int fd;
             std::string deviceName;    /*!< The serial port device name on which the client should try to connect*/
             /**

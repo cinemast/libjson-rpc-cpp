@@ -67,7 +67,7 @@ namespace jsonrpc
              */
             void SetTimeout(long timeout);
 
-        private:
+        protected:
 
             /**
              * @brief Queue that we are messaging
