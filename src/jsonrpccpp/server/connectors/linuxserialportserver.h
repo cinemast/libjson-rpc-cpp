@@ -45,7 +45,7 @@ public:
   virtual int CheckForConnection();
   virtual void HandleConnection(int connection);
 
-private:
+protected:
   std::string deviceName;
   int serial_fd;
 

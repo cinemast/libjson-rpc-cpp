@@ -42,7 +42,7 @@ public:
   virtual int CheckForConnection();
   virtual void HandleConnection(int connection);
 
-private:
+protected:
   std::string socket_path;
   int socket_fd;
   struct sockaddr_un address;

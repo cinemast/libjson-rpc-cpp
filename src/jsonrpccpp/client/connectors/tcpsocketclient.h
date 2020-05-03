@@ -47,7 +47,7 @@ namespace jsonrpc
                          */
             virtual void SendRPCMessage(const std::string& message, std::string& result) ;
 
-        private:
+        protected:
             IClientConnector *realSocket; /*!< A pointer to the real implementation of this class depending of running OS*/
     };
 

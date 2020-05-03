@@ -22,7 +22,7 @@ namespace jsonrpc
             virtual ~UnixDomainSocketClient();
             virtual void SendRPCMessage(const std::string& message, std::string& result) ;
 
-        private:
+        protected:
             std::string path;
     };
 
