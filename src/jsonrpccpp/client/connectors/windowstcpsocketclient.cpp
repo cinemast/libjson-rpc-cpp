@@ -161,11 +161,13 @@ SOCKET WindowsTcpSocketClient::Connect() throw(JsonRpcException) {
       }
     }
 
-    if (!foundValidIp)
+    if (!foundValidIp) {
+      closesocket(socket_fd);
       throw JsonRpcException(
           Errors::ERROR_CLIENT_CONNECTOR,
           "Hostname resolved but connection was refused on the given port.");
-
+    }
+	
     return socket_fd;
   }
 }
@@ -195,6 +197,7 @@ WindowsTcpSocketClient::Connect(const string &ip,
       message = GetErrorMessage(err);
       break;
     }
+    closesocket(socket_fd);
     throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, message);
   }
   memset(&address, 0, sizeof(SOCKADDR_IN));
@@ -229,6 +232,7 @@ WindowsTcpSocketClient::Connect(const string &ip,
       message = GetErrorMessage(err);
       break;
     }
+    closesocket(socket_fd);
     throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, message);
   }
   return socket_fd;
