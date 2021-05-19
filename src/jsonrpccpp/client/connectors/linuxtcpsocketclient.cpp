@@ -147,6 +147,7 @@ int LinuxTcpSocketClient::Connect(const string &ip, const int &port) {
       message = strerror(err);
       break;
     }
+    close(socket_fd);
     throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, message);
   }
   return socket_fd;
