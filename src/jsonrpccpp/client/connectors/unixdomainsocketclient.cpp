@@ -44,6 +44,7 @@ void UnixDomainSocketClient::SendRPCMessage(const std::string &message,
 
   if (connect(socket_fd, (struct sockaddr *)&address, sizeof(sockaddr_un)) !=
       0) {
+    close(socket_fd);
     throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR,
                            "Could not connect to: " + this->path);
   }
@@ -51,12 +52,14 @@ void UnixDomainSocketClient::SendRPCMessage(const std::string &message,
   StreamWriter writer;
   string toSend = message + DEFAULT_DELIMITER_CHAR;
   if (!writer.Write(toSend, socket_fd)) {
+    close(socket_fd);
     throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR,
                            "Could not write request");
   }
 
   StreamReader reader(DEFAULT_BUFFER_SIZE);
   if (!reader.Read(result, socket_fd, DEFAULT_DELIMITER_CHAR)) {
+    close(socket_fd);
     throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR,
                            "Could not read response");
   }
