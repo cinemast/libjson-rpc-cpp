@@ -36,9 +36,9 @@ namespace jsonrpc {
             std::map<std::string,std::string> headers;
             std::string response;
 
-            static int callback(void *cls, struct MHD_Connection *connection, const char *url, const char *method, const char *version, const char *upload_data, size_t *upload_data_size, void **con_cls);
+            static MHD_Result callback(void *cls, struct MHD_Connection *connection, const char *url, const char *method, const char *version, const char *upload_data, size_t *upload_data_size, void **con_cls);
 
-            static int header_iterator (void *cls, enum MHD_ValueKind kind, const char *key, const char *value);
+            static MHD_Result header_iterator (void *cls, enum MHD_ValueKind kind, const char *key, const char *value);
     };
 
 } // namespace jsonrpc
