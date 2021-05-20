@@ -18,7 +18,7 @@ JsonRpcException::JsonRpcException(int code)
 
 JsonRpcException::JsonRpcException(int code, const std::string &message)
     : code(code), message(Errors::GetErrorMessage(code)) {
-  if (this->message != "")
+  if (!this->message.empty())
     this->message = this->message + ": ";
   this->message = this->message + message;
   this->setWhatMessage();
@@ -27,7 +27,7 @@ JsonRpcException::JsonRpcException(int code, const std::string &message)
 JsonRpcException::JsonRpcException(int code, const std::string &message,
                                    const Json::Value &data)
     : code(code), message(Errors::GetErrorMessage(code)), data(data) {
-  if (this->message != "")
+  if (!this->message.empty())
     this->message = this->message + ": ";
   this->message = this->message + message;
   this->setWhatMessage();

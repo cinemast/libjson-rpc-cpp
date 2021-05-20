@@ -55,8 +55,8 @@ TEST_CASE("test_procedure_parametervalidation", TEST_MODULE) {
 
   Procedure proc2("someprocedure", PARAMS_BY_NAME, JSON_BOOLEAN, "bool",
                   JSON_BOOLEAN, "object", JSON_OBJECT, "array", JSON_ARRAY,
-                  "real", JSON_REAL, "int", JSON_INTEGER,
-                  "numeric", JSON_NUMERIC, NULL);
+                  "real", JSON_REAL, "int", JSON_INTEGER, "numeric",
+                  JSON_NUMERIC, NULL);
   Json::Value param4;
   Json::Value array;
   array.append(0);

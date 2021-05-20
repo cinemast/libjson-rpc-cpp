@@ -46,7 +46,7 @@ void RpcProtocolServerV2::HandleSingleRequest(const Json::Value &req,
 }
 void RpcProtocolServerV2::HandleBatchRequest(const Json::Value &req,
                                              Json::Value &response) {
-  if (req.size() == 0)
+  if (req.empty())
     this->WrapError(Json::nullValue, Errors::ERROR_RPC_INVALID_REQUEST,
                     Errors::GetErrorMessage(Errors::ERROR_RPC_INVALID_REQUEST),
                     response);

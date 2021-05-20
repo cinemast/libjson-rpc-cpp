@@ -49,7 +49,7 @@ void AbstractProtocolHandler::HandleRequest(const std::string &request,
   }
 
   if (resp != Json::nullValue)
-    retValue = Json::writeString(wbuilder,resp);
+    retValue = Json::writeString(wbuilder, resp);
 }
 
 void AbstractProtocolHandler::ProcessRequest(const Json::Value &request,

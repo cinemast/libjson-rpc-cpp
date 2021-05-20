@@ -130,24 +130,22 @@ void CPPServerStubGenerator::generateProcedureDefinitions() {
       if (!proc.GetParameters().empty()) {
         this->writeLine(
             replaceAll(TEMPLATE_CPPSERVER_SIGMETHOD, "<procedurename>",
-                      CPPHelper::normalizeString(proc.GetProcedureName())));
+                       CPPHelper::normalizeString(proc.GetProcedureName())));
+      } else {
+        this->writeLine(replaceAll(
+            TEMPLATE_CPPSERVER_SIGMETHOD_WITHOUT_PARAMS, "<procedurename>",
+            CPPHelper::normalizeString(proc.GetProcedureName())));
       }
-      else {
-        this->writeLine(
-            replaceAll(TEMPLATE_CPPSERVER_SIGMETHOD_WITHOUT_PARAMS, "<procedurename>",
-                      CPPHelper::normalizeString(proc.GetProcedureName())));
-      }
-    }
-    else {
+    } else {
       if (!proc.GetParameters().empty()) {
         this->writeLine(
             replaceAll(TEMPLATE_CPPSERVER_SIGNOTIFICATION, "<procedurename>",
-                      CPPHelper::normalizeString(proc.GetProcedureName())));
-      }
-      else {
+                       CPPHelper::normalizeString(proc.GetProcedureName())));
+      } else {
         this->writeLine(
-            replaceAll(TEMPLATE_CPPSERVER_SIGNOTIFICATION_WITHOUT_PARAMS, "<procedurename>",
-                      CPPHelper::normalizeString(proc.GetProcedureName())));
+            replaceAll(TEMPLATE_CPPSERVER_SIGNOTIFICATION_WITHOUT_PARAMS,
+                       "<procedurename>",
+                       CPPHelper::normalizeString(proc.GetProcedureName())));
       }
     }
 
@@ -185,7 +183,8 @@ void CPPServerStubGenerator::generateAbstractDefinitions() {
   }
 }
 
-string CPPServerStubGenerator::generateBindingParameterlist(const Procedure &proc) {
+string
+CPPServerStubGenerator::generateBindingParameterlist(const Procedure &proc) {
   stringstream parameter;
   const parameterNameList_t &list = proc.GetParameters();
 

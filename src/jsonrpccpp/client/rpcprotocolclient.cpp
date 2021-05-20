@@ -23,7 +23,8 @@ const std::string RpcProtocolClient::KEY_ERROR_CODE = "code";
 const std::string RpcProtocolClient::KEY_ERROR_MESSAGE = "message";
 const std::string RpcProtocolClient::KEY_ERROR_DATA = "data";
 
-RpcProtocolClient::RpcProtocolClient(clientVersion_t version, bool omitEndingLineFeed)
+RpcProtocolClient::RpcProtocolClient(clientVersion_t version,
+                                     bool omitEndingLineFeed)
     : version(version), omitEndingLineFeed(omitEndingLineFeed) {}
 
 void RpcProtocolClient::BuildRequest(const std::string &method,
@@ -46,9 +47,10 @@ void RpcProtocolClient::HandleResponse(const std::string &response,
     if (reader.parse(response, value)) {
       this->HandleResponse(value, result);
     } else {
-      throw JsonRpcException(Errors::ERROR_RPC_JSON_PARSE_ERROR, " " + response);
+      throw JsonRpcException(Errors::ERROR_RPC_JSON_PARSE_ERROR,
+                             " " + response);
     }
-  } catch (Json::Exception& e) {
+  } catch (Json::Exception &e) {
     throw JsonRpcException(Errors::ERROR_RPC_JSON_PARSE_ERROR, " " + response);
   }
 }

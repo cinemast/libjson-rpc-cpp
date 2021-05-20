@@ -53,7 +53,7 @@ SpecificationParser::GetProceduresFromString(const string &content) {
 }
 void SpecificationParser::GetProcedure(Json::Value &signature,
                                        Procedure &result) {
-  if (signature.isObject() && GetProcedureName(signature) != "") {
+  if (signature.isObject() && !GetProcedureName(signature).empty()) {
     result.SetProcedureName(GetProcedureName(signature));
     if (signature.isMember(KEY_SPEC_RETURN_TYPE)) {
       result.SetProcedureType(RPC_METHOD);
