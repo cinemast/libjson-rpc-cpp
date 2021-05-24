@@ -33,6 +33,11 @@ bool AbstractThreadedServer::StopListening() {
   return true;
 }
 
+void AbstractThreadedServer::SetWaitTime(uint microseconds)
+{
+  waitTimeMicroseconds = microseconds;
+}
+
 void AbstractThreadedServer::ListenLoop() {
   while (this->running) {
     int conn = this->CheckForConnection();
@@ -45,7 +50,7 @@ void AbstractThreadedServer::ListenLoop() {
         this->HandleConnection(conn);
       }
     } else {
-      std::this_thread::sleep_for(std::chrono::milliseconds(1));
+      std::this_thread::sleep_for(std::chrono::microseconds(waitTimeMicroseconds));
     }
   }
 }
