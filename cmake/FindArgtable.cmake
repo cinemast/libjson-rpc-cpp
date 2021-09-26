@@ -7,14 +7,14 @@
 
 find_path (
     ARGTABLE_INCLUDE_DIR
-    NAMES argtable2.h
-    DOC "argtable include dir"
+    NAMES Argtable2.h
+    DOC "Argtable include dir"
 )
 
 find_library (
     ARGTABLE_LIBRARY
-    NAMES argtable2
-    DOC "argtable library"
+    NAMES Argtable2
+    DOC "Argtable library"
 )
 
 set(ARGTABLE_INCLUDE_DIRS ${ARGTABLE_INCLUDE_DIR})
@@ -26,8 +26,8 @@ set(ARGTABLE_LIBRARIES ${ARGTABLE_LIBRARY})
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     find_library(
         ARGTABLE_LIBRARY_DEBUG
-        NAMES argtable2d
-        DOC "argtable debug library"
+        NAMES Argtable2d
+        DOC "Argtable debug library"
     )
     set(ARGTABLE_LIBRARIES optimized ${ARGTABLE_LIBRARIES} debug ${ARGTABLE_LIBRARY_DEBUG})
 endif()
@@ -35,6 +35,6 @@ endif()
 # handle the QUIETLY and REQUIRED arguments and set JSONCPP_FOUND to TRUE
 # if all listed variables are TRUE, hide their existence from configuration view
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(argtable DEFAULT_MSG ARGTABLE_INCLUDE_DIR ARGTABLE_LIBRARY)
+find_package_handle_standard_args(Argtable DEFAULT_MSG ARGTABLE_INCLUDE_DIR ARGTABLE_LIBRARY)
 mark_as_advanced (ARGTABLE_INCLUDE_DIR ARGTABLE_LIBRARY)
 

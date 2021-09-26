@@ -28,12 +28,12 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     find_library(
         MHD_LIBRARY_DEBUG
         NAMES microhttpd_d microhttpd-10_d libmicrohttpd_d libmicrohttpd-dll_d
-        DOC "mhd debug library"
+        DOC "MHD debug library"
     )
     set(MHD_LIBRARIES optimized ${MHD_LIBRARIES} debug ${MHD_LIBRARY_DEBUG})
 endif()
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(mhd DEFAULT_MSG MHD_INCLUDE_DIR MHD_LIBRARY)
+find_package_handle_standard_args(MHD DEFAULT_MSG MHD_INCLUDE_DIR MHD_LIBRARY)
 mark_as_advanced(MHD_INCLUDE_DIR MHD_LIBRARY)
 

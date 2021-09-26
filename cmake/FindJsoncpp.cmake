@@ -1,32 +1,32 @@
-# Find jsoncpp
+# Find Jsoncpp
 #
-# Find the jsoncpp includes and library
+# Find the Jsoncpp includes and library
 #
 # if you nee to add a custom library search path, do it via via CMAKE_PREFIX_PATH
 #
 # This module defines
 #  JSONCPP_INCLUDE_DIR, where to find header, etc.
-#  JSONCPP_LIBRARY, the libraries needed to use jsoncpp.
-#  JSONCPP_FOUND, If false, do not try to use jsoncpp.
-#  JSONCPP_INCLUDE_PREFIX, include prefix for jsoncpp.
-#  jsoncpp_lib_static imported library.
+#  JSONCPP_LIBRARY, the libraries needed to use Jsoncpp.
+#  JSONCPP_FOUND, If false, do not try to use Jsoncpp.
+#  JSONCPP_INCLUDE_PREFIX, include prefix for Jsoncpp.
+#  Jsoncpp_lib_static imported library.
 
 # only look in default directories
 find_path(
 	JSONCPP_INCLUDE_DIR
-	NAMES json/json.h jsoncpp/json/json.h
-	DOC "jsoncpp include dir"
+	NAMES json/json.h Jsoncpp/json/json.h
+	DOC "Jsoncpp include dir"
 )
 
 find_library(
     JSONCPP_LIBRARY
-    NAMES jsoncpp
-    DOC "jsoncpp library"
+    NAMES Jsoncpp
+    DOC "Jsoncpp library"
 )
 
-add_library(jsoncpp_lib_static UNKNOWN IMPORTED)
+add_library(Jsoncpp_lib_static UNKNOWN IMPORTED)
 set_target_properties(
-	jsoncpp_lib_static
+	Jsoncpp_lib_static
 	PROPERTIES
 	IMPORTED_LOCATION "${JSONCPP_LIBRARY}"
 	INTERFACE_INCLUDE_DIRECTORIES "${JSONCPP_INCLUDE_DIR}"
@@ -38,12 +38,12 @@ set_target_properties(
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	find_library(
 		JSONCPP_LIBRARY_DEBUG
-		NAMES jsoncppd
-		DOC "jsoncpp debug library"
+		NAMES Jsoncppd
+		DOC "Jsoncpp debug library"
 	)
 
 	set_target_properties(
-		jsoncpp_lib_static
+		Jsoncpp_lib_static
 		PROPERTIES
 		IMPORTED_LOCATION_DEBUG "${JSONCPP_LIBRARY_DEBUG}"
 	)
@@ -55,11 +55,11 @@ endif()
 find_path(
     JSONCPP_INCLUDE_PREFIX
     NAMES json.h
-    PATH_SUFFIXES jsoncpp/json json
+    PATH_SUFFIXES Jsoncpp/json json
 )
 
-if (${JSONCPP_INCLUDE_PREFIX} MATCHES "jsoncpp")
-    set(JSONCPP_INCLUDE_PREFIX "jsoncpp/json")
+if (${JSONCPP_INCLUDE_PREFIX} MATCHES "Jsoncpp")
+    set(JSONCPP_INCLUDE_PREFIX "Jsoncpp/json")
 else()
     set(JSONCPP_INCLUDE_PREFIX "json")
 endif()
@@ -69,5 +69,5 @@ endif()
 # handle the QUIETLY and REQUIRED arguments and set JSONCPP_FOUND to TRUE
 # if all listed variables are TRUE, hide their existence from configuration view
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(jsoncpp DEFAULT_MSG JSONCPP_INCLUDE_DIR JSONCPP_LIBRARY)
+find_package_handle_standard_args(Jsoncpp DEFAULT_MSG JSONCPP_INCLUDE_DIR JSONCPP_LIBRARY)
 mark_as_advanced (JSONCPP_INCLUDE_DIR JSONCPP_LIBRARY)
