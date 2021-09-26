@@ -66,6 +66,12 @@ public:
   void SetUrlHandler(const std::string &url, IClientConnectionHandler *handler);
 
 private:
+#if MHD_VERSION >= 0x00097002
+  typedef MHD_Result MicroHttpdResult;
+#else
+  typedef int MicroHttpdResult;
+#endif
+
   int port;
   int threads;
   bool running;
@@ -79,10 +85,12 @@ private:
   std::map<std::string, IClientConnectionHandler *> urlhandler;
   struct sockaddr_in loopback_addr;
 
-  static int callback(void *cls, struct MHD_Connection *connection,
-                      const char *url, const char *method, const char *version,
-                      const char *upload_data, size_t *upload_data_size,
-                      void **con_cls);
+  static MicroHttpdResult callback(void *cls, struct MHD_Connection *connection,
+                                   const char *url, const char *method,
+                                   const char *version,
+                                   const char *upload_data,
+                                   size_t *upload_data_size,
+                                   void **con_cls);
 
   IClientConnectionHandler *GetHandler(const std::string &url);
 };
