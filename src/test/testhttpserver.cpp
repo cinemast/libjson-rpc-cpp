@@ -41,7 +41,7 @@ std::string TestHttpServer::GetHeader(const std::string &key) {
   return "";
 }
 
-int TestHttpServer::callback(void *cls, MHD_Connection *connection,
+MHD_Result TestHttpServer::callback(void *cls, MHD_Connection *connection,
                              const char *url, const char *method,
                              const char *version, const char *upload_data,
                              size_t *upload_data_size, void **con_cls) {
@@ -69,7 +69,7 @@ int TestHttpServer::callback(void *cls, MHD_Connection *connection,
   return MHD_YES;
 }
 
-int TestHttpServer::header_iterator(void *cls, MHD_ValueKind kind,
+MHD_Result TestHttpServer::header_iterator(void *cls, MHD_ValueKind kind,
                                     const char *key, const char *value) {
   (void)kind;
   TestHttpServer *_this = static_cast<TestHttpServer *>(cls);
