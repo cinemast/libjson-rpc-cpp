@@ -172,7 +172,7 @@
       <dia:attribute name="text">
         <dia:composite type="text">
           <dia:attribute name="string">
-            <dia:string>#sepc.json
+            <dia:string>#spec.json
 {
   add()
 }#</dia:string>

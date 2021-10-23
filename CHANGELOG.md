@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Build example for Centos 7 (#267)
 - `Json::Value` example code (#281)
 - IPv6 Support for `HttpServer` (#275)
+- Added data field in error handler in JS stub generator
 
 ### Fixed
 - Incorrect README sections (#280)

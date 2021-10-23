@@ -60,8 +60,8 @@ namespace jsonrpc
        * @return A boolean that indicates the success or the failure of the operation.
        */
       bool SendResponse(const std::string& response, const std::string& ret_queue);
-
-    private:
+    
+    protected:
 
       /**
        * Callback for listening thread to start ListenLoop.
@@ -79,7 +79,7 @@ namespace jsonrpc
        */
       void ListenLoop();
 
-    private:
+
 
       /**
        * @brief Keeps track of whether the server is running.

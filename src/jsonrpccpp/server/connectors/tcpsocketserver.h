@@ -67,7 +67,7 @@ public:
    */
   bool StopListening();
 
-private:
+protected:
   AbstractServerConnector *realSocket;
 };
 

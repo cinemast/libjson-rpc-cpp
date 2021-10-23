@@ -46,7 +46,7 @@ public:
   virtual int CheckForConnection();
   virtual void HandleConnection(int connection);
 
-private:
+protected:
   std::string ipToBind;
   unsigned int port;
   int socket_fd;
