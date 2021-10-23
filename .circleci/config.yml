@@ -12,7 +12,7 @@ jobs:
           command: 'apt-get update && apt-get update && apt-get install -y wget build-essential cmake libjsoncpp-dev libargtable2-dev libcurl4-openssl-dev libmicrohttpd-dev git libhiredis-dev redis-server'
       - run:
           name: Build test and install
-          command: 'cd docker && OS=debian ./build_test_install.sh'
+          command: 'OS=debian ./docker/build_test_install.sh'
       - run:
           name: Create coverage report
           command: lcov --directory . --capture --output-file coverage.info && lcov --remove coverage.info '/usr/*' --output-file coverage.info
