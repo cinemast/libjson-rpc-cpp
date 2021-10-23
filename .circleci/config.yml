@@ -1,0 +1,37 @@
+version: 2.1
+orbs:
+  codecov: codecov/codecov@1.0.2
+jobs:
+  "build-linux-gcc":
+    docker:
+      - image: "debian:latest"
+    steps:
+      - checkout
+      - run:
+          name: Installing GCC and CMake
+          command: 'apt-get update && apt-get update && apt-get install -y wget build-essential cmake libjsoncpp-dev libargtable2-dev libcurl4-openssl-dev libmicrohttpd-dev git libhiredis-dev redis-server'
+      - run:
+          name: Build test and install
+          command: 'cd docker && OS=debian ./build_test_install.sh'
+      - run:
+          name: Create coverage report
+          command: lcov --directory . --capture --output-file coverage.info && lcov --remove coverage.info '/usr/*' --output-file coverage.info
+      - codecov/upload:
+          file: coverage.info
+  "build-osx-clang":
+    macos:
+      xcode: "13.0.0"
+    steps:
+      - checkout
+      - run:
+          name: Installing CMake
+          command: 'brew install cmake jsoncpp argtable curl hiredis redis libmicrohttpd'
+      - run:
+          name: Build
+          command: 'OS=osx ./docker/build_test_install.sh'
+workflows:
+  version: 2
+  build:
+    jobs:
+      - "build-linux-gcc"
+      - "build-osx-clang"
