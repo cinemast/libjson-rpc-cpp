@@ -9,7 +9,7 @@ jobs:
       - checkout
       - run:
           name: Installing GCC and CMake
-          command: 'apt-get update && apt-get update && apt-get install -y wget build-essential cmake libjsoncpp-dev libargtable2-dev libcurl4-openssl-dev libmicrohttpd-dev git libhiredis-dev redis-server'
+          command: 'apt-get update && apt-get update && apt-get install -y wget build-essential cmake libjsoncpp-dev libargtable2-dev libcurl4-openssl-dev libmicrohttpd-dev git libhiredis-dev redis-server lcov'
       - run:
           name: Build test and install
           command: 'OS=debian ./docker/build_test_install.sh'
