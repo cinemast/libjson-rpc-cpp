@@ -31,14 +31,20 @@ namespace jsonrpc {
             std::string GetHeader(const std::string &key);
 
         private:
+#if MHD_VERSION >= 0x00097002
+            typedef MHD_Result MicroHttpdResult;
+#else
+            typedef int MicroHttpdResult;
+#endif
+
             int port;
             MHD_Daemon* daemon;
             std::map<std::string,std::string> headers;
             std::string response;
 
-            static MHD_Result callback(void *cls, struct MHD_Connection *connection, const char *url, const char *method, const char *version, const char *upload_data, size_t *upload_data_size, void **con_cls);
+            static MicroHttpdResult callback(void *cls, struct MHD_Connection *connection, const char *url, const char *method, const char *version, const char *upload_data, size_t *upload_data_size, void **con_cls);
 
-            static MHD_Result header_iterator (void *cls, enum MHD_ValueKind kind, const char *key, const char *value);
+            static MicroHttpdResult header_iterator (void *cls, enum MHD_ValueKind kind, const char *key, const char *value);
     };
 
 } // namespace jsonrpc
