@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   codecov: codecov/codecov@1.0.2
 jobs:
-  "build-debian-gcc":
+  build-debian-gcc:
     docker:
       - image: "debian:latest"
     steps:
@@ -19,7 +19,7 @@ jobs:
       - codecov/upload:
           file: coverage.info
 
-  "build-fedora-gcc":
+  build-fedora-gcc:
     docker:
       - image: "fedora:latest"
     steps:
@@ -30,7 +30,7 @@ jobs:
       - run:
           name: Build test and install
           command: 'OS=debian ./docker/build_test_install.sh'
-  "build-archlinux-gcc":
+  build-archlinux-gcc:
     docker:
       - image: "archlinux:latest"
     steps:
@@ -41,7 +41,7 @@ jobs:
       - run:
           name: Build test and install
           command: 'OS=debian ./docker/build_test_install.sh'
-  "build-osx-clang":
+  build-osx-clang:
     macos:
       xcode: "13.0.0"
     steps:
@@ -56,5 +56,7 @@ workflows:
   version: 2
   build:
     jobs:
-      - "build-debian-gcc"
-      - "build-osx-clang"
+      - build-debian-gcc
+      - build-fedora-gcc
+      - build-archlinux-gcc
+      - build-osx-clang
