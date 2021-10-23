@@ -1,8 +1,9 @@
-**I am currently working on a new C++17 implementation -> [json-rpc-cxx](https://github.com/jsonrpcx/json-rpc-cxx).**
+**I created a new C++17 header only implementation -> [json-rpc-cxx](https://github.com/jsonrpcx/json-rpc-cxx).**
 
-Master [![Build Status](https://travis-ci.org/cinemast/libjson-rpc-cpp.png?branch=master)](https://travis-ci.org/cinemast/libjson-rpc-cpp) [![codecov](https://codecov.io/gh/cinemast/libjson-rpc-cpp/branch/master/graph/badge.svg)](https://codecov.io/gh/cinemast/libjson-rpc-cpp)
-Develop [![Build Status](https://travis-ci.org/cinemast/libjson-rpc-cpp.png?branch=develop)](https://travis-ci.org/cinemast/libjson-rpc-cpp) [![codecov](https://codecov.io/gh/cinemast/libjson-rpc-cpp/branch/develop/graph/badge.svg)](https://codecov.io/gh/cinemast/libjson-rpc-cpp) |
-[![Coverity Status](https://scan.coverity.com/projects/3169/badge.svg?flat=1)](https://scan.coverity.com/projects/3169)
+Master [![CircleCI](https://circleci.com/gh/cinemast/libjson-rpc-cpp/tree/master.svg?style=svg)](https://circleci.com/gh/cinemast/libjson-rpc-cpp/tree/master)
+Develop [![CircleCI](https://circleci.com/gh/cinemast/libjson-rpc-cpp/tree/develop.svg?style=svg)](https://circleci.com/gh/cinemast/libjson-rpc-cpp/tree/develop)
+[![codecov](https://codecov.io/gh/cinemast/libjson-rpc-cpp/branch/master/graph/badge.svg?token=QNoXsaI2ta)](https://codecov.io/gh/cinemast/libjson-rpc-cpp)
+
 
 libjson-rpc-cpp
 ===============
