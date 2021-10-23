@@ -3,7 +3,7 @@ set -evu
 
 PREFIX=/usr/local
 
-if [ "$OS" == "arch" ] || [ "$OS" == "fedora" ] || [ "$OS" == "centos7" ]
+if [ "$OS" == "archlinux" ] || [ "$OS" == "fedora" ]
 then
 	PREFIX=/usr
 fi
