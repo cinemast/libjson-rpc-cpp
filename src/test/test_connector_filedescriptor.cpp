@@ -24,36 +24,34 @@ using namespace std;
 #define TEST_MODULE "[connector_filedescriptor]"
 
 namespace testfiledescriptorserver {
-struct F {
-  FileDescriptorServer *server;
-  FileDescriptorClient *client;
-  MockClientConnectionHandler handler;
+  struct F {
+    FileDescriptorServer *server;
+    FileDescriptorClient *client;
+    MockClientConnectionHandler handler;
 
-  F() {
-    pipe(c2sfd);
-    pipe(s2cfd);
-    server = new FileDescriptorServer(c2sfd[0], s2cfd[1]);
-    client = new FileDescriptorClient(s2cfd[0], c2sfd[1]);
-    server->SetHandler(&handler);
-    REQUIRE(server->StartListening());
-  }
-  ~F() {
-    server->StopListening();
-    delete server;
-    delete client;
-    close(c2sfd[0]);
-    close(c2sfd[1]);
-    close(s2cfd[0]);
-    close(s2cfd[1]);
-  }
+    F() {
+      pipe(c2sfd);
+      pipe(s2cfd);
+      server = new FileDescriptorServer(c2sfd[0], s2cfd[1]);
+      client = new FileDescriptorClient(s2cfd[0], c2sfd[1]);
+      server->SetHandler(&handler);
+      REQUIRE(server->StartListening());
+    }
+    ~F() {
+      server->StopListening();
+      delete server;
+      delete client;
+      close(c2sfd[0]);
+      close(c2sfd[1]);
+      close(s2cfd[0]);
+      close(s2cfd[1]);
+    }
 
-  int c2sfd[2]; // Client to server fd
-  int s2cfd[2]; // Server to client fd
-};
+    int c2sfd[2]; // Client to server fd
+    int s2cfd[2]; // Server to client fd
+  };
 
-bool check_exception1(JsonRpcException const &ex) {
-  return ex.GetCode() == Errors::ERROR_CLIENT_CONNECTOR;
-}
+  bool check_exception1(JsonRpcException const &ex) { return ex.GetCode() == Errors::ERROR_CLIENT_CONNECTOR; }
 } // namespace testfiledescriptorserver
 using namespace testfiledescriptorserver;
 
@@ -124,8 +122,7 @@ TEST_CASE("test_filedescriptor_server_multiplestart", TEST_MODULE) {
   close(fds[1]);
 }
 
-TEST_CASE("test_filedescriptor_server_input_fd_invalid_while_listening",
-          TEST_MODULE) {
+TEST_CASE("test_filedescriptor_server_input_fd_invalid_while_listening", TEST_MODULE) {
   int c2sfd[2];
   pipe(c2sfd);
   int s2cfd[2];
@@ -178,8 +175,7 @@ TEST_CASE("test_filedescriptor_server_output_fd_invalid", TEST_MODULE) {
 TEST_CASE("test_filedescriptor_client_output_fd_invalid", TEST_MODULE) {
   FileDescriptorClient client(2, 6);
   string result;
-  CHECK_EXCEPTION_TYPE(client.SendRPCMessage("foobar", result),
-                       JsonRpcException, check_exception1);
+  CHECK_EXCEPTION_TYPE(client.SendRPCMessage("foobar", result), JsonRpcException, check_exception1);
 }
 
 TEST_CASE("test_filedescriptor_client_input_fd_invalid", TEST_MODULE) {
@@ -193,8 +189,7 @@ TEST_CASE("test_filedescriptor_client_input_fd_invalid", TEST_MODULE) {
   // crashed.
   close(s2cfd[0]);
   string result;
-  CHECK_EXCEPTION_TYPE(client.SendRPCMessage("foobar", result),
-                       JsonRpcException, check_exception1);
+  CHECK_EXCEPTION_TYPE(client.SendRPCMessage("foobar", result), JsonRpcException, check_exception1);
   close(c2sfd[1]);
   close(s2cfd[1]);
   close(c2sfd[0]);

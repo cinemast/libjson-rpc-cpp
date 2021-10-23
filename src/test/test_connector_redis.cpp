@@ -29,44 +29,38 @@ using namespace std;
 #define TEST_MODULE "[connector_redis]"
 
 namespace testredisserver {
-///////////////////////////////////////////////////////////////////////////
-// Prepare redis fixture
-//
-// This fixture shall:
-//   1. Start up a redis-server in the backgroun
-//   2. Create a standard RedisServer connection which can be used
-//   3. Create a standard RedisClient connection which can be used
-//   4. Create a hiredis connection which can also be used
-//
-struct F {
-  TestRedisServer redis_server;
-  redisContext *con;
-  RedisServer server;
-  RedisClient client;
-  MockClientConnectionHandler handler;
+  ///////////////////////////////////////////////////////////////////////////
+  // Prepare redis fixture
+  //
+  // This fixture shall:
+  //   1. Start up a redis-server in the backgroun
+  //   2. Create a standard RedisServer connection which can be used
+  //   3. Create a standard RedisClient connection which can be used
+  //   4. Create a hiredis connection which can also be used
+  //
+  struct F {
+    TestRedisServer redis_server;
+    redisContext *con;
+    RedisServer server;
+    RedisClient client;
+    MockClientConnectionHandler handler;
 
-  F()
-      : redis_server(), server(TEST_HOST, TEST_PORT, TEST_QUEUE),
-        client(TEST_HOST, TEST_PORT, TEST_QUEUE) {
-    con = redisConnect(TEST_HOST, TEST_PORT);
-    server.SetHandler(&handler);
-    server.StartListening();
-    client.SetTimeout(1);
-  }
-  ~F() {
-    redisFree(con);
-    server.StopListening();
-    redis_server.Stop();
-  }
-};
+    F() : redis_server(), server(TEST_HOST, TEST_PORT, TEST_QUEUE), client(TEST_HOST, TEST_PORT, TEST_QUEUE) {
+      con = redisConnect(TEST_HOST, TEST_PORT);
+      server.SetHandler(&handler);
+      server.StartListening();
+      client.SetTimeout(1);
+    }
+    ~F() {
+      redisFree(con);
+      server.StopListening();
+      redis_server.Stop();
+    }
+  };
 
-bool check_exception1(JsonRpcException const &ex) {
-  return ex.GetCode() == Errors::ERROR_CLIENT_CONNECTOR;
-}
+  bool check_exception1(JsonRpcException const &ex) { return ex.GetCode() == Errors::ERROR_CLIENT_CONNECTOR; }
 
-bool check_exception2(JsonRpcException const &ex) {
-  return ex.GetCode() == Errors::ERROR_RPC_INTERNAL_ERROR;
-}
+  bool check_exception2(JsonRpcException const &ex) { return ex.GetCode() == Errors::ERROR_RPC_INTERNAL_ERROR; }
 } // namespace testredisserver
 
 using namespace testredisserver;
@@ -95,8 +89,7 @@ TEST_CASE_METHOD(F, "test_redis_multiple", TEST_MODULE) {
 }
 
 TEST_CASE("test_redis_client_error", TEST_MODULE) {
-  CHECK_EXCEPTION_TYPE(RedisClient client(TEST_HOST, TEST_PORT + 1, TEST_QUEUE),
-                       JsonRpcException, check_exception1);
+  CHECK_EXCEPTION_TYPE(RedisClient client(TEST_HOST, TEST_PORT + 1, TEST_QUEUE), JsonRpcException, check_exception1);
 }
 
 #ifdef __APPLE__
@@ -120,8 +113,7 @@ TEST_CASE_METHOD(F, "test_redis_client_ret_queue", TEST_MODULE) {
   CHECK(retqueue == TEST_QUEUE "_" RAND_SECOND);
 
   // Check behaviour when queue already exists
-  reply = (redisReply *)redisCommand(con, "LPUSH %s %s",
-                                     TEST_QUEUE "_" RAND_FIRST, "test");
+  reply = (redisReply *)redisCommand(con, "LPUSH %s %s", TEST_QUEUE "_" RAND_FIRST, "test");
   freeReplyObject(reply);
 
   srand(0);
@@ -130,8 +122,7 @@ TEST_CASE_METHOD(F, "test_redis_client_ret_queue", TEST_MODULE) {
 
   // Check for a failure with the redis context
   redis_server.Stop();
-  CHECK_EXCEPTION_TYPE(GetReturnQueue(con, TEST_QUEUE, retqueue),
-                       JsonRpcException, check_exception1);
+  CHECK_EXCEPTION_TYPE(GetReturnQueue(con, TEST_QUEUE, retqueue), JsonRpcException, check_exception1);
 }
 
 TEST_CASE_METHOD(F, "test_redis_client_set_queue", TEST_MODULE) {
@@ -168,15 +159,13 @@ TEST_CASE_METHOD(F, "test_redis_server_bad_request", TEST_MODULE) {
 
   redisReply *reply;
 
-  reply = (redisReply *)redisCommand(con, "LPUSH %s %s", queue.c_str(),
-                                     req1.c_str());
+  reply = (redisReply *)redisCommand(con, "LPUSH %s %s", queue.c_str(), req1.c_str());
   CHECK(handler.request == "");
   freeReplyObject(reply);
   reply = (redisReply *)redisCommand(con, "DEL %s", queue.c_str());
   freeReplyObject(reply);
 
-  reply =
-      (redisReply *)redisCommand(con, "SET %s %s", queue.c_str(), req1.c_str());
+  reply = (redisReply *)redisCommand(con, "SET %s %s", queue.c_str(), req1.c_str());
   CHECK(handler.request == "");
   freeReplyObject(reply);
   reply = (redisReply *)redisCommand(con, "DEL %s", queue.c_str());
@@ -188,8 +177,7 @@ TEST_CASE_METHOD(F, "test_redis_client_timeout", TEST_MODULE) {
   client2.SetTimeout(1);
 
   string result;
-  CHECK_EXCEPTION_TYPE(client2.SendRPCMessage("examplerequest", result),
-                       JsonRpcException, check_exception1);
+  CHECK_EXCEPTION_TYPE(client2.SendRPCMessage("examplerequest", result), JsonRpcException, check_exception1);
 }
 
 TEST_CASE_METHOD(F, "test_redis_server_longrequest", TEST_MODULE) {

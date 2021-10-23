@@ -52,8 +52,7 @@ int kbhit() {
 int main(int argc, char **argv) {
 
   if (argc < 2) {
-    cerr << "Provide XBMC API URL as argument! e.g.: " << argv[0]
-         << " http://127.0.0.1:8080/jsonrpc" << endl;
+    cerr << "Provide XBMC API URL as argument! e.g.: " << argv[0] << " http://127.0.0.1:8080/jsonrpc" << endl;
     return -1;
   } else {
     cout << "XBMC Remote control" << endl;

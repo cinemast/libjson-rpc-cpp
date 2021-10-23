@@ -17,19 +17,19 @@ using namespace jsonrpc;
 using namespace std;
 
 namespace testserver {
-struct F {
-  MockServerConnector c;
-  TestServer server;
+  struct F {
+    MockServerConnector c;
+    TestServer server;
 
-  F() : server(c) {}
-};
+    F() : server(c) {}
+  };
 
-struct F1 {
-  MockServerConnector c;
-  TestServer server;
+  struct F1 {
+    MockServerConnector c;
+    TestServer server;
 
-  F1() : server(c, JSONRPC_SERVER_V1) {}
-};
+    F1() : server(c, JSONRPC_SERVER_V1) {}
+  };
 } // namespace testserver
 using namespace testserver;
 
@@ -48,8 +48,7 @@ TEST_CASE_METHOD(F, "test_server_v2_method_success", TEST_MODULE) {
   CHECK(c.GetJsonResponse()["jsonrpc"].asString() == "2.0");
   CHECK(c.GetJsonResponse().isMember("error") == false);
 
-  c.SetRequest(
-      "{\"jsonrpc\":\"2.0\", \"id\": 1, \"method\": \"sub\",\"params\":[5,7]}");
+  c.SetRequest("{\"jsonrpc\":\"2.0\", \"id\": 1, \"method\": \"sub\",\"params\":[5,7]}");
   CHECK(c.GetJsonResponse()["result"].asInt() == -2);
   CHECK(c.GetJsonResponse()["id"].asInt() == 1);
   CHECK(c.GetJsonResponse()["jsonrpc"].asString() == "2.0");
@@ -109,8 +108,7 @@ TEST_CASE_METHOD(F, "test_server_v2_invalidrequest", TEST_MODULE) {
   CHECK(c.GetJsonResponse().isMember("result") == false);
 
   // no method name
-  c.SetRequest(
-      "{\"jsonrpc\":\"2.0\", \"id\": 1,\"params\":{\"name\":\"Peter\"}}");
+  c.SetRequest("{\"jsonrpc\":\"2.0\", \"id\": 1,\"params\":{\"name\":\"Peter\"}}");
   CHECK(c.GetJsonResponse()["error"]["code"] == -32600);
   CHECK(c.GetJsonResponse().isMember("result") == false);
 
@@ -179,8 +177,7 @@ TEST_CASE_METHOD(F, "test_server_v2_method_error", TEST_MODULE) {
   CHECK(c.GetJsonResponse().isMember("result") == false);
 
   // userspace exception
-  c.SetRequest(
-      "{\"jsonrpc\":\"2.0\", \"id\": 1, \"method\": \"exceptionMethod\"}");
+  c.SetRequest("{\"jsonrpc\":\"2.0\", \"id\": 1, \"method\": \"exceptionMethod\"}");
   CHECK(c.GetJsonResponse()["error"]["code"] == -32099);
   CHECK(c.GetJsonResponse()["error"]["message"] == "User exception");
   CHECK(c.GetJsonResponse()["error"]["data"][0] == 33);
@@ -385,31 +382,14 @@ TEST_CASE("test_server_abstractserver", TEST_MODULE) {
   MockServerConnector c;
   TestServer server(c, JSONRPC_SERVER_V1V2);
 
-  CHECK(server.bindAndAddNotification(Procedure("testMethod", PARAMS_BY_NAME,
-                                                JSON_STRING, "name",
-                                                JSON_STRING, NULL),
-                                      &TestServer::initCounter) == false);
-  CHECK(server.bindAndAddMethod(Procedure("initCounter", PARAMS_BY_NAME,
-                                          "value", JSON_INTEGER, NULL),
-                                &TestServer::sayHello) == false);
+  CHECK(server.bindAndAddNotification(Procedure("testMethod", PARAMS_BY_NAME, JSON_STRING, "name", JSON_STRING, NULL), &TestServer::initCounter) == false);
+  CHECK(server.bindAndAddMethod(Procedure("initCounter", PARAMS_BY_NAME, "value", JSON_INTEGER, NULL), &TestServer::sayHello) == false);
 
-  CHECK(
-      server.bindAndAddMethod(Procedure("testMethod", PARAMS_BY_NAME,
-                                        JSON_STRING, "name", JSON_STRING, NULL),
-                              &TestServer::sayHello) == true);
-  CHECK(
-      server.bindAndAddMethod(Procedure("testMethod", PARAMS_BY_NAME,
-                                        JSON_STRING, "name", JSON_STRING, NULL),
-                              &TestServer::sayHello) == false);
+  CHECK(server.bindAndAddMethod(Procedure("testMethod", PARAMS_BY_NAME, JSON_STRING, "name", JSON_STRING, NULL), &TestServer::sayHello) == true);
+  CHECK(server.bindAndAddMethod(Procedure("testMethod", PARAMS_BY_NAME, JSON_STRING, "name", JSON_STRING, NULL), &TestServer::sayHello) == false);
 
-  CHECK(server.bindAndAddNotification(Procedure("testNotification",
-                                                PARAMS_BY_NAME, "value",
-                                                JSON_INTEGER, NULL),
-                                      &TestServer::initCounter) == true);
-  CHECK(server.bindAndAddNotification(Procedure("testNotification",
-                                                PARAMS_BY_NAME, "value",
-                                                JSON_INTEGER, NULL),
-                                      &TestServer::initCounter) == false);
+  CHECK(server.bindAndAddNotification(Procedure("testNotification", PARAMS_BY_NAME, "value", JSON_INTEGER, NULL), &TestServer::initCounter) == true);
+  CHECK(server.bindAndAddNotification(Procedure("testNotification", PARAMS_BY_NAME, "value", JSON_INTEGER, NULL), &TestServer::initCounter) == false);
 
   CHECK(server.StartListening() == true);
   CHECK(server.StopListening() == true);

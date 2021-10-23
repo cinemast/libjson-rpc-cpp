@@ -16,20 +16,13 @@ using namespace std;
 
 class SampleServer : public AbstractServer<SampleServer> {
 public:
-  SampleServer(UnixDomainSocketServer &server)
-      : AbstractServer<SampleServer>(server) {
-    this->bindAndAddMethod(Procedure("sayHello", PARAMS_BY_NAME, JSON_STRING,
-                                     "name", JSON_STRING, NULL),
-                           &SampleServer::sayHello);
-    this->bindAndAddNotification(
-        Procedure("notifyServer", PARAMS_BY_NAME, NULL),
-        &SampleServer::notifyServer);
+  SampleServer(UnixDomainSocketServer &server) : AbstractServer<SampleServer>(server) {
+    this->bindAndAddMethod(Procedure("sayHello", PARAMS_BY_NAME, JSON_STRING, "name", JSON_STRING, NULL), &SampleServer::sayHello);
+    this->bindAndAddNotification(Procedure("notifyServer", PARAMS_BY_NAME, NULL), &SampleServer::notifyServer);
   }
 
   // method
-  void sayHello(const Json::Value &request, Json::Value &response) {
-    response = "Hello: " + request["name"].asString();
-  }
+  void sayHello(const Json::Value &request, Json::Value &response) { response = "Hello: " + request["name"].asString(); }
 
   // notification
   void notifyServer(const Json::Value &request) {

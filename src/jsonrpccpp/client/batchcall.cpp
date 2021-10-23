@@ -15,8 +15,7 @@ using namespace std;
 
 BatchCall::BatchCall() : id(1) {}
 
-int BatchCall::addCall(const string &methodname, const Json::Value &params,
-                       bool isNotification) {
+int BatchCall::addCall(const string &methodname, const Json::Value &params, bool isNotification) {
   Json::Value call;
   call[RpcProtocolClient::KEY_PROTOCOL_VERSION] = "2.0";
   call[RpcProtocolClient::KEY_PROCEDURE_NAME] = methodname;

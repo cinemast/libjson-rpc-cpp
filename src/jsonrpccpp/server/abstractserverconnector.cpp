@@ -18,17 +18,12 @@ AbstractServerConnector::AbstractServerConnector() { this->handler = NULL; }
 
 AbstractServerConnector::~AbstractServerConnector() {}
 
-void AbstractServerConnector::ProcessRequest(const string &request,
-                                             string &response) {
+void AbstractServerConnector::ProcessRequest(const string &request, string &response) {
   if (this->handler != NULL) {
     this->handler->HandleRequest(request, response);
   }
 }
 
-void AbstractServerConnector::SetHandler(IClientConnectionHandler *handler) {
-  this->handler = handler;
-}
+void AbstractServerConnector::SetHandler(IClientConnectionHandler *handler) { this->handler = handler; }
 
-IClientConnectionHandler *AbstractServerConnector::GetHandler() {
-  return this->handler;
-}
+IClientConnectionHandler *AbstractServerConnector::GetHandler() { return this->handler; }

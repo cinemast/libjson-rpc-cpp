@@ -11,21 +11,16 @@
 
 using namespace jsonrpc;
 
-JsonRpcException::JsonRpcException(int code)
-    : code(code), message(Errors::GetErrorMessage(code)) {
-  this->setWhatMessage();
-}
+JsonRpcException::JsonRpcException(int code) : code(code), message(Errors::GetErrorMessage(code)) { this->setWhatMessage(); }
 
-JsonRpcException::JsonRpcException(int code, const std::string &message)
-    : code(code), message(Errors::GetErrorMessage(code)) {
+JsonRpcException::JsonRpcException(int code, const std::string &message) : code(code), message(Errors::GetErrorMessage(code)) {
   if (!this->message.empty())
     this->message = this->message + ": ";
   this->message = this->message + message;
   this->setWhatMessage();
 }
 
-JsonRpcException::JsonRpcException(int code, const std::string &message,
-                                   const Json::Value &data)
+JsonRpcException::JsonRpcException(int code, const std::string &message, const Json::Value &data)
     : code(code), message(Errors::GetErrorMessage(code)), data(data) {
   if (!this->message.empty())
     this->message = this->message + ": ";
@@ -33,10 +28,7 @@ JsonRpcException::JsonRpcException(int code, const std::string &message,
   this->setWhatMessage();
 }
 
-JsonRpcException::JsonRpcException(const std::string &message)
-    : code(0), message(message) {
-  this->setWhatMessage();
-}
+JsonRpcException::JsonRpcException(const std::string &message) : code(0), message(message) { this->setWhatMessage(); }
 
 JsonRpcException::~JsonRpcException() throw() {}
 
@@ -46,9 +38,7 @@ const std::string &JsonRpcException::GetMessage() const { return message; }
 
 const Json::Value &JsonRpcException::GetData() const { return data; }
 
-const char *JsonRpcException::what() const throw() {
-  return this->whatString.c_str();
-}
+const char *JsonRpcException::what() const throw() { return this->whatString.c_str(); }
 
 void JsonRpcException::setWhatMessage() {
   if (this->code != 0) {

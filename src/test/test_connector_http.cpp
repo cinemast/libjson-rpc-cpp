@@ -31,28 +31,24 @@ using namespace std;
 #define TEST_MODULE "[connector_http]"
 
 namespace testhttpserver {
-struct ServerFixture {
-  HttpServer server;
-  MockClientConnectionHandler handler;
+  struct ServerFixture {
+    HttpServer server;
+    MockClientConnectionHandler handler;
 
-  ServerFixture() : server(TEST_PORT) { server.SetHandler(&handler); }
+    ServerFixture() : server(TEST_PORT) { server.SetHandler(&handler); }
 
-  ~ServerFixture() { server.StopListening(); }
-};
+    ~ServerFixture() { server.StopListening(); }
+  };
 
-struct F : public ServerFixture {
-  HttpClient client;
+  struct F : public ServerFixture {
+    HttpClient client;
 
-  F() : client(CLIENT_URL) { server.StartListening(); }
-};
+    F() : client(CLIENT_URL) { server.StartListening(); }
+  };
 
-bool check_exception1(JsonRpcException const &ex) {
-  return ex.GetCode() == Errors::ERROR_CLIENT_CONNECTOR;
-}
+  bool check_exception1(JsonRpcException const &ex) { return ex.GetCode() == Errors::ERROR_CLIENT_CONNECTOR; }
 
-bool check_exception2(JsonRpcException const &ex) {
-  return ex.GetCode() == Errors::ERROR_RPC_INTERNAL_ERROR;
-}
+  bool check_exception2(JsonRpcException const &ex) { return ex.GetCode() == Errors::ERROR_RPC_INTERNAL_ERROR; }
 } // namespace testhttpserver
 using namespace testhttpserver;
 
@@ -68,8 +64,7 @@ TEST_CASE_METHOD(F, "test_http_success", TEST_MODULE) {
 TEST_CASE("test_http_client_error", TEST_MODULE) {
   HttpClient client("http://someinvalidurl/asdf");
   string result;
-  CHECK_EXCEPTION_TYPE(client.SendRPCMessage("asdfasfwer", result),
-                       JsonRpcException, check_exception1);
+  CHECK_EXCEPTION_TYPE(client.SendRPCMessage("asdfasfwer", result), JsonRpcException, check_exception1);
 }
 
 #ifndef __APPLE__
@@ -98,8 +93,7 @@ TEST_CASE_METHOD(ServerFixture, "test_http_client_bind_address", TEST_MODULE) {
   CHECK(result == "exampleresponse");
 
   HttpClient client2(ALTERNATE_CLIENT_URL);
-  CHECK_EXCEPTION_TYPE(client2.SendRPCMessage("examplerequest", result),
-                       JsonRpcException, check_exception1);
+  CHECK_EXCEPTION_TYPE(client2.SendRPCMessage("examplerequest", result), JsonRpcException, check_exception1);
 }
 
 #ifndef WIN32
@@ -118,16 +112,14 @@ TEST_CASE_METHOD(F, "test_http_client_timeout", TEST_MODULE) {
   handler.timeout = 20;
   client.SetTimeout(10);
   string result;
-  CHECK_EXCEPTION_TYPE(client.SendRPCMessage("Test", result), JsonRpcException,
-                       check_exception1);
+  CHECK_EXCEPTION_TYPE(client.SendRPCMessage("Test", result), JsonRpcException, check_exception1);
   handler.timeout = 0;
   client.SetTimeout(10000);
   handler.response = "asdf";
   client.SendRPCMessage("", result);
   CHECK(result == "asdf");
   server.StopListening();
-  CHECK_EXCEPTION_TYPE(client.SendRPCMessage("Test", result), JsonRpcException,
-                       check_exception1);
+  CHECK_EXCEPTION_TYPE(client.SendRPCMessage("Test", result), JsonRpcException, check_exception1);
 }
 
 TEST_CASE("test_http_client_headers", TEST_MODULE) {
@@ -201,8 +193,7 @@ TEST_CASE("test_http_server_endpoints", TEST_MODULE) {
   client2.SendRPCMessage("test", response);
   CHECK(response == "response2");
 
-  CHECK_EXCEPTION_TYPE(client3.SendRPCMessage("test", response),
-                       JsonRpcException, check_exception2);
+  CHECK_EXCEPTION_TYPE(client3.SendRPCMessage("test", response), JsonRpcException, check_exception2);
 
   client3.SetUrl("http://localhost:8383/handler2");
   client3.SendRPCMessage("test", response);

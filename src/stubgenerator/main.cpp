@@ -19,8 +19,7 @@ int main(int argc, char **argv) {
   vector<StubGenerator *> stubgens;
   vector<Procedure> procedures;
 
-  bool result = StubGeneratorFactory::createStubGenerators(
-      argc, argv, procedures, stubgens, stdout, stderr);
+  bool result = StubGeneratorFactory::createStubGenerators(argc, argv, procedures, stubgens, stdout, stderr);
 
   for (unsigned int i = 0; i < stubgens.size(); ++i) {
     stubgens[i]->generateStub();

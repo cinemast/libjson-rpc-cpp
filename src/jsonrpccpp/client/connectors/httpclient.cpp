@@ -35,8 +35,7 @@ struct string {
   size_t len;
 };
 
-static size_t writefunc(void *ptr, size_t size, size_t nmemb,
-                        struct string *s) {
+static size_t writefunc(void *ptr, size_t size, size_t nmemb, struct string *s) {
   size_t new_len = s->len + size * nmemb;
   s->ptr = (char *)realloc(s->ptr, new_len + 1);
   memcpy(s->ptr + s->len, ptr, size * nmemb);
@@ -58,8 +57,7 @@ HttpClient::HttpClient(const std::string &url) : url(url) {
 
 HttpClient::~HttpClient() { curl_easy_cleanup(curl); }
 
-void HttpClient::SendRPCMessage(const std::string &message,
-                                std::string &result) {
+void HttpClient::SendRPCMessage(const std::string &message, std::string &result) {
 
   curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
   curl_easy_setopt(curl, CURLOPT_URL, this->url.c_str());
@@ -72,11 +70,8 @@ void HttpClient::SendRPCMessage(const std::string &message,
 
   struct curl_slist *headers = NULL;
 
-  for (std::map<std::string, std::string>::iterator header =
-           this->headers.begin();
-       header != this->headers.end(); ++header) {
-    headers = curl_slist_append(
-        headers, (header->first + ": " + header->second).c_str());
+  for (std::map<std::string, std::string>::iterator header = this->headers.begin(); header != this->headers.end(); ++header) {
+    headers = curl_slist_append(headers, (header->first + ": " + header->second).c_str());
   }
 
   headers = curl_slist_append(headers, "Content-Type: application/json");
@@ -115,10 +110,6 @@ void HttpClient::SetUrl(const std::string &url) { this->url = url; }
 
 void HttpClient::SetTimeout(long timeout) { this->timeout = timeout; }
 
-void HttpClient::AddHeader(const std::string &attr, const std::string &val) {
-  this->headers[attr] = val;
-}
+void HttpClient::AddHeader(const std::string &attr, const std::string &val) { this->headers[attr] = val; }
 
-void HttpClient::RemoveHeader(const std::string &attr) {
-  this->headers.erase(attr);
-}
+void HttpClient::RemoveHeader(const std::string &attr) { this->headers.erase(attr); }

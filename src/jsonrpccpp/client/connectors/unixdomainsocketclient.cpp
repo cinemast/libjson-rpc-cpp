@@ -23,45 +23,38 @@
 using namespace jsonrpc;
 using namespace std;
 
-UnixDomainSocketClient::UnixDomainSocketClient(const std::string &path)
-    : path(path) {}
+UnixDomainSocketClient::UnixDomainSocketClient(const std::string &path) : path(path) {}
 
 UnixDomainSocketClient::~UnixDomainSocketClient() {}
 
-void UnixDomainSocketClient::SendRPCMessage(const std::string &message,
-                                            std::string &result) {
+void UnixDomainSocketClient::SendRPCMessage(const std::string &message, std::string &result) {
   sockaddr_un address;
   int socket_fd;
   socket_fd = socket(AF_UNIX, SOCK_STREAM, 0);
   if (socket_fd < 0) {
-    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR,
-                           "Could not create unix domain socket");
+    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Could not create unix domain socket");
   }
   memset(&address, 0, sizeof(sockaddr_un));
 
   address.sun_family = AF_UNIX;
   strncpy(address.sun_path, this->path.c_str(), 107);
 
-  if (connect(socket_fd, (struct sockaddr *)&address, sizeof(sockaddr_un)) !=
-      0) {
+  if (connect(socket_fd, (struct sockaddr *)&address, sizeof(sockaddr_un)) != 0) {
     close(socket_fd);
-    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR,
-                           "Could not connect to: " + this->path);
+    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Could not connect to: " + this->path);
   }
 
   StreamWriter writer;
   string toSend = message + DEFAULT_DELIMITER_CHAR;
   if (!writer.Write(toSend, socket_fd)) {
     close(socket_fd);
-    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR,
-                           "Could not write request");
+    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Could not write request");
   }
 
   StreamReader reader(DEFAULT_BUFFER_SIZE);
   if (!reader.Read(result, socket_fd, DEFAULT_DELIMITER_CHAR)) {
     close(socket_fd);
-    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR,
-                           "Could not read response");
+    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Could not read response");
   }
   close(socket_fd);
 }

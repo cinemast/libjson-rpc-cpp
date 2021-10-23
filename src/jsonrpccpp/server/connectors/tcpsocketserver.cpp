@@ -18,9 +18,7 @@
 using namespace jsonrpc;
 using namespace std;
 
-TcpSocketServer::TcpSocketServer(const std::string &ipToBind,
-                                 const unsigned int &port)
-    : AbstractServerConnector() {
+TcpSocketServer::TcpSocketServer(const std::string &ipToBind, const unsigned int &port) : AbstractServerConnector() {
 #ifdef _WIN32
   this->realSocket = new WindowsTcpSocketServer(ipToBind, port);
 #else

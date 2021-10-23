@@ -29,9 +29,7 @@ public:
   virtual std::string methodWithoutParameters();
 };
 
-MyStubServer::MyStubServer(AbstractServerConnector &connector,
-                           serverVersion_t type)
-    : AbstractStubServer(connector, type) {}
+MyStubServer::MyStubServer(AbstractServerConnector &connector, serverVersion_t type) : AbstractStubServer(connector, type) {}
 
 void MyStubServer::notifyServer() { cout << "Server got notified" << endl; }
 
@@ -43,18 +41,13 @@ string MyStubServer::sayHello(const string &name) {
 
 int MyStubServer::addNumbers(int param1, int param2) { return param1 + param2; }
 
-double MyStubServer::addNumbers2(double param1, double param2) {
-  return param1 + param2;
-}
+double MyStubServer::addNumbers2(double param1, double param2) { return param1 + param2; }
 
-bool MyStubServer::isEqual(const string &str1, const string &str2) {
-  return str1 == str2;
-}
+bool MyStubServer::isEqual(const string &str1, const string &str2) { return str1 == str2; }
 
 Json::Value MyStubServer::calculate(const Json::Value &args) {
   Json::Value result;
-  if ((args.isMember("arg1") && args["arg1"].isInt()) &&
-      (args.isMember("arg2") && args["arg2"].isInt()) &&
+  if ((args.isMember("arg1") && args["arg1"].isInt()) && (args.isMember("arg2") && args["arg2"].isInt()) &&
       (args.isMember("operator") && args["operator"].isString())) {
     int calculated = 0;
 

@@ -10,8 +10,7 @@ bool StreamWriter::Write(const string &source, int fd) {
   size_t remainingSize = totalSize;
 
   do {
-    bytesWritten =
-        write(fd, source.c_str() + (totalSize - remainingSize), remainingSize);
+    bytesWritten = write(fd, source.c_str() + (totalSize - remainingSize), remainingSize);
     if (bytesWritten < 0) {
       return false;
     } else {

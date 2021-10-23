@@ -15,25 +15,21 @@
 using namespace std;
 using namespace jsonrpc;
 
-vector<Procedure>
-SpecificationParser::GetProceduresFromFile(const string &filename) {
+vector<Procedure> SpecificationParser::GetProceduresFromFile(const string &filename) {
   string content;
   GetFileContent(filename, content);
   return GetProceduresFromString(content);
 }
-vector<Procedure>
-SpecificationParser::GetProceduresFromString(const string &content) {
+vector<Procedure> SpecificationParser::GetProceduresFromString(const string &content) {
 
   Json::Reader reader;
   Json::Value val;
   if (!reader.parse(content, val)) {
-    throw JsonRpcException(Errors::ERROR_RPC_JSON_PARSE_ERROR,
-                           " specification file contains syntax errors");
+    throw JsonRpcException(Errors::ERROR_RPC_JSON_PARSE_ERROR, " specification file contains syntax errors");
   }
 
   if (!val.isArray()) {
-    throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,
-                           " top level json value is not an array");
+    throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX, " top level json value is not an array");
   }
 
   vector<Procedure> result;
@@ -42,17 +38,14 @@ SpecificationParser::GetProceduresFromString(const string &content) {
     Procedure proc;
     GetProcedure(val[i], proc);
     if (procnames.find(proc.GetProcedureName()) != procnames.end()) {
-      throw JsonRpcException(
-          Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,
-          "Procedurename not unique: " + proc.GetProcedureName());
+      throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX, "Procedurename not unique: " + proc.GetProcedureName());
     }
     procnames[proc.GetProcedureName()] = proc;
     result.push_back(proc);
   }
   return result;
 }
-void SpecificationParser::GetProcedure(Json::Value &signature,
-                                       Procedure &result) {
+void SpecificationParser::GetProcedure(Json::Value &signature, Procedure &result) {
   if (signature.isObject() && !GetProcedureName(signature).empty()) {
     result.SetProcedureName(GetProcedureName(signature));
     if (signature.isMember(KEY_SPEC_RETURN_TYPE)) {
@@ -62,8 +55,7 @@ void SpecificationParser::GetProcedure(Json::Value &signature,
       result.SetProcedureType(RPC_NOTIFICATION);
     }
     if (signature.isMember(KEY_SPEC_PROCEDURE_PARAMETERS)) {
-      if (signature[KEY_SPEC_PROCEDURE_PARAMETERS].isObject() ||
-          signature[KEY_SPEC_PROCEDURE_PARAMETERS].isArray()) {
+      if (signature[KEY_SPEC_PROCEDURE_PARAMETERS].isObject() || signature[KEY_SPEC_PROCEDURE_PARAMETERS].isArray()) {
         if (signature[KEY_SPEC_PROCEDURE_PARAMETERS].isArray()) {
           result.SetParameterDeclarationType(PARAMS_BY_POSITION);
           GetPositionalParameters(signature, result);
@@ -72,29 +64,22 @@ void SpecificationParser::GetProcedure(Json::Value &signature,
           GetNamedParameters(signature, result);
         }
       } else {
-        throw JsonRpcException(
-            Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,
-            "Invalid signature types in fileds: " + signature.toStyledString());
+        throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX, "Invalid signature types in fileds: " + signature.toStyledString());
       }
     }
   } else {
-    throw JsonRpcException(
-        Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,
-        "procedure declaration does not contain name or parameters: " +
-            signature.toStyledString());
+    throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,
+                           "procedure declaration does not contain name or parameters: " + signature.toStyledString());
   }
 }
-void SpecificationParser::GetFileContent(const std::string &filename,
-                                         std::string &target) {
+void SpecificationParser::GetFileContent(const std::string &filename, std::string &target) {
   ifstream config(filename.c_str());
 
   if (config) {
     config.open(filename.c_str(), ios::in);
-    target.assign((std::istreambuf_iterator<char>(config)),
-                  (std::istreambuf_iterator<char>()));
+    target.assign((std::istreambuf_iterator<char>(config)), (std::istreambuf_iterator<char>()));
   } else {
-    throw JsonRpcException(
-        Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_NOT_FOUND, filename);
+    throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_NOT_FOUND, filename);
   }
 }
 jsontype_t SpecificationParser::toJsonType(Json::Value &val) {
@@ -120,29 +105,22 @@ jsontype_t SpecificationParser::toJsonType(Json::Value &val) {
     result = JSON_OBJECT;
     break;
   default:
-    throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX,
-                           "Unknown parameter type: " + val.toStyledString());
+    throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX, "Unknown parameter type: " + val.toStyledString());
   }
   return result;
 }
-void SpecificationParser::GetPositionalParameters(Json::Value &val,
-                                                  Procedure &result) {
+void SpecificationParser::GetPositionalParameters(Json::Value &val, Procedure &result) {
   // Positional parameters
   for (unsigned int i = 0; i < val[KEY_SPEC_PROCEDURE_PARAMETERS].size(); i++) {
     stringstream paramname;
     paramname << "param" << std::setfill('0') << std::setw(2) << (i + 1);
-    result.AddParameter(paramname.str(),
-                        toJsonType(val[KEY_SPEC_PROCEDURE_PARAMETERS][i]));
+    result.AddParameter(paramname.str(), toJsonType(val[KEY_SPEC_PROCEDURE_PARAMETERS][i]));
   }
 }
-void SpecificationParser::GetNamedParameters(Json::Value &val,
-                                             Procedure &result) {
-  vector<string> parameters =
-      val[KEY_SPEC_PROCEDURE_PARAMETERS].getMemberNames();
+void SpecificationParser::GetNamedParameters(Json::Value &val, Procedure &result) {
+  vector<string> parameters = val[KEY_SPEC_PROCEDURE_PARAMETERS].getMemberNames();
   for (unsigned int i = 0; i < parameters.size(); ++i) {
-    result.AddParameter(
-        parameters.at(i),
-        toJsonType(val[KEY_SPEC_PROCEDURE_PARAMETERS][parameters.at(i)]));
+    result.AddParameter(parameters.at(i), toJsonType(val[KEY_SPEC_PROCEDURE_PARAMETERS][parameters.at(i)]));
   }
 }
 

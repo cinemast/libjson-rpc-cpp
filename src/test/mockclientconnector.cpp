@@ -25,12 +25,9 @@ Json::Value MockClientConnector::GetJsonRequest() {
     return Json::nullValue;
 }
 
-void MockClientConnector::SetResponse(const std::string &response) {
-  this->response = response;
-}
+void MockClientConnector::SetResponse(const std::string &response) { this->response = response; }
 
-void MockClientConnector::SendRPCMessage(const string &message,
-                                         string &result) {
+void MockClientConnector::SendRPCMessage(const string &message, string &result) {
   request = message;
   result = this->response;
 }

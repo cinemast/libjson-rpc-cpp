@@ -1,11 +1,9 @@
 #ifndef STREAMREADER_H
 #define STREAMREADER_H
 
-
-class StreamReader
-{
+class StreamReader {
 public:
-    StreamReader();
+  StreamReader();
 };
 
 #endif // STREAMREADER_H

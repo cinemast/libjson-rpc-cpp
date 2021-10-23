@@ -27,8 +27,7 @@ using namespace std;
 #define READ_TIMEOUT 0.001 // Set timeout in seconds
 
 FileDescriptorServer::FileDescriptorServer(int inputfd, int outputfd)
-    : AbstractThreadedServer(0), inputfd(inputfd), outputfd(outputfd),
-      reader(DEFAULT_BUFFER_SIZE) {}
+    : AbstractThreadedServer(0), inputfd(inputfd), outputfd(outputfd), reader(DEFAULT_BUFFER_SIZE) {}
 
 bool FileDescriptorServer::InitializeListener() {
   if (!IsReadable(inputfd) || !IsWritable(outputfd))
@@ -61,8 +60,7 @@ bool FileDescriptorServer::IsReadable(int fd) {
   int ret = fcntl(fd, F_GETFL, &o_accmode);
   if (ret == -1)
     return false;
-  return ((o_accmode & O_ACCMODE) == O_RDONLY ||
-          (o_accmode & O_ACCMODE) == O_RDWR);
+  return ((o_accmode & O_ACCMODE) == O_RDONLY || (o_accmode & O_ACCMODE) == O_RDWR);
 }
 
 bool FileDescriptorServer::IsWritable(int fd) {

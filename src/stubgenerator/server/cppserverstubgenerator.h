@@ -10,25 +10,23 @@
 #ifndef JSONRPC_CPP_SERVERSTUBGENERATOR_H
 #define JSONRPC_CPP_SERVERSTUBGENERATOR_H
 
-#include "../stubgenerator.h"
 #include "../codegenerator.h"
+#include "../stubgenerator.h"
 
-namespace jsonrpc
-{
-    class CPPServerStubGenerator : public StubGenerator
-    {
-        public:
-            CPPServerStubGenerator(const std::string& stubname, std::vector<Procedure> &procedures, std::ostream &outputstream);
-            CPPServerStubGenerator(const std::string& stubname, std::vector<Procedure> &procedures, const std::string &filename);
+namespace jsonrpc {
+  class CPPServerStubGenerator : public StubGenerator {
+  public:
+    CPPServerStubGenerator(const std::string &stubname, std::vector<Procedure> &procedures, std::ostream &outputstream);
+    CPPServerStubGenerator(const std::string &stubname, std::vector<Procedure> &procedures, const std::string &filename);
 
-            virtual void generateStub();
+    virtual void generateStub();
 
-            void generateBindings();
-            void generateProcedureDefinitions();
-            void generateAbstractDefinitions();
-            std::string generateBindingParameterlist(const Procedure &proc);
-            void generateParameterMapping(const Procedure &proc);
-    };
-}
+    void generateBindings();
+    void generateProcedureDefinitions();
+    void generateAbstractDefinitions();
+    std::string generateBindingParameterlist(const Procedure &proc);
+    void generateParameterMapping(const Procedure &proc);
+  };
+} // namespace jsonrpc
 
 #endif // JSONRPC_CPP_SERVERSTUBGENERATOR_H

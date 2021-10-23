@@ -16,28 +16,28 @@
 #include <map>
 
 namespace jsonrpc {
-class HttpClient : public IClientConnector {
-public:
-  HttpClient(const std::string &url);
-  virtual ~HttpClient();
-  virtual void SendRPCMessage(const std::string &message, std::string &result);
+  class HttpClient : public IClientConnector {
+  public:
+    HttpClient(const std::string &url);
+    virtual ~HttpClient();
+    virtual void SendRPCMessage(const std::string &message, std::string &result);
 
-  void SetUrl(const std::string &url);
-  void SetTimeout(long timeout);
+    void SetUrl(const std::string &url);
+    void SetTimeout(long timeout);
 
-  void AddHeader(const std::string &attr, const std::string &val);
-  void RemoveHeader(const std::string &attr);
+    void AddHeader(const std::string &attr, const std::string &val);
+    void RemoveHeader(const std::string &attr);
 
-protected:
-  std::map<std::string, std::string> headers;
-  std::string url;
+  protected:
+    std::map<std::string, std::string> headers;
+    std::string url;
 
-  /**
-   * @brief timeout for http request in milliseconds
-   */
-  long timeout;
-  CURL *curl;
-};
+    /**
+     * @brief timeout for http request in milliseconds
+     */
+    long timeout;
+    CURL *curl;
+  };
 
 } /* namespace jsonrpc */
 #endif /* JSONRPC_CPP_HTTPCLIENT_H_ */

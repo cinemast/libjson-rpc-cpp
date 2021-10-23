@@ -1,26 +1,26 @@
 [
-{
+  {
     "name": "Input.Left",
-            "returns": "string"
-},
-{
+    "returns": "string"
+  },
+  {
     "name": "Input.Right",
-            "returns": "string"
-},
-{
+    "returns": "string"
+  },
+  {
     "name": "Input.Up",
-            "returns": "string"
-},
-{
+    "returns": "string"
+  },
+  {
     "name": "Input.Down",
-            "returns": "string"
-},
-{
+    "returns": "string"
+  },
+  {
     "name": "Input.Back",
-            "returns": "string"
-},
-{
+    "returns": "string"
+  },
+  {
     "name": "Input.Select",
-            "returns": "string"
-}
+    "returns": "string"
+  }
 ]

@@ -15,23 +15,23 @@
 
 namespace jsonrpc {
 
-class MockServerConnector : public AbstractServerConnector {
-public:
-  MockServerConnector();
+  class MockServerConnector : public AbstractServerConnector {
+  public:
+    MockServerConnector();
 
-  virtual bool StartListening();
-  virtual bool StopListening();
+    virtual bool StartListening();
+    virtual bool StopListening();
 
-  bool SetRequest(const std::string &request);
-  Json::Value GetJsonRequest();
+    bool SetRequest(const std::string &request);
+    Json::Value GetJsonRequest();
 
-  std::string GetResponse();
-  Json::Value GetJsonResponse();
+    std::string GetResponse();
+    Json::Value GetJsonResponse();
 
-private:
-  std::string request;
-  std::string response;
-};
+  private:
+    std::string request;
+    std::string response;
+  };
 
 } // namespace jsonrpc
 

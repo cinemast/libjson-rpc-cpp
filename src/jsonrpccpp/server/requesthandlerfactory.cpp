@@ -14,8 +14,7 @@
 
 using namespace jsonrpc;
 
-IProtocolHandler *RequestHandlerFactory::createProtocolHandler(
-    serverVersion_t type, IProcedureInvokationHandler &handler) {
+IProtocolHandler *RequestHandlerFactory::createProtocolHandler(serverVersion_t type, IProcedureInvokationHandler &handler) {
   IProtocolHandler *result = NULL;
   switch (type) {
   case JSONRPC_SERVER_V1:

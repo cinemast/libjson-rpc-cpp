@@ -33,10 +33,8 @@ using namespace std;
 
 #define READ_TIMEOUT 0.001 // Set timeout in seconds
 
-LinuxSerialPortServer::LinuxSerialPortServer(const std::string &deviceName,
-                                             size_t threads)
-    : AbstractThreadedServer(threads), deviceName(deviceName),
-      reader(DEFAULT_BUFFER_SIZE) {}
+LinuxSerialPortServer::LinuxSerialPortServer(const std::string &deviceName, size_t threads)
+    : AbstractThreadedServer(threads), deviceName(deviceName), reader(DEFAULT_BUFFER_SIZE) {}
 
 LinuxSerialPortServer::~LinuxSerialPortServer() { close(this->serial_fd); }
 

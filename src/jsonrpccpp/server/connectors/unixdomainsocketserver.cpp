@@ -22,10 +22,8 @@
 using namespace jsonrpc;
 using namespace std;
 
-UnixDomainSocketServer::UnixDomainSocketServer(const string &socket_path,
-                                               size_t threads)
-    : AbstractThreadedServer(threads), socket_path(socket_path), socket_fd(-1) {
-}
+UnixDomainSocketServer::UnixDomainSocketServer(const string &socket_path, size_t threads)
+    : AbstractThreadedServer(threads), socket_path(socket_path), socket_fd(-1) {}
 
 UnixDomainSocketServer::~UnixDomainSocketServer() {
   if (this->socket_fd != -1)
@@ -50,9 +48,7 @@ bool UnixDomainSocketServer::InitializeListener() {
   this->address.sun_family = AF_UNIX;
   strncpy(this->address.sun_path, this->socket_path.c_str(), 107);
 
-  if (::bind(this->socket_fd,
-             reinterpret_cast<struct sockaddr *>(&(this->address)),
-             sizeof(struct sockaddr_un)) != 0) {
+  if (::bind(this->socket_fd, reinterpret_cast<struct sockaddr *>(&(this->address)), sizeof(struct sockaddr_un)) != 0) {
     return false;
   }
 
@@ -66,9 +62,7 @@ int UnixDomainSocketServer::CheckForConnection() {
   socklen_t address_length = sizeof(this->address);
 
   int fd;
-  fd = accept(this->socket_fd,
-              reinterpret_cast<struct sockaddr *>(&(this->address)),
-              &address_length);
+  fd = accept(this->socket_fd, reinterpret_cast<struct sockaddr *>(&(this->address)), &address_length);
   return fd;
 }
 

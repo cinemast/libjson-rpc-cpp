@@ -50,8 +50,7 @@ void ProcessReply(redisReply *reply, std::string &result) {
   }
 
   if (reply->elements != 2) {
-    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR,
-                           "Item needs two elements");
+    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Item needs two elements");
   }
 
   // It's the second element that we care about
@@ -72,25 +71,21 @@ void ProcessReply(redisReply *reply, std::string &result) {
  * @param prefix Prefix for the queue name.
  * @param ret_queue The name is returned here.
  */
-void jsonrpc::GetReturnQueue(redisContext *con, const std::string &prefix,
-                             std::string &ret_queue) {
+void jsonrpc::GetReturnQueue(redisContext *con, const std::string &prefix, std::string &ret_queue) {
   char id[17];
   std::stringstream str;
   genRandom(id, 16);
   str << prefix << "_" << id;
   ret_queue = str.str();
 
-  redisReply *reply =
-      (redisReply *)redisCommand(con, "EXISTS %s", ret_queue.c_str());
+  redisReply *reply = (redisReply *)redisCommand(con, "EXISTS %s", ret_queue.c_str());
   if (reply == NULL) {
-    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR,
-                           "redis error: Failed to run queue check");
+    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "redis error: Failed to run queue check");
   }
 
   if (reply->type != REDIS_REPLY_INTEGER) {
     freeReplyObject(reply);
-    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR,
-                           "redis error: Failed to run queue check");
+    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "redis error: Failed to run queue check");
   }
 
   if (reply->integer != 0) {
@@ -102,15 +97,12 @@ void jsonrpc::GetReturnQueue(redisContext *con, const std::string &prefix,
   freeReplyObject(reply);
 }
 
-RedisClient::RedisClient(const std::string &host, int port,
-                         const std::string &queue)
-    : queue(queue), con(NULL) {
+RedisClient::RedisClient(const std::string &host, int port, const std::string &queue) : queue(queue), con(NULL) {
   this->timeout = 10;
 
   con = redisConnect(host.c_str(), port);
   if (con == NULL) {
-    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR,
-                           "redis error: Failed to connect");
+    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "redis error: Failed to connect");
   }
 
   if (con->err) {
@@ -132,39 +124,32 @@ RedisClient::~RedisClient() {
   }
 }
 
-void RedisClient::SendRPCMessage(const std::string &message,
-                                 std::string &result) {
+void RedisClient::SendRPCMessage(const std::string &message, std::string &result) {
   std::string ret_queue;
   GetReturnQueue(con, queue, ret_queue);
 
   redisReply *ret;
   std::string data = ret_queue + "!" + message;
-  ret = (redisReply *)redisCommand(con, "LPUSH %s %s", queue.c_str(),
-                                   data.c_str());
+  ret = (redisReply *)redisCommand(con, "LPUSH %s %s", queue.c_str(), data.c_str());
 
   if (ret == NULL) {
-    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR,
-                           "Unknown error while sending request");
+    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Unknown error while sending request");
   }
   if (ret->type != REDIS_REPLY_INTEGER || ret->integer <= 0) {
     freeReplyObject(ret);
-    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR,
-                           "Error while sending request, queue not updated");
+    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Error while sending request, queue not updated");
   }
 
   freeReplyObject(ret);
 
   redisReply *reply = NULL;
-  reply = (redisReply *)redisCommand(con, "BRPOP %s %d", ret_queue.c_str(),
-                                     this->timeout);
+  reply = (redisReply *)redisCommand(con, "BRPOP %s %d", ret_queue.c_str(), this->timeout);
   if (reply == NULL) {
-    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR,
-                           "Unknown error while getting response");
+    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Unknown error while getting response");
   }
   if (reply->type == REDIS_REPLY_NIL) {
     freeReplyObject(reply);
-    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR,
-                           "Operation timed out");
+    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Operation timed out");
   }
 
   ProcessReply(reply, result);

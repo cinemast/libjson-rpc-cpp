@@ -23,10 +23,7 @@ using namespace jsonrpc;
 #define REDIS_MAXLINES 255
 #define REDIS_KEY "accept connections"
 
-TestRedisServer::TestRedisServer()
-    : pid(0), maxlines(REDIS_MAXLINES), key(REDIS_KEY) {
-  this->Start();
-}
+TestRedisServer::TestRedisServer() : pid(0), maxlines(REDIS_MAXLINES), key(REDIS_KEY) { this->Start(); }
 
 TestRedisServer::~TestRedisServer() { this->Stop(); }
 

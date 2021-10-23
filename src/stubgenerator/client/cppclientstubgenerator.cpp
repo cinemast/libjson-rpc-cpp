@@ -12,8 +12,8 @@
 
 #define TEMPLATE_CPPCLIENT_SIGCLASS "class <stubname> : public jsonrpc::Client"
 
-#define TEMPLATE_CPPCLIENT_SIGCONSTRUCTOR                                      \
-  "<stubname>(jsonrpc::IClientConnector &conn, jsonrpc::clientVersion_t type " \
+#define TEMPLATE_CPPCLIENT_SIGCONSTRUCTOR                                                                                                                      \
+  "<stubname>(jsonrpc::IClientConnector &conn, jsonrpc::clientVersion_t type "                                                                                 \
   "= jsonrpc::JSONRPC_CLIENT_V2) : jsonrpc::Client(conn, type) {}"
 
 #define TEMPLATE_CPPCLIENT_SIGMETHOD "<returntype> <methodname>(<parameters>) "
@@ -21,8 +21,7 @@
 #define TEMPLATE_NAMED_ASSIGNMENT "p[\"<paramname>\"] = <paramname>;"
 #define TEMPLATE_POSITION_ASSIGNMENT "p.append(<paramname>);"
 
-#define TEMPLATE_METHODCALL                                                    \
-  "Json::Value result = this->CallMethod(\"<name>\",p);"
+#define TEMPLATE_METHODCALL "Json::Value result = this->CallMethod(\"<name>\",p);"
 #define TEMPLATE_NOTIFICATIONCALL "this->CallNotification(\"<name>\",p);"
 
 #define TEMPLATE_RETURNCHECK "if (result<cast>)"
@@ -31,14 +30,10 @@
 using namespace std;
 using namespace jsonrpc;
 
-CPPClientStubGenerator::CPPClientStubGenerator(
-    const string &stubname, std::vector<Procedure> &procedures,
-    std::ostream &outputstream)
+CPPClientStubGenerator::CPPClientStubGenerator(const string &stubname, std::vector<Procedure> &procedures, std::ostream &outputstream)
     : StubGenerator(stubname, procedures, outputstream) {}
 
-CPPClientStubGenerator::CPPClientStubGenerator(
-    const string &stubname, std::vector<Procedure> &procedures,
-    const string filename)
+CPPClientStubGenerator::CPPClientStubGenerator(const string &stubname, std::vector<Procedure> &procedures, const string filename)
     : StubGenerator(stubname, procedures, filename) {}
 
 void CPPClientStubGenerator::generateStub() {
@@ -49,15 +44,13 @@ void CPPClientStubGenerator::generateStub() {
 
   int depth = CPPHelper::namespaceOpen(*this, stubname);
 
-  this->writeLine(replaceAll(TEMPLATE_CPPCLIENT_SIGCLASS, "<stubname>",
-                             classname.at(classname.size() - 1)));
+  this->writeLine(replaceAll(TEMPLATE_CPPCLIENT_SIGCLASS, "<stubname>", classname.at(classname.size() - 1)));
   this->writeLine("{");
   this->increaseIndentation();
   this->writeLine("public:");
   this->increaseIndentation();
 
-  this->writeLine(replaceAll(TEMPLATE_CPPCLIENT_SIGCONSTRUCTOR, "<stubname>",
-                             classname.at(classname.size() - 1)));
+  this->writeLine(replaceAll(TEMPLATE_CPPCLIENT_SIGCONSTRUCTOR, "<stubname>", classname.at(classname.size() - 1)));
   this->writeNewLine();
 
   for (unsigned int i = 0; i < procedures.size(); i++) {
@@ -80,10 +73,8 @@ void CPPClientStubGenerator::generateMethod(Procedure &proc) {
     returntype = "void";
 
   replaceAll2(procsignature, "<returntype>", returntype);
-  replaceAll2(procsignature, "<methodname>",
-              CPPHelper::normalizeString(proc.GetProcedureName()));
-  replaceAll2(procsignature, "<parameters>",
-              CPPHelper::generateParameterDeclarationList(proc));
+  replaceAll2(procsignature, "<methodname>", CPPHelper::normalizeString(proc.GetProcedureName()));
+  replaceAll2(procsignature, "<parameters>", CPPHelper::generateParameterDeclarationList(proc));
 
   this->writeLine(procsignature);
   this->writeLine("{");
@@ -102,8 +93,7 @@ void CPPClientStubGenerator::generateAssignments(Procedure &proc) {
   string assignment;
   parameterNameList_t list = proc.GetParameters();
   if (!list.empty()) {
-    for (parameterNameList_t::iterator it = list.begin(); it != list.end();
-         ++it) {
+    for (parameterNameList_t::iterator it = list.begin(); it != list.end(); ++it) {
 
       if (proc.GetParameterDeclarationType() == PARAMS_BY_NAME) {
         assignment = TEMPLATE_NAMED_ASSIGNMENT;
@@ -124,13 +114,11 @@ void CPPClientStubGenerator::generateProcCall(Procedure &proc) {
     call = TEMPLATE_METHODCALL;
     this->writeLine(replaceAll(call, "<name>", proc.GetProcedureName()));
     call = TEMPLATE_RETURNCHECK;
-    replaceAll2(call, "<cast>",
-                CPPHelper::isCppConversion(proc.GetReturnType()));
+    replaceAll2(call, "<cast>", CPPHelper::isCppConversion(proc.GetReturnType()));
     this->writeLine(call);
     this->increaseIndentation();
     call = TEMPLATE_RETURN;
-    replaceAll2(call, "<cast>",
-                CPPHelper::toCppConversion(proc.GetReturnType()));
+    replaceAll2(call, "<cast>", CPPHelper::toCppConversion(proc.GetReturnType()));
     this->writeLine(call);
     this->decreaseIndentation();
     this->writeLine("else");

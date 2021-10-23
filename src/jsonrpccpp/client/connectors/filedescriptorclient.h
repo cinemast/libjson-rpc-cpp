@@ -13,20 +13,18 @@
 #include "../iclientconnector.h"
 #include <jsonrpccpp/common/exception.h>
 
-namespace jsonrpc
-{
-  class FileDescriptorClient : public IClientConnector
-  {
-    public:
-      FileDescriptorClient(int inputfd, int outputfd);
-      virtual ~FileDescriptorClient();
-      virtual void SendRPCMessage(const std::string& message, std::string& result) ;
+namespace jsonrpc {
+  class FileDescriptorClient : public IClientConnector {
+  public:
+    FileDescriptorClient(int inputfd, int outputfd);
+    virtual ~FileDescriptorClient();
+    virtual void SendRPCMessage(const std::string &message, std::string &result);
 
-    protected:
-      int inputfd;
-      int outputfd;
+  protected:
+    int inputfd;
+    int outputfd;
 
-      bool IsReadable(int fd);
+    bool IsReadable(int fd);
   };
 
 } /* namespace jsonrpc */

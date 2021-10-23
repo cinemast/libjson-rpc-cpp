@@ -13,5 +13,4 @@
 #include <fstream>
 #include <string>
 
-
 #endif // STUBHELPER_H

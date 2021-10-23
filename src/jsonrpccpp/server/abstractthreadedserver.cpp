@@ -3,8 +3,7 @@
 using namespace jsonrpc;
 using namespace std;
 
-AbstractThreadedServer::AbstractThreadedServer(size_t threads)
-    : running(false), threadPool(threads), threads(threads) {}
+AbstractThreadedServer::AbstractThreadedServer(size_t threads) : running(false), threadPool(threads), threads(threads) {}
 
 AbstractThreadedServer::~AbstractThreadedServer() { this->StopListening(); }
 
@@ -17,8 +16,7 @@ bool AbstractThreadedServer::StartListening() {
 
   this->running = true;
 
-  this->listenerThread =
-      unique_ptr<thread>(new thread(&AbstractThreadedServer::ListenLoop, this));
+  this->listenerThread = unique_ptr<thread>(new thread(&AbstractThreadedServer::ListenLoop, this));
 
   return true;
 }
@@ -39,8 +37,7 @@ void AbstractThreadedServer::ListenLoop() {
 
     if (conn > 0) {
       if (this->threads > 0) {
-        this->threadPool.enqueue(&AbstractThreadedServer::HandleConnection,
-                                 this, conn);
+        this->threadPool.enqueue(&AbstractThreadedServer::HandleConnection, this, conn);
       } else {
         this->HandleConnection(conn);
       }

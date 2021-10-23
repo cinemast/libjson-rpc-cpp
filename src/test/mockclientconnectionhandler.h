@@ -13,20 +13,17 @@
 #include <jsonrpccpp/server.h>
 #include <string>
 
-namespace jsonrpc
-{
-    class MockClientConnectionHandler : public IClientConnectionHandler
-    {
-        public:
-            MockClientConnectionHandler();
+namespace jsonrpc {
+  class MockClientConnectionHandler : public IClientConnectionHandler {
+  public:
+    MockClientConnectionHandler();
 
-            virtual void HandleRequest(const std::string& request, std::string& retValue);
+    virtual void HandleRequest(const std::string &request, std::string &retValue);
 
-            std::string response;
-            std::string request;
-            long timeout;
-    };
+    std::string response;
+    std::string request;
+    long timeout;
+  };
 
-
-}
+} // namespace jsonrpc
 #endif // JSONRPC_CPP_MOCKCLIENTCONNECTIONHANDLER_H

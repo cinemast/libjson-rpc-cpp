@@ -10,35 +10,33 @@
 #ifndef JSONRPC_CPP_CODEGENERATOR_H
 #define JSONRPC_CPP_CODEGENERATOR_H
 
-#include <string>
-#include <ostream>
 #include <fstream>
+#include <ostream>
 #include <sstream>
+#include <string>
 
-namespace jsonrpc
-{
-    class CodeGenerator
-    {
-        public:
-            CodeGenerator(const std::string &filename);
-            CodeGenerator(std::ostream &outputstream);
-            virtual ~CodeGenerator();
+namespace jsonrpc {
+  class CodeGenerator {
+  public:
+    CodeGenerator(const std::string &filename);
+    CodeGenerator(std::ostream &outputstream);
+    virtual ~CodeGenerator();
 
-            void write (const std::string &line);
-            void writeLine(const std::string &line);
-            void writeNewLine();
-            void increaseIndentation();
-            void decreaseIndentation();
+    void write(const std::string &line);
+    void writeLine(const std::string &line);
+    void writeNewLine();
+    void increaseIndentation();
+    void decreaseIndentation();
 
-            void setIndentSymbol(const std::string &symbol);
+    void setIndentSymbol(const std::string &symbol);
 
-        private:
-            std::ostream *output;
-            std::ofstream file;
-            std::string indentSymbol;
-            int indentation;
-            bool atBeginning;
-    };
-}
+  private:
+    std::ostream *output;
+    std::ofstream file;
+    std::string indentSymbol;
+    int indentation;
+    bool atBeginning;
+  };
+} // namespace jsonrpc
 
 #endif // JSONRPC_CPP_CODEGENERATOR_H

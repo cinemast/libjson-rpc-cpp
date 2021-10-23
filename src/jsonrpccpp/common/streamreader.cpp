@@ -6,8 +6,7 @@
 using namespace jsonrpc;
 using namespace std;
 
-StreamReader::StreamReader(size_t buffersize)
-    : buffersize(buffersize), buffer(static_cast<char *>(malloc(buffersize))) {}
+StreamReader::StreamReader(size_t buffersize) : buffersize(buffersize), buffer(static_cast<char *>(malloc(buffersize))) {}
 
 StreamReader::~StreamReader() { free(buffer); }
 
@@ -20,8 +19,7 @@ bool StreamReader::Read(std::string &target, int fd, char delimiter) {
     } else {
       target.append(buffer, static_cast<size_t>(bytesRead));
     }
-  } while (memchr(buffer, delimiter, bytesRead) ==
-           NULL); //(target.find(delimiter) == string::npos && bytesRead > 0);
+  } while (memchr(buffer, delimiter, bytesRead) == NULL); //(target.find(delimiter) == string::npos && bytesRead > 0);
 
   target.pop_back();
   return true;

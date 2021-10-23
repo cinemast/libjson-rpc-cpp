@@ -10,6 +10,16 @@
 #ifndef CHECKEXCEPTION_H
 #define CHECKEXCEPTION_H
 
-#define CHECK_EXCEPTION_TYPE(throwCode, exceptionType, expression) {bool thrown = false; try {throwCode;} catch(exceptionType &ex) { CHECK(expression(ex)); thrown = true; } CHECK(thrown);}
+#define CHECK_EXCEPTION_TYPE(throwCode, exceptionType, expression)                                                                                             \
+  {                                                                                                                                                            \
+    bool thrown = false;                                                                                                                                       \
+    try {                                                                                                                                                      \
+      throwCode;                                                                                                                                               \
+    } catch (exceptionType & ex) {                                                                                                                             \
+      CHECK(expression(ex));                                                                                                                                   \
+      thrown = true;                                                                                                                                           \
+    }                                                                                                                                                          \
+    CHECK(thrown);                                                                                                                                             \
+  }
 
 #endif // CHECKEXCEPTION_H

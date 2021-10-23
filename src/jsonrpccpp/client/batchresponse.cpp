@@ -15,8 +15,7 @@ using namespace std;
 
 BatchResponse::BatchResponse() {}
 
-void BatchResponse::addResponse(Json::Value &id, Json::Value response,
-                                bool isError) {
+void BatchResponse::addResponse(Json::Value &id, Json::Value response, bool isError) {
   if (isError) {
     errorResponses.push_back(id);
   }
@@ -38,16 +37,14 @@ void BatchResponse::getResult(Json::Value &id, Json::Value &result) {
 }
 
 int BatchResponse::getErrorCode(Json::Value &id) {
-  if (std::find(errorResponses.begin(), errorResponses.end(), id) !=
-      errorResponses.end()) {
+  if (std::find(errorResponses.begin(), errorResponses.end(), id) != errorResponses.end()) {
     return responses[id]["code"].asInt();
   }
   return 0;
 }
 
 string BatchResponse::getErrorMessage(Json::Value &id) {
-  if (std::find(errorResponses.begin(), errorResponses.end(), id) !=
-      errorResponses.end()) {
+  if (std::find(errorResponses.begin(), errorResponses.end(), id) != errorResponses.end()) {
     return responses[id]["message"].asString();
   }
   return "";

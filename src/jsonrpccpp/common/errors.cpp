@@ -42,22 +42,16 @@ Errors::_init::_init() {
   possibleErrors[ERROR_RPC_INVALID_PARAMS] = "INVALID_PARAMS: Invalid method "
                                              "parameters (invalid name and/or "
                                              "type) recognised";
-  possibleErrors[ERROR_RPC_JSON_PARSE_ERROR] =
-      "JSON_PARSE_ERROR: The JSON-Object is not JSON-Valid";
+  possibleErrors[ERROR_RPC_JSON_PARSE_ERROR] = "JSON_PARSE_ERROR: The JSON-Object is not JSON-Valid";
   possibleErrors[ERROR_RPC_INTERNAL_ERROR] = "INTERNAL_ERROR: ";
 
-  possibleErrors[ERROR_SERVER_PROCEDURE_IS_METHOD] =
-      "PROCEDURE_IS_METHOD: The requested notification is declared as a method";
-  possibleErrors[ERROR_SERVER_PROCEDURE_IS_NOTIFICATION] =
-      "PROCEDURE_IS_NOTIFICATION: The requested method is declared as "
-      "notification";
-  possibleErrors[ERROR_SERVER_PROCEDURE_POINTER_IS_NULL] =
-      "PROCEDURE_POINTER_IS_NULL: Server has no function Reference registered";
-  possibleErrors[ERROR_SERVER_PROCEDURE_SPECIFICATION_NOT_FOUND] =
-      "Configuration file was not found";
+  possibleErrors[ERROR_SERVER_PROCEDURE_IS_METHOD] = "PROCEDURE_IS_METHOD: The requested notification is declared as a method";
+  possibleErrors[ERROR_SERVER_PROCEDURE_IS_NOTIFICATION] = "PROCEDURE_IS_NOTIFICATION: The requested method is declared as "
+                                                           "notification";
+  possibleErrors[ERROR_SERVER_PROCEDURE_POINTER_IS_NULL] = "PROCEDURE_POINTER_IS_NULL: Server has no function Reference registered";
+  possibleErrors[ERROR_SERVER_PROCEDURE_SPECIFICATION_NOT_FOUND] = "Configuration file was not found";
 
-  possibleErrors[ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX] =
-      "Procedure specification mallformed";
+  possibleErrors[ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX] = "Procedure specification mallformed";
 
   possibleErrors[ERROR_CLIENT_INVALID_RESPONSE] = "The response is invalid";
   possibleErrors[ERROR_CLIENT_CONNECTOR] = "Client connector error";

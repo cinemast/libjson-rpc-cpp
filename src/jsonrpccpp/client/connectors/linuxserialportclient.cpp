@@ -23,26 +23,22 @@
 using namespace jsonrpc;
 using namespace std;
 
-LinuxSerialPortClient::LinuxSerialPortClient(const std::string &deviceName)
-    : deviceName(deviceName) {}
+LinuxSerialPortClient::LinuxSerialPortClient(const std::string &deviceName) : deviceName(deviceName) {}
 
 LinuxSerialPortClient::~LinuxSerialPortClient() {}
 
-void LinuxSerialPortClient::SendRPCMessage(const std::string &message,
-                                           std::string &result) {
+void LinuxSerialPortClient::SendRPCMessage(const std::string &message, std::string &result) {
   int serial_fd = this->Connect();
 
   StreamWriter writer;
   string toSend = message + DEFAULT_DELIMITER_CHAR;
   if (!writer.Write(toSend, serial_fd)) {
-    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR,
-                           "Could not write request");
+    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Could not write request");
   }
 
   StreamReader reader(DEFAULT_BUFFER_SIZE);
   if (!reader.Read(result, serial_fd, DEFAULT_DELIMITER_CHAR)) {
-    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR,
-                           "Could not read response");
+    throw JsonRpcException(Errors::ERROR_CLIENT_CONNECTOR, "Could not read response");
   }
   close(serial_fd);
 }

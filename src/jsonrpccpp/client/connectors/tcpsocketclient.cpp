@@ -18,8 +18,7 @@
 using namespace jsonrpc;
 using namespace std;
 
-TcpSocketClient::TcpSocketClient(const std::string &ipToConnect,
-                                 const unsigned int &port) {
+TcpSocketClient::TcpSocketClient(const std::string &ipToConnect, const unsigned int &port) {
 #ifdef _WIN32
   this->realSocket = new WindowsTcpSocketClient(ipToConnect, port);
 #else
@@ -29,8 +28,7 @@ TcpSocketClient::TcpSocketClient(const std::string &ipToConnect,
 
 TcpSocketClient::~TcpSocketClient() { delete this->realSocket; }
 
-void TcpSocketClient::SendRPCMessage(const std::string &message,
-                                     std::string &result) {
+void TcpSocketClient::SendRPCMessage(const std::string &message, std::string &result) {
   if (this->realSocket != NULL) {
     this->realSocket->SendRPCMessage(message, result);
   }

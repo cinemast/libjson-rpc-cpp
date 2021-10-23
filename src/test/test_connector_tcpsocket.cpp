@@ -28,21 +28,19 @@ using namespace std;
 #define PORT 50012
 
 namespace testtcpsocketserver {
-struct F {
-  TcpSocketServer server;
-  TcpSocketClient client;
-  MockClientConnectionHandler handler;
+  struct F {
+    TcpSocketServer server;
+    TcpSocketClient client;
+    MockClientConnectionHandler handler;
 
-  F() : server(IP, PORT), client(IP, PORT) {
-    server.SetHandler(&handler);
-    REQUIRE(server.StartListening());
-  }
-  ~F() { server.StopListening(); }
-};
+    F() : server(IP, PORT), client(IP, PORT) {
+      server.SetHandler(&handler);
+      REQUIRE(server.StartListening());
+    }
+    ~F() { server.StopListening(); }
+  };
 
-bool check_exception1(JsonRpcException const &ex) {
-  return ex.GetCode() == Errors::ERROR_CLIENT_CONNECTOR;
-}
+  bool check_exception1(JsonRpcException const &ex) { return ex.GetCode() == Errors::ERROR_CLIENT_CONNECTOR; }
 } // namespace testtcpsocketserver
 using namespace testtcpsocketserver;
 
@@ -79,8 +77,7 @@ TEST_CASE("test_tcpsocket_client_invalid", TEST_MODULE) {
                                               // recompile tests and run tests
                                               // again.
   string result;
-  CHECK_EXCEPTION_TYPE(client.SendRPCMessage("foobar", result),
-                       JsonRpcException, check_exception1);
+  CHECK_EXCEPTION_TYPE(client.SendRPCMessage("foobar", result), JsonRpcException, check_exception1);
 }
 
 #endif

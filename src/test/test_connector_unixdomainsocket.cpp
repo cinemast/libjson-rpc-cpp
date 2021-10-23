@@ -22,23 +22,21 @@ using namespace std;
 #define TEST_MODULE "[connector_unixdomainsocket]"
 
 namespace testunixdomainsocketserver {
-struct F {
-  string filename;
-  UnixDomainSocketServer server;
-  UnixDomainSocketClient client;
-  MockClientConnectionHandler handler;
+  struct F {
+    string filename;
+    UnixDomainSocketServer server;
+    UnixDomainSocketClient client;
+    MockClientConnectionHandler handler;
 
-  F() : filename("/tmp/somedomainsocket"), server(filename), client(filename) {
-    remove(filename.c_str());
-    server.SetHandler(&handler);
-    REQUIRE(server.StartListening());
-  }
-  ~F() { server.StopListening(); }
-};
+    F() : filename("/tmp/somedomainsocket"), server(filename), client(filename) {
+      remove(filename.c_str());
+      server.SetHandler(&handler);
+      REQUIRE(server.StartListening());
+    }
+    ~F() { server.StopListening(); }
+  };
 
-bool check_exception1(JsonRpcException const &ex) {
-  return ex.GetCode() == Errors::ERROR_CLIENT_CONNECTOR;
-}
+  bool check_exception1(JsonRpcException const &ex) { return ex.GetCode() == Errors::ERROR_CLIENT_CONNECTOR; }
 } // namespace testunixdomainsocketserver
 using namespace testunixdomainsocketserver;
 
@@ -73,8 +71,7 @@ TEST_CASE("test_unixdomainsocket_server_multiplestart", TEST_MODULE) {
 TEST_CASE("test_unixdomainsocket_client_invalid", TEST_MODULE) {
   UnixDomainSocketClient client("tmp/someinvalidpath");
   string result;
-  CHECK_EXCEPTION_TYPE(client.SendRPCMessage("foobar", result),
-                       JsonRpcException, check_exception1);
+  CHECK_EXCEPTION_TYPE(client.SendRPCMessage("foobar", result), JsonRpcException, check_exception1);
 }
 
 #endif

@@ -10,17 +10,15 @@
 #ifndef JSONRPC_CPP_CLIENTCONNECTOR_H_
 #define JSONRPC_CPP_CLIENTCONNECTOR_H_
 
-#include <string>
 #include <jsonrpccpp/common/exception.h>
+#include <string>
 
-namespace jsonrpc
-{
-    class IClientConnector
-    {
-        public:
-            virtual ~IClientConnector(){}
+namespace jsonrpc {
+  class IClientConnector {
+  public:
+    virtual ~IClientConnector() {}
 
-            virtual void SendRPCMessage(const std::string& message, std::string& result)  = 0;
-    };
+    virtual void SendRPCMessage(const std::string &message, std::string &result) = 0;
+  };
 } /* namespace jsonrpc */
 #endif /* JSONRPC_CPP_CLIENTCONNECTOR_H_ */

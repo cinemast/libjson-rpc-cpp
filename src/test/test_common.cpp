@@ -20,20 +20,15 @@ using namespace jsonrpc;
 using namespace std;
 
 namespace testcommon {
-bool check_exception1(JsonRpcException const &ex) {
-  return ex.GetCode() == Errors::ERROR_RPC_JSON_PARSE_ERROR;
-}
+  bool check_exception1(JsonRpcException const &ex) { return ex.GetCode() == Errors::ERROR_RPC_JSON_PARSE_ERROR; }
 
-bool check_exception2(JsonRpcException const &ex) {
-  return ex.GetCode() == Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX;
-}
+  bool check_exception2(JsonRpcException const &ex) { return ex.GetCode() == Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX; }
 } // namespace testcommon
 
 using namespace testcommon;
 
 TEST_CASE("test_procedure_parametervalidation", TEST_MODULE) {
-  Procedure proc1("someprocedure", PARAMS_BY_NAME, JSON_BOOLEAN, "name",
-                  JSON_STRING, "ssnr", JSON_INTEGER, NULL);
+  Procedure proc1("someprocedure", PARAMS_BY_NAME, JSON_BOOLEAN, "name", JSON_STRING, "ssnr", JSON_INTEGER, NULL);
 
   // Expected to pass validation
   Json::Value param1;
@@ -53,10 +48,8 @@ TEST_CASE("test_procedure_parametervalidation", TEST_MODULE) {
   param3.append("Peter");
   CHECK(proc1.ValidateNamedParameters(param3) == false);
 
-  Procedure proc2("someprocedure", PARAMS_BY_NAME, JSON_BOOLEAN, "bool",
-                  JSON_BOOLEAN, "object", JSON_OBJECT, "array", JSON_ARRAY,
-                  "real", JSON_REAL, "int", JSON_INTEGER, "numeric",
-                  JSON_NUMERIC, NULL);
+  Procedure proc2("someprocedure", PARAMS_BY_NAME, JSON_BOOLEAN, "bool", JSON_BOOLEAN, "object", JSON_OBJECT, "array", JSON_ARRAY, "real", JSON_REAL, "int",
+                  JSON_INTEGER, "numeric", JSON_NUMERIC, NULL);
   Json::Value param4;
   Json::Value array;
   array.append(0);
@@ -103,8 +96,7 @@ TEST_CASE("test_exception", TEST_MODULE) {
   CHECK(ex.GetCode() == -32003);
 
   JsonRpcException ex2(Errors::ERROR_CLIENT_CONNECTOR, "addInfo");
-  CHECK(string(ex2.what()) ==
-        "Exception -32003 : Client connector error: addInfo");
+  CHECK(string(ex2.what()) == "Exception -32003 : Client connector error: addInfo");
 
   JsonRpcException ex3("addInfo");
   CHECK(string(ex3.what()) == "addInfo");
@@ -114,44 +106,27 @@ TEST_CASE("test_exception", TEST_MODULE) {
   Json::Value data;
   data.append(13);
   data.append(41);
-  JsonRpcException ex4(Errors::ERROR_RPC_INTERNAL_ERROR, "internal error",
-                       data);
+  JsonRpcException ex4(Errors::ERROR_RPC_INTERNAL_ERROR, "internal error", data);
   CHECK(ex4.GetData().size() == 2);
   CHECK(ex4.GetData()[0].asInt() == 13);
   CHECK(ex4.GetData()[1].asInt() == 41);
 }
 
 TEST_CASE("test_specificationparser_errors", TEST_MODULE) {
-  CHECK_EXCEPTION_TYPE(
-      SpecificationParser::GetProceduresFromFile("testspec1.json"),
-      JsonRpcException, check_exception1);
-  CHECK_EXCEPTION_TYPE(
-      SpecificationParser::GetProceduresFromFile("testspec2.json"),
-      JsonRpcException, check_exception2);
-  CHECK_EXCEPTION_TYPE(
-      SpecificationParser::GetProceduresFromFile("testspec3.json"),
-      JsonRpcException, check_exception2);
-  CHECK_EXCEPTION_TYPE(
-      SpecificationParser::GetProceduresFromFile("testspec4.json"),
-      JsonRpcException, check_exception2);
-  CHECK_EXCEPTION_TYPE(SpecificationParser::GetProceduresFromString("{}"),
-                       JsonRpcException, check_exception2);
+  CHECK_EXCEPTION_TYPE(SpecificationParser::GetProceduresFromFile("testspec1.json"), JsonRpcException, check_exception1);
+  CHECK_EXCEPTION_TYPE(SpecificationParser::GetProceduresFromFile("testspec2.json"), JsonRpcException, check_exception2);
+  CHECK_EXCEPTION_TYPE(SpecificationParser::GetProceduresFromFile("testspec3.json"), JsonRpcException, check_exception2);
+  CHECK_EXCEPTION_TYPE(SpecificationParser::GetProceduresFromFile("testspec4.json"), JsonRpcException, check_exception2);
+  CHECK_EXCEPTION_TYPE(SpecificationParser::GetProceduresFromString("{}"), JsonRpcException, check_exception2);
 
-  CHECK_EXCEPTION_TYPE(SpecificationParser::GetProceduresFromString(
-                           "[{\"name\":\"proc1\"},{\"name\":\"proc1\"}]"),
-                       JsonRpcException, check_exception2);
-  CHECK_EXCEPTION_TYPE(
-      SpecificationParser::GetProceduresFromString(
-          "[{\"name\":\"proc1\", \"params\": {\"param1\": null}}]"),
-      JsonRpcException, check_exception2);
-  CHECK_EXCEPTION_TYPE(SpecificationParser::GetProceduresFromString(
-                           "[{\"name\":\"proc1\", \"params\": 23}]"),
-                       JsonRpcException, check_exception2);
+  CHECK_EXCEPTION_TYPE(SpecificationParser::GetProceduresFromString("[{\"name\":\"proc1\"},{\"name\":\"proc1\"}]"), JsonRpcException, check_exception2);
+  CHECK_EXCEPTION_TYPE(SpecificationParser::GetProceduresFromString("[{\"name\":\"proc1\", \"params\": {\"param1\": null}}]"), JsonRpcException,
+                       check_exception2);
+  CHECK_EXCEPTION_TYPE(SpecificationParser::GetProceduresFromString("[{\"name\":\"proc1\", \"params\": 23}]"), JsonRpcException, check_exception2);
 }
 
 TEST_CASE("test_specificationparser_success", TEST_MODULE) {
-  std::vector<Procedure> procs =
-      SpecificationParser::GetProceduresFromFile("testspec5.json");
+  std::vector<Procedure> procs = SpecificationParser::GetProceduresFromFile("testspec5.json");
   REQUIRE(procs.size() == 4);
 
   CHECK(procs[0].GetProcedureName() == "testmethod");
@@ -176,21 +151,13 @@ TEST_CASE("test_specificationparser_success", TEST_MODULE) {
 TEST_CASE("test_specificationwriter", TEST_MODULE) {
   vector<Procedure> procedures;
 
-  procedures.push_back(Procedure("testmethod1", PARAMS_BY_NAME, JSON_INTEGER,
-                                 "param1", JSON_INTEGER, "param2", JSON_REAL,
-                                 NULL));
-  procedures.push_back(Procedure("testmethod2", PARAMS_BY_POSITION,
-                                 JSON_INTEGER, "param1", JSON_OBJECT, "param2",
-                                 JSON_ARRAY, NULL));
+  procedures.push_back(Procedure("testmethod1", PARAMS_BY_NAME, JSON_INTEGER, "param1", JSON_INTEGER, "param2", JSON_REAL, NULL));
+  procedures.push_back(Procedure("testmethod2", PARAMS_BY_POSITION, JSON_INTEGER, "param1", JSON_OBJECT, "param2", JSON_ARRAY, NULL));
 
-  procedures.push_back(Procedure("testnotification1", PARAMS_BY_NAME, "param1",
-                                 JSON_BOOLEAN, "param2", JSON_STRING, NULL));
-  procedures.push_back(Procedure("testnotification2", PARAMS_BY_POSITION,
-                                 "param1", JSON_INTEGER, "param2", JSON_STRING,
-                                 NULL));
+  procedures.push_back(Procedure("testnotification1", PARAMS_BY_NAME, "param1", JSON_BOOLEAN, "param2", JSON_STRING, NULL));
+  procedures.push_back(Procedure("testnotification2", PARAMS_BY_POSITION, "param1", JSON_INTEGER, "param2", JSON_STRING, NULL));
 
-  procedures.push_back(
-      Procedure("testnotification3", PARAMS_BY_POSITION, NULL));
+  procedures.push_back(Procedure("testnotification3", PARAMS_BY_POSITION, NULL));
 
   Json::Value result = SpecificationWriter::toJsonValue(procedures);
 
@@ -225,6 +192,5 @@ TEST_CASE("test_specificationwriter", TEST_MODULE) {
   CHECK(result[1]["returns"].isIntegral() == true);
 
   CHECK(SpecificationWriter::toFile("testspec.json", procedures) == true);
-  CHECK(SpecificationWriter::toFile("/a/b/c/testspec.json", procedures) ==
-        false);
+  CHECK(SpecificationWriter::toFile("/a/b/c/testspec.json", procedures) == false);
 }

@@ -20,8 +20,7 @@ using namespace jsonrpc;
  * @param request The request is returned here.
  * @return Returns true on success, false otherwise.
  */
-bool ProcessRedisReply(redisReply *req, std::string &ret_queue,
-                       std::string &request) {
+bool ProcessRedisReply(redisReply *req, std::string &ret_queue, std::string &request) {
 
   // The return from hiredis is strange in that it's always an array of
   // length 2, with the first element the name of the key as a string,
@@ -55,8 +54,7 @@ bool ProcessRedisReply(redisReply *req, std::string &ret_queue,
   return true;
 }
 
-RedisServer::RedisServer(std::string host, int port, std::string queue)
-    : running(false), host(host), port(port), queue(queue), con(NULL) {}
+RedisServer::RedisServer(std::string host, int port, std::string queue) : running(false), host(host), port(port), queue(queue), con(NULL) {}
 
 bool RedisServer::StartListening() {
   if (this->running) {
@@ -74,8 +72,7 @@ bool RedisServer::StartListening() {
   }
 
   this->running = true;
-  int ret = pthread_create(&(this->listenning_thread), NULL,
-                           RedisServer::LaunchLoop, this);
+  int ret = pthread_create(&(this->listenning_thread), NULL, RedisServer::LaunchLoop, this);
   this->running = static_cast<bool>(ret == 0);
 
   return this->running;
@@ -93,11 +90,9 @@ bool RedisServer::StopListening() {
   return !(this->running);
 }
 
-bool RedisServer::SendResponse(const std::string &response,
-                               const std::string &ret_queue) {
+bool RedisServer::SendResponse(const std::string &response, const std::string &ret_queue) {
   redisReply *ret;
-  ret = (redisReply *)redisCommand(con, "LPUSH %s %s", ret_queue.c_str(),
-                                   response.c_str());
+  ret = (redisReply *)redisCommand(con, "LPUSH %s %s", ret_queue.c_str(), response.c_str());
 
   if (ret == NULL) {
     return false;

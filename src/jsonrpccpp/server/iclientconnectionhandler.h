@@ -12,23 +12,21 @@
 
 #include <string>
 
-namespace jsonrpc
-{
-    class Procedure;
-    class IClientConnectionHandler {
-        public:
-            virtual ~IClientConnectionHandler() {}
+namespace jsonrpc {
+  class Procedure;
+  class IClientConnectionHandler {
+  public:
+    virtual ~IClientConnectionHandler() {}
 
-            virtual void HandleRequest(const std::string& request, std::string& retValue) = 0;
-    };
+    virtual void HandleRequest(const std::string &request, std::string &retValue) = 0;
+  };
 
-    class IProtocolHandler : public IClientConnectionHandler
-    {
-        public:
-            virtual ~IProtocolHandler(){}
+  class IProtocolHandler : public IClientConnectionHandler {
+  public:
+    virtual ~IProtocolHandler() {}
 
-            virtual void AddProcedure(const Procedure& procedure) = 0;
-    };
-}
+    virtual void AddProcedure(const Procedure &procedure) = 0;
+  };
+} // namespace jsonrpc
 
 #endif // JSONRPC_CPP_ICLIENTCONNECTIONHANDLER_H

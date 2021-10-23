@@ -10,60 +10,57 @@
 #ifndef JSONRPC_BATCHRESPONSE_H
 #define JSONRPC_BATCHRESPONSE_H
 
-#include <map>
 #include <jsonrpccpp/common/jsonparser.h>
+#include <map>
 
 namespace jsonrpc {
 
+  /**
+   * @brief The BatchResponse class provides a simple interface for handling batch responses.
+   */
+  class BatchResponse {
+  public:
+    BatchResponse();
+
     /**
-     * @brief The BatchResponse class provides a simple interface for handling batch responses.
+     * @brief addResponse method is used only internally by the framework
+     * @param id
+     * @param response
+     * @param isError
      */
-    class BatchResponse
-    {
-        public:
-            BatchResponse();
+    void addResponse(Json::Value &id, Json::Value response, bool isError = false);
 
-            /**
-             * @brief addResponse method is used only internally by the framework
-             * @param id
-             * @param response
-             * @param isError
-             */
-            void addResponse(Json::Value& id, Json::Value response, bool isError = false);
+    /**
+     * @brief getResult method gets the result for a given request id (returned by BatchCall::addCall.
+     * You should always invoke getErrorCode() first to check if the result is valid.
+     * @param id
+     * @return
+     */
+    Json::Value getResult(int id);
 
-            /**
-             * @brief getResult method gets the result for a given request id (returned by BatchCall::addCall.
-             * You should always invoke getErrorCode() first to check if the result is valid.
-             * @param id
-             * @return
-             */
-            Json::Value getResult(int id);
+    void getResult(Json::Value &id, Json::Value &result);
 
+    /**
+     * @brief getErrorCode method checks if for a given id, an error occurred in the batch request.
+     * @param id
+     */
+    int getErrorCode(Json::Value &id);
 
-            void getResult(Json::Value& id, Json::Value &result);
+    /**
+     * @brief getErrorMessage method gets the corresponding error message.
+     * @param id
+     * @return the error message in case of an error, an empty string if no error was found for the provided id.
+     */
+    std::string getErrorMessage(Json::Value &id);
 
-            /**
-             * @brief getErrorCode method checks if for a given id, an error occurred in the batch request.
-             * @param id
-             */
-            int getErrorCode(Json::Value& id);
+    std::string getErrorMessage(int id);
 
-            /**
-             * @brief getErrorMessage method gets the corresponding error message.
-             * @param id
-             * @return the error message in case of an error, an empty string if no error was found for the provided id.
-             */
-            std::string getErrorMessage(Json::Value& id);
+    bool hasErrors();
 
-            std::string getErrorMessage(int id);
-
-            bool hasErrors();
-
-        private:
-            std::map<Json::Value, Json::Value> responses;
-            std::vector<Json::Value> errorResponses;
-
-    };
+  private:
+    std::map<Json::Value, Json::Value> responses;
+    std::vector<Json::Value> errorResponses;
+  };
 
 } // namespace jsonrpc
 

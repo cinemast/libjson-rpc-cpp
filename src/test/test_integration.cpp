@@ -44,23 +44,16 @@ std::string rand_alnum_str(std::string::size_type sz) {
 
 class StubServer : public AbstractStubServer {
 public:
-  StubServer(AbstractServerConnector &connector)
-      : AbstractStubServer(connector) {}
+  StubServer(AbstractServerConnector &connector) : AbstractStubServer(connector) {}
   virtual void notifyServer() {}
 
-  virtual std::string sayHello(const std::string &name) {
-    return string("Hello ") + name;
-  }
+  virtual std::string sayHello(const std::string &name) { return string("Hello ") + name; }
 
   virtual int addNumbers(int param1, int param2) { return param1 + param2; }
 
-  virtual double addNumbers2(double param1, double param2) {
-    return param1 + param2;
-  }
+  virtual double addNumbers2(double param1, double param2) { return param1 + param2; }
 
-  virtual bool isEqual(const std::string &str1, const std::string &str2) {
-    return str1 == str2;
-  }
+  virtual bool isEqual(const std::string &str1, const std::string &str2) { return str1 == str2; }
 
   virtual Json::Value buildObject(const std::string &name, int age) {
     Json::Value result;
@@ -71,9 +64,7 @@ public:
 
   virtual std::string methodWithoutParameters() { return "foo"; }
 
-  virtual Json::Value calculate(const Json::Value &args) {
-    return Json::Value(args);
-  }
+  virtual Json::Value calculate(const Json::Value &args) { return Json::Value(args); }
 };
 
 #ifdef HTTP_TESTING

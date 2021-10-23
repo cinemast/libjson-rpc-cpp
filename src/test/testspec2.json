@@ -1,8 +1,8 @@
 [
-    {
-        "params": {
-            "name": "Peter"
-        },
-        "returns": "Hello Peter"
-    }
+  {
+    "params": {
+      "name": "Peter"
+    },
+    "returns": "Hello Peter"
+  }
 ]

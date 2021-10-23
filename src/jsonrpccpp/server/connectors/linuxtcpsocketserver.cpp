@@ -26,9 +26,7 @@
 using namespace jsonrpc;
 using namespace std;
 
-LinuxTcpSocketServer::LinuxTcpSocketServer(const std::string &ipToBind,
-                                           const unsigned int &port,
-                                           size_t threads)
+LinuxTcpSocketServer::LinuxTcpSocketServer(const std::string &ipToBind, const unsigned int &port, size_t threads)
     : AbstractThreadedServer(threads), ipToBind(ipToBind), port(port) {}
 
 LinuxTcpSocketServer::~LinuxTcpSocketServer() {
@@ -44,8 +42,7 @@ bool LinuxTcpSocketServer::InitializeListener() {
 
   fcntl(this->socket_fd, F_SETFL, FNDELAY);
   int reuseaddr = 1;
-  setsockopt(this->socket_fd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr,
-             sizeof(reuseaddr));
+  setsockopt(this->socket_fd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, sizeof(reuseaddr));
 
   /* start with a clean address structure */
   memset(&(this->address), 0, sizeof(struct sockaddr_in));
@@ -54,9 +51,7 @@ bool LinuxTcpSocketServer::InitializeListener() {
   inet_aton(this->ipToBind.c_str(), &(this->address.sin_addr));
   this->address.sin_port = htons(this->port);
 
-  if (::bind(this->socket_fd,
-             reinterpret_cast<struct sockaddr *>(&(this->address)),
-             sizeof(struct sockaddr_in)) != 0) {
+  if (::bind(this->socket_fd, reinterpret_cast<struct sockaddr *>(&(this->address)), sizeof(struct sockaddr_in)) != 0) {
     return false;
   }
 
@@ -70,9 +65,7 @@ int LinuxTcpSocketServer::CheckForConnection() {
   struct sockaddr_in connection_address;
   memset(&connection_address, 0, sizeof(struct sockaddr_in));
   socklen_t address_length = sizeof(connection_address);
-  return accept(this->socket_fd,
-                reinterpret_cast<struct sockaddr *>(&(connection_address)),
-                &address_length);
+  return accept(this->socket_fd, reinterpret_cast<struct sockaddr *>(&(connection_address)), &address_length);
 }
 
 void LinuxTcpSocketServer::HandleConnection(int connection) {
@@ -106,8 +99,7 @@ int LinuxTcpSocketServer::CloseByReset(const int &fd) {
   so_linger.l_onoff = 1;
   so_linger.l_linger = 0;
 
-  int ret =
-      setsockopt(fd, SOL_SOCKET, SO_LINGER, &so_linger, sizeof(so_linger));
+  int ret = setsockopt(fd, SOL_SOCKET, SO_LINGER, &so_linger, sizeof(so_linger));
   if (ret != 0)
     return ret;
 
