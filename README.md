@@ -1,7 +1,6 @@
 **I created a new C++17 header only implementation -> [json-rpc-cxx](https://github.com/jsonrpcx/json-rpc-cxx).**
 
 Master [![CircleCI](https://circleci.com/gh/cinemast/libjson-rpc-cpp/tree/master.svg?style=svg)](https://circleci.com/gh/cinemast/libjson-rpc-cpp/tree/master)
-Develop [![CircleCI](https://circleci.com/gh/cinemast/libjson-rpc-cpp/tree/develop.svg?style=svg)](https://circleci.com/gh/cinemast/libjson-rpc-cpp/tree/develop)
 [![codecov](https://codecov.io/gh/cinemast/libjson-rpc-cpp/branch/master/graph/badge.svg?token=QNoXsaI2ta)](https://codecov.io/gh/cinemast/libjson-rpc-cpp)
 
 
