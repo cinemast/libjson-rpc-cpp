@@ -16,6 +16,7 @@ xcuserdata
 
 #Qt-creator noise
 build-*
+cmake-build-*
 
 # svn & cvs
 .svn

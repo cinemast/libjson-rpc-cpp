@@ -3,7 +3,7 @@ set -evu
 
 PREFIX=/usr/local
 
-if [ "$OS" == "arch" ] || [ "$OS" == "fedora" ] || [ "$OS" == "centos7" ]
+if [ "$OS" == "archlinux" ] || [ "$OS" == "fedora" ]
 then
 	PREFIX=/usr
 fi
@@ -17,7 +17,7 @@ cmake -DCMAKE_INSTALL_PREFIX="$PREFIX" -DWITH_COVERAGE=YES -DCMAKE_BUILD_TYPE=Re
 	-DBUILD_STATIC_LIBS=ON -DTCP_SOCKET_SERVER=YES -DTCP_SOCKET_CLIENT=YES \
 	-DBUILD_SHARED_LIBS=ON -DUNIX_DOMAIN_SOCKET_SERVER=NO -DUNIX_DOMAIN_SOCKET_CLIENT=NO ..
 
-make -j$(nproc)
+make
 
 echo "Running test suite"
 ./bin/unit_testsuite --durations yes
