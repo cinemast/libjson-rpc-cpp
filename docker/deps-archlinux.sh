@@ -1,6 +1,6 @@
 #!/bin/bash
 set -evu
-pacman -Sy --noconfirm \
+pacman -Syyu --noconfirm \
     sudo \
     sed \
     grep \
@@ -10,7 +10,6 @@ pacman -Sy --noconfirm \
     cmake \
     make \
     gcc \
-    libffi \
     git \
     jsoncpp \
     libmicrohttpd \
