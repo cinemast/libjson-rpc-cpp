@@ -9,8 +9,10 @@
 
 #include "client.h"
 #include "rpcprotocolclient.h"
+#include <sstream>
 
 using namespace jsonrpc;
+using namespace std;
 
 Client::Client(IClientConnector &connector, clientVersion_t version, bool omitEndingLineFeed) : connector(connector) {
   this->protocol = new RpcProtocolClient(version, omitEndingLineFeed);
@@ -29,11 +31,11 @@ void Client::CallProcedures(const BatchCall &calls, BatchResponse &result) {
   std::string request, response;
   request = calls.toString();
   connector.SendRPCMessage(request, response);
-  Json::Reader reader;
   Json::Value tmpresult;
 
   try {
-    if (!reader.parse(response, tmpresult) || !tmpresult.isArray()) {
+    istringstream(response) >> tmpresult;
+    if(!tmpresult.isArray()) {
       throw JsonRpcException(Errors::ERROR_CLIENT_INVALID_RESPONSE, "Array expected.");
     }
   } catch (const Json::Exception &e) {

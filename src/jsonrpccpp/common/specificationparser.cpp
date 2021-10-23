@@ -22,12 +22,13 @@ vector<Procedure> SpecificationParser::GetProceduresFromFile(const string &filen
 }
 vector<Procedure> SpecificationParser::GetProceduresFromString(const string &content) {
 
-  Json::Reader reader;
   Json::Value val;
-  if (!reader.parse(content, val)) {
+
+  try {
+    std::istringstream(content) >> val;
+  } catch (Json::Exception &e) {
     throw JsonRpcException(Errors::ERROR_RPC_JSON_PARSE_ERROR, " specification file contains syntax errors");
   }
-
   if (!val.isArray()) {
     throw JsonRpcException(Errors::ERROR_SERVER_PROCEDURE_SPECIFICATION_SYNTAX, " top level json value is not an array");
   }

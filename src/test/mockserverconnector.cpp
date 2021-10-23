@@ -8,6 +8,7 @@
  ************************************************************************/
 
 #include "mockserverconnector.h"
+#include <sstream>
 
 using namespace jsonrpc;
 using namespace std;
@@ -26,21 +27,15 @@ bool MockServerConnector::SetRequest(const string &request) {
 }
 
 Json::Value MockServerConnector::GetJsonRequest() {
-  Json::Reader reader;
   Json::Value result;
-  if (reader.parse(request, result))
-    return result;
-  else
-    return Json::nullValue;
+  istringstream(request) >> result;
+  return result;
 }
 
 string MockServerConnector::GetResponse() { return this->response; }
 
 Json::Value MockServerConnector::GetJsonResponse() {
-  Json::Reader reader;
   Json::Value result;
-  if (reader.parse(response, result))
-    return result;
-  else
-    return Json::nullValue;
+  istringstream(response) >> result;
+  return result;
 }

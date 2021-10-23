@@ -35,11 +35,10 @@ void RpcProtocolClient::BuildRequest(const std::string &method, const Json::Valu
 }
 
 void RpcProtocolClient::HandleResponse(const std::string &response, Json::Value &result) {
-  Json::Reader reader;
   Json::Value value;
 
   try {
-    if (reader.parse(response, value)) {
+    if (std::istringstream(response) >> value) {
       this->HandleResponse(value, result);
     } else {
       throw JsonRpcException(Errors::ERROR_RPC_JSON_PARSE_ERROR, " " + response);

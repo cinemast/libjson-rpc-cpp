@@ -9,8 +9,7 @@
 
 #include "abstractprotocolhandler.h"
 #include <jsonrpccpp/common/errors.h>
-#include <jsonrpccpp/common/jsonparser.h>
-
+#include <sstream>
 #include <map>
 
 using namespace jsonrpc;
@@ -23,18 +22,14 @@ AbstractProtocolHandler::~AbstractProtocolHandler() {}
 void AbstractProtocolHandler::AddProcedure(const Procedure &procedure) { this->procedures[procedure.GetProcedureName()] = procedure; }
 
 void AbstractProtocolHandler::HandleRequest(const std::string &request, std::string &retValue) {
-  Json::Reader reader;
   Json::Value req;
   Json::Value resp;
   Json::StreamWriterBuilder wbuilder;
   wbuilder["indentation"] = "";
 
   try {
-    if (reader.parse(request, req, false)) {
-      this->HandleJsonRequest(req, resp);
-    } else {
-      this->WrapError(Json::nullValue, Errors::ERROR_RPC_JSON_PARSE_ERROR, Errors::GetErrorMessage(Errors::ERROR_RPC_JSON_PARSE_ERROR), resp);
-    }
+    istringstream(request) >> req;
+    this->HandleJsonRequest(req, resp);
   } catch (const Json::Exception &e) {
     this->WrapError(Json::nullValue, Errors::ERROR_RPC_JSON_PARSE_ERROR, Errors::GetErrorMessage(Errors::ERROR_RPC_JSON_PARSE_ERROR), resp);
   }
