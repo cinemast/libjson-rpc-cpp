@@ -1,5 +1,4 @@
 #!/bin/bash
-sh
 set -evu
 pacman -Sy --noconfirm \
     sudo \
