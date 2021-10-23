@@ -29,7 +29,7 @@ jobs:
           command: ./docker/deps-fedora.sh
       - run:
           name: Build test and install
-          command: 'OS=debian ./docker/build_test_install.sh'
+          command: 'OS=fedora ./docker/build_test_install.sh'
   build-archlinux-gcc:
     docker:
       - image: "archlinux:latest"
@@ -40,7 +40,7 @@ jobs:
           command: ./docker/deps-archlinux.sh
       - run:
           name: Build test and install
-          command: 'OS=debian ./docker/build_test_install.sh'
+          command: 'OS=archlinux ./docker/build_test_install.sh'
   build-osx-clang:
     macos:
       xcode: "13.0.0"
