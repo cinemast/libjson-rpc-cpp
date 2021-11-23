@@ -155,7 +155,7 @@ Call jsonrpcstub:
 jsonrpcstub spec.json --cpp-server=AbstractStubServer --cpp-client=StubClient
 mkdir -p gen
 mv abstractstubserver.h gen
-mv stubclient.ch gen
+mv stubclient.h gen
 ```
 
 This generates an `AbstractStubServer` and a `StubClient` class and moves them to the `gen` folder.
