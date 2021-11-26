@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.4.1] - 2021-11-25
+### Fixed
+- Fedora CI build by updating to Catch v2.13.7
+- Typo in README (#313)
+
+### Changed
+- Vendoring catch library instead of downloading from github
+
 ## [1.4.0] - 2021-10-23
 ### Fixed
 - Deprecation warnings for Jsoncpp (#312)

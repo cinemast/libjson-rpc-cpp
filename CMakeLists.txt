@@ -23,7 +23,7 @@ endif()
 
 set(MAJOR_VERSION 1)
 set(MINOR_VERSION 4)
-set(PATCH_VERSION 0)
+set(PATCH_VERSION 1)
 set(SO_VERSION    1)
 
 if(NOT MSVC)
