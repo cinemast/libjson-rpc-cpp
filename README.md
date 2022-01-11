@@ -93,7 +93,7 @@ Build
 -----
 
 ```sh
-git clone git://github.com/cinemast/libjson-rpc-cpp.git
+git clone https://github.com/cinemast/libjson-rpc-cpp.git
 mkdir -p libjson-rpc-cpp/build
 cd libjson-rpc-cpp/build
 cmake .. && make
