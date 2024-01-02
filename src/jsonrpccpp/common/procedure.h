@@ -20,7 +20,7 @@ namespace jsonrpc {
   typedef std::map<std::string, jsontype_t> parameterNameList_t;
   typedef std::vector<jsontype_t> parameterPositionList_t;
 
-  typedef enum { PARAMS_BY_NAME, PARAMS_BY_POSITION } parameterDeclaration_t;
+  typedef enum { PARAMS_BY_NAME, PARAMS_BY_POSITION, PARAMS_BY_POSITION_WITH_OPTIONAL } parameterDeclaration_t;
 
   class Procedure {
   public:
@@ -73,6 +73,7 @@ namespace jsonrpc {
 
     bool ValidateNamedParameters(const Json::Value &parameters) const;
     bool ValidatePositionalParameters(const Json::Value &parameters) const;
+    bool ValidateOptionalPositionalParameters(const Json::Value &parameters) const;
 
   private:
     /**

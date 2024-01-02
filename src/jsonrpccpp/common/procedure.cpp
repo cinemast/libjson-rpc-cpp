@@ -57,6 +57,8 @@ bool Procedure::ValdiateParameters(const Json::Value &parameters) const {
   }
   if (parameters.isArray() && this->paramDeclaration == PARAMS_BY_POSITION) {
     return this->ValidatePositionalParameters(parameters);
+  } else if (parameters.isArray() && this->paramDeclaration == PARAMS_BY_POSITION_WITH_OPTIONAL) {
+    return this->ValidateOptionalPositionalParameters(parameters);
   } else if (parameters.isObject() && this->paramDeclaration == PARAMS_BY_NAME) {
     return this->ValidateNamedParameters(parameters);
   } else {
@@ -101,6 +103,19 @@ bool Procedure::ValidatePositionalParameters(const Json::Value &parameters) cons
   }
   return ok;
 }
+
+bool Procedure::ValidateOptionalPositionalParameters(const Json::Value &parameters) const {
+  bool ok = true;
+
+  if (parameters.size() > this->parametersPosition.size()) {
+    return false;
+  }
+  for (unsigned int i = 0; ok && i < parameters.size(); i++) {
+    ok = this->ValidateSingleParameter(this->parametersPosition.at(i), parameters[i]);
+  }
+  return ok;
+}
+
 bool Procedure::ValidateSingleParameter(jsontype_t expectedType, const Json::Value &value) const {
   bool ok = true;
   switch (expectedType) {
